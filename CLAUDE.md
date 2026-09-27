@@ -2,6 +2,8 @@
 
 A personal learning system built on the `teach` skill (`mattpocock-skills:teach`). One repo, several **track** workspaces, one public hub website (GitHub Pages). Design history: `TEACHER-PLAN.md`.
 
+**How to teach** (lesson, quiz, glossary and learning-record rules): `TEACHING.md`. Read it before writing any lesson.
+
 ## Privacy rule (non-negotiable)
 
 The site is **public**. Never commit personal or sensitive data: no tenant or domain names, IP addresses from real networks, internal system names, credentials, coworker names, or specific security weaknesses.
