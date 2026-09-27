@@ -1,0 +1,196 @@
+/* Teacher: shared stylesheet for the hub, every lesson and every reference page.
+   Change the look of the whole library here. */
+
+:root {
+  --bg: #fbfaf7;
+  --surface: #ffffff;
+  --text: #1f1d1a;
+  --muted: #6b665e;
+  --rule: #e4e0d8;
+  --accent: #9b3d1f;        /* links, highlights */
+  --accent-soft: #f6e9e2;
+  --ok: #2f6f3e;
+  --ok-soft: #e4f1e6;
+  --bad: #a3292b;
+  --bad-soft: #f8e3e3;
+  --code-bg: #f1eee8;
+  --track-it: #2c5d8a;
+  --track-app: #7a4a9a;
+  --track-data: #3d7a5c;
+  --track-side: #9a6a1f;
+  --serif: "Source Serif 4", Georgia, "Times New Roman", serif;
+  --sans: "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --mono: "JetBrains Mono", Consolas, "Courier New", monospace;
+  color-scheme: light;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #171614;
+    --surface: #1f1d1b;
+    --text: #ebe7e0;
+    --muted: #a39d93;
+    --rule: #34312d;
+    --accent: #e39a78;
+    --accent-soft: #3a2a22;
+    --ok: #86c795;
+    --ok-soft: #1f3324;
+    --bad: #ec8f8f;
+    --bad-soft: #3a2222;
+    --code-bg: #262320;
+    --track-it: #7fb0de;
+    --track-app: #c49be0;
+    --track-data: #86c7a5;
+    --track-side: #dcb36e;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #171614; --surface: #1f1d1b; --text: #ebe7e0; --muted: #a39d93; --rule: #34312d;
+  --accent: #e39a78; --accent-soft: #3a2a22; --ok: #86c795; --ok-soft: #1f3324;
+  --bad: #ec8f8f; --bad-soft: #3a2222; --code-bg: #262320;
+  --track-it: #7fb0de; --track-app: #c49be0; --track-data: #86c7a5; --track-side: #dcb36e;
+  color-scheme: dark;
+}
+
+* { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font: 18px/1.6 var(--serif);
+}
+main, .page-header, .page-footer {
+  max-width: 44rem;
+  margin: 0 auto;
+  padding: 0 16px;
+}
+main { padding-bottom: 3rem; }
+
+/* ---------- Navigation header / footer ---------- */
+.page-header {
+  display: flex; flex-wrap: wrap; gap: .25rem 1rem; align-items: baseline;
+  padding-top: 1.25rem; padding-bottom: .75rem;
+  border-bottom: 1px solid var(--rule);
+  font: 14px/1.4 var(--sans);
+}
+.page-header a { color: var(--muted); text-decoration: none; }
+.page-header a:hover { color: var(--accent); }
+.page-header .home { font-weight: 600; color: var(--text); }
+.page-footer {
+  display: flex; justify-content: space-between; gap: 1rem; flex-wrap: wrap;
+  border-top: 1px solid var(--rule);
+  padding-top: 1rem; padding-bottom: 2rem;
+  font: 14px/1.4 var(--sans);
+}
+.page-footer a { color: var(--accent); text-decoration: none; }
+.page-footer .disabled { color: var(--muted); }
+
+/* ---------- Typography ---------- */
+h1, h2, h3 { font-family: var(--sans); line-height: 1.25; letter-spacing: -0.01em; }
+h1 { font-size: 2rem; margin: 2rem 0 .25rem; }
+h2 { font-size: 1.3rem; margin: 2.25rem 0 .5rem; }
+h3 { font-size: 1.05rem; margin: 1.5rem 0 .25rem; }
+.kicker {
+  font: 600 12px/1 var(--sans); text-transform: uppercase; letter-spacing: .08em;
+  color: var(--track-color, var(--accent)); margin-top: 2rem;
+}
+.lede { font-size: 1.15rem; color: var(--muted); margin-top: .25rem; }
+a { color: var(--accent); }
+code, pre, kbd { font-family: var(--mono); font-size: .85em; }
+code { background: var(--code-bg); padding: .1em .3em; border-radius: 3px; }
+pre {
+  background: var(--code-bg); padding: .9rem 1rem; border-radius: 6px;
+  overflow-x: auto; line-height: 1.45;
+}
+pre code { background: none; padding: 0; }
+.hl { background: var(--accent-soft); color: var(--text); border-radius: 2px; padding: 0 .15em; }
+table { border-collapse: collapse; width: 100%; font: 15px/1.45 var(--sans); margin: 1rem 0; }
+th, td { text-align: left; padding: .45rem .6rem; border-bottom: 1px solid var(--rule); vertical-align: top; }
+th { font-weight: 600; color: var(--muted); font-size: 13px; text-transform: uppercase; letter-spacing: .04em; }
+.table-wrap { overflow-x: auto; }
+.sidenote { font-size: .85rem; color: var(--muted); }
+sup.cite a { text-decoration: none; font-family: var(--sans); font-size: .7em; }
+
+/* Track colours */
+.track-it   { --track-color: var(--track-it); }
+.track-app  { --track-color: var(--track-app); }
+.track-data { --track-color: var(--track-data); }
+.track-side { --track-color: var(--track-side); }
+
+/* ---------- Callouts ---------- */
+.callout {
+  border-left: 3px solid var(--track-color, var(--accent));
+  background: var(--surface);
+  padding: .75rem 1rem; margin: 1.25rem 0; border-radius: 0 6px 6px 0;
+}
+.callout > :first-child { margin-top: 0; }
+.callout > :last-child { margin-bottom: 0; }
+.callout .label { font: 600 12px/1 var(--sans); text-transform: uppercase; letter-spacing: .06em; color: var(--muted); display: block; margin-bottom: .4rem; }
+.win { border-left-color: var(--ok); }
+.source { border-left-color: var(--muted); font-size: .95rem; }
+.ask { border-left-color: var(--accent); font-size: .95rem; }
+
+/* ---------- Quiz widget (assets/quiz.js) ---------- */
+.quiz {
+  background: var(--surface); border: 1px solid var(--rule); border-radius: 8px;
+  padding: 1rem 1.1rem; margin: 1.25rem 0;
+}
+.quiz .q { margin: 0 0 .75rem; font-weight: 600; font-family: var(--sans); font-size: 1rem; }
+.quiz .q .num { color: var(--muted); font-weight: 400; margin-right: .35rem; }
+.quiz .choices { list-style: none; padding: 0; margin: 0; display: grid; gap: .4rem; }
+.quiz button.choice {
+  width: 100%; text-align: left; cursor: pointer;
+  font: 15px/1.4 var(--sans); color: var(--text);
+  background: var(--bg); border: 1px solid var(--rule); border-radius: 6px;
+  padding: .55rem .75rem;
+}
+.quiz button.choice:hover:not(:disabled) { border-color: var(--accent); }
+.quiz button.choice:disabled { cursor: default; }
+.quiz button.choice.right { background: var(--ok-soft); border-color: var(--ok); }
+.quiz button.choice.wrong { background: var(--bad-soft); border-color: var(--bad); }
+.quiz .explain { margin: .75rem 0 0; font-size: .95rem; }
+.quiz .explain .verdict { font: 600 14px/1 var(--sans); margin-right: .35rem; }
+.quiz .explain .verdict.ok { color: var(--ok); }
+.quiz .explain .verdict.no { color: var(--bad); }
+.quiz-score { font: 600 15px/1.4 var(--sans); color: var(--muted); margin-top: 1rem; }
+
+/* Retrieval prompt: think first, then reveal */
+details.recall {
+  background: var(--surface); border: 1px dashed var(--rule); border-radius: 8px;
+  padding: .75rem 1rem; margin: 1rem 0;
+}
+details.recall summary { cursor: pointer; font-family: var(--sans); font-size: 1rem; font-weight: 600; }
+details.recall summary .hint { font-weight: 400; color: var(--muted); font-size: .85rem; margin-left: .35rem; }
+details.recall[open] summary { margin-bottom: .5rem; }
+
+/* ---------- Hub ---------- */
+.hub-grid { display: grid; gap: 1rem; grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr)); margin: 1rem 0 2rem; }
+.card {
+  background: var(--surface); border: 1px solid var(--rule); border-radius: 10px;
+  padding: 1rem 1.1rem; border-top: 4px solid var(--track-color, var(--rule));
+  font-family: var(--sans); font-size: 15px;
+}
+.card h3 { margin: 0 0 .25rem; font-size: 1.05rem; }
+.card p { margin: .25rem 0; color: var(--muted); }
+.card.soon { opacity: .6; border-style: dashed; }
+.meter { height: 6px; background: var(--rule); border-radius: 3px; overflow: hidden; margin: .6rem 0 .25rem; }
+.meter > span { display: block; height: 100%; background: var(--track-color, var(--accent)); }
+.lesson-list { list-style: none; padding: 0; margin: 0; font-family: var(--sans); font-size: 15px; }
+.lesson-list li { display: flex; gap: .75rem; align-items: baseline; padding: .5rem 0; border-bottom: 1px solid var(--rule); }
+.lesson-list .date { color: var(--muted); font-size: 13px; white-space: nowrap; min-width: 5.5rem; }
+.lesson-list .tag { font-size: 12px; font-weight: 600; color: var(--track-color); white-space: nowrap; }
+.lesson-list a { color: var(--text); text-decoration: none; }
+.lesson-list a:hover { color: var(--accent); }
+.empty { color: var(--muted); font-style: italic; }
+
+/* ---------- Print ---------- */
+@media print {
+  :root { --bg: #fff; --surface: #fff; --text: #000; }
+  body { font-size: 11pt; }
+  .page-header, .page-footer, .no-print { display: none; }
+  details.recall { display: block; }
+  a { color: inherit; }
+  .quiz, .callout, pre { break-inside: avoid; }
+}

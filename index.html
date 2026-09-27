@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Teacher Hub</title>
+<meta name="description" content="A personal learning library: IT certs, app building, and side quests.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=JetBrains+Mono&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/course.css">
+<script src="data/hub.js"></script>
+</head>
+<body>
+<main>
+  <p class="kicker">Teacher</p>
+  <h1>Learning hub</h1>
+  <p class="lede">Short daily lessons, weekly quizzes, and build reviews. Updated by the teacher after every lesson.</p>
+
+  <h2>Due for review</h2>
+  <p class="sidenote">Spaced review: a lesson comes back 1, 3, 7, 14 and 30 days after you took it. Answer its questions from memory before looking.</p>
+  <ul class="lesson-list" id="due"></ul>
+
+  <h2>Tracks</h2>
+  <div class="hub-grid" id="tracks"></div>
+
+  <h2>Recent lessons</h2>
+  <ul class="lesson-list" id="recent"></ul>
+
+  <p class="sidenote" id="updated"></p>
+</main>
+<script>
+(function () {
+  var hub = window.HUB || { tracks: [], lessons: [] };
+  var byId = {};
+  hub.tracks.forEach(function (t) { byId[t.id] = t; });
+
+  function el(tag, cls, text) {
+    var e = document.createElement(tag);
+    if (cls) e.className = cls;
+    if (text != null) e.textContent = text;
+    return e;
+  }
+  function day(s) { var p = s.split("-"); return new Date(+p[0], +p[1] - 1, +p[2]); }
+  function lessonRow(l, note) {
+    var t = byId[l.track] || {};
+    var li = el("li", t.cls);
+    li.appendChild(el("span", "date", note || l.date));
+    li.appendChild(el("span", "tag", t.name || l.track));
+    var a = el("a", null, l.num + " · " + l.title);
+    a.href = l.path;
+    li.appendChild(a);
+    return li;
+  }
+
+  // Tracks
+  var grid = document.getElementById("tracks");
+  hub.tracks.forEach(function (t) {
+    var card = el("div", "card " + t.cls + (t.status === "soon" ? " soon" : ""));
+    card.appendChild(el("h3", null, t.name));
+    card.appendChild(el("p", null, t.mission));
+    var mine = hub.lessons.filter(function (l) { return l.track === t.id; });
+    if (t.goal) {
+      var done = mine.reduce(function (s, l) { return s + (l.covers || 0); }, 0);
+      var pct = Math.min(100, Math.round(100 * done / t.goal.total));
+      var m = el("div", "meter"); var bar = el("span"); bar.style.width = pct + "%"; m.appendChild(bar);
+      card.appendChild(m);
+      card.appendChild(el("p", null, t.goal.label + ": " + done + " / " + t.goal.total + " " + t.goal.unit + " · target " + t.goal.target));
+    }
+    if (t.status !== "soon") {
+      var info = el("p", null, mine.length + (mine.length === 1 ? " lesson" : " lessons"));
+      if (t.glossary) {
+        info.appendChild(document.createTextNode(" · "));
+        var g = el("a", null, "glossary"); g.href = t.glossary; info.appendChild(g);
+      }
+      card.appendChild(info);
+    }
+    grid.appendChild(card);
+  });
+
+  // Recent (newest first, 10)
+  var recent = document.getElementById("recent");
+  var list = hub.lessons.slice().reverse().slice(0, 10);
+  if (!list.length) recent.appendChild(el("li", "empty", "No lessons yet."));
+  list.forEach(function (l) { recent.appendChild(lessonRow(l)); });
+
+  // Due for review
+  var steps = [1, 3, 7, 14, 30];
+  var today = new Date(); today.setHours(0, 0, 0, 0);
+  var due = document.getElementById("due");
+  var items = [];
+  hub.lessons.forEach(function (l) {
+    var age = Math.round((today - day(l.date)) / 864e5);
+    // due if today is on (or up to 2 days past) a review step
+    for (var i = 0; i < steps.length; i++) {
+      if (age >= steps[i] && age <= steps[i] + 2) { items.push({ l: l, note: "day " + steps[i] }); break; }
+    }
+  });
+  if (!items.length) due.appendChild(el("li", "empty", "Nothing due. Nice."));
+  items.forEach(function (it) { due.appendChild(lessonRow(it.l, it.note)); });
+
+  document.getElementById("updated").textContent = "Last updated " + hub.updated + ".";
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,158 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Four Device Settings</title>
+<meta name="description" content="IT lesson 0001: the four network settings every device needs, and how to read them in ipconfig /all.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=JetBrains+Mono&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../assets/course.css">
+<script src="../../assets/quiz.js" defer></script>
+</head>
+<body class="track-it">
+<nav class="page-header">
+  <a class="home" href="../../index.html">Teacher hub</a>
+  <span>IT and certs</span>
+  <a href="../reference/glossary.html">Glossary</a>
+  <a href="../reference/network-settings.html">Cheat sheet</a>
+</nav>
+<main>
+  <p class="kicker">IT and certs · Lesson 0001 · A+ Core 1, objectives 2.4 &amp; 2.6</p>
+  <h1>The four settings every device needs</h1>
+  <p class="lede">About 10 minutes. By the end you can look at <code>ipconfig /all</code> and say which missing setting explains a "nothing works" ticket.</p>
+
+  <div class="callout">
+    <span class="label">Why this matters at work</span>
+    <p>A user says "I can't sign in to anything." Before you look at their account, check the device. Signing in to a cloud service like Microsoft Entra ID first requires the device to <em>find</em> the sign-in server by name and <em>reach</em> it across the internet. If any of four network settings is wrong, the account can be perfectly fine and sign-in still fails.</p>
+  </div>
+
+  <h2>The four settings</h2>
+  <p>To talk on an IP network, a device needs four values.<sup class="cite"><a href="#src-messer">[1]</a></sup> Think of them as questions the device must be able to answer:</p>
+
+  <div class="table-wrap">
+  <table>
+    <thead><tr><th>Setting</th><th>The question it answers</th><th>Example</th></tr></thead>
+    <tbody>
+      <tr><td><strong>IP address</strong></td><td>Who am I on this network?</td><td><code>192.168.1.42</code></td></tr>
+      <tr><td><strong>Subnet mask</strong></td><td>Which addresses are local, meaning in the same room as me?</td><td><code>255.255.255.0</code></td></tr>
+      <tr><td><strong>Default gateway</strong></td><td>Where do I send traffic for everything that isn't local?</td><td><code>192.168.1.1</code></td></tr>
+      <tr><td><strong>DNS server</strong></td><td>Who turns names like <code>example.com</code> into IP addresses?</td><td><code>192.168.1.1</code></td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <p>Coming from programming, you can treat these like a function's required parameters. Leave one out and the call still runs, but only some things work:</p>
+  <ul>
+    <li><strong>No gateway:</strong> local things work (the printer down the hall), but the internet doesn't.</li>
+    <li><strong>No working DNS:</strong> you can reach an IP address directly, but anything typed as a name fails. Since people use names for almost everything, it looks like "the internet is down."</li>
+  </ul>
+
+  <h2>Where the settings come from</h2>
+  <p>Almost nobody types these in by hand. A <strong>DHCP</strong> server hands all four out automatically when the device joins the network.<sup class="cite"><a href="#src-messer">[1]</a></sup> If the device asks and <em>no DHCP server answers</em>, Windows gives itself a fallback address in the range <code>169.254.0.0</code>–<code>169.254.255.255</code>. This fallback is called <strong>APIPA</strong>, a link-local address.<sup class="cite"><a href="#src-messer">[1]</a></sup> It has no gateway and no DNS server, so the device can reach almost nothing.</p>
+  <div class="callout win">
+    <span class="label">Rule of thumb</span>
+    <p>See <code>169.254.x.x</code>? The problem is the connection to DHCP (cable, Wi-Fi, switch port, or the DHCP server itself), not the user's account.</p>
+  </div>
+
+  <h2>Reading <code>ipconfig /all</code></h2>
+  <p>On Windows, <code>ipconfig /all</code> shows every setting for every adapter.<sup class="cite"><a href="#src-ms">[2]</a></sup> Here's a healthy adapter, with the four settings highlighted:</p>
+<pre><code>Ethernet adapter Ethernet:
+
+   Description . . . . . . . . . . . : Example Ethernet Controller
+   Physical Address. . . . . . . . . : 00-00-5E-00-53-2A
+   DHCP Enabled. . . . . . . . . . . : Yes
+   <span class="hl">IPv4 Address. . . . . . . . . . . : 192.168.1.42(Preferred)</span>
+   <span class="hl">Subnet Mask . . . . . . . . . . . : 255.255.255.0</span>
+   <span class="hl">Default Gateway . . . . . . . . . : 192.168.1.1</span>
+   DHCP Server . . . . . . . . . . . : 192.168.1.1
+   <span class="hl">DNS Servers . . . . . . . . . . . : 192.168.1.1</span></code></pre>
+  <p>And here's one where DHCP never answered:</p>
+<pre><code>Ethernet adapter Ethernet:
+
+   DHCP Enabled. . . . . . . . . . . : Yes
+   <span class="hl">Autoconfiguration IPv4 Address. . : 169.254.83.107(Preferred)</span>
+   Subnet Mask . . . . . . . . . . . : 255.255.0.0
+   <span class="hl">Default Gateway . . . . . . . . . :</span></code></pre>
+  <p class="sidenote">The gateway line is blank and the address starts with 169.254. Those two clues together mean APIPA.</p>
+
+  <h2>Try it (2 minutes)</h2>
+  <ol>
+    <li>Open a terminal on your own PC and run <code>ipconfig /all</code>.</li>
+    <li>Find your active adapter and point to each of the four settings.</li>
+    <li>Check: is <code>DHCP Enabled</code> set to <em>Yes</em>? Is your DNS server the same address as your gateway (common at home) or a different one (common at work)?</li>
+  </ol>
+  <p class="sidenote">Keep the output to yourself. Real addresses from a work network are exactly the kind of detail this public site never stores.</p>
+
+  <h2>Practice</h2>
+  <p>Answer from memory before scrolling back up. Struggling a little is what makes it stick.</p>
+
+  <section class="quiz">
+    <p class="q">A laptop shows <code>169.254.83.107</code> and a blank default gateway. What's the most likely cause?</p>
+    <ul class="choices">
+      <li><button class="choice">The DNS server is down</button></li>
+      <li><button class="choice" data-correct>No DHCP server answered it</button></li>
+      <li><button class="choice">The subnet mask is wrong</button></li>
+      <li><button class="choice">The user's password has expired</button></li>
+    </ul>
+    <div class="explain" hidden>A <code>169.254.x.x</code> address is APIPA: Windows made up its own address because DHCP never replied. Check the physical or Wi-Fi connection and the DHCP server. A password problem wouldn't change the IP address at all.</div>
+  </section>
+
+  <section class="quiz">
+    <p class="q">A user can open a site by typing its IP address, but typing its name gives "can't find server." Which setting is at fault?</p>
+    <ul class="choices">
+      <li><button class="choice">Default gateway is missing</button></li>
+      <li><button class="choice">Subnet mask is wrong</button></li>
+      <li><button class="choice" data-correct>DNS server is misconfigured</button></li>
+      <li><button class="choice">No IP address assigned</button></li>
+    </ul>
+    <div class="explain" hidden>Reaching the IP address proves the IP, mask and gateway all work: traffic is getting out. Only turning names into addresses fails, and that's DNS's job.</div>
+  </section>
+
+  <section class="quiz">
+    <p class="q">A PC can print to a printer on its own local network, but can't reach <em>any</em> internet address, even by IP. What's wrong?</p>
+    <ul class="choices">
+      <li><button class="choice">DNS server is unreachable</button></li>
+      <li><button class="choice">Account is locked out</button></li>
+      <li><button class="choice">DHCP lease is renewing</button></li>
+      <li><button class="choice" data-correct>Default gateway is wrong</button></li>
+    </ul>
+    <div class="explain" hidden>Local traffic works, so the IP address and mask are fine. Traffic leaving the local network goes through the default gateway. If even a raw IP address on the internet fails, the gateway is the suspect, not DNS.</div>
+  </section>
+
+  <section class="quiz">
+    <p class="q">Which setting tells a device whether another address is on its own local network?</p>
+    <ul class="choices">
+      <li><button class="choice" data-correct>Subnet mask</button></li>
+      <li><button class="choice">Default gateway</button></li>
+      <li><button class="choice">DNS server</button></li>
+      <li><button class="choice">DHCP server</button></li>
+    </ul>
+    <div class="explain" hidden>The subnet mask marks which part of the address identifies the network. The device compares that part of its own address with the destination's. If they match, the destination is local. If not, traffic goes to the gateway.</div>
+  </section>
+  <p class="quiz-score" data-quiz-score></p>
+
+  <details class="recall">
+    <summary>Close the page in your head: name all four settings and one symptom of each going wrong. <span class="hint">(then click to check)</span></summary>
+    <p><strong>IP address</strong>: nothing works, or a 169.254 address. <strong>Subnet mask</strong>: local devices look "remote" (or the other way round). <strong>Default gateway</strong>: local works, internet doesn't. <strong>DNS server</strong>: IP addresses work, names don't.</p>
+  </details>
+
+  <div class="callout source" id="src-messer">
+    <span class="label">Primary source: watch next</span>
+    <p>[1] Professor Messer, <a href="https://www.professormesser.com/free-a-plus-training/220-1201/220-1201-video/assigning-ip-addresses-220-1201/">Assigning IP Addresses (220-1201)</a>, 8 minutes. It covers exactly this lesson, plus DHCP reservations. Free.</p>
+    <p id="src-ms">[2] Microsoft Learn, <a href="https://learn.microsoft.com/en-us/windows-server/administration/windows-commands/ipconfig">ipconfig command reference</a>.</p>
+  </div>
+
+  <div class="callout ask">
+    <span class="label">Questions?</span>
+    <p>Anything unclear? Ask your teacher. Open Claude in the Teacher repo and ask, for example: <em>"In IT lesson 0001, why does APIPA use a 255.255.0.0 mask?"</em> Follow-up questions are part of the course.</p>
+  </div>
+</main>
+<nav class="page-footer">
+  <span class="disabled">← No earlier lesson</span>
+  <a href="../../index.html">Hub</a>
+  <span class="disabled">Next lesson: tomorrow →</span>
+</nav>
+</body>
+</html>

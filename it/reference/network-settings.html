@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Network Settings Cheat Sheet</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=JetBrains+Mono&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../assets/course.css">
+</head>
+<body class="track-it">
+<nav class="page-header"><a class="home" href="../../index.html">Teacher hub</a><span>IT and certs</span><a href="glossary.html">Glossary</a></nav>
+<main>
+  <p class="kicker">IT and certs · Reference</p>
+  <h1>Network settings cheat sheet</h1>
+  <p class="lede">The four settings, what breaks without each, and where to look. From <a href="../lessons/0001-four-ip-settings.html">lesson 0001</a>.</p>
+
+  <h2>The four settings</h2>
+  <div class="table-wrap">
+  <table>
+    <thead><tr><th>Setting</th><th>Job</th><th>If it's wrong</th></tr></thead>
+    <tbody>
+      <tr><td>IP address</td><td>Identifies this device</td><td>Nothing works; or APIPA <code>169.254.x.x</code></td></tr>
+      <tr><td>Subnet mask</td><td>Defines which addresses are local</td><td>Local devices unreachable or misrouted</td></tr>
+      <tr><td>Default gateway</td><td>Exit for all non-local traffic</td><td>Local works, internet doesn't (even by IP)</td></tr>
+      <tr><td>DNS server</td><td>Turns names into IP addresses</td><td>IP addresses work, names fail</td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <h2>Quick triage</h2>
+  <div class="table-wrap">
+  <table>
+    <thead><tr><th>You see</th><th>Suspect</th></tr></thead>
+    <tbody>
+      <tr><td><code>169.254.x.x</code> + blank gateway</td><td>DHCP not reached (cable, Wi-Fi, port, server)</td></tr>
+      <tr><td>Reach by IP works, by name fails</td><td>DNS</td></tr>
+      <tr><td>Local printer works, no internet at all</td><td>Default gateway</td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <h2>Commands (Windows)</h2>
+  <div class="table-wrap">
+  <table>
+    <tbody>
+      <tr><td><code>ipconfig /all</code></td><td>Show every setting on every adapter</td></tr>
+      <tr><td><code>ipconfig /release</code> then <code>ipconfig /renew</code></td><td>Drop and re-request a DHCP lease</td></tr>
+    </tbody>
+  </table>
+  </div>
+  <p class="sidenote">Sources: <a href="https://www.professormesser.com/free-a-plus-training/220-1201/220-1201-video/assigning-ip-addresses-220-1201/">Professor Messer, Assigning IP Addresses</a> · <a href="https://learn.microsoft.com/en-us/windows-server/administration/windows-commands/ipconfig">Microsoft Learn, ipconfig</a></p>
+</main>
+</body>
+</html>
