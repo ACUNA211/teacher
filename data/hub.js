@@ -1,7 +1,7 @@
 /* Hub data. The teacher updates this file after every lesson; index.html renders it.
    Keep it free of personal data: the site is public. */
 window.HUB = {
-  updated: "2026-09-26",
+  updated: "2026-09-27",
   tracks: [
     {
       id: "it", name: "IT and certs", folder: "it", cls: "track-it", status: "active",
@@ -30,6 +30,11 @@ window.HUB = {
       track: "it", num: "0001", date: "2026-09-26", covers: 1,
       title: "The four settings every device needs",
       path: "it/lessons/0001-four-ip-settings.html"
+    },
+    {
+      track: "it", num: "0002", date: "2026-09-27", covers: 1,
+      title: "TCP, UDP and the ports they deliver to",
+      path: "it/lessons/0002-tcp-udp-ports.html"
     }
   ]
 };

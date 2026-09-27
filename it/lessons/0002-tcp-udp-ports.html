@@ -1,0 +1,166 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>TCP, UDP and Ports</title>
+<meta name="description" content="IT lesson 0002: how IP, TCP, UDP and port numbers work together, and how to test a port with Test-NetConnection.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=JetBrains+Mono&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../assets/course.css">
+<script src="../../assets/quiz.js" defer></script>
+</head>
+<body class="track-it">
+<nav class="page-header">
+  <a class="home" href="../../index.html">Teacher hub</a>
+  <span>IT and certs</span>
+  <a href="../reference/glossary.html">Glossary</a>
+  <a href="../reference/network-settings.html">Cheat sheet</a>
+</nav>
+<main>
+  <p class="kicker">IT and certs · Lesson 0002 · A+ Core 1, objective 2.1</p>
+  <h1>TCP, UDP and the ports they deliver to</h1>
+  <p class="lede">About 10 minutes. By the end you can explain why "the server is up" and "the app works" are two different questions, and test the second one yourself.</p>
+
+  <div class="callout">
+    <span class="label">Why this matters at work</span>
+    <p>A user can reach a server (it answers a ping) but the app on it won't connect. The four settings from <a href="0001-four-ip-settings.html">lesson 0001</a> got traffic to the right <em>machine</em>. Getting it to the right <em>program</em> on that machine is a separate step, handled by port numbers. A firewall that blocks one port breaks one app while everything else looks fine.</p>
+  </div>
+
+  <h2>IP is the truck, TCP and UDP are the boxes</h2>
+  <p>An IP packet carries data from one address to another, like a truck that knows the street address but not which room the parcel is for.<sup class="cite"><a href="#src-messer">[1]</a></sup> Inside the packet rides a second layer: either <strong>TCP</strong> or <strong>UDP</strong>. Both add <strong>port numbers</strong>, which say which program should receive the data.</p>
+
+  <div class="table-wrap">
+  <table>
+    <thead><tr><th></th><th>TCP</th><th>UDP</th></tr></thead>
+    <tbody>
+      <tr><td><strong>Style</strong></td><td>Connection-oriented: sets up a conversation first</td><td>Connectionless: just sends</td></tr>
+      <tr><td><strong>Reliable?</strong></td><td>Yes. Lost data is re-sent, and data arrives in order</td><td>No. Lost data stays lost</td></tr>
+      <tr><td><strong>Flow control</strong></td><td>Yes. The receiver can say "slow down"</td><td>No</td></tr>
+      <tr><td><strong>Good for</strong></td><td>Web pages, email, file transfers, remote desktop</td><td>Live voice and video, DNS lookups, DHCP</td></tr>
+    </tbody>
+  </table>
+  </div>
+  <p>Coming from programming: TCP is like a function call that waits for a return value and retries on failure. UDP is fire-and-forget. For a phone call, a late packet is useless anyway, so UDP's speed wins over TCP's guarantees.<sup class="cite"><a href="#src-messer">[1]</a></sup></p>
+  <p class="sidenote">Remember DHCP from lesson 0001? It uses UDP. A device without an IP address can't set up a TCP conversation yet, so it shouts a UDP broadcast instead.</p>
+
+  <h2>Port numbers</h2>
+  <p>A port is a number from <strong>0 to 65,535</strong>, and TCP and UDP each have their own full set.<sup class="cite"><a href="#src-messer">[1]</a></sup> One server with one IP address can run a web server, a mail server and a file share at once, because each listens on its own port.</p>
+  <ul>
+    <li><strong>Non-ephemeral ports</strong> are permanent. Servers listen on them. The well-known ones are usually <code>0</code>–<code>1023</code>, such as <code>443</code> for HTTPS.<sup class="cite"><a href="#src-messer">[1]</a></sup></li>
+    <li><strong>Ephemeral ports</strong> are temporary. The client picks one at random for each connection so replies find their way back, then drops it when done.</li>
+  </ul>
+  <p>So every connection has two ends, each an address plus a port:</p>
+<pre><code>Client  192.0.2.10 : <span class="hl">51544</span>   (ephemeral, picked by the laptop)
+   ⇅  TCP
+Server  198.51.100.7 : <span class="hl">443</span>   (non-ephemeral, HTTPS)</code></pre>
+  <div class="callout win">
+    <span class="label">Rule of thumb</span>
+    <p>Ping works but the app doesn't? The machine is reachable, so suspect the <em>port</em>: the service isn't running, or a firewall blocks that port.</p>
+  </div>
+
+  <h2>Try it (2 minutes)</h2>
+  <p>PowerShell's <code>Test-NetConnection</code> tries to open a TCP connection to a port and tells you if it worked.<sup class="cite"><a href="#src-ms">[2]</a></sup></p>
+  <ol>
+    <li>Open PowerShell and run <code>Test-NetConnection example.com -Port 443</code>.</li>
+    <li>Look for <code>TcpTestSucceeded : True</code>. Something on that server answered on port 443.</li>
+    <li>Now try a port nothing listens on: <code>Test-NetConnection example.com -Port 8123</code>. It waits, then shows <code>False</code>.</li>
+  </ol>
+<pre><code>ComputerName     : example.com
+RemoteAddress    : 203.0.113.80
+<span class="hl">RemotePort       : 443</span>
+InterfaceAlias   : Ethernet
+SourceAddress    : 192.0.2.10
+<span class="hl">TcpTestSucceeded : True</span></code></pre>
+  <p class="sidenote">Addresses above are documentation examples. Your output will differ. It only tests TCP: there's no "connection" to test with UDP.</p>
+
+  <h2>Practice</h2>
+  <p>Answer from memory before scrolling back up.</p>
+
+  <section class="quiz">
+    <p class="q">A user's PC can ping a file server, but the file-sharing app times out. Other users connect fine. What's the best next suspect?</p>
+    <ul class="choices">
+      <li><button class="choice">The PC's DNS server fails</button></li>
+      <li><button class="choice" data-correct>A firewall blocks that port</button></li>
+      <li><button class="choice">The server's IP address changed</button></li>
+      <li><button class="choice">The PC has APIPA addressing</button></li>
+    </ul>
+    <div class="explain" hidden>A working ping proves the address, gateway and routing are fine, so DNS, IP changes and APIPA are ruled out. Reaching the machine but not the program points at the port: most often a firewall on this PC or path blocking it.</div>
+  </section>
+
+  <section class="quiz">
+    <p class="q">A video call stutters on a busy network, but it never pauses to re-send lost audio. Which protocol is it most likely using?</p>
+    <ul class="choices">
+      <li><button class="choice">TCP, because it's reliable</button></li>
+      <li><button class="choice">TCP, because it's ordered</button></li>
+      <li><button class="choice" data-correct>UDP, because it's connectionless</button></li>
+      <li><button class="choice">IP alone, without ports</button></li>
+    </ul>
+    <div class="explain" hidden>Live voice and video usually ride UDP. It doesn't re-send lost data, so you get a glitch instead of a delay. TCP would stop and re-send, which is worse for a live conversation. And IP alone has no ports, so it couldn't reach the app.</div>
+  </section>
+
+  <section class="quiz">
+    <p class="q">Your laptop opens two browser tabs to the same HTTPS server. How does it keep the two replies apart?</p>
+    <ul class="choices">
+      <li><button class="choice">Each tab uses different IP addresses</button></li>
+      <li><button class="choice">The server uses different listening ports</button></li>
+      <li><button class="choice">DNS returns two separate server names</button></li>
+      <li><button class="choice" data-correct>Each connection gets an ephemeral port</button></li>
+    </ul>
+    <div class="explain" hidden>Both tabs talk to the same server port (443). The laptop picks a different temporary, ephemeral port for each connection, so each reply comes back to the right tab.</div>
+  </section>
+
+  <section class="quiz">
+    <p class="q"><code>Test-NetConnection</code> to a server on port 3389 returns <code>TcpTestSucceeded : False</code>. What does that tell you for sure?</p>
+    <ul class="choices">
+      <li><button class="choice" data-correct>No TCP connection opened on that port</button></li>
+      <li><button class="choice">The server itself is switched off now</button></li>
+      <li><button class="choice">The user's account lacks the sign-in rights</button></li>
+      <li><button class="choice">The server's DNS record is missing entirely</button></li>
+    </ul>
+    <div class="explain" hidden>False only means the TCP connection to that port didn't open. The server may be on with the service stopped, or a firewall may block the port. Account rights come later, after a connection exists. A missing DNS record would fail earlier, before any port test.</div>
+  </section>
+  <p class="quiz-score" data-quiz-score></p>
+
+  <details class="recall">
+    <summary>From memory: give two differences between TCP and UDP, and the job of an ephemeral port. <span class="hint">(then click to check)</span></summary>
+    <p><strong>TCP</strong> is connection-oriented, reliable (re-sends, keeps order) and has flow control. <strong>UDP</strong> is connectionless, with no re-sending and no flow control, so it's lighter and faster. An <strong>ephemeral port</strong> is the temporary port a client picks for one connection, so the reply finds its way back.</p>
+  </details>
+
+  <h2>Review: earlier lessons</h2>
+  <p>Spaced retrieval: pull these from memory first, then check.</p>
+
+  <details class="recall">
+    <summary>A laptop's <code>ipconfig /all</code> shows <code>169.254.20.5</code> and a blank default gateway. What happened, and where do you look? <span class="hint">(<a href="0001-four-ip-settings.html">lesson 0001</a>)</span></summary>
+    <p>That's APIPA: no DHCP server answered, so Windows made up a link-local address. Look at the connection to DHCP (cable, Wi-Fi, switch port, or the DHCP server), not the user's account.</p>
+  </details>
+
+  <details class="recall">
+    <summary>A PC reaches websites by IP address but not by name. Which of the four settings is wrong? <span class="hint">(<a href="0001-four-ip-settings.html">lesson 0001</a>)</span></summary>
+    <p>DNS. Reaching an IP address proves the IP address, mask and gateway work. Only turning names into addresses fails.</p>
+  </details>
+
+  <details class="recall">
+    <summary>Name the four settings a device needs, and which one decides whether an address is local. <span class="hint">(<a href="0001-four-ip-settings.html">lesson 0001</a>)</span></summary>
+    <p>IP address, subnet mask, default gateway, DNS server. The <strong>subnet mask</strong> decides what's local; everything else goes to the gateway.</p>
+  </details>
+
+  <div class="callout source" id="src-messer">
+    <span class="label">Primary source: watch next</span>
+    <p>[1] Professor Messer, <a href="https://www.professormesser.com/free-a-plus-training/220-1201/220-1201-video/introduction-to-ip-220-1201/">Introduction to IP (220-1201)</a>. It covers exactly this lesson. Free. Next up in the course: <a href="https://www.professormesser.com/free-a-plus-training/220-1201/220-1201-video/common-ports-220-1201/">Common Ports</a>.</p>
+    <p id="src-ms">[2] Microsoft Learn, <a href="https://learn.microsoft.com/en-us/powershell/module/nettcpip/test-netconnection">Test-NetConnection reference</a>.</p>
+  </div>
+
+  <div class="callout ask">
+    <span class="label">Questions?</span>
+    <p>Anything unclear? Ask your teacher. Open Claude in the Teacher repo and ask, for example: <em>"In IT lesson 0002, why does DNS usually use UDP but sometimes TCP?"</em> Follow-up questions are part of the course.</p>
+  </div>
+</main>
+<nav class="page-footer">
+  <a href="0001-four-ip-settings.html">← The four settings every device needs</a>
+  <a href="../../index.html">Hub</a>
+  <span class="disabled">Next lesson: tomorrow →</span>
+</nav>
+</body>
+</html>

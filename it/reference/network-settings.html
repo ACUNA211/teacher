@@ -14,7 +14,7 @@
 <main>
   <p class="kicker">IT and certs · Reference</p>
   <h1>Network settings cheat sheet</h1>
-  <p class="lede">The four settings, what breaks without each, and where to look. From <a href="../lessons/0001-four-ip-settings.html">lesson 0001</a>.</p>
+  <p class="lede">The four settings, what breaks without each, and where to look. From lessons <a href="../lessons/0001-four-ip-settings.html">0001</a> and <a href="../lessons/0002-tcp-udp-ports.html">0002</a>.</p>
 
   <h2>The four settings</h2>
   <div class="table-wrap">
@@ -41,16 +41,31 @@
   </table>
   </div>
 
+  <h2>TCP vs UDP</h2>
+  <div class="table-wrap">
+  <table>
+    <thead><tr><th></th><th>TCP</th><th>UDP</th></tr></thead>
+    <tbody>
+      <tr><td>Style</td><td>Connection-oriented</td><td>Connectionless</td></tr>
+      <tr><td>Reliable, ordered</td><td>Yes (re-sends lost data)</td><td>No</td></tr>
+      <tr><td>Flow control</td><td>Yes</td><td>No</td></tr>
+      <tr><td>Typical uses</td><td>Web, email, file transfer, remote desktop</td><td>Live voice/video, DNS lookups, DHCP</td></tr>
+    </tbody>
+  </table>
+  </div>
+  <p>Ports: <code>0</code>–<code>65535</code> for each of TCP and UDP. Servers listen on <strong>non-ephemeral</strong> ports (well-known ones usually <code>0</code>–<code>1023</code>). Clients use a temporary <strong>ephemeral</strong> port per connection. Ping works but the app doesn't → suspect the port (service stopped or firewall).</p>
+
   <h2>Commands (Windows)</h2>
   <div class="table-wrap">
   <table>
     <tbody>
       <tr><td><code>ipconfig /all</code></td><td>Show every setting on every adapter</td></tr>
       <tr><td><code>ipconfig /release</code> then <code>ipconfig /renew</code></td><td>Drop and re-request a DHCP lease</td></tr>
+      <tr><td><code>Test-NetConnection host -Port 443</code></td><td>PowerShell: does a TCP connection to that port open? Read <code>TcpTestSucceeded</code></td></tr>
     </tbody>
   </table>
   </div>
-  <p class="sidenote">Sources: <a href="https://www.professormesser.com/free-a-plus-training/220-1201/220-1201-video/assigning-ip-addresses-220-1201/">Professor Messer, Assigning IP Addresses</a> · <a href="https://learn.microsoft.com/en-us/windows-server/administration/windows-commands/ipconfig">Microsoft Learn, ipconfig</a></p>
+  <p class="sidenote">Sources: <a href="https://www.professormesser.com/free-a-plus-training/220-1201/220-1201-video/assigning-ip-addresses-220-1201/">Professor Messer, Assigning IP Addresses</a> · <a href="https://learn.microsoft.com/en-us/windows-server/administration/windows-commands/ipconfig">Microsoft Learn, ipconfig</a> · <a href="https://www.professormesser.com/free-a-plus-training/220-1201/220-1201-video/introduction-to-ip-220-1201/">Professor Messer, Introduction to IP</a> · <a href="https://learn.microsoft.com/en-us/powershell/module/nettcpip/test-netconnection">Microsoft Learn, Test-NetConnection</a></p>
 </main>
 </body>
 </html>
