@@ -1,0 +1,179 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Types Are a Promise</title>
+<meta name="description" content="App building lesson 0001, build review for 2026-09-28: how two-player-bg-finder describes games.json with TypeScript types, loads it with fetch, and why the type checker only protects you at build time.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=JetBrains+Mono&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../assets/course.css">
+<script src="../../assets/quiz.js" defer></script>
+</head>
+<body class="track-app">
+<nav class="page-header">
+  <a class="home" href="../../index.html">Teacher hub</a>
+  <span>App building</span>
+  <a href="../reference/glossary.html">Glossary</a>
+</nav>
+<main>
+  <p class="kicker">App building · Lesson 0001 · Build review, week of 2026-09-21</p>
+  <h1>Types are a promise, not a check</h1>
+  <p class="lede">About 10 minutes. By the end you can read <code>types.ts</code> and the data-loading code in Board Games for Two, and you know which command catches a type mistake and which ones don't.</p>
+
+  <div class="callout">
+    <span class="label">What got built this week</span>
+    <p>A lot: <a href="https://github.com/ACUNA211/two-player-bg-finder">two-player-bg-finder</a> went from a plan to a deployed app in 22 commits. A Python scraper writes <code>web/public/games.json</code> (3,638 games), and a Vite + React app shows it as a sortable, filterable table. We'll skip the filter panel for now and look at the foundation everything else stands on: <strong>how the app knows what a game looks like</strong>. It came in <a href="https://github.com/ACUNA211/two-player-bg-finder/commit/1f93002">1f93002</a> (the web app) and changed in <a href="https://github.com/ACUNA211/two-player-bg-finder/commit/dfcae09">dfcae09</a> (the new two-player score).</p>
+  </div>
+
+  <h2>1. The JSON file and the type that describes it</h2>
+  <p>JSON is plain text for data: objects in <code>{ }</code> with <code>"key": value</code> pairs, arrays in <code>[ ]</code>, plus strings, numbers, <code>true</code>/<code>false</code> and <code>null</code>. One game in <code>games.json</code> looks like this (trimmed):</p>
+<pre><code>{"dump_date": "2026-09-25", "scrape_date": "2026-09-26",
+ "games": [{"id": 187645, "name": "Star Wars: Rebellion", "year": 2016,
+            "weight": 3.751, "mechanics": ["Dice Rolling", "Hand Management"], ...}]}</code></pre>
+  <p>The app describes that shape in <code>web/src/types.ts</code>:</p>
+<pre><code>// Mirrors the games.json schema in scraper/README.md.
+export type GamesFile = {
+  dump_date: string;
+  scrape_date: string;
+  games: Game[];
+};
+
+export type Game = {
+  score: number;
+  name: string;
+  year: <span class="hl">number | null</span>;
+  mechanics: string[];
+  ...
+};</code></pre>
+  <p>Reading it as a C# developer:</p>
+  <div class="table-wrap">
+  <table>
+    <thead><tr><th>TypeScript</th><th>Closest C#</th><th>Meaning</th></tr></thead>
+    <tbody>
+      <tr><td><code>export type Game = { ... }</code></td><td><code>public record Game { ... }</code></td><td>A named shape. <code>export</code> lets other files <code>import</code> it, like <code>public</code>.</td></tr>
+      <tr><td><code>number</code></td><td><code>double</code></td><td>JavaScript has one number type for ints and decimals.</td></tr>
+      <tr><td><code>number | null</code></td><td><code>int?</code></td><td>A <em>union</em>: either a number or <code>null</code>. Some games have no year on record.</td></tr>
+      <tr><td><code>string[]</code></td><td><code>string[]</code> / <code>List&lt;string&gt;</code></td><td>An array of strings. JS arrays grow, like a <code>List</code>.</td></tr>
+    </tbody>
+  </table>
+  </div>
+  <p>Why a separate file? Every component (<code>GamesTable</code>, <code>GamesBrowser</code>, <code>filters.ts</code>) imports <code>Game</code> from one place, so the editor can autocomplete <code>g.poll_score</code> and the compiler can flag <code>g.pol_score</code>. When the scraper started writing three new fields in <a href="https://github.com/ACUNA211/two-player-bg-finder/commit/dfcae09">dfcae09</a>, the same commit added them here:</p>
+<pre><code>   score: number;
+<span class="hl">+  poll_score: number;
++  poll_pct: number;
++  geek_pct: number;</span></code></pre>
+  <p>That "change the JSON, change the type in the same commit" habit is the whole point of this lesson, because <strong>nothing else keeps them in sync</strong>.</p>
+
+  <h2>2. Where the JSON enters the app</h2>
+  <p><code>web/src/App.tsx</code> downloads the file when the page opens:</p>
+<pre><code>const [data, setData] = useState&lt;GamesFile | null&gt;(null);
+const [error, setError] = useState&lt;string | null&gt;(null);
+
+useEffect(() =&gt; {
+  fetch("/games.json")
+    .then((r) =&gt; (r.ok ? <span class="hl">r.json()</span> : Promise.reject(new Error(`HTTP ${r.status}`))))
+    .then(setData, (e: Error) =&gt; setError(e.message));
+}, []);</code></pre>
+  <ul>
+    <li><code>useState&lt;GamesFile | null&gt;(null)</code>: a piece of component state that starts as <code>null</code> ("not loaded yet"). The <code>&lt;...&gt;</code> is a generic type argument, exactly like C#'s <code>List&lt;Game&gt;</code>. It returns a pair, unpacked with <code>const [data, setData] = ...</code> (like a C# tuple deconstruction).<sup class="cite"><a href="#src-react">[1]</a></sup></li>
+    <li><code>(r) =&gt; ...</code> is an arrow function, the same as a C# lambda.</li>
+    <li><code>fetch(...)</code> returns a <em>Promise</em>, JavaScript's <code>Task</code>. <code>.then(onSuccess, onFailure)</code> is like <code>ContinueWith</code>: run this when the value arrives.</li>
+    <li><code>useEffect(..., [])</code> runs the code after the component first appears on screen. The empty array means "no dependencies, so don't run it again".<sup class="cite"><a href="#src-react">[1]</a></sup></li>
+  </ul>
+  <p>Now the key line. The type library that ships with TypeScript declares <code>json(): Promise&lt;any&gt;</code>. <code>any</code> means "don't check this". So when <code>setData</code> receives the parsed file, TypeScript simply <strong>believes</strong> it's a <code>GamesFile</code>. Nothing looks inside.</p>
+
+  <div class="callout win">
+    <span class="label">The big idea</span>
+    <p>In C#, <code>JsonSerializer.Deserialize&lt;Game&gt;()</code> builds a real <code>Game</code> object, and the type exists at runtime. TypeScript types are <strong>erased</strong>: the compiler checks them, then deletes them, and the browser runs plain JavaScript.<sup class="cite"><a href="#src-ts">[2]</a></sup> So <code>types.ts</code> is a promise about <code>games.json</code>, and only you (and the scraper) keep it.</p>
+  </div>
+
+  <h2>Which command checks the types?</h2>
+  <p>Look at the scripts in <code>web/package.json</code>:</p>
+<pre><code>"build": "<span class="hl">tsc -b</span> &amp;&amp; vite build",
+"test": "vitest run"</code></pre>
+  <p><code>tsc -b</code> is the TypeScript compiler, run only to type-check (the <code>tsconfig.json</code> has <code>"noEmit": true</code>). Then Vite bundles. <strong>Vitest strips the types without checking them</strong>, so <code>npm test</code> can pass while the build fails.<sup class="cite"><a href="#src-vitest">[3]</a></sup> I tried it on the repo: deleting <code>poll_pct</code> from <code>types.ts</code> leaves all 23 tests green, while <code>tsc</code> reports three errors. And neither command reads <code>public/games.json</code>: it's fetched in the browser, outside the compiler's view.</p>
+
+  <h2>Practice</h2>
+  <section class="quiz">
+    <p class="q">What does <code>&lt;GamesFile | null&gt;</code> tell TypeScript in <code>useState&lt;GamesFile | null&gt;(null)</code>?</p>
+    <ul class="choices">
+      <li><button class="choice">Checks at runtime that JSON matches GamesFile</button></li>
+      <li><button class="choice" data-correct>Says data holds a GamesFile or nothing</button></li>
+      <li><button class="choice">Downloads games.json before the component first renders</button></li>
+      <li><button class="choice">Makes data a list of GamesFile objects</button></li>
+    </ul>
+    <div class="explain" hidden>It's a generic type argument with a union: <code>data</code> is either a <code>GamesFile</code> or <code>null</code> (not loaded yet). It checks nothing at runtime, downloads nothing (that's <code>fetch</code>), and a list would be <code>GamesFile[]</code>.</div>
+  </section>
+
+  <section class="quiz">
+    <p class="q">The scraper renames <code>poll_pct</code> to <code>poll_percent</code> in <code>games.json</code>, but nobody updates <code>types.ts</code>. You run <code>npm test</code> and <code>npm run build</code>. What happens?</p>
+    <ul class="choices">
+      <li><button class="choice">Tests fail, because Vitest checks every type</button></li>
+      <li><button class="choice">Build fails, because tsc reads the JSON</button></li>
+      <li><button class="choice" data-correct>Both pass, then the browser page crashes</button></li>
+      <li><button class="choice">Both fail, since the types stop matching</button></li>
+    </ul>
+    <div class="explain" hidden>The tests build their own fake games, and <code>tsc</code> never sees <code>games.json</code> (it's fetched at runtime). In the browser, <code>g.poll_pct</code> is now <code>undefined</code>, and <code>pct(v)</code> in <code>GamesTable.tsx</code> calls <code>v.toFixed(1)</code> on it: a TypeError ("Cannot read properties of undefined") while rendering the table.</div>
+  </section>
+
+  <section class="quiz">
+    <p class="q">What breaks if we delete the <code>, []</code> at the end of the <code>useEffect</code> call in <code>App.tsx</code>?</p>
+    <ul class="choices">
+      <li><button class="choice">Nothing; empty arrays are simply ignored</button></li>
+      <li><button class="choice">It never fetches games.json at all</button></li>
+      <li><button class="choice">TypeScript refuses to compile the component</button></li>
+      <li><button class="choice" data-correct>It fetches again after every render</button></li>
+    </ul>
+    <div class="explain" hidden>With no dependency array, an effect runs after <em>every</em> render.<sup class="cite"><a href="#src-react">[1]</a></sup> Here <code>setData</code> stores a new object, which causes a re-render, which runs the effect, which fetches again: a loop of downloads. The <code>[]</code> means "only after the first render". It still compiles either way.</div>
+  </section>
+
+  <section class="quiz">
+    <p class="q">The Year column renders <code>c.getValue() ?? "–"</code>, where the value comes from <code>year: number | null</code>. What does <code>??</code> do?</p>
+    <ul class="choices">
+      <li><button class="choice" data-correct>Shows a dash when year is null</button></li>
+      <li><button class="choice">Throws an error when year is null</button></li>
+      <li><button class="choice">Shows a dash when year is zero</button></li>
+      <li><button class="choice">Asks TypeScript to guess a missing year</button></li>
+    </ul>
+    <div class="explain" hidden>It's the same null-coalescing operator as C#: use the right side only when the left is <code>null</code> or <code>undefined</code>. A year of <code>0</code> would still show <code>0</code>. (<code>num()</code> turns <code>null</code> into <code>undefined</code> first so the table sorts missing years last.) The <code>| null</code> in the type is what reminds the author to handle it.</div>
+  </section>
+  <p class="quiz-score" data-quiz-score></p>
+
+  <h2>Try it in your copy (5 minutes)</h2>
+  <ol>
+    <li>In your local <code>two-player-bg-finder</code>, <code>cd web</code> and run <code>npm install</code> if you haven't.</li>
+    <li>Open <code>src/types.ts</code> and delete the line <code>poll_pct: number;</code>.</li>
+    <li><strong>Predict first</strong>, then run <code>npm test</code>, then <code>npx tsc -b</code>. Which one complains, and in which files?</li>
+    <li>Undo the change (<code>git checkout src/types.ts</code>).</li>
+  </ol>
+  <details class="recall">
+    <summary>What should you see? <span class="hint">(after running it)</span></summary>
+    <p><code>npm test</code>: 23 passed. <code>npx tsc -b</code>: three errors. <code>GamesTable.tsx</code> says <em>Property 'poll_pct' does not exist on type 'Game'</em>, and both test files say <em>Object literal may only specify known properties</em>, because their fake <code>game()</code> helpers still set <code>poll_pct</code>. Takeaway: before trusting a green test run, run <code>npm run build</code> too.</p>
+  </details>
+
+  <details class="recall">
+    <summary>From memory: why can't TypeScript warn you when <code>games.json</code> stops matching <code>types.ts</code>? <span class="hint">(then click to check)</span></summary>
+    <p>Types are erased before the code runs, the file arrives at runtime through <code>fetch</code>, and <code>r.json()</code> is typed <code>any</code>, so the compiler never compares the real data to the type.</p>
+  </details>
+
+  <div class="callout source" id="src-ts">
+    <span class="label">Primary source: read next</span>
+    <p>[2] TypeScript Handbook, <a href="https://www.typescriptlang.org/docs/handbook/2/basic-types.html#erased-types">The Basics: Erased Types</a>, then <a href="https://www.typescriptlang.org/docs/handbook/2/everyday-types.html">Everyday Types</a> for unions and arrays. About 15 minutes, and it covers every type syntax in <code>types.ts</code>.</p>
+    <p id="src-react">[1] react.dev, <a href="https://react.dev/reference/react/useState">useState</a> and <a href="https://react.dev/reference/react/useEffect">useEffect</a> (see "dependencies").</p>
+    <p id="src-vitest">[3] Vitest Guide, <a href="https://vitest.dev/guide/testing-types">Testing Types</a>: type checking is a separate, opt-in mode. Also confirmed by running both commands on the repo.</p>
+  </div>
+
+  <div class="callout ask">
+    <span class="label">Questions?</span>
+    <p>Anything unclear? Ask your teacher. Open Claude in the Teacher repo and ask, for example: <em>"In app lesson 0001, how could the app check games.json at runtime instead of just trusting it?"</em> Follow-up questions are part of the course.</p>
+  </div>
+</main>
+<nav class="page-footer">
+  <span class="disabled">First app-building lesson</span>
+  <a href="../../index.html">Hub</a>
+  <span class="disabled">Next build review: next Monday →</span>
+</nav>
+</body>
+</html>

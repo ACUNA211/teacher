@@ -40,6 +40,11 @@ window.HUB = {
       track: "it", num: "0003", date: "2026-09-28", covers: 0,
       title: "Web and remote access ports",
       path: "it/lessons/0003-web-remote-ports.html"
+    },
+    {
+      track: "app", num: "0001", date: "2026-09-28", covers: 0,
+      title: "Build review: types are a promise, not a check",
+      path: "app-building/lessons/0001-build-review-2026-09-28.html"
     }
   ]
 };
