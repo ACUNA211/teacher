@@ -70,6 +70,20 @@
   </table>
   </div>
 
+  <h2>Common ports: email, DNS and DHCP</h2>
+  <div class="table-wrap">
+  <table>
+    <thead><tr><th>Port</th><th>Protocol</th><th>Transport</th><th>Use</th></tr></thead>
+    <tbody>
+      <tr><td><code>25</code></td><td>SMTP</td><td>TCP</td><td>Send mail; server-to-server relay (<code>587</code> = client submission with sign-in)</td></tr>
+      <tr><td><code>53</code></td><td>DNS</td><td>UDP (TCP for large answers, zone transfers)</td><td>Name to IP address</td></tr>
+      <tr><td><code>67</code>, <code>68</code></td><td>DHCP</td><td>UDP</td><td>Automatic IP settings (67 server, 68 client)</td></tr>
+      <tr><td><code>110</code></td><td>POP3</td><td>TCP</td><td>Fetch mail to one device (<code>995</code> over TLS)</td></tr>
+      <tr><td><code>143</code></td><td>IMAP</td><td>TCP</td><td>Fetch mail, kept on server and synced (<code>993</code> over TLS)</td></tr>
+    </tbody>
+  </table>
+  </div>
+
   <h2>Commands (Windows)</h2>
   <div class="table-wrap">
   <table>
@@ -78,6 +92,7 @@
       <tr><td><code>ipconfig /release</code> then <code>ipconfig /renew</code></td><td>Drop and re-request a DHCP lease</td></tr>
       <tr><td><code>Test-NetConnection host -Port 443</code></td><td>PowerShell: does a TCP connection to that port open? Read <code>TcpTestSucceeded</code></td></tr>
       <tr><td><code>Get-NetTCPConnection -State Established</code></td><td>PowerShell: list open TCP connections with local and remote ports</td></tr>
+      <tr><td><code>Resolve-DnsName name</code> (<code>-Type MX</code> for mail servers)</td><td>PowerShell: ask DNS for a name's records</td></tr>
     </tbody>
   </table>
   </div>

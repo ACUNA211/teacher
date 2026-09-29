@@ -1,0 +1,170 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Email, DNS and DHCP Ports</title>
+<meta name="description" content="IT lesson 0004: the ports behind email (SMTP, POP3, IMAP), name lookups (DNS) and automatic addressing (DHCP), and why DNS and DHCP use UDP.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=JetBrains+Mono&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../assets/course.css">
+<script src="../../assets/quiz.js" defer></script>
+</head>
+<body class="track-it">
+<nav class="page-header">
+  <a class="home" href="../../index.html">Teacher hub</a>
+  <span>IT and certs</span>
+  <a href="../reference/glossary.html">Glossary</a>
+  <a href="../reference/network-settings.html">Cheat sheet</a>
+</nav>
+<main>
+  <p class="kicker">IT and certs · Lesson 0004 · A+ Core 1, objective 2.1</p>
+  <h1>Email, DNS and DHCP ports</h1>
+  <p class="lede">About 10 minutes. By the end you know the ports that send and fetch email, the port that turns names into addresses, and the two ports a device uses to get its IP settings in the first place.</p>
+
+  <div class="callout">
+    <span class="label">Why this matters at work</span>
+    <p>Two of the four settings from <a href="0001-four-ip-settings.html">lesson 0001</a> come from these protocols: DHCP hands out the address, DNS finds everything by name. And a classic helpdesk ticket, "my scanner (or an old app) can't send email any more", is almost always about SMTP: which port it uses and whether it still signs in the old way. Microsoft 365 turned off basic (password-only) sign-in for POP and IMAP in 2022 and is doing the same by default for SMTP sign-in at the end of 2026.<sup class="cite"><a href="#src-exo">[3]</a></sup></p>
+  </div>
+
+  <h2>Email: one port to send, two ways to fetch</h2>
+  <p>Email uses separate protocols for <strong>sending</strong> and <strong>reading</strong>. All three run over TCP.<sup class="cite"><a href="#src-messer">[1]</a></sup></p>
+
+  <div class="table-wrap">
+  <table>
+    <thead><tr><th>Port</th><th>Protocol</th><th>Job</th></tr></thead>
+    <tbody>
+      <tr><td><code>25</code></td><td>SMTP</td><td><strong>Send</strong> mail, and pass it between mail servers</td></tr>
+      <tr><td><code>110</code></td><td>POP3</td><td><strong>Fetch</strong> mail: download it to one device</td></tr>
+      <tr><td><code>143</code></td><td>IMAP</td><td><strong>Fetch</strong> mail: keep it on the server, synced to every device</td></tr>
+    </tbody>
+  </table>
+  </div>
+  <p><strong>POP3 vs IMAP</strong> is a favourite exam question. POP3 is "post office": you collect the mail and take it home, typically removing it from the server. IMAP leaves the mail and its folders on the server, so phone, laptop and web see the same inbox.<sup class="cite"><a href="#src-ports">[4]</a></sup> Anyone with more than one device wants IMAP.</p>
+  <p class="sidenote">Beyond the exam list: those three are the plain versions. In real setups you'll see the encrypted ones: <code>587</code> for a mail app submitting mail with a sign-in,<sup class="cite"><a href="#src-587">[5]</a></sup> <code>993</code> for IMAP over TLS and <code>995</code> for POP3 over TLS.<sup class="cite"><a href="#src-ports">[4]</a></sup> Same idea as HTTP 80 vs HTTPS 443 from <a href="0003-web-remote-ports.html">lesson 0003</a>.</p>
+
+  <h2>DNS and DHCP: the two that use UDP</h2>
+  <div class="table-wrap">
+  <table>
+    <thead><tr><th>Port</th><th>Protocol</th><th>Transport</th><th>Job</th></tr></thead>
+    <tbody>
+      <tr><td><code>53</code></td><td>DNS</td><td>UDP (TCP for big answers)</td><td>Turn a name into an IP address</td></tr>
+      <tr><td><code>67</code>, <code>68</code></td><td>DHCP</td><td>UDP</td><td>Hand a device its IP settings automatically</td></tr>
+    </tbody>
+  </table>
+  </div>
+  <p><strong>DNS</strong> lookups are tiny, one question and one answer, so UDP's no-handshake speed wins. When an answer is too big for one UDP packet, or when DNS servers copy whole zones to each other, DNS switches to TCP 53.<sup class="cite"><a href="#src-dns">[2]</a></sup> For the exam: "DNS, 53, mostly UDP".</p>
+  <p><strong>DHCP</strong> has two ports: the <strong>server listens on 67</strong> and the <strong>client listens on 68</strong>.<sup class="cite"><a href="#src-dhcp">[6]</a></sup> It has to be UDP: a device asking for an address doesn't <em>have</em> an address yet, so it can't set up a TCP connection. It just broadcasts "is there a DHCP server out there?" and waits.</p>
+
+  <div class="callout win">
+    <span class="label">Memory hooks</span>
+    <p><strong>25</strong>: SMTP sends. <strong>110 &lt; 143</strong>: the older POP3 has the smaller number, the newer IMAP the bigger one. <strong>53</strong>: DNS. <strong>67/68</strong>: DHCP, server first, then client.</p>
+  </div>
+
+  <h2>Try it (2 minutes)</h2>
+  <p>See DNS and DHCP at work on your own PC.<sup class="cite"><a href="#src-ms">[7]</a></sup></p>
+  <ol>
+    <li>Run <code>ipconfig /all</code> and find your adapter. The <code>DHCP Server</code> line is the machine that answered your port-67 broadcast; <code>DNS Servers</code> is where your port-53 questions go.</li>
+    <li>In PowerShell, ask DNS for a website's address: <code>Resolve-DnsName example.com</code>. That was one small UDP 53 exchange.</li>
+    <li>Now ask where a domain's email goes: <code>Resolve-DnsName -Type MX</code> followed by a domain you use for email. The <code>NameExchange</code> column is the mail server other servers deliver to over SMTP 25.</li>
+  </ol>
+<pre><code>Name             Type  NameExchange                   Preference
+----             ----  ------------                   ----------
+example.net      MX    <span class="hl">mail.example.net</span>               10</code></pre>
+  <p class="sidenote">Your output will differ. If <code>ipconfig</code> shows no DHCP server and a <code>169.254.x.x</code> address, you already know the story from lesson 0001: the port-67 broadcast got no answer.</p>
+
+  <h2>Practice</h2>
+  <p>Answer from memory before scrolling back up.</p>
+
+  <section class="quiz">
+    <p class="q">A user reads email on a laptop and a phone. Messages read on the laptop never show up on the phone. Which fetch protocol is the laptop probably using?</p>
+    <ul class="choices">
+      <li><button class="choice">IMAP on TCP port 143</button></li>
+      <li><button class="choice" data-correct>POP3 on TCP port 110</button></li>
+      <li><button class="choice">SMTP on TCP port 25</button></li>
+      <li><button class="choice">DNS on UDP port 53</button></li>
+    </ul>
+    <div class="explain" hidden>POP3 downloads mail to one device and usually removes it from the server, so the phone never sees it. IMAP keeps mail on the server and syncs every device. SMTP only sends, and DNS isn't email at all.</div>
+  </section>
+
+  <section class="quiz">
+    <p class="q">A multifunction printer's scan-to-email feature stopped working. Receiving mail isn't involved. Which protocol should you check first?</p>
+    <ul class="choices">
+      <li><button class="choice">IMAP, the protocol for reading mail</button></li>
+      <li><button class="choice">DHCP, the protocol for addressing devices</button></li>
+      <li><button class="choice" data-correct>SMTP, the protocol for sending mail</button></li>
+      <li><button class="choice">POP3, the protocol for downloading mail</button></li>
+    </ul>
+    <div class="explain" hidden>Scan-to-email only sends, and sending is SMTP (port 25, or 587 with a sign-in). IMAP and POP3 are for fetching mail. DHCP matters only if the printer has no IP address at all.</div>
+  </section>
+
+  <section class="quiz">
+    <p class="q">A firewall rule allows only TCP traffic. New laptops on that network end up with <code>169.254.x.x</code> addresses. Why?</p>
+    <ul class="choices">
+      <li><button class="choice">DNS needs TCP port 110 open</button></li>
+      <li><button class="choice">SMTP needs UDP port 25 open</button></li>
+      <li><button class="choice">DNS needs TCP port 143 open</button></li>
+      <li><button class="choice" data-correct>DHCP needs UDP ports 67/68 open</button></li>
+    </ul>
+    <div class="explain" hidden>DHCP runs over UDP 67 (server) and 68 (client). Block UDP and the laptops never get a lease, so they fall back to an APIPA 169.254 address. 110 is POP3, 143 is IMAP, and SMTP uses TCP.</div>
+  </section>
+
+  <section class="quiz">
+    <p class="q">Why does DNS normally use UDP port 53 rather than TCP?</p>
+    <ul class="choices">
+      <li><button class="choice" data-correct>Lookups are tiny, so skipping handshakes is faster</button></li>
+      <li><button class="choice">UDP encrypts every lookup, so it's much safer</button></li>
+      <li><button class="choice">TCP cannot carry names, so it isn't allowed</button></li>
+      <li><button class="choice">Routers block TCP 53, so UDP always works</button></li>
+    </ul>
+    <div class="explain" hidden>A lookup is one small question and one small answer, so TCP's setup would cost more than the data. UDP adds no encryption, and DNS does use TCP 53 for large answers and zone transfers.</div>
+  </section>
+  <p class="quiz-score" data-quiz-score></p>
+
+  <details class="recall">
+    <summary>From memory: give the ports for SMTP, POP3, IMAP, DNS and DHCP, and say which use UDP. <span class="hint">(then click to check)</span></summary>
+    <p>SMTP <code>25</code>, POP3 <code>110</code>, IMAP <code>143</code> (all TCP). DNS <code>53</code> (mostly UDP) and DHCP <code>67</code>/<code>68</code> (UDP).</p>
+  </details>
+
+  <h2>Review: earlier lessons</h2>
+  <p>Spaced retrieval: pull these from memory first, then check.</p>
+
+  <details class="recall">
+    <summary>Which two console protocols do the same job, which one should you use, and on what ports? <span class="hint">(<a href="0003-web-remote-ports.html">lesson 0003</a>, yesterday)</span></summary>
+    <p>Telnet (<code>23</code>) and SSH (<code>22</code>). Use SSH: it encrypts the whole session, while Telnet sends everything, passwords included, in plain text.</p>
+  </details>
+
+  <details class="recall">
+    <summary>A user can browse the web but Remote Desktop to their office PC times out. Which port do you suspect? <span class="hint">(<a href="0003-web-remote-ports.html">lesson 0003</a>, yesterday)</span></summary>
+    <p>TCP <code>3389</code>, RDP. Browsing works, so 443 is fine.</p>
+  </details>
+
+  <details class="recall">
+    <summary>A PC can reach a server by IP address but not by name. Which of the four settings is the suspect? <span class="hint">(<a href="0001-four-ip-settings.html">lesson 0001</a>, 3 days ago)</span></summary>
+    <p>The DNS server. Addresses work, names don't, so the name-to-address step is failing. Today you learned that step travels on port 53.</p>
+  </details>
+
+  <div class="callout source" id="src-messer">
+    <span class="label">Primary source: watch next</span>
+    <p>[1] Professor Messer, <a href="https://www.professormesser.com/free-a-plus-training/220-1201/220-1201-video/common-ports-220-1201/">Common Ports (220-1201)</a>. Free. Watch the email, DNS and DHCP part now; the next lesson finishes the video with the file-sharing and directory ports (NetBIOS, SMB, LDAP), the ones behind sign-in and shared drives.</p>
+    <p id="src-dns">[2] DNS on UDP and TCP 53: <a href="https://www.techtarget.com/searchnetworking/tip/Why-does-DNS-use-TCP-Port-53-and-UDP-Port-53">TechTarget, Why does DNS use TCP port 53 and UDP port 53?</a></p>
+    <p id="src-exo">[3] Microsoft Learn, <a href="https://learn.microsoft.com/en-us/exchange/clients-and-mobile-in-exchange-online/deprecation-of-basic-authentication-exchange-online">Deprecation of Basic authentication in Exchange Online</a>, and the Exchange team's <a href="https://techcommunity.microsoft.com/blog/exchange/updated-exchange-online-smtp-auth-basic-authentication-deprecation-timeline/4489835">SMTP AUTH timeline</a>.</p>
+    <p id="src-ports">[4] POP3 vs IMAP and their TLS ports: <a href="https://www.howtonetwork.com/comptia-network-study-guide-free/port-numbers-and-network-protocols/">How To Network, Port numbers and network protocols</a>.</p>
+    <p id="src-587">[5] <a href="https://www.rfc-editor.org/rfc/rfc6409.html">RFC 6409, Message Submission for Mail</a> (port 587).</p>
+    <p id="src-dhcp">[6] <a href="https://www.rfc-editor.org/rfc/rfc2131">RFC 2131, Dynamic Host Configuration Protocol</a> (server port 67, client port 68).</p>
+    <p id="src-ms">[7] Microsoft Learn, <a href="https://learn.microsoft.com/en-us/powershell/module/dnsclient/resolve-dnsname">Resolve-DnsName reference</a> and <a href="https://learn.microsoft.com/en-us/windows-server/administration/windows-commands/ipconfig">ipconfig reference</a>.</p>
+  </div>
+
+  <div class="callout ask">
+    <span class="label">Questions?</span>
+    <p>Anything unclear? Ask your teacher. Open Claude in the Teacher repo and ask, for example: <em>"In IT lesson 0004, walk me through the four DHCP messages a laptop sends when it joins Wi-Fi."</em> Follow-up questions are part of the course.</p>
+  </div>
+</main>
+<nav class="page-footer">
+  <a href="0003-web-remote-ports.html">← Web and remote access ports</a>
+  <a href="../../index.html">Hub</a>
+  <span class="disabled">Next lesson: tomorrow →</span>
+</nav>
+</body>
+</html>
