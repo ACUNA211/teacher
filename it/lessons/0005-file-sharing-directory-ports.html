@@ -1,0 +1,176 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>File Sharing and Directory Ports</title>
+<meta name="description" content="IT lesson 0005: the ports behind Windows file sharing (NetBIOS 137-139, SMB 445) and directory lookups (LDAP 389, LDAPS 636). Finishes the Common Ports list.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=JetBrains+Mono&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../assets/course.css">
+<script src="../../assets/quiz.js" defer></script>
+</head>
+<body class="track-it">
+<nav class="page-header">
+  <a class="home" href="../../index.html">Teacher hub</a>
+  <span>IT and certs</span>
+  <a href="../reference/glossary.html">Glossary</a>
+  <a href="../reference/network-settings.html">Cheat sheet</a>
+</nav>
+<main>
+  <p class="kicker">IT and certs · Lesson 0005 · A+ Core 1, objective 2.1</p>
+  <h1>File sharing and directory ports</h1>
+  <p class="lede">About 10 minutes. The last group of exam ports: the ones that open shared drives (NetBIOS and SMB) and the ones that look up users and groups in a directory (LDAP and LDAPS). After today you have the whole Common Ports list.</p>
+
+  <div class="callout">
+    <span class="label">Why this matters at work</span>
+    <p>"I can sign in but the shared drive won't open" and "the app can't find my account" are two different problems on two different ports. Shared drives speak <strong>SMB</strong>. Classic on-premises Active Directory answers questions over <strong>LDAP</strong>, and many companies still run it and sync it to Entra ID.<sup class="cite"><a href="#src-ldap">[3]</a></sup> Entra ID itself is a cloud service that apps reach over HTTPS 443, not LDAP, which is worth knowing when an older app "needs LDAP" and there's no on-premises directory to point it at.</p>
+  </div>
+
+  <h2>File sharing: old NetBIOS, modern SMB</h2>
+  <p><strong>SMB</strong> (Server Message Block) is the Windows file and printer sharing protocol: every <code>\\server\share</code> path and mapped drive uses it. It can travel two ways.<sup class="cite"><a href="#src-messer">[1]</a></sup></p>
+
+  <div class="table-wrap">
+  <table>
+    <thead><tr><th>Port</th><th>Protocol</th><th>Transport</th><th>Job</th></tr></thead>
+    <tbody>
+      <tr><td><code>137</code></td><td>NetBIOS name service</td><td>UDP</td><td>Find a computer by its short NetBIOS name</td></tr>
+      <tr><td><code>138</code></td><td>NetBIOS datagram service</td><td>UDP</td><td>Small connectionless messages and broadcasts</td></tr>
+      <tr><td><code>139</code></td><td>NetBIOS session service</td><td>TCP</td><td>Carry SMB the old way, over NetBIOS</td></tr>
+      <tr><td><code>445</code></td><td>SMB (direct)</td><td>TCP</td><td>Carry SMB straight over TCP, no NetBIOS</td></tr>
+    </tbody>
+  </table>
+  </div>
+  <p>The three NetBIOS ports together are called <strong>NetBIOS over TCP/IP</strong> (NetBT), from a 1987 standard.<sup class="cite"><a href="#src-nbt">[2]</a></sup> Since Windows 2000, Windows can run SMB <strong>directly on TCP 445</strong> and skip NetBIOS entirely. If both are enabled, Windows tries both at once and uses whichever answers first, so it can still talk to old systems.<sup class="cite"><a href="#src-direct">[4]</a></sup> For the exam: "NetBIOS 137–139 is the legacy path, SMB 445 is the modern one."</p>
+  <p class="sidenote">Security note for later (Security+ territory): SMB is for inside networks. Port 445 should never be reachable from the internet, which is why firewalls and ISPs commonly block it.</p>
+
+  <h2>Directory: LDAP and LDAPS</h2>
+  <div class="table-wrap">
+  <table>
+    <thead><tr><th>Port</th><th>Protocol</th><th>Transport</th><th>Encrypted</th></tr></thead>
+    <tbody>
+      <tr><td><code>389</code></td><td>LDAP</td><td>TCP (UDP for some small lookups)</td><td>No, by default</td></tr>
+      <tr><td><code>636</code></td><td>LDAPS (LDAP over TLS)</td><td>TCP</td><td>Yes, from the first byte</td></tr>
+    </tbody>
+  </table>
+  </div>
+  <p><strong>LDAP</strong> (Lightweight Directory Access Protocol) is how software asks a directory questions: "does this user exist?", "which groups are they in?", "what's this person's department?". Active Directory uses LDAP as its core query protocol.<sup class="cite"><a href="#src-ldap">[3]</a></sup> Plain LDAP on 389 is unencrypted, so a sign-in check can cross the network readable. <strong>LDAPS</strong> wraps the same protocol in TLS on port 636: the same pattern as HTTP 80 vs HTTPS 443.<sup class="cite"><a href="#src-ldaps">[5]</a></sup></p>
+  <p class="sidenote">Beyond the exam: LDAP on 389 can also upgrade itself to TLS mid-connection (called StartTLS), so "port 389" doesn't always mean "unencrypted". For the exam, keep it simple: 389 LDAP, 636 LDAPS.</p>
+
+  <div class="callout win">
+    <span class="label">Memory hooks</span>
+    <p><strong>137, 138, 139</strong>: NetBIOS counts up: name, datagram, session. <strong>445</strong>: SMB, "four-four-five, shares stay alive". <strong>389 → 636</strong>: LDAP, then LDAPS with the S for secure, just like 80 → 443.</p>
+  </div>
+
+  <h2>Try it (2 minutes)</h2>
+  <p>On a work or home Windows PC, see which ports your shares and name lookups use.<sup class="cite"><a href="#src-ms">[6]</a></sup></p>
+  <ol>
+    <li>Run <code>net use</code> to list mapped drives. Each one is an SMB connection.</li>
+    <li>In PowerShell, test the SMB port on a file server you can already reach: <code>Test-NetConnection</code> followed by the server's name and <code>-Port 445</code>. <code>TcpTestSucceeded : True</code> means SMB can connect.</li>
+    <li>Run <code>nbtstat -n</code> to see your PC's own NetBIOS names. If it lists names, NetBIOS over TCP/IP is still enabled on that adapter.</li>
+  </ol>
+<pre><code>ComputerName     : fileserver.example.net
+RemoteAddress    : 192.0.2.20
+RemotePort       : 445
+<span class="hl">TcpTestSucceeded : True</span></code></pre>
+  <p class="sidenote">Your output will differ. No file server handy? Try it at home against a NAS or another PC with a shared folder, or just read the steps: the command is the same one from <a href="0003-web-remote-ports.html">lesson 0003</a> with a different port.</p>
+
+  <h2>Practice</h2>
+  <p>Answer from memory before scrolling back up.</p>
+
+  <section class="quiz">
+    <p class="q">A user on a current Windows laptop can browse the web but gets an error opening a mapped drive after a firewall change. Which port is the likely suspect?</p>
+    <ul class="choices">
+      <li><button class="choice">TCP 389 for LDAP</button></li>
+      <li><button class="choice">TCP 3389 for RDP</button></li>
+      <li><button class="choice" data-correct>TCP 445 for SMB</button></li>
+      <li><button class="choice">UDP 53 for DNS</button></li>
+    </ul>
+    <div class="explain" hidden>Mapped drives are SMB, and modern Windows sends SMB directly over TCP 445. LDAP is for directory lookups, RDP for remote desktops, and a DNS failure would break web browsing too.</div>
+  </section>
+
+  <section class="quiz">
+    <p class="q">A team wants file servers to use only modern direct-hosted SMB and turn off the legacy path. Which ports stop being needed?</p>
+    <ul class="choices">
+      <li><button class="choice">Port 445, direct-hosted SMB traffic</button></li>
+      <li><button class="choice" data-correct>Ports 137–139, NetBIOS over TCP/IP</button></li>
+      <li><button class="choice">Port 636, LDAP over TLS</button></li>
+      <li><button class="choice">Port 3389, Remote Desktop Protocol</button></li>
+    </ul>
+    <div class="explain" hidden>137–139 are NetBIOS over TCP/IP, the legacy way to carry SMB. Direct-hosted SMB uses TCP 445, which must stay open. 636 is LDAPS and 3389 is RDP, unrelated to file sharing.</div>
+  </section>
+
+  <section class="quiz">
+    <p class="q">An internal app checks users' passwords against an on-premises directory on port 389. A review flags that the check crosses the network unencrypted. What's the standard fix?</p>
+    <ul class="choices">
+      <li><button class="choice">Switch to SMB on port 445</button></li>
+      <li><button class="choice">Switch to NetBIOS on port 139</button></li>
+      <li><button class="choice">Switch to DNS on port 53</button></li>
+      <li><button class="choice" data-correct>Switch to LDAPS on port 636</button></li>
+    </ul>
+    <div class="explain" hidden>LDAPS is the same directory protocol wrapped in TLS, on TCP 636. SMB and NetBIOS carry files, not directory queries, and DNS only turns names into addresses.</div>
+  </section>
+
+  <section class="quiz">
+    <p class="q">A help-desk tool shows a user's department and group memberships, read live from Active Directory. Which protocol is it using?</p>
+    <ul class="choices">
+      <li><button class="choice" data-correct>LDAP, the directory query protocol</button></li>
+      <li><button class="choice">SMB, the file sharing protocol</button></li>
+      <li><button class="choice">SMTP, the mail sending protocol</button></li>
+      <li><button class="choice">DHCP, the address leasing protocol</button></li>
+    </ul>
+    <div class="explain" hidden>Looking up users, groups and attributes in a directory is LDAP's whole job (TCP 389, or 636 for LDAPS). SMB shares files, SMTP sends mail and DHCP hands out IP settings.</div>
+  </section>
+  <p class="quiz-score" data-quiz-score></p>
+
+  <details class="recall">
+    <summary>From memory: give the ports for NetBIOS, SMB, LDAP and LDAPS, and say which is the legacy file-sharing path. <span class="hint">(then click to check)</span></summary>
+    <p>NetBIOS <code>137</code>–<code>139</code> (137, 138 UDP; 139 TCP) is the legacy path. SMB direct <code>445</code> TCP. LDAP <code>389</code>, LDAPS <code>636</code>.</p>
+  </details>
+
+  <details class="recall">
+    <summary>Bonus: you now know the whole exam list. Say every port from <a href="0003-web-remote-ports.html">0003</a>, <a href="0004-email-dns-dhcp-ports.html">0004</a> and today, lowest to highest. <span class="hint">(then click to check)</span></summary>
+    <p>FTP <code>20/21</code>, SSH <code>22</code>, Telnet <code>23</code>, SMTP <code>25</code>, DNS <code>53</code>, DHCP <code>67/68</code>, HTTP <code>80</code>, POP3 <code>110</code>, NetBIOS <code>137–139</code>, IMAP <code>143</code>, LDAP <code>389</code>, HTTPS <code>443</code>, SMB <code>445</code>, LDAPS <code>636</code>, RDP <code>3389</code>. The <a href="../reference/network-settings.html">cheat sheet</a> has them all.</p>
+  </details>
+
+  <h2>Review: earlier lessons</h2>
+  <p>Spaced retrieval: pull these from memory first, then check.</p>
+
+  <details class="recall">
+    <summary>A user's email read on the laptop never shows as read on the phone. Which fetch protocol is the laptop using, and which one should it use? <span class="hint">(<a href="0004-email-dns-dhcp-ports.html">lesson 0004</a>, yesterday)</span></summary>
+    <p>POP3 (<code>110</code>), which downloads mail to one device. Switch to IMAP (<code>143</code>, or <code>993</code> over TLS), which keeps mail on the server and syncs every device.</p>
+  </details>
+
+  <details class="recall">
+    <summary>Ping to a server works but the app on it doesn't respond. What does that tell you, and what's the next suspect? <span class="hint">(<a href="0002-tcp-udp-ports.html">lesson 0002</a>, 3 days ago)</span></summary>
+    <p>The network path and IP settings are fine. Suspect the port: the service isn't listening, or a firewall blocks that port. <code>Test-NetConnection</code> with <code>-Port</code> checks it directly.</p>
+  </details>
+
+  <details class="recall">
+    <summary>What's the encrypted replacement for Telnet, and on which port? <span class="hint">(<a href="0003-web-remote-ports.html">lesson 0003</a>, 2 days ago)</span></summary>
+    <p>SSH on TCP <code>22</code>. Telnet (<code>23</code>) sends everything, passwords included, in plain text.</p>
+  </details>
+
+  <div class="callout source" id="src-messer">
+    <span class="label">Primary source: watch next</span>
+    <p>[1] Professor Messer, <a href="https://www.professormesser.com/free-a-plus-training/220-1201/220-1201-video/common-ports-220-1201/">Common Ports (220-1201)</a>. Free. Watch the whole video now as a review: you've covered every port in it across lessons 0003 to 0005.</p>
+    <p id="src-nbt">[2] <a href="https://www.rfc-editor.org/info/rfc1002">RFC 1002, NetBIOS service on a TCP/UDP transport</a> (name 137, datagram 138, session 139).</p>
+    <p id="src-ldap">[3] LDAP in Active Directory and ports 389/636: <a href="https://www.cbtnuggets.com/blog/technology/networking/ldap-port-389-vs-636">CBT Nuggets, LDAP port 389 vs 636</a>.</p>
+    <p id="src-direct">[4] Microsoft Learn, <a href="https://learn.microsoft.com/en-us/troubleshoot/windows-server/networking/direct-hosting-of-smb-over-tcpip">Direct hosting of SMB over TCP/IP</a>, and <a href="https://petri.com/smb-port-445-139-138-137/">Petri, SMB ports 445, 139, 138 and 137 explained</a>.</p>
+    <p id="src-ldaps">[5] <a href="https://www.rfc-editor.org/rfc/rfc4511">RFC 4511, LDAP: The Protocol</a> (StartTLS and the LDAP message format).</p>
+    <p id="src-ms">[6] Microsoft Learn, <a href="https://learn.microsoft.com/en-us/powershell/module/nettcpip/test-netconnection">Test-NetConnection reference</a>, <a href="https://learn.microsoft.com/en-us/windows-server/administration/windows-commands/net-use">net use</a> and <a href="https://learn.microsoft.com/en-us/windows-server/administration/windows-commands/nbtstat">nbtstat</a>.</p>
+  </div>
+
+  <div class="callout ask">
+    <span class="label">Questions?</span>
+    <p>Anything unclear? Ask your teacher. Open Claude in the Teacher repo and ask, for example: <em>"In IT lesson 0005, how does an Entra ID tenant check passwords for an old app that only speaks LDAP?"</em> Follow-up questions are part of the course.</p>
+  </div>
+</main>
+<nav class="page-footer">
+  <a href="0004-email-dns-dhcp-ports.html">← Email, DNS and DHCP ports</a>
+  <a href="../../index.html">Hub</a>
+  <span class="disabled">Next lesson: tomorrow →</span>
+</nav>
+</body>
+</html>
