@@ -99,6 +99,19 @@
   </table>
   </div>
 
+  <h2>Wi-Fi bands and channels</h2>
+  <div class="table-wrap">
+  <table>
+    <thead><tr><th>Band</th><th>Range</th><th>Speed</th><th>Channels (20 MHz, non-overlapping)</th></tr></thead>
+    <tbody>
+      <tr><td>2.4 GHz</td><td>Longest, best through walls</td><td>Slowest, most crowded</td><td>3: <strong>1, 6, 11</strong> (US allows 1&ndash;11)</td></tr>
+      <tr><td>5 GHz</td><td>Shorter</td><td>Faster</td><td>About 25 (numbered 36 and up)</td></tr>
+      <tr><td>6 GHz</td><td>Shortest</td><td>Widest channels, least crowded</td><td>About 59 (Wi-Fi 6E / 7 only)</td></tr>
+    </tbody>
+  </table>
+  </div>
+  <p class="sidenote">Bonding makes 40, 80, 160 (Wi-Fi 7: 320) MHz channels: faster, but fewer fit. Check a Windows connection with <code>netsh wlan show interfaces</code> (Radio type, Band, Channel).</p>
+
   <h2>Commands (Windows)</h2>
   <div class="table-wrap">
   <table>
@@ -109,11 +122,12 @@
       <tr><td><code>Get-NetTCPConnection -State Established</code></td><td>PowerShell: list open TCP connections with local and remote ports</td></tr>
       <tr><td><code>net use</code></td><td>List mapped drives (SMB connections)</td></tr>
       <tr><td><code>nbtstat -n</code></td><td>Show this PC's NetBIOS names (listed = NetBIOS over TCP/IP enabled)</td></tr>
+      <tr><td><code>netsh wlan show interfaces</code></td><td>Current Wi-Fi connection: radio type (802.11 standard), band, channel, signal</td></tr>
       <tr><td><code>Resolve-DnsName name</code> (<code>-Type MX</code> for mail servers)</td><td>PowerShell: ask DNS for a name's records</td></tr>
     </tbody>
   </table>
   </div>
-  <p class="sidenote">Sources: <a href="https://www.professormesser.com/free-a-plus-training/220-1201/220-1201-video/assigning-ip-addresses-220-1201/">Professor Messer, Assigning IP Addresses</a> · <a href="https://learn.microsoft.com/en-us/windows-server/administration/windows-commands/ipconfig">Microsoft Learn, ipconfig</a> · <a href="https://www.professormesser.com/free-a-plus-training/220-1201/220-1201-video/introduction-to-ip-220-1201/">Professor Messer, Introduction to IP</a> · <a href="https://learn.microsoft.com/en-us/powershell/module/nettcpip/test-netconnection">Microsoft Learn, Test-NetConnection</a> · <a href="https://www.professormesser.com/free-a-plus-training/220-1201/220-1201-video/common-ports-220-1201/">Professor Messer, Common Ports</a> · <a href="https://learn.microsoft.com/en-us/powershell/module/nettcpip/get-nettcpconnection">Microsoft Learn, Get-NetTCPConnection</a> · <a href="https://learn.microsoft.com/en-us/troubleshoot/windows-server/networking/direct-hosting-of-smb-over-tcpip">Microsoft Learn, Direct hosting of SMB over TCP/IP</a></p>
+  <p class="sidenote">Sources: <a href="https://www.professormesser.com/free-a-plus-training/220-1201/220-1201-video/assigning-ip-addresses-220-1201/">Professor Messer, Assigning IP Addresses</a> · <a href="https://learn.microsoft.com/en-us/windows-server/administration/windows-commands/ipconfig">Microsoft Learn, ipconfig</a> · <a href="https://www.professormesser.com/free-a-plus-training/220-1201/220-1201-video/introduction-to-ip-220-1201/">Professor Messer, Introduction to IP</a> · <a href="https://learn.microsoft.com/en-us/powershell/module/nettcpip/test-netconnection">Microsoft Learn, Test-NetConnection</a> · <a href="https://www.professormesser.com/free-a-plus-training/220-1201/220-1201-video/common-ports-220-1201/">Professor Messer, Common Ports</a> · <a href="https://learn.microsoft.com/en-us/powershell/module/nettcpip/get-nettcpconnection">Microsoft Learn, Get-NetTCPConnection</a> · <a href="https://learn.microsoft.com/en-us/troubleshoot/windows-server/networking/direct-hosting-of-smb-over-tcpip">Microsoft Learn, Direct hosting of SMB over TCP/IP</a> · <a href="https://www.professormesser.com/free-a-plus-training/220-1201/220-1201-video/wireless-network-technologies-220-1201/">Professor Messer, Wireless Network Technologies</a></p>
 </main>
 </body>
 </html>

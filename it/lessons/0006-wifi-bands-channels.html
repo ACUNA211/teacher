@@ -1,0 +1,165 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Wi-Fi Bands and Channels</title>
+<meta name="description" content="IT lesson 0006: the three Wi-Fi frequency bands (2.4, 5 and 6 GHz), their range and speed trade-offs, channels, the non-overlapping 1, 6, 11 rule, and channel width.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=JetBrains+Mono&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../assets/course.css">
+<script src="../../assets/quiz.js" defer></script>
+</head>
+<body class="track-it">
+<nav class="page-header">
+  <a class="home" href="../../index.html">Teacher hub</a>
+  <span>IT and certs</span>
+  <a href="../reference/glossary.html">Glossary</a>
+  <a href="../reference/network-settings.html">Cheat sheet</a>
+</nav>
+<main>
+  <p class="kicker">IT and certs · Lesson 0006 · A+ Core 1, objective 2.2</p>
+  <h1>Wi-Fi bands and channels</h1>
+  <p class="lede">About 10 minutes. Ports are done; now the radio underneath. Wi-Fi talks on three frequency bands, each cut into channels. Pick the wrong band and the laptop is slow; pick overlapping channels and two access points shout over each other.</p>
+
+  <div class="callout">
+    <span class="label">Why this matters at work</span>
+    <p>"Wi-Fi is fine at my desk but crawls in the far meeting room" is usually a band problem, not an account problem. Knowing which band a laptop picked (and why) lets you explain it instead of rebooting things. Later, when you see an Intune Wi-Fi profile, it pushes the network name and security settings to devices; the bands and channels are the access point's job.</p>
+  </div>
+
+  <h2>Three bands, one trade-off</h2>
+  <p>A <strong>band</strong> is a range of radio frequencies. The rule of thumb: <strong>lower frequency goes farther and through walls better; higher frequency is faster but shorter-range.</strong><sup class="cite"><a href="#src-messer">[1]</a></sup><sup class="cite"><a href="#src-bands">[2]</a></sup></p>
+
+  <div class="table-wrap">
+  <table>
+    <thead><tr><th>Band</th><th>Range and walls</th><th>Speed and room</th><th>Notes</th></tr></thead>
+    <tbody>
+      <tr><td><strong>2.4 GHz</strong></td><td>Longest range, best through walls</td><td>Slowest, most crowded</td><td>Shared with Bluetooth, microwaves, cordless gear</td></tr>
+      <tr><td><strong>5 GHz</strong></td><td>Shorter range, weakened by walls</td><td>Faster, many more channels</td><td>The everyday workhorse band</td></tr>
+      <tr><td><strong>6 GHz</strong></td><td>Shortest range</td><td>Widest channels, least crowded</td><td>Needs Wi-Fi 6E or Wi-Fi 7 on both ends</td></tr>
+    </tbody>
+  </table>
+  </div>
+  <p>The 6 GHz band was opened for unlicensed Wi-Fi in the US by the FCC in April 2020: 1,200 MHz of new spectrum (5.925–7.125 GHz), several times what Wi-Fi had before. Devices that can use it are branded <strong>Wi-Fi 6E</strong>.<sup class="cite"><a href="#src-fcc">[3]</a></sup></p>
+
+  <h2>Channels and why 1, 6, 11</h2>
+  <p>Each band is split into <strong>channels</strong>: slices of frequency an access point and its clients agree to use. Two nearby access points on the same or overlapping channels interfere, so you plan channels like seats in a room.</p>
+  <ul>
+    <li><strong>2.4 GHz</strong>: the US allows channels 1 to 11 (other countries allow up to 13 or 14). The channels are spaced only 5 MHz apart, but each signal is about 20 MHz wide, so neighbors overlap. Only <strong>1, 6 and 11</strong> don't overlap each other.<sup class="cite"><a href="#src-bands">[2]</a></sup></li>
+    <li><strong>5 GHz</strong>: about 25 non-overlapping 20 MHz channels, numbered 36 and up.<sup class="cite"><a href="#src-width">[4]</a></sup></li>
+    <li><strong>6 GHz</strong>: about 59 non-overlapping 20 MHz channels.<sup class="cite"><a href="#src-width">[4]</a></sup></li>
+  </ul>
+  <p>Which channels are legal, and at what power, is set by each country's regulator (the FCC in the US). That's the "regulations" line in the exam objective: the same access point may offer different channels in different countries.<sup class="cite"><a href="#src-messer">[1]</a></sup></p>
+
+  <h2>Channel width: wider is faster, but fewer fit</h2>
+  <p>Newer standards can <strong>bond</strong> neighboring 20 MHz channels into one wider channel: 40, 80 or 160 MHz (Wi-Fi 7 adds 320 MHz in 6 GHz). Twice the width carries roughly twice the data, but leaves fewer separate channels for neighbors.<sup class="cite"><a href="#src-width">[4]</a></sup> In 5 GHz, 25 channels at 20 MHz become only about 2 at 160 MHz; in 6 GHz there are about 7. That's why wide channels live in 5 and 6 GHz, and 2.4 GHz stays at 20 MHz.</p>
+
+  <div class="callout win">
+    <span class="label">Memory hooks</span>
+    <p><strong>Low = long, high = fast.</strong> 2.4 reaches, 5 and 6 race. <strong>1, 6, 11</strong>: the only three 2.4 GHz channels that don't step on each other. <strong>Wider channel, fewer channels.</strong></p>
+  </div>
+
+  <h2>Try it (2 minutes)</h2>
+  <p>On a Windows laptop connected to Wi-Fi, run this in a terminal:<sup class="cite"><a href="#src-netsh">[5]</a></sup></p>
+<pre><code>netsh wlan show interfaces</code></pre>
+  <p>Find three lines: <strong>Radio type</strong> (the 802.11 standard in use), <strong>Band</strong> (2.4, 5 or 6 GHz) and <strong>Channel</strong>.</p>
+<pre><code>Radio type             : 802.11ax
+<span class="hl">Band                   : 5 GHz
+Channel                : 44</span>
+Receive rate (Mbps)    : 1201
+Signal                 : 88%</code></pre>
+  <p class="sidenote">Your output will differ, and older Windows builds don't show the Band line: use the channel instead (1–14 means 2.4 GHz, 36 and up usually 5 GHz). Try it at your desk, then in the farthest room: did the band or the signal change?</p>
+
+  <h2>Practice</h2>
+  <p>Answer from memory before scrolling back up.</p>
+
+  <section class="quiz">
+    <p class="q">A user's laptop has full speed at their desk but is slow two rooms and a concrete wall away from the access point. What's the most likely explanation?</p>
+    <ul class="choices">
+      <li><button class="choice">The 2.4 GHz band is too fast</button></li>
+      <li><button class="choice" data-correct>The 5 GHz signal fades through walls</button></li>
+      <li><button class="choice">The DHCP lease has expired again overnight</button></li>
+      <li><button class="choice">The SMB port 445 is being blocked</button></li>
+    </ul>
+    <div class="explain" hidden>Higher frequencies carry more data but lose strength through walls. Far from the access point, a 5 GHz signal weakens (or the laptop falls back to 2.4 GHz), so speed drops. An expired lease or blocked port would break things outright, not just slow them.</div>
+  </section>
+
+  <section class="quiz">
+    <p class="q">You're placing three 2.4 GHz access points in a small office in the US. Which channel plan avoids overlap?</p>
+    <ul class="choices">
+      <li><button class="choice">Channels 1, 2 and 3</button></li>
+      <li><button class="choice">Channels 6, 6 and 6</button></li>
+      <li><button class="choice">Channels 3, 7 and 12</button></li>
+      <li><button class="choice" data-correct>Channels 1, 6 and 11</button></li>
+    </ul>
+    <div class="explain" hidden>2.4 GHz channels sit 5 MHz apart but each is about 20 MHz wide, so only 1, 6 and 11 are clear of each other. Adjacent channels overlap, reusing one channel makes all three share it, and channel 12 isn't allowed in the US.</div>
+  </section>
+
+  <section class="quiz">
+    <p class="q">A new access point and laptop both support Wi-Fi 6E. Which band gives the widest, least crowded channels?</p>
+    <ul class="choices">
+      <li><button class="choice">The 2.4 GHz band</button></li>
+      <li><button class="choice">The 5 GHz band</button></li>
+      <li><button class="choice" data-correct>The 6 GHz band</button></li>
+      <li><button class="choice">The 900 MHz band</button></li>
+    </ul>
+    <div class="explain" hidden>Wi-Fi 6E adds the 6 GHz band: 1,200 MHz of new spectrum with room for many wide channels and few older devices competing. 2.4 GHz is the most crowded, and 900 MHz isn't a regular Wi-Fi band.</div>
+  </section>
+
+  <section class="quiz">
+    <p class="q">An admin sets a busy 5 GHz access point to 160 MHz channels for top speed, and neighbors now interfere more. Why?</p>
+    <ul class="choices">
+      <li><button class="choice" data-correct>Wider channels leave fewer separate channels</button></li>
+      <li><button class="choice">Wider channels always reach shorter distances</button></li>
+      <li><button class="choice">Wider channels force the 2.4 band</button></li>
+      <li><button class="choice">Wider channels need a new IP</button></li>
+    </ul>
+    <div class="explain" hidden>Bonding 20 MHz channels into 160 MHz leaves only about two 160 MHz channels in 5 GHz, so nearby access points end up sharing frequencies. Width doesn't change the band or anything at the IP layer.</div>
+  </section>
+  <p class="quiz-score" data-quiz-score></p>
+
+  <details class="recall">
+    <summary>From memory: name the three Wi-Fi bands and the trade-off between them, plus the three non-overlapping 2.4 GHz channels. <span class="hint">(then click to check)</span></summary>
+    <p>2.4, 5 and 6 GHz. Lower frequency reaches farther and through walls; higher is faster with more and wider channels but shorter range. Non-overlapping 2.4 GHz channels: <strong>1, 6, 11</strong>.</p>
+  </details>
+
+  <h2>Review: earlier lessons</h2>
+  <p>Spaced retrieval: pull these from memory first, then check.</p>
+
+  <details class="recall">
+    <summary>A mapped drive won't open after a firewall change, but the web works. Which port do you check first, and what's the legacy path it replaced? <span class="hint">(<a href="0005-file-sharing-directory-ports.html">lesson 0005</a>, yesterday)</span></summary>
+    <p>SMB on TCP <code>445</code>. The legacy path was SMB over NetBIOS (<code>137</code>–<code>139</code>).</p>
+  </details>
+
+  <details class="recall">
+    <summary>Which port does Remote Desktop use, and which port does HTTPS use? <span class="hint">(<a href="0003-web-remote-ports.html">lesson 0003</a>, 3 days ago)</span></summary>
+    <p>RDP: TCP <code>3389</code>. HTTPS: TCP <code>443</code>.</p>
+  </details>
+
+  <details class="recall">
+    <summary>Name the four IP settings every device needs, and say what breaks if the DNS server is wrong. <span class="hint">(<a href="0001-four-ip-settings.html">lesson 0001</a>, 5 days ago)</span></summary>
+    <p>IP address, subnet mask, default gateway and DNS server. With a wrong DNS server, names don't resolve: sites fail by name even though pinging an IP address still works.</p>
+  </details>
+
+  <div class="callout source" id="src-messer">
+    <span class="label">Primary source: watch next</span>
+    <p>[1] Professor Messer, <a href="https://www.professormesser.com/free-a-plus-training/220-1201/220-1201-video/wireless-network-technologies-220-1201/">Wireless Network Technologies (220-1201)</a>. Free. Watch the first part (frequencies, channels, regulations) now; the 802.11 standards, Bluetooth, NFC and RFID come in the next lessons.</p>
+    <p id="src-bands">[2] 2.4 vs 5 GHz trade-offs, 11 US channels, non-overlapping 1, 6, 11: <a href="https://simeononsecurity.com/a-plus/networking-fundamentals-tcp-ip-wireless-protocols/">SimeonOnSecurity, CompTIA A+ (220-1201) Networking Fundamentals</a>.</p>
+    <p id="src-fcc">[3] <a href="https://www.benton.org/headlines/fcc-opens-6-ghz-band-wi-fi-and-other-unlicensed-uses">Benton Institute, FCC opens 6 GHz band to Wi-Fi and other unlicensed uses</a> (April 2020) and <a href="https://blogs.intel.com/technology/2020/04/fcc-ruling-marks-a-giant-milestone-in-the-evolution-of-wi-fi/">Intel, FCC ruling marks a giant milestone</a>.</p>
+    <p id="src-width">[4] Channel counts per band and width: <a href="https://www.ezurio.com/resources/blog/the-road-to-wi-fi-6e-part-6-6-ghz-spectrum">Ezurio, The road to Wi-Fi 6E: 6 GHz spectrum</a> and <a href="https://www.juniper.net/content/dam/www/assets/infographics/us/en/wi-fi-6E-quick-guide.pdf">Juniper, Wi-Fi 6E quick guide</a>.</p>
+    <p id="src-netsh">[5] <a href="https://learn.microsoft.com/en-us/windows-server/networking/technologies/netsh/netsh-contexts">Microsoft Learn, Netsh command syntax and contexts</a>, and <a href="https://www.elevenforum.com/t/check-wi-fi-network-band-in-windows-11.37637/">ElevenForum, check Wi-Fi network band in Windows 11</a> (the Band line).</p>
+  </div>
+
+  <div class="callout ask">
+    <span class="label">Questions?</span>
+    <p>Anything unclear? Ask your teacher. Open Claude in the Teacher repo and ask, for example: <em>"In IT lesson 0006, why would a laptop pick 2.4 GHz when 5 GHz is available?"</em> Follow-up questions are part of the course.</p>
+  </div>
+</main>
+<nav class="page-footer">
+  <a href="0005-file-sharing-directory-ports.html">← File sharing and directory ports</a>
+  <a href="../../index.html">Hub</a>
+  <span class="disabled">Next lesson: tomorrow →</span>
+</nav>
+</body>
+</html>
