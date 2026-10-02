@@ -1,0 +1,161 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>802.11 Wi-Fi Standards</title>
+<meta name="description" content="IT lesson 0007: the 802.11 Wi-Fi standards (a, b, g, n, ac, ax, be), their Wi-Fi generation names, which bands each uses, rough top speeds, and backward compatibility.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=JetBrains+Mono&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../assets/course.css">
+<script src="../../assets/quiz.js" defer></script>
+</head>
+<body class="track-it">
+<nav class="page-header">
+  <a class="home" href="../../index.html">Teacher hub</a>
+  <span>IT and certs</span>
+  <a href="../reference/glossary.html">Glossary</a>
+  <a href="../reference/network-settings.html">Cheat sheet</a>
+</nav>
+<main>
+  <p class="kicker">IT and certs · Lesson 0007 · A+ Core 1, objective 2.2</p>
+  <h1>802.11 Wi-Fi standards</h1>
+  <p class="lede">About 10 minutes. Yesterday: the bands and channels. Today: the standards that use them. Every Wi-Fi device speaks one or more versions of IEEE <strong>802.11</strong>, and the box says either the letters (802.11ax) or the friendly name (Wi-Fi 6). You need to translate both ways.</p>
+
+  <div class="callout">
+    <span class="label">Why this matters at work</span>
+    <p>"The new access point is Wi-Fi 7 but this laptop is still slow" usually means the laptop's adapter is older: a connection runs at the best standard <em>both</em> ends share. One command (below) tells you what an adapter supports, so you can tell a hardware limit from a network problem before anyone replaces anything.</p>
+  </div>
+
+  <h2>The standards in one table</h2>
+  <p>802.11 is the IEEE family of wireless LAN standards; each amendment gets letters. In 2018 the Wi-Fi Alliance added simple generation numbers for the newer ones.<sup class="cite"><a href="#src-gens">[2]</a></sup> Speeds are theoretical maximums: real throughput is much lower.</p>
+
+  <div class="table-wrap">
+  <table>
+    <thead><tr><th>Standard</th><th>Name</th><th>Bands</th><th>Top speed (theoretical)</th></tr></thead>
+    <tbody>
+      <tr><td><strong>802.11a</strong></td><td>—</td><td>5 GHz</td><td>54 Mbps</td></tr>
+      <tr><td><strong>802.11b</strong></td><td>—</td><td>2.4 GHz</td><td>11 Mbps</td></tr>
+      <tr><td><strong>802.11g</strong></td><td>—</td><td>2.4 GHz</td><td>54 Mbps</td></tr>
+      <tr><td><strong>802.11n</strong></td><td>Wi-Fi 4</td><td>2.4 and 5 GHz</td><td>600 Mbps</td></tr>
+      <tr><td><strong>802.11ac</strong></td><td>Wi-Fi 5</td><td>5 GHz only</td><td>Several Gbps (3.5 to 6.9, by setup)</td></tr>
+      <tr><td><strong>802.11ax</strong></td><td>Wi-Fi 6 / 6E</td><td>2.4 and 5 GHz (6E adds 6 GHz)</td><td>9.6 Gbps</td></tr>
+      <tr><td><strong>802.11be</strong></td><td>Wi-Fi 7</td><td>2.4, 5 and 6 GHz</td><td>About 46 Gbps</td></tr>
+    </tbody>
+  </table>
+  </div>
+  <p class="sidenote">Sources: a/b/g/n speeds and bands <a href="#src-messer">[1]</a><a href="#src-old">[3]</a>; generation names, bands and n/ax/be speeds <a href="#src-gens">[2]</a>. 802.11ac's top figure depends on how many antennas (streams) and how wide a channel are used, which is why sources quote 3.5 or 6.9 Gbps.<sup class="cite"><a href="#src-ac">[4]</a></sup></p>
+
+  <h2>Three ideas that make the table stick</h2>
+  <ul>
+    <li><strong>The names count up from n.</strong> n = 4, ac = 5, ax = 6, be = 7. The old a, b and g never got official numbers.</li>
+    <li><strong>Bands follow history.</strong> b and g live in 2.4 GHz, a in 5 GHz. n was the first to use both. ac went 5 GHz only. ax went back to both, and 6E/7 added the new 6 GHz band from <a href="0006-wifi-bands-channels.html">lesson 0006</a>.</li>
+    <li><strong>Newer talks to older, at the older speed.</strong> Standards are backward compatible within a band: a Wi-Fi 6 access point still serves an 802.11n laptop, just at n speeds.<sup class="cite"><a href="#src-messer">[1]</a></sup> But a 2.4 GHz-only 802.11g device can never join a 5 GHz-only network.</li>
+  </ul>
+  <p>Where did the speed come from? Mostly from <strong>wider channels</strong> (yesterday's bonding) and <strong>MIMO</strong>: several antennas sending separate streams at once. 802.11n introduced MIMO; 802.11ac added <strong>multi-user MIMO</strong>, sending to several clients at the same time.<sup class="cite"><a href="#src-ac">[4]</a></sup></p>
+
+  <div class="callout win">
+    <span class="label">Memory hooks</span>
+    <p><strong>b = 2.4 and 11, a = 5 and 54, g = 2.4 and 54.</strong> <strong>n4, ac5, ax6, be7.</strong> <strong>ac is the 5-only one.</strong> The link runs at the best standard both ends share.</p>
+  </div>
+
+  <h2>Try it (2 minutes)</h2>
+  <p>On a Windows laptop, open a terminal and run:<sup class="cite"><a href="#src-netsh">[5]</a></sup></p>
+<pre><code>netsh wlan show drivers</code></pre>
+  <p>Find the <strong>Radio types supported</strong> line. That's every 802.11 standard the adapter can speak:</p>
+<pre><code><span class="hl">Radio types supported     : 802.11b 802.11g 802.11n 802.11a 802.11ac 802.11ax</span></code></pre>
+  <p class="sidenote">Your list will differ. The newest letters on it are the adapter's ceiling: <code>ax</code> means Wi-Fi 6 (6E if it also shows the 6 GHz band in <code>netsh wlan show interfaces</code>). Compare with the <strong>Radio type</strong> line from yesterday's <code>show interfaces</code>: that's the standard the current connection actually uses.</p>
+
+  <h2>Practice</h2>
+  <p>Answer from memory before scrolling back up.</p>
+
+  <section class="quiz">
+    <p class="q">A spec sheet says a laptop supports "Wi-Fi 6". Which 802.11 standard is that?</p>
+    <ul class="choices">
+      <li><button class="choice">The 802.11ac standard</button></li>
+      <li><button class="choice">The 802.11be standard</button></li>
+      <li><button class="choice" data-correct>The 802.11ax standard</button></li>
+      <li><button class="choice">The 802.11n standard</button></li>
+    </ul>
+    <div class="explain" hidden>The generation names count up from n: n is Wi-Fi 4, ac is Wi-Fi 5, ax is Wi-Fi 6 (and 6E when it adds 6 GHz), be is Wi-Fi 7.</div>
+  </section>
+
+  <section class="quiz">
+    <p class="q">A warehouse barcode scanner only supports 802.11g. The new access points broadcast on 5 GHz only. What happens?</p>
+    <ul class="choices">
+      <li><button class="choice">It joins at 802.11ac speed</button></li>
+      <li><button class="choice" data-correct>It cannot see the network</button></li>
+      <li><button class="choice">It joins at 54 Mbps</button></li>
+      <li><button class="choice">It needs a new IP</button></li>
+    </ul>
+    <div class="explain" hidden>802.11g is a 2.4 GHz standard. Backward compatibility only works within a band, so a 2.4 GHz-only radio never hears a 5 GHz-only network. Turning on 2.4 GHz at the access point would let it join at g speeds.</div>
+  </section>
+
+  <section class="quiz">
+    <p class="q">A Wi-Fi 7 access point is installed, but a user's laptop reports <code>Radio type: 802.11ac</code>. Why?</p>
+    <ul class="choices">
+      <li><button class="choice">The access point dropped to 2.4 GHz</button></li>
+      <li><button class="choice">802.11ac is newer and faster than 802.11be</button></li>
+      <li><button class="choice">The DNS server picked a slower radio</button></li>
+      <li><button class="choice" data-correct>The laptop's adapter only supports Wi-Fi 5</button></li>
+    </ul>
+    <div class="explain" hidden>A connection uses the best standard both ends share. The access point speaks be, but this laptop tops out at ac (Wi-Fi 5), so they meet at ac. And ac is 5 GHz only, so it isn't a 2.4 GHz fallback. <code>netsh wlan show drivers</code> confirms the adapter's ceiling.</div>
+  </section>
+
+  <section class="quiz">
+    <p class="q">Which standard was the first to work in both the 2.4 GHz and 5 GHz bands?</p>
+    <ul class="choices">
+      <li><button class="choice">802.11g, which has no number</button></li>
+      <li><button class="choice" data-correct>802.11n (also called Wi-Fi 4)</button></li>
+      <li><button class="choice">802.11ac (also called Wi-Fi 5)</button></li>
+      <li><button class="choice">802.11a, which has no number</button></li>
+    </ul>
+    <div class="explain" hidden>802.11n (Wi-Fi 4) ran in both bands and introduced MIMO. g was 2.4 GHz only, a was 5 GHz only, and ac is 5 GHz only.</div>
+  </section>
+  <p class="quiz-score" data-quiz-score></p>
+
+  <details class="recall">
+    <summary>From memory: match n, ac, ax and be to their Wi-Fi numbers, and name the one that is 5 GHz only. <span class="hint">(then click to check)</span></summary>
+    <p>n = Wi-Fi 4, ac = Wi-Fi 5, ax = Wi-Fi 6 (6E with 6 GHz), be = Wi-Fi 7. <strong>802.11ac</strong> is 5 GHz only.</p>
+  </details>
+
+  <h2>Review: earlier lessons</h2>
+  <p>Spaced retrieval: pull these from memory first, then check.</p>
+
+  <details class="recall">
+    <summary>Lower vs higher Wi-Fi frequency: which reaches farther, which is faster? And why do wide 160 MHz channels cause more interference between neighbors? <span class="hint">(<a href="0006-wifi-bands-channels.html">lesson 0006</a>, yesterday)</span></summary>
+    <p>Lower (2.4 GHz) reaches farther and through walls; higher (5, 6 GHz) is faster but shorter-range. Bonding into wide channels leaves fewer separate channels, so nearby access points end up sharing them.</p>
+  </details>
+
+  <details class="recall">
+    <summary>A laptop joins Wi-Fi but gets no address. Which protocol failed, on which ports, and why must it use UDP? <span class="hint">(<a href="0004-email-dns-dhcp-ports.html">lesson 0004</a>, 3 days ago)</span></summary>
+    <p>DHCP: server on UDP <code>67</code>, client on UDP <code>68</code>. The client has no address yet, so it can't set up a TCP connection; it broadcasts and waits.</p>
+  </details>
+
+  <details class="recall">
+    <summary>A live video call drops a few packets and keeps going instead of pausing to re-send them. TCP or UDP, and why? <span class="hint">(<a href="0002-tcp-udp-ports.html">lesson 0002</a>, 5 days ago)</span></summary>
+    <p>UDP. It's connectionless and doesn't re-send lost data, so real-time traffic stays on time. TCP would stall to recover every lost packet.</p>
+  </details>
+
+  <div class="callout source" id="src-messer">
+    <span class="label">Primary source: watch next</span>
+    <p>[1] Professor Messer, <a href="https://www.professormesser.com/free-a-plus-training/220-1201/220-1201-video/wireless-network-technologies-220-1201/">Wireless Network Technologies (220-1201)</a>. Free. Watch the 802.11 standards part now; the last part (long-range fixed wireless, Bluetooth, NFC, RFID) is the next lesson.</p>
+    <p id="src-gens">[2] Generation names, bands and top speeds: <a href="https://www.intel.com/content/dam/www/central-libraries/us/en/documents/2022-07/wifi7-generations-overview-table-1920-1080.pdf">Intel, Wi-Fi generations overview</a> and <a href="https://www.electronics-notes.com/articles/connectivity/wifi-ieee-802-11/wifi-alliance-generations-designations-numbers.php">Electronics Notes, Wi-Fi generation numbering</a>.</p>
+    <p id="src-old">[3] 802.11a/b/g/n bands and speeds: <a href="https://www.professormesser.com/free-a-plus-training/220-901/wireless-standards-2/">Professor Messer, Wireless Standards (220-901)</a>.</p>
+    <p id="src-ac">[4] 802.11ac channel width, MU-MIMO and the 6.9 Gbps figure: <a href="https://www.professormesser.com/network-plus/n10-008/n10-008-video/wireless-standards-n10-008/">Professor Messer, Wireless Standards (N10-008)</a>.</p>
+    <p id="src-netsh">[5] <a href="https://learn.microsoft.com/en-us/windows-server/networking/technologies/netsh/netsh-contexts">Microsoft Learn, Netsh command syntax and contexts</a>, and <a href="https://www.elevenforum.com/t/check-wi-fi-radio-types-supported-by-wireless-network-adapter-in-windows-11.43760/">ElevenForum, check Wi-Fi radio types supported</a>.</p>
+  </div>
+
+  <div class="callout ask">
+    <span class="label">Questions?</span>
+    <p>Anything unclear? Ask your teacher. Open Claude in the Teacher repo and ask, for example: <em>"In IT lesson 0007, what does OFDMA in Wi-Fi 6 actually change for a busy office?"</em> Follow-up questions are part of the course.</p>
+  </div>
+</main>
+<nav class="page-footer">
+  <a href="0006-wifi-bands-channels.html">← Wi-Fi bands and channels</a>
+  <a href="../../index.html">Hub</a>
+  <span class="disabled">Next lesson: tomorrow →</span>
+</nav>
+</body>
+</html>
