@@ -1,0 +1,244 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Weekly Quiz: Sep 26 – Oct 2</title>
+<meta name="description" content="IT lesson 0008: Saturday in-depth quiz on the first week: the four IP settings, TCP and UDP, the common exam ports, Wi-Fi bands, channels and 802.11 standards, plus an A+ Core 1 pace check.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=JetBrains+Mono&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../assets/course.css">
+<script src="../../assets/quiz.js" defer></script>
+</head>
+<body class="track-it">
+<nav class="page-header">
+  <a class="home" href="../../index.html">Teacher hub</a>
+  <span>IT and certs</span>
+  <a href="../reference/glossary.html">Glossary</a>
+  <a href="../reference/network-settings.html">Cheat sheet</a>
+</nav>
+<main>
+  <p class="kicker">IT and certs · Lesson 0008 · Saturday quiz · A+ Core 1, objectives 2.1, 2.2, 2.4 &amp; 2.6</p>
+  <h1>Weekly quiz: Sep 26 – Oct 2</h1>
+  <p class="lede">About 20 minutes. Fourteen questions mixing the whole first week: the four IP settings, TCP and UDP, every exam port, and Wi-Fi bands, channels and standards. The topics are shuffled on purpose, and most questions are tickets, not definitions: decide what's wrong before you decide what it's called.</p>
+
+  <div class="callout">
+    <span class="label">How to take it</span>
+    <p>No scrolling back to the lessons until you've answered. A wrong answer now, followed by the explanation, sticks better than a right answer you looked up. Each explanation links to the lesson that taught it, so you know exactly what to reread.</p>
+  </div>
+
+  <p class="quiz-score" data-quiz-score></p>
+
+  <section class="quiz">
+    <p class="q">A user can ping the default gateway and can ping a public server by its IP address, but <code>Resolve-DnsName example.com</code> times out. Which setting do you check next?</p>
+    <ul class="choices">
+      <li><button class="choice">The subnet mask value</button></li>
+      <li><button class="choice" data-correct>The DNS server address</button></li>
+      <li><button class="choice">The default gateway address</button></li>
+      <li><button class="choice">The Wi-Fi channel width</button></li>
+    </ul>
+    <div class="explain" hidden>Reaching a public IP proves the IP address, mask and gateway all work: traffic gets out. Only turning names into addresses fails, which is the DNS server's job. Channel width would slow things, not break only names. See <a href="0001-four-ip-settings.html">lesson 0001</a>.</div>
+  </section>
+
+  <section class="quiz">
+    <p class="q">A clinic's older tablets support only 802.11a. The team is configuring new access points. Which must stay enabled so the tablets can still connect?</p>
+    <ul class="choices">
+      <li><button class="choice">Keep the 2.4 GHz band</button></li>
+      <li><button class="choice">Keep the 6 GHz band</button></li>
+      <li><button class="choice">Keep the 802.11g mode on</button></li>
+      <li><button class="choice" data-correct>Keep the 5 GHz band</button></li>
+    </ul>
+    <div class="explain" hidden>802.11a is a 5 GHz-only standard (54 Mbps). Backward compatibility works only within a band, so the tablets need 5 GHz. 802.11g is a 2.4 GHz standard and won't help an a-only radio. See <a href="0007-wifi-standards.html">lesson 0007</a>.</div>
+  </section>
+
+  <section class="quiz">
+    <p class="q">After a firewall change, a user on a current Windows laptop can browse the web and send email, but <code>\\fileserver\share</code> won't open. Ping to the file server works. What's the best first test?</p>
+    <ul class="choices">
+      <li><button class="choice">Test-NetConnection to the server on 389</button></li>
+      <li><button class="choice">Test-NetConnection to the server on 3389</button></li>
+      <li><button class="choice" data-correct>Test-NetConnection to the server on 445</button></li>
+      <li><button class="choice">Test-NetConnection to the server on 110</button></li>
+    </ul>
+    <div class="explain" hidden>A <code>\\server\share</code> path is SMB, which modern Windows sends directly over TCP 445. Ping working means the machine is reachable, so suspect the port (<a href="0002-tcp-udp-ports.html">lesson 0002</a>). 389 is LDAP, 3389 is RDP and 110 is POP3. See <a href="0005-file-sharing-directory-ports.html">lesson 0005</a>.</div>
+  </section>
+
+  <section class="quiz">
+    <p class="q">A firewall log shows a laptop at <code>192.0.2.10</code> connecting from port <code>51544</code> to a server's port <code>443</code>. Which statement is correct?</p>
+    <ul class="choices">
+      <li><button class="choice" data-correct>The laptop picked 51544; the server listens on 443</button></li>
+      <li><button class="choice">The server picked 51544; the laptop listens on 443</button></li>
+      <li><button class="choice">Both ports were picked at random for this one</button></li>
+      <li><button class="choice">Port 51544 is the well-known port for secure web</button></li>
+    </ul>
+    <div class="explain" hidden>The client picks a temporary ephemeral port (51544) for each connection so the reply finds its way back. The server listens on a fixed, non-ephemeral port: 443 for HTTPS. See <a href="0002-tcp-udp-ports.html">lesson 0002</a> and <a href="0003-web-remote-ports.html">lesson 0003</a>.</div>
+  </section>
+
+  <section class="quiz">
+    <p class="q">Users near the break room report Wi-Fi drops every time the microwave runs. Their laptops show <code>Band : 2.4 GHz</code>. What's the best fix?</p>
+    <ul class="choices">
+      <li><button class="choice">Renew every laptop's DHCP address lease</button></li>
+      <li><button class="choice">Change to 2.4 GHz channel 12</button></li>
+      <li><button class="choice" data-correct>Steer those laptops to 5 GHz</button></li>
+      <li><button class="choice">Open UDP port 53 for outbound</button></li>
+    </ul>
+    <div class="explain" hidden>2.4 GHz is shared with microwaves, Bluetooth and cordless gear. Moving clients to 5 GHz gets them out of that noise. Channel 12 isn't allowed in the US, and a lease renewal or DNS port wouldn't stop radio interference. See <a href="0006-wifi-bands-channels.html">lesson 0006</a>.</div>
+  </section>
+
+  <section class="quiz">
+    <p class="q">A user moves from a desktop mail app to webmail and finds years of old messages, and the folders they made in the app, missing from the server. How was the desktop app most likely set up?</p>
+    <ul class="choices">
+      <li><button class="choice">The desktop app used IMAP on 143</button></li>
+      <li><button class="choice" data-correct>The desktop app used POP3 on 110</button></li>
+      <li><button class="choice">The desktop app used SMTP on 25</button></li>
+      <li><button class="choice">The desktop app used LDAP on 389</button></li>
+    </ul>
+    <div class="explain" hidden>POP3 downloads mail to one device and typically removes it from the server, so the messages and local folders lived only in the app. IMAP would have kept mail and folders on the server. SMTP only sends; LDAP is directory lookups. See <a href="0004-email-dns-dhcp-ports.html">lesson 0004</a>.</div>
+  </section>
+
+  <section class="quiz">
+    <p class="q">A remote worker can SSH into a jump server and ping it, but Remote Desktop to the same server times out. What's the most likely issue?</p>
+    <ul class="choices">
+      <li><button class="choice">TCP 22 is blocked along the path</button></li>
+      <li><button class="choice">UDP 67 is blocked along the path</button></li>
+      <li><button class="choice">TCP 443 is blocked along the path</button></li>
+      <li><button class="choice" data-correct>TCP 3389 is blocked along the path</button></li>
+    </ul>
+    <div class="explain" hidden>SSH on 22 already works, so 22 isn't blocked. Remote Desktop (RDP) uses TCP 3389, the one four-digit port on the exam list. UDP 67 is DHCP and 443 is HTTPS. See <a href="0003-web-remote-ports.html">lesson 0003</a>.</div>
+  </section>
+
+  <section class="quiz">
+    <p class="q">After a router was replaced, every laptop that joins the guest Wi-Fi gets a <code>169.254.x.x</code> address and a blank default gateway. Signal is strong. What's the most likely cause?</p>
+    <ul class="choices">
+      <li><button class="choice" data-correct>No DHCP server is answering requests</button></li>
+      <li><button class="choice">The DNS server is resolving slowly</button></li>
+      <li><button class="choice">The access point uses channel 6</button></li>
+      <li><button class="choice">Each user's sign-in password has expired</button></li>
+    </ul>
+    <div class="explain" hidden>169.254.x.x is APIPA: Windows made up an address because no DHCP server answered its UDP 67/68 broadcast. A strong signal rules out the radio, channel 6 is a normal choice, and passwords don't change IP addresses. Check the new router's DHCP settings. See <a href="0001-four-ip-settings.html">lesson 0001</a> and <a href="0004-email-dns-dhcp-ports.html">lesson 0004</a>.</div>
+  </section>
+
+  <section class="quiz">
+    <p class="q">An office upgrades every access point and laptop to Wi-Fi 7, but speeds at desks barely improve. Every access point is set to 20 MHz channels on 5 GHz. What's the most likely limit?</p>
+    <ul class="choices">
+      <li><button class="choice">Wi-Fi 7 only runs on 2.4 GHz</button></li>
+      <li><button class="choice">The laptops fell back to 802.11g mode</button></li>
+      <li><button class="choice" data-correct>The narrow 20 MHz channels limit throughput</button></li>
+      <li><button class="choice">The DHCP server gave out slow addresses</button></li>
+    </ul>
+    <div class="explain" hidden>Most of the newer standards' speed comes from wider bonded channels (plus MIMO). Locked to 20 MHz, Wi-Fi 7 can't use its headroom. Wi-Fi 7 runs on 2.4, 5 and 6 GHz, 802.11g can't use 5 GHz at all, and addresses don't have speeds. See <a href="0006-wifi-bands-channels.html">lesson 0006</a> and <a href="0007-wifi-standards.html">lesson 0007</a>.</div>
+  </section>
+
+  <section class="quiz">
+    <p class="q">An older internal app asks for an "LDAP server" to check sign-ins. The company uses only cloud Entra ID, with no on-premises directory. What's the core problem?</p>
+    <ul class="choices">
+      <li><button class="choice">Entra ID answers over SMB, not LDAP</button></li>
+      <li><button class="choice" data-correct>Entra ID answers over HTTPS, not LDAP</button></li>
+      <li><button class="choice">Entra ID answers LDAP only on 3389</button></li>
+      <li><button class="choice">Entra ID answers LDAP only over UDP</button></li>
+    </ul>
+    <div class="explain" hidden>LDAP (389, or 636 for LDAPS) is how software queries a classic directory like on-premises Active Directory. Entra ID is a cloud service that apps reach over HTTPS 443, so there's no LDAP server to point the app at. See <a href="0005-file-sharing-directory-ports.html">lesson 0005</a>.</div>
+  </section>
+
+  <section class="quiz">
+    <p class="q">A firewall allows UDP 53 but blocks TCP 53. Most sites resolve fine, but lookups for one domain with a very large DNS record fail. Why?</p>
+    <ul class="choices">
+      <li><button class="choice">Large DNS answers need port 443 instead</button></li>
+      <li><button class="choice">Large DNS answers are sent through DHCP</button></li>
+      <li><button class="choice">Large DNS answers need a new gateway</button></li>
+      <li><button class="choice" data-correct>Large DNS answers fall back to TCP</button></li>
+    </ul>
+    <div class="explain" hidden>DNS uses UDP 53 for small lookups because skipping TCP's handshake is faster. When an answer is too big for one UDP packet, DNS retries over TCP 53, which this firewall blocks. See <a href="0004-email-dns-dhcp-ports.html">lesson 0004</a> and <a href="0002-tcp-udp-ports.html">lesson 0002</a>.</div>
+  </section>
+
+  <section class="quiz">
+    <p class="q"><code>netsh wlan show drivers</code> on a laptop lists <code>802.11b 802.11g 802.11n 802.11a 802.11ac</code>. The new access points run Wi-Fi 6E on 6 GHz only. What happens?</p>
+    <ul class="choices">
+      <li><button class="choice" data-correct>It cannot join the 6 GHz network</button></li>
+      <li><button class="choice">It joins the network at 6E speed</button></li>
+      <li><button class="choice">It joins over 802.11ac on 6 GHz</button></li>
+      <li><button class="choice">It joins after a DHCP lease renewal</button></li>
+    </ul>
+    <div class="explain" hidden>The adapter's ceiling is 802.11ac (Wi-Fi 5), which is 5 GHz only. 6 GHz needs Wi-Fi 6E or Wi-Fi 7 on both ends, so the laptop never even sees the network. A 5 GHz SSID would let it join at ac speeds. See <a href="0007-wifi-standards.html">lesson 0007</a> and <a href="0006-wifi-bands-channels.html">lesson 0006</a>.</div>
+  </section>
+
+  <section class="quiz">
+    <p class="q">Which of the following lists only protocols that send logins in plain text by default?</p>
+    <ul class="choices">
+      <li><button class="choice">SSH, FTP, HTTP</button></li>
+      <li><button class="choice">Telnet, LDAPS, HTTP</button></li>
+      <li><button class="choice" data-correct>Telnet, FTP, HTTP</button></li>
+      <li><button class="choice">Telnet, FTP, RDP</button></li>
+    </ul>
+    <div class="explain" hidden>Telnet (23), FTP (20/21) and HTTP (80) are all unencrypted. Telnet and HTTP have encrypted replacements in SSH (22) and HTTPS (443). RDP (3389) is encrypted, and LDAPS (636) is LDAP wrapped in TLS. See <a href="0003-web-remote-ports.html">lesson 0003</a> and <a href="0005-file-sharing-directory-ports.html">lesson 0005</a>.</div>
+  </section>
+
+  <section class="quiz">
+    <p class="q">A copier sends scan-to-email through a cloud mail provider and signs in with a username and password. Which port is it most likely configured to use?</p>
+    <ul class="choices">
+      <li><button class="choice">TCP 143, mail fetching with IMAP</button></li>
+      <li><button class="choice" data-correct>TCP 587, mail submission with sign-in</button></li>
+      <li><button class="choice">TCP 110, mail fetching with POP3</button></li>
+      <li><button class="choice">UDP 53, name lookups with DNS</button></li>
+    </ul>
+    <div class="explain" hidden>Scan-to-email only sends, and sending is SMTP: 25 between servers, and 587 when a mail app or device submits mail with a sign-in. IMAP and POP3 fetch mail; DNS finds the server but doesn't carry the message. See <a href="0004-email-dns-dhcp-ports.html">lesson 0004</a>.</div>
+  </section>
+
+  <p class="quiz-score" data-quiz-score></p>
+
+  <h2>Explain it in your own words</h2>
+  <p>Say or write the answer before you open each one. If you can explain it to a coworker, you know it.</p>
+
+  <details class="recall">
+    <summary>A user says "I can't sign in to anything" and their laptop has a 169.254.x.x address. Explain to them, without jargon, why this isn't an account problem and what you'll check. <span class="hint">(<a href="0001-four-ip-settings.html">lesson 0001</a>, <a href="0004-email-dns-dhcp-ports.html">lesson 0004</a>)</span></summary>
+    <p>The laptop never got its network settings: it asked for them (DHCP, UDP 67/68) and nobody answered, so it made up a 169.254 address with no gateway and no DNS. It can't reach the sign-in service at all, so the password is never even checked. Check the cable or Wi-Fi connection, the switch port, and the DHCP server.</p>
+  </details>
+
+  <details class="recall">
+    <summary>Why does a live video call use UDP while a file download uses TCP? And why can't DHCP use TCP? <span class="hint">(<a href="0002-tcp-udp-ports.html">lesson 0002</a>)</span></summary>
+    <p>TCP sets up a connection and re-sends lost data in order: right for files, where every byte matters. UDP just sends: a lost video packet is a brief glitch instead of a stall, and a late packet is useless anyway. DHCP clients have no IP address yet, so they can't set up a TCP connection; they broadcast over UDP and wait.</p>
+  </details>
+
+  <details class="recall">
+    <summary>A manager asks why the new Wi-Fi 7 access points didn't make every laptop fast. Give two reasons. <span class="hint">(<a href="0006-wifi-bands-channels.html">lesson 0006</a>, <a href="0007-wifi-standards.html">lesson 0007</a>)</span></summary>
+    <p>A connection runs at the best standard both ends share, so an older laptop adapter (say, Wi-Fi 5) stays at its own speed. And distance and walls matter: higher bands are faster but fade sooner, so far-away laptops get weaker signal or fall back to 2.4 GHz. (Narrow channel settings and crowded channels are good third answers.)</p>
+  </details>
+
+  <details class="recall">
+    <summary>Walk a "the shared drive won't open" ticket from the bottom up: which checks, in which order, and which port matters at the end? <span class="hint">(<a href="0001-four-ip-settings.html">0001</a>, <a href="0002-tcp-udp-ports.html">0002</a>, <a href="0005-file-sharing-directory-ports.html">0005</a>)</span></summary>
+    <p>Does the PC have good IP settings (no 169.254, a gateway, a DNS server)? Does the server's name resolve? Does ping reach it? Then test the service's port: SMB on TCP 445 with <code>Test-NetConnection</code>. Only after a connection opens do permissions on the share come into it.</p>
+  </details>
+
+  <h2>Pace check</h2>
+  <div class="callout">
+    <span class="label">A+ Core 1: 3 of 63 videos covered (about 5%)</span>
+    <div class="meter"><span style="width:5%"></span></div>
+    <p>Fully covered so far: Assigning IP Addresses, Introduction to IP, and Common Ports. Wireless Network Technologies is half done and gets counted when the next lesson finishes it.</p>
+    <p><strong>What the calendar needs:</strong> the syllabus puts all new material in weeks 1–17 (to Jan 23), with weeks 18–21 for review. That's 63 videos in 17 weeks, about <strong>3.7 per week</strong>. After week one you'd expect about 4; you're at 3, so <strong>about one video behind</strong>. That's small, and you're still inside the Networking block (2.1–2.8, through Oct 24) where it should be.</p>
+    <p><strong>The trend to watch:</strong> this week's lessons covered roughly one video per two lessons. With six daily lessons a week (Saturdays are quizzes now), that's about 2.6 videos a week, which would reach about 45 of 63 by Jan 23. Left alone, the gap grows by about one video a week.</p>
+    <p><strong>Options</strong> (your call; nothing has been changed):</p>
+    <ul>
+      <li>Let some daily lessons cover a whole short video when it's simple, keeping the 10-minute limit.</li>
+      <li>Borrow one or two of the four review weeks for new material.</li>
+      <li>Move the exam target from late February to around late March 2027.</li>
+    </ul>
+    <p>Ask your teacher to adjust the plan if you want one of these. Next Saturday's check will show whether the trend holds.</p>
+  </div>
+
+  <div class="callout source" id="src-messer">
+    <span class="label">Primary source: watch next</span>
+    <p>Professor Messer, <a href="https://www.professormesser.com/free-a-plus-training/220-1201/220-1201-video/220-1201-training-course/">Free CompTIA A+ 220-1201 course</a>. Rewatch the video behind whichever question you missed: Assigning IP Addresses, Introduction to IP, Common Ports, or Wireless Network Technologies. Free.</p>
+  </div>
+
+  <div class="callout ask">
+    <span class="label">Questions?</span>
+    <p>Missed one and the explanation didn't settle it? Ask your teacher. Open Claude in the Teacher repo and ask, for example: <em>"In IT lesson 0008, question 11, why would a DNS answer be too big for UDP?"</em> Follow-up questions are part of the course.</p>
+  </div>
+</main>
+<nav class="page-footer">
+  <a href="0007-wifi-standards.html">← 802.11 Wi-Fi standards</a>
+  <a href="../../index.html">Hub</a>
+  <span class="disabled">Next lesson: tomorrow →</span>
+</nav>
+</body>
+</html>
