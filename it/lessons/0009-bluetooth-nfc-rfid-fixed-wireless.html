@@ -1,0 +1,170 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Bluetooth, NFC, RFID, Fixed Wireless</title>
+<meta name="description" content="IT lesson 0009: the wireless that isn't Wi-Fi. Long-range fixed wireless, Bluetooth, RFID and NFC: range, power, and what each is for.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=JetBrains+Mono&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../assets/course.css">
+<script src="../../assets/quiz.js" defer></script>
+</head>
+<body class="track-it">
+<nav class="page-header">
+  <a class="home" href="../../index.html">Teacher hub</a>
+  <span>IT and certs</span>
+  <a href="../reference/glossary.html">Glossary</a>
+  <a href="../reference/network-settings.html">Cheat sheet</a>
+</nav>
+<main>
+  <p class="kicker">IT and certs · Lesson 0009 · A+ Core 1, objective 2.2</p>
+  <h1>Bluetooth, NFC, RFID and fixed wireless</h1>
+  <p class="lede">About 10 minutes. The last two lessons were Wi-Fi. Today: the four other wireless technologies in the same exam objective. The trick is to sort them by <strong>range</strong>: kilometers, meters, a few meters, a few centimeters. Range tells you what each one is for.</p>
+
+  <div class="callout">
+    <span class="label">Why this matters at work</span>
+    <p>Passwordless sign-in leans on these radios. A FIDO2 security key, which Microsoft Entra ID accepts as a sign-in method, can talk to the device over USB, <strong>NFC</strong> or <strong>Bluetooth Low Energy</strong>.<sup class="cite"><a href="#src-fido">[5]</a></sup> When "my key won't work" turns out to be "the phone's NFC is off" or "Bluetooth isn't paired", you've fixed a sign-in problem without touching the account.</p>
+  </div>
+
+  <h2>Four technologies, longest range first</h2>
+
+  <h3>1. Long-range fixed wireless (kilometers)</h3>
+  <p>A radio link between two <em>fixed</em> places, such as two buildings or a tower and a building, using a <strong>directional antenna</strong> at each end that aims a narrow beam at the other.<sup class="cite"><a href="#src-fixed">[2]</a></sup> Used to join a second building without trenching cable, or to bring internet to places without wired service. Exam points:<sup class="cite"><a href="#src-messer">[1]</a></sup></p>
+  <ul>
+    <li><strong>Licensed or unlicensed spectrum.</strong> Licensed: you pay for exclusive use of a frequency, so no one else interferes. Unlicensed: free (often the same 2.4 and 5 GHz bands as Wi-Fi) but shared.</li>
+    <li><strong>Power is regulated.</strong> Regulators (the FCC in the US) cap how strongly you may transmit, and the cap depends on band and antenna gain.<sup class="cite"><a href="#src-fcc">[3]</a></sup> You can't simply turn the power all the way up.</li>
+  </ul>
+
+  <h3>2. Bluetooth (about 10 meters)</h3>
+  <p>A <strong>personal area network (PAN)</strong> for headsets, mice, keyboards, speakers and phones. It uses the <strong>2.4 GHz</strong> band (the same one as lesson 0006's crowded Wi-Fi channels), and consumer devices reach about <strong>10 meters</strong>.<sup class="cite"><a href="#src-messer">[1]</a></sup> Devices must be <strong>paired</strong> once before they connect, and they need to be in pairing mode, in range and charged.<sup class="cite"><a href="#src-bt">[6]</a></sup></p>
+
+  <h3>3. RFID (centimeters to meters)</h3>
+  <p><strong>Radio-frequency identification</strong>: a small tag answers a reader. Access badges, inventory and assembly-line tracking, pet ID chips.<sup class="cite"><a href="#src-messer">[1]</a></sup> The surprising part: a <strong>passive</strong> tag has <strong>no battery</strong>. The reader's radio signal powers the tag just long enough for it to reply. That's why passive range is short and the tags are cheap and tiny. <strong>Active</strong> tags carry a battery and reach much farther.<sup class="cite"><a href="#src-rfid">[4]</a></sup></p>
+
+  <h3>4. NFC (about 4 centimeters)</h3>
+  <p><strong>Near field communication</strong> grew out of RFID and runs at 13.56 MHz, but it's <strong>two-way</strong> and works only at a <strong>few centimeters</strong>.<sup class="cite"><a href="#src-nfc">[7]</a></sup> That tiny range is the point: you have to <em>mean</em> to tap. Tap-to-pay, tapping a phone to a badge reader, tapping a security key to a phone.</p>
+
+  <div class="table-wrap">
+  <table>
+    <thead><tr><th>Technology</th><th>Range</th><th>Typical use</th><th>Remember</th></tr></thead>
+    <tbody>
+      <tr><td><strong>Fixed wireless</strong></td><td>Kilometers</td><td>Building to building</td><td>Directional antennas; regulated power</td></tr>
+      <tr><td><strong>Bluetooth</strong></td><td>About 10 m</td><td>Headsets, mice, keyboards</td><td>2.4 GHz; pair first</td></tr>
+      <tr><td><strong>RFID</strong></td><td>cm to m</td><td>Badges, inventory tags</td><td>Passive tag: no battery</td></tr>
+      <tr><td><strong>NFC</strong></td><td>About 4 cm</td><td>Tap to pay, tap a key</td><td>Two-way, built on RFID</td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <div class="callout win">
+    <span class="label">Memory hooks</span>
+    <p><strong>Kilometers, ten meters, a few meters, a tap.</strong> Fixed wireless = two buildings and a regulator. Bluetooth = pair, 2.4, ten meters. RFID = the reader powers the tag. NFC = RFID you tap, and it talks back.</p>
+  </div>
+
+  <h2>Try it (2 minutes)</h2>
+  <p>On a Windows laptop, open PowerShell and run:</p>
+<pre><code>Get-PnpDevice -Class Bluetooth</code></pre>
+  <p>You'll see the Bluetooth radio itself plus every paired device, each with a <strong>Status</strong>:</p>
+<pre><code>Status  Class      FriendlyName
+------  -----      ------------
+<span class="hl">OK      Bluetooth  Intel(R) Wireless Bluetooth(R)</span>
+OK      Bluetooth  Example Headset
+Unknown Bluetooth  Example Mouse</code></pre>
+  <p class="sidenote">Your list will differ. <code>OK</code> = present and working. <code>Unknown</code> usually means paired but not connected right now (off, asleep or out of range). <code>Error</code> on the radio line points to a driver or hardware problem, not the headset. The everyday fix path is Settings → Bluetooth &amp; devices: remove the device, put it in pairing mode, add it again.<sup class="cite"><a href="#src-bt">[6]</a></sup></p>
+
+  <h2>Practice</h2>
+  <p>Answer from memory before scrolling back up.</p>
+
+  <section class="quiz">
+    <p class="q">Employees open the office door by holding a thin plastic badge near a reader. The badge has no battery. What technology is most likely?</p>
+    <ul class="choices">
+      <li><button class="choice">Bluetooth pairing with the reader</button></li>
+      <li><button class="choice" data-correct>RFID tag powered by reader</button></li>
+      <li><button class="choice">802.11 link at 2.4 GHz</button></li>
+      <li><button class="choice">A long-range fixed wireless link</button></li>
+    </ul>
+    <div class="explain" hidden>A passive RFID tag has no battery: the reader's radio signal powers it long enough to reply with its ID. Bluetooth and Wi-Fi both need a powered radio in the badge. (Some newer badges use NFC, which is built on the same idea.)</div>
+  </section>
+
+  <section class="quiz">
+    <p class="q">A company leases a second building across a wide parking lot and wants it on the same network, without digging a trench for cable. What fits best?</p>
+    <ul class="choices">
+      <li><button class="choice">Bluetooth adapters paired between both buildings</button></li>
+      <li><button class="choice">NFC readers placed at both doors</button></li>
+      <li><button class="choice" data-correct>Fixed wireless with a directional antenna</button></li>
+      <li><button class="choice">Passive RFID tags on each roof</button></li>
+    </ul>
+    <div class="explain" hidden>Long-range fixed wireless links two fixed sites with a directional antenna at each end, aimed at each other. Bluetooth reaches about 10 meters, NFC a few centimeters, and RFID only identifies tags; none of them carry a building's network traffic.</div>
+  </section>
+
+  <section class="quiz">
+    <p class="q">A user's wireless headset works at their desk but cuts out when they walk to the break room about 25 meters away, leaving the laptop behind. Most likely cause?</p>
+    <ul class="choices">
+      <li><button class="choice" data-correct>The headset is beyond Bluetooth range</button></li>
+      <li><button class="choice">The headset's DHCP lease has expired</button></li>
+      <li><button class="choice">The AP switched to channel 11</button></li>
+      <li><button class="choice">The break room blocks NFC signals</button></li>
+    </ul>
+    <div class="explain" hidden>Consumer Bluetooth reaches about 10 meters, so 25 meters away from the laptop is out of range. A headset paired to a laptop doesn't get a DHCP address or use the Wi-Fi access point, and it isn't an NFC device.</div>
+  </section>
+
+  <section class="quiz">
+    <p class="q">To approve a sign-in, a user holds a hardware security key against the back of their phone for a second. Which technology carries that tap?</p>
+    <ul class="choices">
+      <li><button class="choice">Long-range fixed wireless</button></li>
+      <li><button class="choice">Active RFID beacon</button></li>
+      <li><button class="choice">Wi-Fi 6E radio</button></li>
+      <li><button class="choice" data-correct>Near field communication</button></li>
+    </ul>
+    <div class="explain" hidden>Holding two things together for a second is NFC's signature: two-way, a few centimeters, tap to use. Security keys accepted by Microsoft Entra ID can connect over USB, NFC or Bluetooth Low Energy.</div>
+  </section>
+  <p class="quiz-score" data-quiz-score></p>
+
+  <details class="recall">
+    <summary>From memory: an installer wants to turn a fixed wireless link's power all the way up "for a stronger signal." What do you tell them, and what's the difference between licensed and unlicensed spectrum? <span class="hint">(then click to check)</span></summary>
+    <p>Transmit power is capped by regulators (the FCC in the US), depending on the band and antenna. Licensed spectrum is paid-for, exclusive use with no one else interfering; unlicensed is free but shared with everyone else nearby.</p>
+  </details>
+
+  <h2>Review: earlier lessons</h2>
+  <p>Spaced retrieval: pull these from memory first, then check.</p>
+
+  <details class="recall">
+    <summary>A spec sheet says "Wi-Fi 5." Which 802.11 standard, which band, and can an 802.11g-only device join that network? <span class="hint">(<a href="0007-wifi-standards.html">lesson 0007</a>, 2 days ago)</span></summary>
+    <p>802.11ac, 5 GHz only. An 802.11g device is 2.4 GHz only, so it can't see a 5 GHz-only network: backward compatibility only works within a band.</p>
+  </details>
+
+  <details class="recall">
+    <summary>Which three 2.4 GHz channels don't overlap, and why does that matter for Bluetooth too? <span class="hint">(<a href="0006-wifi-bands-channels.html">lesson 0006</a>, 3 days ago)</span></summary>
+    <p>Channels <strong>1, 6 and 11</strong>. Bluetooth also lives in 2.4 GHz, so a crowded 2.4 GHz office is noisy for both Wi-Fi and Bluetooth devices.</p>
+  </details>
+
+  <details class="recall">
+    <summary>Loading a web page uses TCP, but a DNS lookup normally uses UDP. Why the difference? <span class="hint">(<a href="0002-tcp-udp-ports.html">lesson 0002</a>, 7 days ago)</span></summary>
+    <p>A web page must arrive complete and in order, so it uses TCP's reliable, connection-oriented delivery. A DNS lookup is one small question and answer: UDP skips the connection setup, and if the reply is lost the client just asks again.</p>
+  </details>
+
+  <div class="callout source" id="src-messer">
+    <span class="label">Primary source: watch next</span>
+    <p>[1] Professor Messer, <a href="https://www.professormesser.com/free-a-plus-training/220-1201/220-1201-video/wireless-network-technologies-220-1201/">Wireless Network Technologies (220-1201)</a>. Free. Watch the last part (long-range fixed wireless, Bluetooth, RFID, NFC): this lesson finishes the video.</p>
+    <p id="src-fixed">[2] Fixed wireless and directional antennas: <a href="https://graphsearch.epfl.ch/en/concept/13214323">EPFL Graph Search, Fixed wireless</a>.</p>
+    <p id="src-fcc">[3] US power limits for fixed point-to-point links depend on band and antenna gain: <a href="https://www.govinfo.gov/content/pkg/CFR-2013-title47-vol1/pdf/CFR-2013-title47-vol1-sec15-247.pdf">47 CFR §15.247 (FCC Part 15)</a>.</p>
+    <p id="src-rfid">[4] Passive vs. active RFID: <a href="https://learn.sparkfun.com/tutorials/rfid-basics/types-of-rfid-systems">SparkFun, RFID Basics</a>.</p>
+    <p id="src-fido">[5] <a href="https://learn.microsoft.com/en-us/entra/identity/authentication/fido2-compatibility">Microsoft Learn, Support for FIDO2 authentication with Microsoft Entra ID</a> (USB, NFC and BLE transports).</p>
+    <p id="src-bt">[6] <a href="https://support.microsoft.com/windows/troubleshoot-bluetooth-not-connecting-in-windows-b91d81ec-5b3c-4bcd-be58-d09a91bb163e">Microsoft Support, Troubleshoot Bluetooth not connecting in Windows</a>.</p>
+    <p id="src-nfc">[7] NFC frequency and range: <a href="https://www.rfwireless-world.com/terminology/other-wireless/nfc-vs-rfid-vs-bluetooth-vs-wifi">RF Wireless World, NFC vs. RFID vs. Bluetooth vs. Wi-Fi</a>.</p>
+  </div>
+
+  <div class="callout ask">
+    <span class="label">Questions?</span>
+    <p>Anything unclear? Ask your teacher. Open Claude in the Teacher repo and ask, for example: <em>"In IT lesson 0009, how is Bluetooth Low Energy different from regular Bluetooth?"</em> Follow-up questions are part of the course.</p>
+  </div>
+</main>
+<nav class="page-footer">
+  <a href="0008-week-quiz-2026-10-03.html">← Weekly quiz: Sep 26 – Oct 2</a>
+  <a href="../../index.html">Hub</a>
+  <span class="disabled">Next lesson: tomorrow →</span>
+</nav>
+</body>
+</html>

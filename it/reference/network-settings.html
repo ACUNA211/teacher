@@ -129,6 +129,19 @@
   </div>
   <p class="sidenote">A link runs at the best standard both ends share, and only within a band both can use. Adapter's supported standards: <code>netsh wlan show drivers</code> (Radio types supported).</p>
 
+  <h2>Other wireless: fixed, Bluetooth, RFID, NFC</h2>
+  <div class="table-wrap">
+  <table>
+    <thead><tr><th>Technology</th><th>Range</th><th>Typical use</th><th>Remember</th></tr></thead>
+    <tbody>
+      <tr><td>Long-range fixed wireless</td><td>Kilometers</td><td>Building to building, rural internet</td><td>Directional antennas; licensed or unlicensed spectrum; power limits set by regulators</td></tr>
+      <tr><td>Bluetooth</td><td>About 10 m (consumer)</td><td>Headsets, mice, keyboards, phones (PAN)</td><td>2.4 GHz; must be paired first</td></tr>
+      <tr><td>RFID</td><td>Centimeters to meters (passive)</td><td>Badges, inventory and pet tags</td><td>Passive tags have no battery: the reader's radio powers them</td></tr>
+      <tr><td>NFC</td><td>About 4 cm</td><td>Tap to pay, tap a badge or security key</td><td>Built on RFID, 13.56 MHz, two-way</td></tr>
+    </tbody>
+  </table>
+  </div>
+
   <h2>Commands (Windows)</h2>
   <div class="table-wrap">
   <table>
@@ -141,6 +154,7 @@
       <tr><td><code>nbtstat -n</code></td><td>Show this PC's NetBIOS names (listed = NetBIOS over TCP/IP enabled)</td></tr>
       <tr><td><code>netsh wlan show interfaces</code></td><td>Current Wi-Fi connection: radio type (802.11 standard), band, channel, signal</td></tr>
       <tr><td><code>netsh wlan show drivers</code></td><td>Wi-Fi adapter capabilities: every 802.11 standard it supports</td></tr>
+      <tr><td><code>Get-PnpDevice -Class Bluetooth</code></td><td>PowerShell: the Bluetooth radio and paired devices, with status (OK, Error, Unknown)</td></tr>
       <tr><td><code>Resolve-DnsName name</code> (<code>-Type MX</code> for mail servers)</td><td>PowerShell: ask DNS for a name's records</td></tr>
     </tbody>
   </table>
