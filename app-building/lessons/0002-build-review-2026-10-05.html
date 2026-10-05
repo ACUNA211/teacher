@@ -1,0 +1,182 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Filtering Like LINQ</title>
+<meta name="description" content="App building lesson 0002, build review for 2026-10-05: how applyFilters in two-player-bg-finder uses filter, some and every (JavaScript's Where, Any and All), and how its Vitest tests pin the behavior down.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=JetBrains+Mono&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../assets/course.css">
+<script src="../../assets/quiz.js" defer></script>
+</head>
+<body class="track-app">
+<nav class="page-header">
+  <a class="home" href="../../index.html">Teacher hub</a>
+  <span>App building</span>
+  <a href="../reference/glossary.html">Glossary</a>
+</nav>
+<main>
+  <p class="kicker">App building · Lesson 0002 · Build review, week of 2026-09-28</p>
+  <h1>Filtering like LINQ: filter, some, every</h1>
+  <p class="lede">About 10 minutes. By the end you can read <code>applyFilters</code> in Board Games for Two line by line, say what each filter does with an empty selection, and use a test to prove it.</p>
+
+  <div class="callout">
+    <span class="label">New activity elsewhere</span>
+    <p>New activity in <strong>calorie-manager</strong> (and in one private repo). Want it registered for Monday reviews? Tell your teacher.</p>
+  </div>
+
+  <div class="callout">
+    <span class="label">What got built this week</span>
+    <p>Nothing new in <a href="https://github.com/ACUNA211/two-player-bg-finder">two-player-bg-finder</a>: the last commit is still <a href="https://github.com/ACUNA211/two-player-bg-finder/commit/3a77ac7">3a77ac7</a> (2026-09-26). So this week we read code that already exists: the function behind the filter panel, <a href="https://github.com/ACUNA211/two-player-bg-finder/blob/3a77ac7/web/src/filters.ts#L106-L122"><code>applyFilters</code> in <code>web/src/filters.ts</code></a>, last changed in <a href="https://github.com/ACUNA211/two-player-bg-finder/commit/26bb9e1">26bb9e1</a>.</p>
+  </div>
+
+  <h2>1. One pure function decides what you see</h2>
+  <p>Every time you tick a box in the filter panel, <code>GamesBrowser.tsx</code> runs one line:</p>
+<pre><code>const filtered = useMemo(() =&gt; applyFilters(games, filters), [games, filters]);</code></pre>
+  <p><code>useMemo</code> caches the result and only recomputes when <code>games</code> or <code>filters</code> change (the same dependency-array idea as <code>useEffect</code> in lesson 0001).<sup class="cite"><a href="#src-react">[2]</a></sup> The interesting part is <code>applyFilters</code> itself. Here it is, trimmed:</p>
+<pre><code>export function applyFilters(games: Game[], f: Filters): Game[] {
+  const name = f.name.trim().toLowerCase();
+  ...
+  return games.<span class="hl">filter</span>(
+    (g) =&gt;
+      (!name || g.name.toLowerCase().includes(name)) &amp;&amp;
+      (!f.types.length || f.types.<span class="hl">some</span>((t) =&gt; g.types.includes(t))) &amp;&amp;
+      f.mustPlay.<span class="hl">every</span>((n) =&gt; plays(g, n)) &amp;&amp;
+      ...
+  );
+}</code></pre>
+  <p>It takes the full list and the current filter settings, and returns a new list. It changes nothing and touches no screen. That's a <em>pure function</em>, and it's <strong>why</strong> the AI put it in its own file instead of inside the component: a plain function is easy to test without a browser (section 3).</p>
+
+  <h2>2. You already know these three methods</h2>
+  <p>JavaScript arrays have built-in methods that take an arrow function (a lambda). They map almost one-to-one onto LINQ:</p>
+  <div class="table-wrap">
+  <table>
+    <thead><tr><th>JavaScript</th><th>C# LINQ</th><th>Returns</th><th>On an empty array</th></tr></thead>
+    <tbody>
+      <tr><td><code>games.filter(g =&gt; ...)</code></td><td><code>games.Where(g =&gt; ...)</code></td><td>a new array of the items that pass</td><td><code>[]</code></td></tr>
+      <tr><td><code>types.some(t =&gt; ...)</code></td><td><code>types.Any(t =&gt; ...)</code></td><td><code>true</code> if <em>at least one</em> passes</td><td><code>false</code></td></tr>
+      <tr><td><code>mustPlay.every(n =&gt; ...)</code></td><td><code>mustPlay.All(n =&gt; ...)</code></td><td><code>true</code> if <em>all</em> pass</td><td><code>true</code></td></tr>
+      <tr><td><code>g.types.includes(t)</code></td><td><code>g.Types.Contains(t)</code></td><td><code>true</code> if the value is in the array</td><td><code>false</code></td></tr>
+    </tbody>
+  </table>
+  </div>
+  <p>One difference: <code>filter</code> builds the whole new array right away. LINQ's <code>Where</code> is lazy until you enumerate it.<sup class="cite"><a href="#src-mdn">[1]</a></sup></p>
+  <p>Now read the filter conditions with that table in mind. Each one is joined with <code>&amp;&amp;</code>, so a game must pass all of them:</p>
+  <ul>
+    <li><strong>Types: "matches any".</strong> <code>f.types.some(t =&gt; g.types.includes(t))</code>: keep the game if <em>any</em> selected type is one of its types. Pick Strategy and Family, and a Family-only game still shows.</li>
+    <li><strong>Must play: "all required".</strong> <code>f.mustPlay.every(n =&gt; plays(g, n))</code>: tick 3 and 4, and the game must support <em>both</em> player counts.</li>
+    <li><strong>The empty case.</strong> Nothing selected should mean "filter is off". <code>every</code> on an empty array is already <code>true</code>, so must-play needs no guard. <code>some</code> on an empty array is <code>false</code>, which would hide every game, so the types line adds a guard first: <code>!f.types.length || ...</code>.</li>
+  </ul>
+  <p>That guard uses JavaScript <em>truthiness</em>: <code>0</code> counts as false, so <code>!f.types.length</code> is <code>true</code> when the array is empty, and <code>||</code> stops there without calling <code>some</code>. C# would make you write <code>f.Types.Count == 0 || ...</code>; JS accepts the number directly.<sup class="cite"><a href="#src-mdn">[1]</a></sup> The <code>!name ||</code> on the line above is the same trick: an empty string is falsy too.</p>
+
+  <div class="callout win">
+    <span class="label">The big idea</span>
+    <p><code>some</code> means "any", <code>every</code> means "all", and they disagree about empty arrays (<code>false</code> vs <code>true</code>). When you read a filter, ask two questions: <strong>any or all?</strong> and <strong>what happens when nothing is selected?</strong> The comments in the panel ("matches any") and the test names answer both.</p>
+  </div>
+
+  <h2>3. How the tests pin it down</h2>
+  <p><code>web/src/GamesBrowser.test.tsx</code> tests <code>applyFilters</code> directly, with tiny fake games. First, a helper that builds one:</p>
+<pre><code>function game(pos: number, over: <span class="hl">Partial&lt;Game&gt;</span> = {}): Game {
+  return {
+    pos, score: 100 - pos / 10, name: `Game ${pos}`, weight: 2.5, types: [], ...
+    <span class="hl">...over</span>,
+  };
+}</code></pre>
+  <ul>
+    <li><code>Partial&lt;Game&gt;</code> is a built-in TypeScript type: the same shape as <code>Game</code>, but every field optional.<sup class="cite"><a href="#src-ts">[3]</a></sup> So a test can pass just <code>{ weight: null }</code>.</li>
+    <li><code>over: Partial&lt;Game&gt; = {}</code> is a default parameter, like C#'s <code>= null</code> optional arguments.</li>
+    <li><code>...over</code> is <em>spread</em>: copy every property of <code>over</code> into this new object. Later properties win, so the overrides replace the defaults. It's the C# record <code>with</code> expression: <code>defaults with { Weight = null }</code>.<sup class="cite"><a href="#src-mdn">[1]</a></sup></li>
+  </ul>
+  <p>Then each test names one rule and checks it:</p>
+<pre><code>test("type matches any selected value", () =&gt; {
+  const gs = [game(1, { types: ["Strategy"] }), game(2, { types: ["Family"] }), game(3, { types: ["Party"] })];
+  expect(pos(applyFilters(gs, filt({ types: ["Strategy", "Family"] })))).<span class="hl">toEqual([1, 2])</span>;
+});</code></pre>
+  <p><code>test(name, fn)</code> is an xUnit <code>[Fact]</code>, and <code>expect(x).toEqual(y)</code> is <code>Assert.Equal(y, x)</code>, comparing arrays by content.<sup class="cite"><a href="#src-vitest">[4]</a></sup> <code>pos</code> turns the games into their numbers so the expected value reads <code>[1, 2]</code>. The test name is the spec: "any selected value". If someone (or the AI) changes <code>some</code> to <code>every</code>, this exact test turns red. I tried it: that's the only filter test that fails.</p>
+
+  <h2>Practice</h2>
+  <section class="quiz">
+    <p class="q">Nobody has picked a type, so <code>f.types</code> is <code>[]</code>. What does the line <code>(!f.types.length || f.types.some((t) =&gt; g.types.includes(t)))</code> do?</p>
+    <ul class="choices">
+      <li><button class="choice">Drops every game from the list</button></li>
+      <li><button class="choice" data-correct>Keeps every game in the list</button></li>
+      <li><button class="choice">Keeps only games with no types</button></li>
+      <li><button class="choice">Throws because the array is empty</button></li>
+    </ul>
+    <div class="explain" hidden><code>[].length</code> is <code>0</code>, which is falsy, so <code>!0</code> is <code>true</code>. <code>||</code> stops at the first true value and never calls <code>some</code>. The condition is <code>true</code> for every game, so the type filter is effectively off. Without the guard, <code>[].some(...)</code> would be <code>false</code> and every game would vanish.</div>
+  </section>
+
+  <section class="quiz">
+    <p class="q">What breaks if we change <code>f.types.some(...)</code> to <code>f.types.every(...)</code> on that same line?</p>
+    <ul class="choices">
+      <li><button class="choice">Nothing changes, since both return a boolean</button></li>
+      <li><button class="choice">Games must now match no selected type</button></li>
+      <li><button class="choice">TypeScript rejects it, since every needs indexes</button></li>
+      <li><button class="choice" data-correct>Games must now match every selected type</button></li>
+    </ul>
+    <div class="explain" hidden>Both compile (same signature), but the meaning flips from "any" to "all". Pick Strategy and Family and a game now needs both types, so the test <em>type matches any selected value</em> gets <code>[]</code> instead of <code>[1, 2]</code> and fails.</div>
+  </section>
+
+  <section class="quiz">
+    <p class="q">Why does the must-play line, <code>f.mustPlay.every((n) =&gt; plays(g, n))</code>, need no <code>!f.mustPlay.length ||</code> guard?</p>
+    <ul class="choices">
+      <li><button class="choice">mustPlay is never an empty array</button></li>
+      <li><button class="choice" data-correct>every on empty arrays returns true</button></li>
+      <li><button class="choice">TypeScript inserts the guard during compilation</button></li>
+      <li><button class="choice">some on empty arrays returns true</button></li>
+    </ul>
+    <div class="explain" hidden>"All of nothing" is true, like LINQ's <code>All</code> on an empty list. So with no boxes ticked, every game passes, and the test <em>must play: blank filters nothing</em> confirms it. <code>mustPlay</code> starts empty in <code>emptyFilters()</code>, TypeScript never adds code like this, and <code>some</code> on an empty array returns <code>false</code>.</div>
+  </section>
+
+  <section class="quiz">
+    <p class="q">In the test helper <code>game()</code>, someone moves <code>...over,</code> from the end of the object to the top. What happens?</p>
+    <ul class="choices">
+      <li><button class="choice">Nothing, object keys have no order</button></li>
+      <li><button class="choice">The overrides would overwrite every default</button></li>
+      <li><button class="choice">Games would lose their default values</button></li>
+      <li><button class="choice" data-correct>The defaults would overwrite every override</button></li>
+    </ul>
+    <div class="explain" hidden>In an object literal, a later property with the same name wins. With the spread first, <code>weight: 2.5</code> comes after <code>{ weight: null }</code> and replaces it, so every fake game looks the same. I tried it: 10 of the 12 tests in that file fail.</div>
+  </section>
+  <p class="quiz-score" data-quiz-score></p>
+
+  <h2>Try it in your copy (5 minutes)</h2>
+  <ol>
+    <li>In your local <code>two-player-bg-finder</code>, <code>cd web</code>, run <code>git pull</code> and <code>npm install</code> if you haven't.</li>
+    <li>Run only the filter tests: <code>npx vitest run src/GamesBrowser.test.tsx</code>. You should see 12 passed. (The first run can be slow.)</li>
+    <li>Open <code>src/filters.ts</code>, find the <code>f.mustPlay.every</code> line in <code>applyFilters</code>, and change <code>every</code> to <code>some</code>.</li>
+    <li><strong>Predict first</strong>: which test fails, and does an empty must-play selection still show every game? Then run the tests again.</li>
+    <li>Undo the change: <code>git checkout src/filters.ts</code>.</li>
+  </ol>
+  <details class="recall">
+    <summary>What should you see? <span class="hint">(after running it)</span></summary>
+    <p>Ten of the 12 tests fail, not one. The default filters (<code>emptyFilters()</code>) start with <code>mustPlay: []</code>, and with <code>some</code> that becomes <code>[].some(...)</code>, which is <code>false</code>, so <strong>every</strong> game disappears in almost every test: most failures read <code>expected [] to deeply equal [...]</code>. If you predicted "only the must-play test", that's the lesson: the empty case isn't an edge case here, it's the default. One word broke the whole filter, and the tests caught it in seconds.</p>
+  </details>
+
+  <details class="recall">
+    <summary>Spaced review from lesson 0001: <code>applyFilters</code> reads <code>g.maxplayers</code>. If the scraper stopped writing <code>maxplayers</code> to <code>games.json</code> but <code>types.ts</code> kept it, would <code>npm run build</code> catch it? <span class="hint">(answer, then click)</span></summary>
+    <p>No. <code>tsc</code> checks the code against <code>types.ts</code>, never against <code>games.json</code>, which arrives at run time through <code>fetch</code>. The build passes; in the browser <code>g.maxplayers</code> is <code>undefined</code>, and comparisons like <code>n &lt;= g.maxplayers</code> are simply <code>false</code>, so the must-play filter quietly hides games and the Players column shows <code>undefined</code>. No error anywhere, just wrong results.</p>
+  </details>
+
+  <div class="callout source" id="src-mdn">
+    <span class="label">Primary source: read next</span>
+    <p>[1] MDN Web Docs, <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Indexed_collections">JavaScript Guide: Indexed collections</a>, the "Array methods" section, for <code>filter</code>, <code>some</code>, <code>every</code> and friends. Then the reference pages for <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/every"><code>every</code></a> (note what it says about empty arrays), <a href="https://developer.mozilla.org/en-US/docs/Glossary/Falsy">Falsy</a> and <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Spread_syntax">Spread syntax</a>. About 15 minutes.</p>
+    <p id="src-react">[2] react.dev, <a href="https://react.dev/reference/react/useMemo">useMemo</a>.</p>
+    <p id="src-ts">[3] TypeScript Handbook, <a href="https://www.typescriptlang.org/docs/handbook/utility-types.html#partialtype">Utility Types: Partial&lt;Type&gt;</a>.</p>
+    <p id="src-vitest">[4] Vitest Guide, <a href="https://vitest.dev/guide/">Getting Started</a> (writing tests with <code>test</code> and <code>expect</code>). Every "I tried it" result above was run on the repo at <code>3a77ac7</code>.</p>
+  </div>
+
+  <div class="callout ask">
+    <span class="label">Questions?</span>
+    <p>Anything unclear? Ask your teacher. Open Claude in the Teacher repo and ask, for example: <em>"In app lesson 0002, how would I add a test that Types still matches any when three types are picked?"</em> Follow-up questions are part of the course.</p>
+  </div>
+</main>
+<nav class="page-footer">
+  <a href="0001-build-review-2026-09-28.html">← 0001 Types are a promise</a>
+  <a href="../../index.html">Hub</a>
+  <span class="disabled">Next build review: next Monday →</span>
+</nav>
+</body>
+</html>

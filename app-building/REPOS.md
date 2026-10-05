@@ -11,4 +11,4 @@ The Monday build review reads **only** these repos. If another repo shows activi
 
 | Repo | Last commit reviewed | Review lesson |
 |---|---|---|
-| two-player-bg-finder | [3a77ac7](https://github.com/ACUNA211/two-player-bg-finder/commit/3a77ac7) (2026-09-26) | [0001 Types are a promise, not a check](lessons/0001-build-review-2026-09-28.html) |
+| two-player-bg-finder | [3a77ac7](https://github.com/ACUNA211/two-player-bg-finder/commit/3a77ac7) (2026-09-26), no new commits as of 2026-10-05 | [0002 Filtering like LINQ: filter, some, every](lessons/0002-build-review-2026-10-05.html) (previous: [0001](lessons/0001-build-review-2026-09-28.html)) |

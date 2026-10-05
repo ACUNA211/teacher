@@ -80,6 +80,11 @@ window.HUB = {
       track: "app", num: "0001", date: "2026-09-28", covers: 0,
       title: "Build review: types are a promise, not a check",
       path: "app-building/lessons/0001-build-review-2026-09-28.html"
+    },
+    {
+      track: "app", num: "0002", date: "2026-10-05", covers: 0,
+      title: "Build review: filtering like LINQ (filter, some, every)",
+      path: "app-building/lessons/0002-build-review-2026-10-05.html"
     }
   ]
 };
