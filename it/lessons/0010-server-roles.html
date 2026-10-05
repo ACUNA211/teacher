@@ -1,0 +1,172 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Server Roles</title>
+<meta name="description" content="IT lesson 0010: the jobs servers do on a network. DNS, DHCP, file, print, mail, web, syslog and AAA: what each one hands out, and how a user notices when one is down.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=JetBrains+Mono&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../assets/course.css">
+<script src="../../assets/quiz.js" defer></script>
+</head>
+<body class="track-it">
+<nav class="page-header">
+  <a class="home" href="../../index.html">Teacher hub</a>
+  <span>IT and certs</span>
+  <a href="../reference/glossary.html">Glossary</a>
+  <a href="../reference/network-settings.html">Cheat sheet</a>
+</nav>
+<main>
+  <p class="kicker">IT and certs · Lesson 0010 · A+ Core 1, objective 2.3</p>
+  <h1>Server roles: who hands out what</h1>
+  <p class="lede">About 10 minutes. You already know the <em>ports</em> for most of these services (lessons 0003–0005). Today flips the view: the exam calls them <strong>server roles</strong>, the jobs a server does for everyone else on the network.<sup class="cite"><a href="#src-messer">[1]</a></sup> The useful skill is working backwards: from what the user can't do to which role is down.</p>
+
+  <div class="callout">
+    <span class="label">Why this matters at work</span>
+    <p>Microsoft Entra ID is an <strong>authentication server</strong> run as a cloud service, and it does all three A's below. It checks who you are (authentication), Conditional Access and roles decide what you may do (authorization), and the <strong>sign-in logs</strong> record who signed in, with which app, to which resource, and whether it failed and why (accounting).<sup class="cite"><a href="#src-entra">[3]</a></sup> When you read a sign-in log to explain a lockout, you're using the "accounting" part of AAA.</p>
+  </div>
+
+  <h2>Eight roles, one sentence each</h2>
+  <p>Read each row as "this server hands out ___." Exam objective 2.3 lists these server roles:<sup class="cite"><a href="#src-messer">[1]</a></sup></p>
+
+  <div class="table-wrap">
+  <table>
+    <thead><tr><th>Role</th><th>Hands out</th><th>When it's down, users say…</th></tr></thead>
+    <tbody>
+      <tr><td><strong>DNS</strong></td><td>IP addresses for names</td><td>"Websites don't load, but I'm connected."</td></tr>
+      <tr><td><strong>DHCP</strong></td><td>IP settings to new devices</td><td>"My laptop has a 169.254 address."</td></tr>
+      <tr><td><strong>File share</strong></td><td>Shared folders and files</td><td>"My mapped drive is gone."</td></tr>
+      <tr><td><strong>Print</strong></td><td>Shared printers and queues</td><td>"Everyone's print jobs are stuck."</td></tr>
+      <tr><td><strong>Mail</strong></td><td>Sending and storing email</td><td>"Email sits in my outbox."</td></tr>
+      <tr><td><strong>Web</strong></td><td>Web pages and web apps</td><td>"The intranet page won't open."</td></tr>
+      <tr><td><strong>Syslog</strong></td><td>A central place for logs</td><td>(Nobody notices… until you need the logs.)</td></tr>
+      <tr><td><strong>AAA</strong></td><td>Sign-in, permissions, records</td><td>"Nobody can sign in."</td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <p>The first four rows are review in disguise: DNS and DHCP from <a href="0001-four-ip-settings.html">lesson 0001</a> and <a href="0004-email-dns-dhcp-ports.html">0004</a>, file sharing from <a href="0005-file-sharing-directory-ports.html">0005</a>, mail from <a href="0004-email-dns-dhcp-ports.html">0004</a>. Three new ideas need a closer look.</p>
+
+  <h3>Print server</h3>
+  <p>One place that holds the printer drivers and the <strong>print queue</strong> for a shared printer, so every PC sends jobs there instead of straight to the printer. Many printers can act as their own print server; bigger sites use a dedicated one.<sup class="cite"><a href="#src-messer">[1]</a></sup> Clue: if <em>everyone's</em> jobs are stuck, look at the server's queue, not one PC.</p>
+
+  <h3>Syslog</h3>
+  <p>A standard way for devices (switches, firewalls, servers) to send their log messages to one central <strong>syslog server</strong>, usually over <strong>UDP port 514</strong>. Every message carries a <strong>severity</strong> from <strong>0 (emergency)</strong> to <strong>7 (debug)</strong>: the lower the number, the worse the news.<sup class="cite"><a href="#src-syslog">[2]</a></sup> Often the collected logs feed a <strong>SIEM</strong> (security information and event management), which searches and correlates them in one database.<sup class="cite"><a href="#src-messer">[1]</a></sup></p>
+
+  <h3>AAA</h3>
+  <p>Three questions, always in this order:</p>
+  <ul>
+    <li><strong>Authentication</strong>: who are you? (password, security key, MFA)</li>
+    <li><strong>Authorization</strong>: what are you allowed to do? (groups, roles, policies)</li>
+    <li><strong>Accounting</strong>: what did you do, and when? (logs of sign-ins and resource use)</li>
+  </ul>
+  <p>Instead of every switch, VPN and app keeping its own user list, they all ask one AAA server.<sup class="cite"><a href="#src-messer">[1]</a></sup></p>
+
+  <div class="callout win">
+    <span class="label">Memory hooks</span>
+    <p><strong>Work backwards from the symptom.</strong> Names fail → DNS. 169.254 → DHCP. Everyone's printing stuck → print server. <strong>Syslog: 514, and 0 is the emergency.</strong> <strong>AAA = who, what, and the receipt.</strong></p>
+  </div>
+
+  <h2>Try it (2 minutes)</h2>
+  <p>On a Windows PC, open PowerShell and run:</p>
+<pre><code>Get-Printer | Select-Object Name, Type, ComputerName</code></pre>
+  <p>You'll see something like:</p>
+<pre><code>Name                         Type       ComputerName
+----                         ----       ------------
+Microsoft Print to PDF       Local
+<span class="hl">\\print01\Floor2-Color        Connection print01</span></code></pre>
+  <p class="sidenote">Your list will differ (the names here are made up). <code>Local</code> = the PC handles the printer itself. <code>Connection</code> = a shared printer that lives on a <strong>print server</strong>, and <code>ComputerName</code> names that server. If a user's <code>Connection</code> printer fails and so does everyone else's on the same server, you've found your role. On a home PC you may only see <code>Local</code> printers: that's fine, it just means no print server.</p>
+
+  <h2>Practice</h2>
+  <p>Answer from memory before scrolling back up.</p>
+
+  <section class="quiz">
+    <p class="q">Several users report that their documents sit in the queue and never print. They all use the same shared printer, connected through one server. Where do you look first?</p>
+    <ul class="choices">
+      <li><button class="choice">The DHCP server's address scope</button></li>
+      <li><button class="choice" data-correct>The print server's job queue</button></li>
+      <li><button class="choice">The syslog server's severity filter</button></li>
+      <li><button class="choice">Each user's mapped drive letter</button></li>
+    </ul>
+    <div class="explain" hidden>The print server holds the shared queue for every client. When <em>several</em> users of the same shared printer are stuck, the common point is that server's queue (or the printer behind it), not anything on one PC.</div>
+  </section>
+
+  <section class="quiz">
+    <p class="q">A firewall sends a log message marked severity 0, and a switch sends one marked severity 6. Which needs attention first?</p>
+    <ul class="choices">
+      <li><button class="choice">The switch, because 6 is higher</button></li>
+      <li><button class="choice">Neither, because syslog ignores severity</button></li>
+      <li><button class="choice">Both equally, because UDP is unreliable</button></li>
+      <li><button class="choice" data-correct>The firewall, because 0 means emergency</button></li>
+    </ul>
+    <div class="explain" hidden>Syslog severities run from 0 (emergency: the system is unusable) to 7 (debug). Lower is worse, so 0 beats 6 (informational). UDP delivery has nothing to do with how urgent the message is.</div>
+  </section>
+
+  <section class="quiz">
+    <p class="q">A user signs in successfully, but gets "access denied" when opening a finance app that their team isn't assigned to. Which part of AAA blocked them?</p>
+    <ul class="choices">
+      <li><button class="choice" data-correct>Authorization: what they may do</button></li>
+      <li><button class="choice">Authentication: proving who they are</button></li>
+      <li><button class="choice">Accounting: recording what they did</button></li>
+      <li><button class="choice">DHCP: assigning their IP settings</button></li>
+    </ul>
+    <div class="explain" hidden>The sign-in worked, so authentication passed. Being refused a specific resource is authorization: the system knows who you are and decided you aren't allowed. Accounting would only record the attempt.</div>
+  </section>
+
+  <section class="quiz">
+    <p class="q">After an incident, a manager asks: "Show me every time this account signed in last week, and from where." Which AAA function answers that?</p>
+    <ul class="choices">
+      <li><button class="choice">Authentication, which checks the password</button></li>
+      <li><button class="choice">Authorization, which applies the policies</button></li>
+      <li><button class="choice" data-correct>Accounting, which keeps the records</button></li>
+      <li><button class="choice">DNS, which resolves the names</button></li>
+    </ul>
+    <div class="explain" hidden>Accounting is the record of what happened: who signed in, when, from where, and to what. In Microsoft Entra ID that's the sign-in logs.</div>
+  </section>
+  <p class="quiz-score" data-quiz-score></p>
+
+  <details class="recall">
+    <summary>From memory: name the three A's in order, with one example of each from your own sign-in today. <span class="hint">(then click to check)</span></summary>
+    <p><strong>Authentication</strong> (your password plus MFA prompt), <strong>authorization</strong> (being allowed into the apps your groups grant), <strong>accounting</strong> (the sign-in log entry that recorded it).</p>
+  </details>
+
+  <h2>Review: earlier lessons</h2>
+  <p>Spaced retrieval: pull these from memory first, then check.</p>
+
+  <details class="recall">
+    <summary>A passive RFID badge has no battery. So where does its power come from, and why does that keep its range short? <span class="hint">(<a href="0009-bluetooth-nfc-rfid-fixed-wireless.html">lesson 0009</a>, 1 day ago)</span></summary>
+    <p>The reader's radio signal powers the tag just long enough for it to reply. That borrowed energy is small, so the tag only works close to the reader. Active tags carry their own battery and reach much farther.</p>
+  </details>
+
+  <details class="recall">
+    <summary>What's the Wi-Fi generation name for 802.11ax, and which bands can it use? <span class="hint">(<a href="0007-wifi-standards.html">lesson 0007</a>, 3 days ago)</span></summary>
+    <p><strong>Wi-Fi 6</strong>, on 2.4 and 5 GHz. The 6E version adds the 6 GHz band.</p>
+  </details>
+
+  <details class="recall">
+    <summary>The company intranet runs on an internal web server. Which port should the browser use to reach it securely, and which port would you use to open a full remote desktop on that server? <span class="hint">(<a href="0003-web-remote-ports.html">lesson 0003</a>, 7 days ago)</span></summary>
+    <p>HTTPS on <strong>TCP 443</strong> for the web page; RDP on <strong>TCP 3389</strong> for the remote desktop.</p>
+  </details>
+
+  <div class="callout source" id="src-messer">
+    <span class="label">Primary source: watch next</span>
+    <p>[1] Professor Messer, <a href="https://www.professormesser.com/free-a-plus-training/220-1201/220-1201-video/network-services-220-1201/">Network Services (220-1201)</a>. Free. Watch the first part (the server roles, through AAA). The rest of the video (spam gateways, UTM, load balancers, proxies, SCADA, IoT) is the next lesson.</p>
+    <p id="src-syslog">[2] Syslog severity levels 0–7 and UDP 514: <a href="https://en.wikipedia.org/wiki/Syslog">Syslog (Wikipedia, citing RFC 5424)</a>; the standard itself is <a href="https://datatracker.ietf.org/doc/html/rfc5424">RFC 5424</a>.</p>
+    <p id="src-entra">[3] <a href="https://learn.microsoft.com/en-us/entra/identity/monitoring-health/concept-sign-ins">Microsoft Learn, Sign-in logs in Microsoft Entra ID</a> (who, how and what for each sign-in, with failure codes).</p>
+    <p id="src-printer">[4] <a href="https://learn.microsoft.com/en-us/powershell/module/printmanagement/get-printer">Microsoft Learn, Get-Printer</a>.</p>
+  </div>
+
+  <div class="callout ask">
+    <span class="label">Questions?</span>
+    <p>Anything unclear? Ask your teacher. Open Claude in the Teacher repo and ask, for example: <em>"In IT lesson 0010, what's the difference between a syslog server and a SIEM?"</em> Follow-up questions are part of the course.</p>
+  </div>
+</main>
+<nav class="page-footer">
+  <a href="0009-bluetooth-nfc-rfid-fixed-wireless.html">← Bluetooth, NFC, RFID and fixed wireless</a>
+  <a href="../../index.html">Hub</a>
+  <span class="disabled">Next lesson: tomorrow →</span>
+</nav>
+</body>
+</html>

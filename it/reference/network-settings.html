@@ -142,6 +142,23 @@
   </table>
   </div>
 
+  <h2>Server roles (objective 2.3)</h2>
+  <div class="table-wrap">
+  <table>
+    <thead><tr><th>Role</th><th>Hands out</th><th>Symptom when down</th></tr></thead>
+    <tbody>
+      <tr><td>DNS</td><td>IP addresses for names</td><td>Connected, but names don't resolve</td></tr>
+      <tr><td>DHCP</td><td>IP settings to new devices</td><td>169.254.x.x address (APIPA)</td></tr>
+      <tr><td>File share</td><td>Shared folders (SMB)</td><td>Mapped drives missing</td></tr>
+      <tr><td>Print</td><td>Shared printers, drivers, queue</td><td>Everyone's jobs stuck in the queue</td></tr>
+      <tr><td>Mail</td><td>Sending and storing email</td><td>Mail stuck in the outbox</td></tr>
+      <tr><td>Web</td><td>Web pages and apps (80/443)</td><td>Intranet or web app won't load</td></tr>
+      <tr><td>Syslog</td><td>Central log collection, UDP 514</td><td>Severity 0 (emergency) to 7 (debug): lower is worse</td></tr>
+      <tr><td>AAA</td><td>Authentication, authorization, accounting</td><td>Who are you? What may you do? What did you do?</td></tr>
+    </tbody>
+  </table>
+  </div>
+
   <h2>Commands (Windows)</h2>
   <div class="table-wrap">
   <table>
@@ -155,6 +172,7 @@
       <tr><td><code>netsh wlan show interfaces</code></td><td>Current Wi-Fi connection: radio type (802.11 standard), band, channel, signal</td></tr>
       <tr><td><code>netsh wlan show drivers</code></td><td>Wi-Fi adapter capabilities: every 802.11 standard it supports</td></tr>
       <tr><td><code>Get-PnpDevice -Class Bluetooth</code></td><td>PowerShell: the Bluetooth radio and paired devices, with status (OK, Error, Unknown)</td></tr>
+      <tr><td><code>Get-Printer | Select-Object Name, Type, ComputerName</code></td><td>PowerShell: printers; <code>Connection</code> = shared from the print server named in <code>ComputerName</code></td></tr>
       <tr><td><code>Resolve-DnsName name</code> (<code>-Type MX</code> for mail servers)</td><td>PowerShell: ask DNS for a name's records</td></tr>
     </tbody>
   </table>
