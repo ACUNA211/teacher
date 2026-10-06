@@ -159,6 +159,23 @@
   </table>
   </div>
 
+  <h2>Internet appliances and special devices (objective 2.3)</h2>
+  <div class="table-wrap">
+  <table>
+    <thead><tr><th>Device</th><th>Sits between / is</th><th>Key point</th></tr></thead>
+    <tbody>
+      <tr><td>Spam gateway</td><td>Internet ↔ mail server</td><td>Filters unwanted and malicious email</td></tr>
+      <tr><td>All-in-one security appliance (UTM)</td><td>Internal network ↔ internet</td><td>Firewall, URL filter, malware/spam scan, IDS/IPS, VPN in one box</td></tr>
+      <tr><td>Load balancer</td><td>Users ↔ a group of servers</td><td>Spreads requests; skips failed servers. Guards <em>your servers</em></td></tr>
+      <tr><td>Proxy server</td><td>Users ↔ internet</td><td>Requests on users' behalf: cache, filter, scan, log. Speaks for <em>your users</em></td></tr>
+      <tr><td>Legacy system</td><td>Old, often unsupported</td><td>Still runs something important</td></tr>
+      <tr><td>Embedded system</td><td>Single-purpose computer in a device</td><td>No OS access (badge reader, alarm panel)</td></tr>
+      <tr><td>SCADA / ICS</td><td>Industrial control of physical processes</td><td>Keep fully separate from office network and internet</td></tr>
+      <tr><td>IoT</td><td>Everyday devices on the network</td><td>Can't patch it? Segment it (separate network)</td></tr>
+    </tbody>
+  </table>
+  </div>
+
   <h2>Commands (Windows)</h2>
   <div class="table-wrap">
   <table>
@@ -173,11 +190,12 @@
       <tr><td><code>netsh wlan show drivers</code></td><td>Wi-Fi adapter capabilities: every 802.11 standard it supports</td></tr>
       <tr><td><code>Get-PnpDevice -Class Bluetooth</code></td><td>PowerShell: the Bluetooth radio and paired devices, with status (OK, Error, Unknown)</td></tr>
       <tr><td><code>Get-Printer | Select-Object Name, Type, ComputerName</code></td><td>PowerShell: printers; <code>Connection</code> = shared from the print server named in <code>ComputerName</code></td></tr>
+      <tr><td><code>netsh winhttp show proxy</code></td><td>System (WinHTTP) proxy; "Direct access" = no proxy. Browsers: Settings → Network &amp; internet → Proxy</td></tr>
       <tr><td><code>Resolve-DnsName name</code> (<code>-Type MX</code> for mail servers)</td><td>PowerShell: ask DNS for a name's records</td></tr>
     </tbody>
   </table>
   </div>
-  <p class="sidenote">Sources: <a href="https://www.professormesser.com/free-a-plus-training/220-1201/220-1201-video/assigning-ip-addresses-220-1201/">Professor Messer, Assigning IP Addresses</a> · <a href="https://learn.microsoft.com/en-us/windows-server/administration/windows-commands/ipconfig">Microsoft Learn, ipconfig</a> · <a href="https://www.professormesser.com/free-a-plus-training/220-1201/220-1201-video/introduction-to-ip-220-1201/">Professor Messer, Introduction to IP</a> · <a href="https://learn.microsoft.com/en-us/powershell/module/nettcpip/test-netconnection">Microsoft Learn, Test-NetConnection</a> · <a href="https://www.professormesser.com/free-a-plus-training/220-1201/220-1201-video/common-ports-220-1201/">Professor Messer, Common Ports</a> · <a href="https://learn.microsoft.com/en-us/powershell/module/nettcpip/get-nettcpconnection">Microsoft Learn, Get-NetTCPConnection</a> · <a href="https://learn.microsoft.com/en-us/troubleshoot/windows-server/networking/direct-hosting-of-smb-over-tcpip">Microsoft Learn, Direct hosting of SMB over TCP/IP</a> · <a href="https://www.professormesser.com/free-a-plus-training/220-1201/220-1201-video/wireless-network-technologies-220-1201/">Professor Messer, Wireless Network Technologies</a></p>
+  <p class="sidenote">Sources: <a href="https://www.professormesser.com/free-a-plus-training/220-1201/220-1201-video/assigning-ip-addresses-220-1201/">Professor Messer, Assigning IP Addresses</a> · <a href="https://learn.microsoft.com/en-us/windows-server/administration/windows-commands/ipconfig">Microsoft Learn, ipconfig</a> · <a href="https://www.professormesser.com/free-a-plus-training/220-1201/220-1201-video/introduction-to-ip-220-1201/">Professor Messer, Introduction to IP</a> · <a href="https://learn.microsoft.com/en-us/powershell/module/nettcpip/test-netconnection">Microsoft Learn, Test-NetConnection</a> · <a href="https://www.professormesser.com/free-a-plus-training/220-1201/220-1201-video/common-ports-220-1201/">Professor Messer, Common Ports</a> · <a href="https://learn.microsoft.com/en-us/powershell/module/nettcpip/get-nettcpconnection">Microsoft Learn, Get-NetTCPConnection</a> · <a href="https://learn.microsoft.com/en-us/troubleshoot/windows-server/networking/direct-hosting-of-smb-over-tcpip">Microsoft Learn, Direct hosting of SMB over TCP/IP</a> · <a href="https://www.professormesser.com/free-a-plus-training/220-1201/220-1201-video/wireless-network-technologies-220-1201/">Professor Messer, Wireless Network Technologies</a> · <a href="https://www.professormesser.com/free-a-plus-training/220-1201/220-1201-video/network-services-220-1201/">Professor Messer, Network Services</a> · <a href="https://learn.microsoft.com/en-us/windows-server/administration/windows-commands/netsh-winhttp">Microsoft Learn, netsh winhttp</a></p>
 </main>
 </body>
 </html>

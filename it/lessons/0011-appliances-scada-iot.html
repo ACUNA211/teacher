@@ -1,0 +1,174 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Appliances, SCADA, IoT</title>
+<meta name="description" content="IT lesson 0011: the boxes that sit in the traffic path (spam gateway, all-in-one security appliance, load balancer, proxy) and the devices you can't patch like a PC (legacy, embedded, SCADA, IoT).">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=JetBrains+Mono&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../assets/course.css">
+<script src="../../assets/quiz.js" defer></script>
+</head>
+<body class="track-it">
+<nav class="page-header">
+  <a class="home" href="../../index.html">Teacher hub</a>
+  <span>IT and certs</span>
+  <a href="../reference/glossary.html">Glossary</a>
+  <a href="../reference/network-settings.html">Cheat sheet</a>
+</nav>
+<main>
+  <p class="kicker">IT and certs · Lesson 0011 · A+ Core 1, objective 2.3</p>
+  <h1>Middleboxes and things you can't patch</h1>
+  <p class="lede">About 10 minutes. <a href="0010-server-roles.html">Yesterday</a> was servers that <em>hand things out</em>. Today finishes objective 2.3 with two more groups:<sup class="cite"><a href="#src-messer">[1]</a></sup> <strong>internet appliances</strong>, boxes that sit <em>in the path</em> of traffic and act on it, and <strong>legacy, embedded, SCADA and IoT</strong> devices, which do one job and can't be managed like a normal PC.</p>
+
+  <div class="callout">
+    <span class="label">Why this matters at work</span>
+    <p>A sign-in or device-enrollment problem that only happens <em>on the office network</em> (and works fine on a phone hotspot) often points at a box in the path: a proxy or security appliance that inspects encrypted traffic. Microsoft recommends letting trusted Microsoft 365 traffic bypass that kind of inspection,<sup class="cite"><a href="#src-m365">[3]</a></sup> and lists Intune service addresses that shouldn't be inspected either.<sup class="cite"><a href="#src-intune">[4]</a></sup> "Works at home, fails at the office" → think middlebox.</p>
+  </div>
+
+  <h2>Part 1: Internet appliances (in the path)</h2>
+  <p>All four sit between users and somewhere else, and every packet that passes can be checked, changed, or sent elsewhere.</p>
+
+  <div class="table-wrap">
+  <table>
+    <thead><tr><th>Appliance</th><th>Sits between</th><th>Does</th></tr></thead>
+    <tbody>
+      <tr><td><strong>Spam gateway</strong></td><td>The internet and the mail server</td><td>Filters unwanted and malicious email before it reaches inboxes. Often a cloud service.</td></tr>
+      <tr><td><strong>All-in-one security appliance</strong> (UTM)</td><td>The internal network and the internet</td><td>One box for many jobs: firewall, URL filtering, malware and spam scanning, IDS/IPS, VPN endpoint, bandwidth control.<sup class="cite"><a href="#src-messer">[1]</a></sup></td></tr>
+      <tr><td><strong>Load balancer</strong></td><td>Users and a group of servers</td><td>Spreads requests across several servers behind one address; if one server fails, it stops sending traffic there.</td></tr>
+      <tr><td><strong>Proxy server</strong></td><td>Users and the internet</td><td>Makes requests <em>on behalf of</em> users: can cache pages, filter URLs, scan content and log access.</td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <p>The pair the exam likes to mix up:</p>
+  <ul>
+    <li><strong>Load balancer</strong> faces <em>inward</em>: it protects and scales <em>your servers</em>. Users outside see one website; behind it, many servers share the work.<sup class="cite"><a href="#src-messer">[1]</a></sup></li>
+    <li><strong>Proxy</strong> faces <em>outward</em>: it stands in for <em>your users</em>. The website sees the proxy's request, not the user's PC.</li>
+  </ul>
+  <p><strong>UTM</strong> stands for <strong>unified threat management</strong>: the "all-in-one" name and the acronym mean the same thing. The trade-off: simple to run, but one box is now a single point of failure for everything.</p>
+
+  <h2>Part 2: Devices you can't manage like a PC</h2>
+  <div class="table-wrap">
+  <table>
+    <thead><tr><th>Type</th><th>What it is</th><th>Example</th></tr></thead>
+    <tbody>
+      <tr><td><strong>Legacy system</strong></td><td>Old hardware or software, often no longer supported by its vendor, still running something important</td><td>An old server that runs one business app nobody can migrate</td></tr>
+      <tr><td><strong>Embedded system</strong></td><td>A computer built into a device for one job; you usually can't reach its operating system</td><td>Door badge reader, alarm panel, time clock</td></tr>
+      <tr><td><strong>SCADA / ICS</strong></td><td>Supervisory control and data acquisition: industrial control systems that run physical processes, often spread over large areas<sup class="cite"><a href="#src-nist">[2]</a></sup></td><td>Power grid, water treatment, pipelines, factory lines</td></tr>
+      <tr><td><strong>IoT</strong></td><td>Internet of things: everyday devices with a network connection, usually over Wi-Fi</td><td>Smart thermostat, lights, video doorbell, smart speaker</td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <p>What they share: you often <strong>can't install patches or security software</strong> on them yourself, and some can't be patched at all. So the standard protection is <strong>segmentation</strong>: put them on their own separate network so a compromised device can't reach everything else.<sup class="cite"><a href="#src-messer">[1]</a></sup> SCADA networks are usually kept fully apart from the office network and the internet.<sup class="cite"><a href="#src-nist">[2]</a></sup> At home, the guest Wi-Fi is the simplest IoT segment.<sup class="cite"><a href="#src-cisa">[5]</a></sup></p>
+
+  <div class="callout win">
+    <span class="label">Memory hooks</span>
+    <p><strong>Load balancer guards the servers; proxy speaks for the users.</strong> <strong>UTM = all-in-one = one box, many jobs.</strong> <strong>Can't patch it? Wall it off</strong> (segment it).</p>
+  </div>
+
+  <h2>Try it (2 minutes)</h2>
+  <p>Does your Windows PC send traffic through a proxy? Open Command Prompt or PowerShell and run:</p>
+<pre><code>netsh winhttp show proxy</code></pre>
+  <p>On a PC with no system proxy you'll see:</p>
+<pre><code>Current WinHTTP proxy settings:
+
+    <span class="hl">Direct access (no proxy server).</span></code></pre>
+  <p class="sidenote">This shows the <strong>WinHTTP</strong> proxy, the one Windows services and many background apps use.<sup class="cite"><a href="#src-winhttp">[6]</a></sup> Browsers usually follow a separate setting: <strong>Settings → Network &amp; internet → Proxy</strong>. If either one names a proxy server, every web request from that app goes through it first. A wrong or unreachable proxy looks like "the internet is down" for some apps while others work fine.</p>
+
+  <h2>Practice</h2>
+  <p>Answer from memory before scrolling back up.</p>
+
+  <section class="quiz">
+    <p class="q">The company website runs on four web servers, but customers only ever use one address. When one server crashes, customers don't notice. Which device makes that possible?</p>
+    <ul class="choices">
+      <li><button class="choice">A proxy server caching pages</button></li>
+      <li><button class="choice">A spam gateway filtering requests</button></li>
+      <li><button class="choice" data-correct>A load balancer spreading requests</button></li>
+      <li><button class="choice">An embedded system routing traffic</button></li>
+    </ul>
+    <div class="explain" hidden>A load balancer sits in front of a group of servers behind one address, shares requests between them, and stops sending traffic to a server that fails. A proxy acts for <em>users</em> going out, not for your servers.</div>
+  </section>
+
+  <section class="quiz">
+    <p class="q">A small office wants one device that handles its firewall, VPN, URL filtering and malware scanning. What is that device called?</p>
+    <ul class="choices">
+      <li><button class="choice" data-correct>A unified threat management appliance</button></li>
+      <li><button class="choice">A SCADA industrial control system</button></li>
+      <li><button class="choice">A dedicated shared print server</button></li>
+      <li><button class="choice">A central syslog logging server</button></li>
+    </ul>
+    <div class="explain" hidden>UTM (unified threat management), also called an all-in-one security appliance, combines many security jobs in one box. SCADA controls industrial processes; print and syslog servers are server roles from lesson 0010.</div>
+  </section>
+
+  <section class="quiz">
+    <p class="q">A building's badge readers run firmware you can't update yourself, and the vendor no longer releases patches. What's the best way to reduce the risk?</p>
+    <ul class="choices">
+      <li><button class="choice">Install antivirus on each reader</button></li>
+      <li><button class="choice">Route them through load balancers</button></li>
+      <li><button class="choice">Give readers public IP addresses</button></li>
+      <li><button class="choice" data-correct>Move them onto separate networks</button></li>
+    </ul>
+    <div class="explain" hidden>Embedded and legacy devices often can't be patched or run security software, so you isolate them: segmentation keeps a compromised reader from reaching the rest of the network. A public address would expose them more, not less.</div>
+  </section>
+
+  <section class="quiz">
+    <p class="q">Users at the office can browse most sites, but the web filter logs show every request coming from one internal address instead of from each PC. Why?</p>
+    <ul class="choices">
+      <li><button class="choice">DHCP gave every PC one address</button></li>
+      <li><button class="choice" data-correct>A proxy sends requests for them</button></li>
+      <li><button class="choice">The spam gateway rewrote the headers</button></li>
+      <li><button class="choice">The load balancer merged their sessions</button></li>
+    </ul>
+    <div class="explain" hidden>A proxy server makes requests on behalf of users, so the outside site (and anything logging after the proxy) sees the proxy's address. DHCP gives each PC its own address; a spam gateway handles email, not web traffic.</div>
+  </section>
+  <p class="quiz-score" data-quiz-score></p>
+
+  <details class="recall">
+    <summary>From memory: name the four internet appliances and say, for each, what it sits between. <span class="hint">(then click to check)</span></summary>
+    <p><strong>Spam gateway</strong>: internet ↔ mail server. <strong>All-in-one / UTM</strong>: internal network ↔ internet. <strong>Load balancer</strong>: users ↔ a group of servers. <strong>Proxy</strong>: users ↔ the internet, making requests for them.</p>
+  </details>
+
+  <h2>Review: earlier lessons</h2>
+  <p>Spaced retrieval: pull these from memory first, then check.</p>
+
+  <details class="recall">
+    <summary>A user signs in fine, but is refused access to an app their team isn't assigned. Which of the three A's blocked them, and which A would you read to see the attempt? <span class="hint">(<a href="0010-server-roles.html">lesson 0010</a>, 1 day ago)</span></summary>
+    <p><strong>Authorization</strong> blocked them (they proved who they are, but aren't allowed). <strong>Accounting</strong> recorded the attempt: in Entra ID, that's the sign-in logs.</p>
+  </details>
+
+  <details class="recall">
+    <summary>Which port and transport does DNS use for a normal name lookup, and which ports does DHCP use? <span class="hint">(<a href="0004-email-dns-dhcp-ports.html">lesson 0004</a>, 7 days ago)</span></summary>
+    <p>DNS: <strong>UDP 53</strong> for normal lookups (TCP 53 for large answers and zone transfers). DHCP: <strong>UDP 67</strong> (server) and <strong>UDP 68</strong> (client).</p>
+  </details>
+
+  <details class="recall">
+    <summary>Name the four IP settings every device needs to reach the internet. <span class="hint">(<a href="0001-four-ip-settings.html">lesson 0001</a>, 10 days ago)</span></summary>
+    <p><strong>IP address</strong>, <strong>subnet mask</strong>, <strong>default gateway</strong> and <strong>DNS server</strong>.</p>
+  </details>
+
+  <div class="callout source" id="src-messer">
+    <span class="label">Primary source: watch next</span>
+    <p>[1] Professor Messer, <a href="https://www.professormesser.com/free-a-plus-training/220-1201/220-1201-video/network-services-220-1201/">Network Services (220-1201)</a>. Free. Watch the second half (from spam gateways to IoT); with lesson 0010 you've now covered the whole video.</p>
+    <p id="src-nist">[2] NIST, <a href="https://csrc.nist.gov/pubs/sp/800/82/r3/final">SP 800-82, Guide to Operational Technology (OT) Security</a> (SCADA as distributed control of dispersed assets such as pipelines, power grids and water systems; isolating OT from business networks).</p>
+    <p id="src-m365">[3] <a href="https://learn.microsoft.com/en-us/microsoft-365/enterprise/microsoft-365-network-connectivity-principles">Microsoft Learn, Microsoft 365 network connectivity principles</a> (bypass proxies and traffic inspection for trusted Microsoft 365 traffic).</p>
+    <p id="src-intune">[4] <a href="https://learn.microsoft.com/en-us/intune/intune-service/fundamentals/intune-endpoints">Microsoft Learn, Network endpoints for Microsoft Intune</a>.</p>
+    <p id="src-cisa">[5] CISA, <a href="https://www.cisa.gov/news-events/news/home-network-security">Home Network Security</a> (segment IoT and work devices; guest Wi-Fi as the simple option).</p>
+    <p id="src-winhttp">[6] <a href="https://learn.microsoft.com/en-us/windows-server/administration/windows-commands/netsh-winhttp">Microsoft Learn, netsh winhttp</a>.</p>
+  </div>
+
+  <div class="callout ask">
+    <span class="label">Questions?</span>
+    <p>Anything unclear? Ask your teacher. Open Claude in the Teacher repo and ask, for example: <em>"In IT lesson 0011, how does a proxy that inspects HTTPS traffic actually read encrypted pages?"</em> Follow-up questions are part of the course.</p>
+  </div>
+</main>
+<nav class="page-footer">
+  <a href="0010-server-roles.html">← Server roles: who hands out what</a>
+  <a href="../../index.html">Hub</a>
+  <span class="disabled">Next lesson: tomorrow →</span>
+</nav>
+</body>
+</html>
