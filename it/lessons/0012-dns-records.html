@@ -1,0 +1,161 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>DNS Records</title>
+<meta name="description" content="IT lesson 0012: the five DNS record types A+ expects you to read (A, AAAA, CNAME, MX, TXT), what each one answers, and how to look them up yourself.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=JetBrains+Mono&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../assets/course.css">
+<script src="../../assets/quiz.js" defer></script>
+</head>
+<body class="track-it">
+<nav class="page-header">
+  <a class="home" href="../../index.html">Teacher hub</a>
+  <span>IT and certs</span>
+  <a href="../reference/glossary.html">Glossary</a>
+  <a href="../reference/network-settings.html">Cheat sheet</a>
+</nav>
+<main>
+  <p class="kicker">IT and certs · Lesson 0012 · A+ Core 1, objective 2.4</p>
+  <h1>DNS records: what a name can answer</h1>
+  <p class="lede">About 10 minutes. You know DNS turns names into IP addresses (<a href="0001-four-ip-settings.html">lesson 0001</a>) over UDP 53 (<a href="0004-email-dns-dhcp-ports.html">lesson 0004</a>). But a DNS server holds more than addresses: it stores <strong>records</strong> of different <strong>types</strong>, and each type answers a different question.<sup class="cite"><a href="#src-messer">[1]</a></sup> Today: the five you'll read most. Tomorrow: the three email-security records built on top of TXT (SPF, DKIM, DMARC).</p>
+
+  <div class="callout">
+    <span class="label">Why this matters at work</span>
+    <p>When an organization adds its own domain to Microsoft 365, the admin center asks for exactly these records: a <strong>TXT</strong> record (<code>MS=ms…</code>) to prove you own the domain, an <strong>MX</strong> record so mail goes to Exchange Online, and a <strong>CNAME</strong> called <code>autodiscover</code> so Outlook can find its settings.<sup class="cite"><a href="#src-m365">[2]</a></sup> "Outlook can't find my mailbox" or "the domain won't verify" usually means one of those records is missing or wrong.</p>
+  </div>
+
+  <h2>The five record types</h2>
+  <p>Each row is one question you can ask DNS about a name. Examples use <code>example.com</code> and documentation addresses (never real ones).</p>
+
+  <div class="table-wrap">
+  <table>
+    <thead><tr><th>Type</th><th>Question it answers</th><th>Example answer</th></tr></thead>
+    <tbody>
+      <tr><td><strong>A</strong></td><td>What's the <strong>IPv4</strong> address of this name?</td><td><code>www.example.com</code> → <code>192.0.2.10</code></td></tr>
+      <tr><td><strong>AAAA</strong></td><td>What's the <strong>IPv6</strong> address of this name?</td><td><code>www.example.com</code> → <code>2001:db8::10</code></td></tr>
+      <tr><td><strong>CNAME</strong></td><td>Is this name an <strong>alias</strong>? What's the real (canonical) name?</td><td><code>autodiscover.example.com</code> → <code>autodiscover.outlook.com</code></td></tr>
+      <tr><td><strong>MX</strong></td><td>Which server <strong>receives email</strong> for this domain?</td><td><code>example.com</code> → <code>10 mail.example.com</code></td></tr>
+      <tr><td><strong>TXT</strong></td><td>Is there any <strong>text</strong> attached to this name?</td><td><code>example.com</code> → <code>"MS=ms12345678"</code></td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <h3>Details that show up on the exam (and at work)</h3>
+  <ul>
+    <li><strong>AAAA is "quad A"</strong>: four A's because an IPv6 address (128 bits) is four times as long as IPv4 (32 bits). A name can have both an A and an AAAA record.</li>
+    <li><strong>CNAME points at a name, never at an address.</strong> The client then looks up that name's A or AAAA record. Move a service, update one record, and every alias follows. A name that has a CNAME can't have any other records,<sup class="cite"><a href="#src-rfc1034">[3]</a></sup> which is why the bare domain (<code>example.com</code>, which needs MX and TXT) usually can't be a CNAME.</li>
+    <li><strong>MX has a priority number: lower wins.</strong> A sending server tries the lowest number first and moves to the next only if that one doesn't answer.<sup class="cite"><a href="#src-rfc5321">[4]</a></sup> MX records also point at a <em>name</em>, which then needs its own A/AAAA record.</li>
+    <li><strong>TXT is free text</strong> that other services read: proof of domain ownership (like Microsoft's <code>MS=</code> value) and the email rules you'll meet tomorrow.<sup class="cite"><a href="#src-messer">[1]</a></sup></li>
+    <li><strong>Every record has a TTL</strong> (time to live, in seconds): how long clients and other DNS servers may cache the answer. A change can take up to the old TTL to be seen everywhere; Microsoft tells admins to allow time for DNS changes before retrying verification.<sup class="cite"><a href="#src-m365">[2]</a></sup></li>
+  </ul>
+
+  <div class="callout win">
+    <span class="label">Memory hooks</span>
+    <p><strong>A = Address (v4). AAAA = four times bigger (v6). CNAME = Common NAME, an alias. MX = Mail eXchanger, lowest number first. TXT = notes for other services.</strong></p>
+  </div>
+
+  <h2>Try it (2 minutes)</h2>
+  <p>Ask DNS for each type yourself. In PowerShell:<sup class="cite"><a href="#src-resolve">[5]</a></sup></p>
+<pre><code>Resolve-DnsName microsoft.com -Type A
+Resolve-DnsName microsoft.com -Type AAAA
+Resolve-DnsName microsoft.com -Type MX
+Resolve-DnsName microsoft.com -Type TXT</code></pre>
+  <p>Look at the columns: <code>Type</code>, <code>TTL</code>, and for MX the <code>NameExchange</code> (mail server) and <code>Preference</code> (priority). The TXT answer will be long: count how many lines start with <code>v=spf1</code> or a <code>…-verification=</code> value. That's tomorrow's lesson showing up early.</p>
+  <p class="sidenote">On any PC, the older tool works too: <code>nslookup -type=mx microsoft.com</code>. Try your own organization's domain as well, but keep the results off any public page.</p>
+
+  <h2>Practice</h2>
+  <p>Answer from memory before scrolling back up.</p>
+
+  <section class="quiz">
+    <p class="q">A new web server only has an IPv6 address. Users on IPv6 can't reach <code>shop.example.com</code> by name. Which record is most likely missing?</p>
+    <ul class="choices">
+      <li><button class="choice">The MX record for shop</button></li>
+      <li><button class="choice" data-correct>The AAAA record for shop</button></li>
+      <li><button class="choice">The TXT record for shop</button></li>
+      <li><button class="choice">The A record for shop</button></li>
+    </ul>
+    <div class="explain" hidden>AAAA maps a name to an IPv6 address. An A record holds only IPv4; MX is for mail and TXT holds text, neither gives a web address.</div>
+  </section>
+
+  <section class="quiz">
+    <p class="q">A domain has two MX records: <code>10 mx1.example.com</code> and <code>20 mx2.example.com</code>. Both servers are online. Where does incoming mail go first?</p>
+    <ul class="choices">
+      <li><button class="choice">To mx2, the higher number</button></li>
+      <li><button class="choice">To both servers, split evenly</button></li>
+      <li><button class="choice">To whichever answered DNS first</button></li>
+      <li><button class="choice" data-correct>To mx1, the lower number</button></li>
+    </ul>
+    <div class="explain" hidden>MX priority: the lowest number is preferred. mx2 (20) only gets mail when mx1 (10) doesn't answer. Equal numbers would share the load.</div>
+  </section>
+
+  <section class="quiz">
+    <p class="q">An admin adds a domain to a cloud service, which asks them to prove they own it without changing where mail or the website goes. Which record do they add?</p>
+    <ul class="choices">
+      <li><button class="choice" data-correct>A TXT record with a value</button></li>
+      <li><button class="choice">A new MX record pointing elsewhere</button></li>
+      <li><button class="choice">A CNAME on the bare domain</button></li>
+      <li><button class="choice">An A record pointing at them</button></li>
+    </ul>
+    <div class="explain" hidden>A TXT record holds a value the service gave you; it checks DNS for it, and nothing else about the domain changes. Changing MX or A would move mail or the website, and the bare domain can't be a CNAME because it already has other records.</div>
+  </section>
+
+  <section class="quiz">
+    <p class="q">Outlook on new laptops can't set itself up for a user's mailbox, but mail and web browsing work. Which record should you check first?</p>
+    <ul class="choices">
+      <li><button class="choice">The domain's A record for www</button></li>
+      <li><button class="choice">The domain's MX record priority numbers</button></li>
+      <li><button class="choice" data-correct>The domain's autodiscover CNAME alias record</button></li>
+      <li><button class="choice">The TTL value on every record</button></li>
+    </ul>
+    <div class="explain" hidden>For Microsoft 365, Outlook finds its settings through <code>autodiscover.&lt;domain&gt;</code>, a CNAME pointing at <code>autodiscover.outlook.com</code>. Mail arriving fine means MX is OK; web browsing working means the A record is OK.</div>
+  </section>
+  <p class="quiz-score" data-quiz-score></p>
+
+  <details class="recall">
+    <summary>From memory: name the five record types and the question each one answers. <span class="hint">(then click to check)</span></summary>
+    <p><strong>A</strong>: IPv4 address. <strong>AAAA</strong>: IPv6 address. <strong>CNAME</strong>: the real name behind an alias. <strong>MX</strong>: which server receives mail (lowest number first). <strong>TXT</strong>: text for other services, such as ownership proof.</p>
+  </details>
+
+  <h2>Review: earlier lessons</h2>
+  <p>Spaced retrieval: pull these from memory first, then check.</p>
+
+  <details class="recall">
+    <summary>A website runs on four servers but customers use one address, and a crashed server goes unnoticed. Which appliance does that, and how is it different from a proxy? <span class="hint">(<a href="0011-appliances-scada-iot.html">lesson 0011</a>, 1 day ago)</span></summary>
+    <p>A <strong>load balancer</strong>: it faces inward and spreads requests across your servers. A <strong>proxy</strong> faces outward and makes requests on behalf of your users.</p>
+  </details>
+
+  <details class="recall">
+    <summary>Which wireless technology works at about 4 cm, at 13.56 MHz, and is used for tap-to-pay and some security keys? <span class="hint">(<a href="0009-bluetooth-nfc-rfid-fixed-wireless.html">lesson 0009</a>, 3 days ago)</span></summary>
+    <p><strong>NFC</strong> (near-field communication). It's built on RFID, but designed for very short, two-way exchanges.</p>
+  </details>
+
+  <details class="recall">
+    <summary>Which port does SMB use for file sharing today, and which port does LDAPS use? <span class="hint">(<a href="0005-file-sharing-directory-ports.html">lesson 0005</a>, 7 days ago)</span></summary>
+    <p>SMB: <strong>TCP 445</strong> (direct-hosted, no NetBIOS needed). LDAPS: <strong>TCP 636</strong> (plain LDAP is 389).</p>
+  </details>
+
+  <div class="callout source" id="src-messer">
+    <span class="label">Primary source: watch next</span>
+    <p>[1] Professor Messer, <a href="https://www.professormesser.com/free-a-plus-training/220-1201/220-1201-video/dns-configuration-220-1201/">DNS Configuration (220-1201)</a>. Free. Watch the first part (A, AAAA, CNAME, MX, TXT); tomorrow's lesson finishes the video with SPF, DKIM and DMARC.</p>
+    <p id="src-m365">[2] <a href="https://learn.microsoft.com/en-us/microsoft-365/admin/get-help-with-domains/create-dns-records-at-any-dns-hosting-provider">Microsoft Learn, Add DNS records to connect your domain</a> (TXT <code>MS=ms…</code> verification, MX to Exchange Online, <code>autodiscover</code> CNAME).</p>
+    <p id="src-rfc1034">[3] <a href="https://www.rfc-editor.org/rfc/rfc1034">RFC 1034, Domain Names: Concepts and Facilities</a>, section 3.6.2 (a name with a CNAME holds no other data).</p>
+    <p id="src-rfc5321">[4] <a href="https://www.rfc-editor.org/rfc/rfc5321">RFC 5321, Simple Mail Transfer Protocol</a>, section 5.1 (lowest-numbered MX records are most preferred).</p>
+    <p id="src-resolve">[5] <a href="https://learn.microsoft.com/en-us/powershell/module/dnsclient/resolve-dnsname">Microsoft Learn, Resolve-DnsName</a>.</p>
+  </div>
+
+  <div class="callout ask">
+    <span class="label">Questions?</span>
+    <p>Anything unclear? Ask your teacher. Open Claude in the Teacher repo and ask, for example: <em>"In IT lesson 0012, why can't the bare domain be a CNAME, and how do cloud DNS providers work around it?"</em> Follow-up questions are part of the course.</p>
+  </div>
+</main>
+<nav class="page-footer">
+  <a href="0011-appliances-scada-iot.html">← Middleboxes and things you can't patch</a>
+  <a href="../../index.html">Hub</a>
+  <span class="disabled">Next lesson: tomorrow →</span>
+</nav>
+</body>
+</html>

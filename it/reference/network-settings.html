@@ -176,6 +176,21 @@
   </table>
   </div>
 
+  <h2>DNS record types (objective 2.4)</h2>
+  <div class="table-wrap">
+  <table>
+    <thead><tr><th>Type</th><th>Answers</th><th>Remember</th></tr></thead>
+    <tbody>
+      <tr><td><code>A</code></td><td>Name → IPv4 address</td><td>A = Address</td></tr>
+      <tr><td><code>AAAA</code></td><td>Name → IPv6 address</td><td>"Quad A": 4× the bits of IPv4</td></tr>
+      <tr><td><code>CNAME</code></td><td>Alias → canonical (real) name</td><td>Points at a name, never an IP; no other records on that name</td></tr>
+      <tr><td><code>MX</code></td><td>Domain → mail server name + priority</td><td>Lowest number tried first</td></tr>
+      <tr><td><code>TXT</code></td><td>Free text read by other services</td><td>Domain ownership proof (<code>MS=ms…</code>), email rules</td></tr>
+    </tbody>
+  </table>
+  </div>
+  <p>Every record has a <strong>TTL</strong> (seconds it may be cached). Microsoft 365 custom domain: TXT to verify, MX for mail, CNAME <code>autodiscover</code> → <code>autodiscover.outlook.com</code>.</p>
+
   <h2>Commands (Windows)</h2>
   <div class="table-wrap">
   <table>
@@ -191,11 +206,11 @@
       <tr><td><code>Get-PnpDevice -Class Bluetooth</code></td><td>PowerShell: the Bluetooth radio and paired devices, with status (OK, Error, Unknown)</td></tr>
       <tr><td><code>Get-Printer | Select-Object Name, Type, ComputerName</code></td><td>PowerShell: printers; <code>Connection</code> = shared from the print server named in <code>ComputerName</code></td></tr>
       <tr><td><code>netsh winhttp show proxy</code></td><td>System (WinHTTP) proxy; "Direct access" = no proxy. Browsers: Settings → Network &amp; internet → Proxy</td></tr>
-      <tr><td><code>Resolve-DnsName name</code> (<code>-Type MX</code> for mail servers)</td><td>PowerShell: ask DNS for a name's records</td></tr>
+      <tr><td><code>Resolve-DnsName name -Type A|AAAA|CNAME|MX|TXT</code></td><td>PowerShell: ask DNS for one record type (<code>nslookup -type=mx name</code> also works)</td></tr>
     </tbody>
   </table>
   </div>
-  <p class="sidenote">Sources: <a href="https://www.professormesser.com/free-a-plus-training/220-1201/220-1201-video/assigning-ip-addresses-220-1201/">Professor Messer, Assigning IP Addresses</a> · <a href="https://learn.microsoft.com/en-us/windows-server/administration/windows-commands/ipconfig">Microsoft Learn, ipconfig</a> · <a href="https://www.professormesser.com/free-a-plus-training/220-1201/220-1201-video/introduction-to-ip-220-1201/">Professor Messer, Introduction to IP</a> · <a href="https://learn.microsoft.com/en-us/powershell/module/nettcpip/test-netconnection">Microsoft Learn, Test-NetConnection</a> · <a href="https://www.professormesser.com/free-a-plus-training/220-1201/220-1201-video/common-ports-220-1201/">Professor Messer, Common Ports</a> · <a href="https://learn.microsoft.com/en-us/powershell/module/nettcpip/get-nettcpconnection">Microsoft Learn, Get-NetTCPConnection</a> · <a href="https://learn.microsoft.com/en-us/troubleshoot/windows-server/networking/direct-hosting-of-smb-over-tcpip">Microsoft Learn, Direct hosting of SMB over TCP/IP</a> · <a href="https://www.professormesser.com/free-a-plus-training/220-1201/220-1201-video/wireless-network-technologies-220-1201/">Professor Messer, Wireless Network Technologies</a> · <a href="https://www.professormesser.com/free-a-plus-training/220-1201/220-1201-video/network-services-220-1201/">Professor Messer, Network Services</a> · <a href="https://learn.microsoft.com/en-us/windows-server/administration/windows-commands/netsh-winhttp">Microsoft Learn, netsh winhttp</a></p>
+  <p class="sidenote">Sources: <a href="https://www.professormesser.com/free-a-plus-training/220-1201/220-1201-video/assigning-ip-addresses-220-1201/">Professor Messer, Assigning IP Addresses</a> · <a href="https://learn.microsoft.com/en-us/windows-server/administration/windows-commands/ipconfig">Microsoft Learn, ipconfig</a> · <a href="https://www.professormesser.com/free-a-plus-training/220-1201/220-1201-video/introduction-to-ip-220-1201/">Professor Messer, Introduction to IP</a> · <a href="https://learn.microsoft.com/en-us/powershell/module/nettcpip/test-netconnection">Microsoft Learn, Test-NetConnection</a> · <a href="https://www.professormesser.com/free-a-plus-training/220-1201/220-1201-video/common-ports-220-1201/">Professor Messer, Common Ports</a> · <a href="https://learn.microsoft.com/en-us/powershell/module/nettcpip/get-nettcpconnection">Microsoft Learn, Get-NetTCPConnection</a> · <a href="https://learn.microsoft.com/en-us/troubleshoot/windows-server/networking/direct-hosting-of-smb-over-tcpip">Microsoft Learn, Direct hosting of SMB over TCP/IP</a> · <a href="https://www.professormesser.com/free-a-plus-training/220-1201/220-1201-video/wireless-network-technologies-220-1201/">Professor Messer, Wireless Network Technologies</a> · <a href="https://www.professormesser.com/free-a-plus-training/220-1201/220-1201-video/network-services-220-1201/">Professor Messer, Network Services</a> · <a href="https://learn.microsoft.com/en-us/windows-server/administration/windows-commands/netsh-winhttp">Microsoft Learn, netsh winhttp</a> · <a href="https://www.professormesser.com/free-a-plus-training/220-1201/220-1201-video/dns-configuration-220-1201/">Professor Messer, DNS Configuration</a> · <a href="https://learn.microsoft.com/en-us/microsoft-365/admin/get-help-with-domains/create-dns-records-at-any-dns-hosting-provider">Microsoft Learn, Add DNS records to connect your domain</a></p>
 </main>
 </body>
 </html>
