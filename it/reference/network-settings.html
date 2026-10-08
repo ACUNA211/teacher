@@ -191,6 +191,19 @@
   </div>
   <p>Every record has a <strong>TTL</strong> (seconds it may be cached). Microsoft 365 custom domain: TXT to verify, MX for mail, CNAME <code>autodiscover</code> → <code>autodiscover.outlook.com</code>.</p>
 
+  <h3>Email authentication records (all TXT-based)</h3>
+  <div class="table-wrap">
+  <table>
+    <thead><tr><th>Record</th><th>Lives at</th><th>Checks</th><th>Remember</th></tr></thead>
+    <tbody>
+      <tr><td><code>SPF</code></td><td><code>example.com</code> (TXT)</td><td>Is the sending server's IP allowed?</td><td>Only one per domain; <code>-all</code> hard fail, <code>~all</code> soft fail. M365: <code>include:spf.protection.outlook.com</code></td></tr>
+      <tr><td><code>DKIM</code></td><td><code>selector._domainkey.example.com</code></td><td>Valid signature, message unchanged?</td><td>Private key signs, public key in DNS. M365: two CNAMEs (selector1, selector2)</td></tr>
+      <tr><td><code>DMARC</code></td><td><code>_dmarc.example.com</code> (TXT)</td><td>What to do on failure, where to report</td><td><code>p=none</code> → <code>quarantine</code> → <code>reject</code>; <code>rua=</code> reports</td></tr>
+    </tbody>
+  </table>
+  </div>
+  <p>Read the result in a message header: <code>Authentication-Results: spf=pass dkim=pass dmarc=pass</code>.</p>
+
   <h2>Commands (Windows)</h2>
   <div class="table-wrap">
   <table>
@@ -210,7 +223,7 @@
     </tbody>
   </table>
   </div>
-  <p class="sidenote">Sources: <a href="https://www.professormesser.com/free-a-plus-training/220-1201/220-1201-video/assigning-ip-addresses-220-1201/">Professor Messer, Assigning IP Addresses</a> · <a href="https://learn.microsoft.com/en-us/windows-server/administration/windows-commands/ipconfig">Microsoft Learn, ipconfig</a> · <a href="https://www.professormesser.com/free-a-plus-training/220-1201/220-1201-video/introduction-to-ip-220-1201/">Professor Messer, Introduction to IP</a> · <a href="https://learn.microsoft.com/en-us/powershell/module/nettcpip/test-netconnection">Microsoft Learn, Test-NetConnection</a> · <a href="https://www.professormesser.com/free-a-plus-training/220-1201/220-1201-video/common-ports-220-1201/">Professor Messer, Common Ports</a> · <a href="https://learn.microsoft.com/en-us/powershell/module/nettcpip/get-nettcpconnection">Microsoft Learn, Get-NetTCPConnection</a> · <a href="https://learn.microsoft.com/en-us/troubleshoot/windows-server/networking/direct-hosting-of-smb-over-tcpip">Microsoft Learn, Direct hosting of SMB over TCP/IP</a> · <a href="https://www.professormesser.com/free-a-plus-training/220-1201/220-1201-video/wireless-network-technologies-220-1201/">Professor Messer, Wireless Network Technologies</a> · <a href="https://www.professormesser.com/free-a-plus-training/220-1201/220-1201-video/network-services-220-1201/">Professor Messer, Network Services</a> · <a href="https://learn.microsoft.com/en-us/windows-server/administration/windows-commands/netsh-winhttp">Microsoft Learn, netsh winhttp</a> · <a href="https://www.professormesser.com/free-a-plus-training/220-1201/220-1201-video/dns-configuration-220-1201/">Professor Messer, DNS Configuration</a> · <a href="https://learn.microsoft.com/en-us/microsoft-365/admin/get-help-with-domains/create-dns-records-at-any-dns-hosting-provider">Microsoft Learn, Add DNS records to connect your domain</a></p>
+  <p class="sidenote">Sources: <a href="https://www.professormesser.com/free-a-plus-training/220-1201/220-1201-video/assigning-ip-addresses-220-1201/">Professor Messer, Assigning IP Addresses</a> · <a href="https://learn.microsoft.com/en-us/windows-server/administration/windows-commands/ipconfig">Microsoft Learn, ipconfig</a> · <a href="https://www.professormesser.com/free-a-plus-training/220-1201/220-1201-video/introduction-to-ip-220-1201/">Professor Messer, Introduction to IP</a> · <a href="https://learn.microsoft.com/en-us/powershell/module/nettcpip/test-netconnection">Microsoft Learn, Test-NetConnection</a> · <a href="https://www.professormesser.com/free-a-plus-training/220-1201/220-1201-video/common-ports-220-1201/">Professor Messer, Common Ports</a> · <a href="https://learn.microsoft.com/en-us/powershell/module/nettcpip/get-nettcpconnection">Microsoft Learn, Get-NetTCPConnection</a> · <a href="https://learn.microsoft.com/en-us/troubleshoot/windows-server/networking/direct-hosting-of-smb-over-tcpip">Microsoft Learn, Direct hosting of SMB over TCP/IP</a> · <a href="https://www.professormesser.com/free-a-plus-training/220-1201/220-1201-video/wireless-network-technologies-220-1201/">Professor Messer, Wireless Network Technologies</a> · <a href="https://www.professormesser.com/free-a-plus-training/220-1201/220-1201-video/network-services-220-1201/">Professor Messer, Network Services</a> · <a href="https://learn.microsoft.com/en-us/windows-server/administration/windows-commands/netsh-winhttp">Microsoft Learn, netsh winhttp</a> · <a href="https://www.professormesser.com/free-a-plus-training/220-1201/220-1201-video/dns-configuration-220-1201/">Professor Messer, DNS Configuration</a> · <a href="https://learn.microsoft.com/en-us/microsoft-365/admin/get-help-with-domains/create-dns-records-at-any-dns-hosting-provider">Microsoft Learn, Add DNS records to connect your domain</a> · <a href="https://learn.microsoft.com/en-us/defender-office-365/email-authentication-spf-configure">Microsoft Learn, SPF</a> · <a href="https://learn.microsoft.com/en-us/defender-office-365/email-authentication-dkim-configure">Microsoft Learn, DKIM</a> · <a href="https://learn.microsoft.com/en-us/defender-office-365/email-authentication-dmarc-configure">Microsoft Learn, DMARC</a></p>
 </main>
 </body>
 </html>

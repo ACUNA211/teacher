@@ -1,0 +1,156 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>SPF, DKIM and DMARC</title>
+<meta name="description" content="IT lesson 0013: the three TXT-based email authentication records (SPF, DKIM, DMARC), what each one proves, and how to read them in DNS and in a message header.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=JetBrains+Mono&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../assets/course.css">
+<script src="../../assets/quiz.js" defer></script>
+</head>
+<body class="track-it">
+<nav class="page-header">
+  <a class="home" href="../../index.html">Teacher hub</a>
+  <span>IT and certs</span>
+  <a href="../reference/glossary.html">Glossary</a>
+  <a href="../reference/network-settings.html">Cheat sheet</a>
+</nav>
+<main>
+  <p class="kicker">IT and certs · Lesson 0013 · A+ Core 1, objective 2.4</p>
+  <h1>SPF, DKIM and DMARC: proving mail is really yours</h1>
+  <p class="lede">About 10 minutes. Email was built with no proof of who sent it: anyone can type any address in the From line. Yesterday (<a href="0012-dns-records.html">lesson 0012</a>) you saw that TXT records hold notes for other services. Today: the three notes that let a receiving mail server check whether a message really came from your domain.<sup class="cite"><a href="#src-messer">[1]</a></sup> This finishes the DNS Configuration video.</p>
+
+  <div class="callout">
+    <span class="label">Why this matters at work</span>
+    <p>"My emails to a customer land in their junk folder" or "someone is sending phishing that looks like it's from us" are both questions about these three records. In Microsoft 365 you don't set SPF in an admin portal at all: it's a TXT record at your DNS host.<sup class="cite"><a href="#src-spf">[2]</a></sup> Reading a message header and seeing <code>spf=fail</code> or <code>dmarc=fail</code> tells you which record to fix.</p>
+  </div>
+
+  <h2>Three records, three questions</h2>
+  <p>All three live in DNS as text, and all three are checked by the <em>receiving</em> server, not the sender. Examples use <code>example.com</code> and documentation addresses.</p>
+
+  <div class="table-wrap">
+  <table>
+    <thead><tr><th>Record</th><th>Question it answers</th><th>Where it lives / example</th></tr></thead>
+    <tbody>
+      <tr><td><strong>SPF</strong><br><small>Sender Policy Framework</small></td><td>Is this sending <strong>server</strong> allowed to send mail for the domain?</td><td>TXT at <code>example.com</code><br><code>v=spf1 ip4:192.0.2.25 include:spf.protection.outlook.com -all</code></td></tr>
+      <tr><td><strong>DKIM</strong><br><small>DomainKeys Identified Mail</small></td><td>Was the message <strong>signed</strong> by the domain, and is it unchanged since?</td><td>Public key at <code>selector1._domainkey.example.com</code><br><code>v=DKIM1; k=rsa; p=MIIB…</code></td></tr>
+      <tr><td><strong>DMARC</strong><br><small>Domain-based Message Authentication, Reporting and Conformance</small></td><td>If SPF and DKIM <strong>fail</strong>, what should the receiver do, and who gets the reports?</td><td>TXT at <code>_dmarc.example.com</code><br><code>v=DMARC1; p=quarantine; rua=mailto:dmarc@example.com</code></td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <h3>How each one works</h3>
+  <ul>
+    <li><strong>SPF is an allow-list of senders.</strong> The receiver looks at the IP address that delivered the message and checks it against the domain's SPF list. The ending says what to do with anyone not on it: <code>-all</code> means hard fail, <code>~all</code> means soft fail (suspicious, but deliver). A domain may have <strong>only one</strong> SPF record; adding a second one breaks both. Microsoft 365 domains need <code>include:spf.protection.outlook.com</code>, and Microsoft recommends <code>-all</code>.<sup class="cite"><a href="#src-spf">[2]</a></sup></li>
+    <li><strong>DKIM is a digital signature.</strong> The sending server signs each message with a <em>private</em> key and adds a <code>DKIM-Signature</code> header. The receiver fetches the matching <em>public</em> key from DNS (the <code>s=</code> selector in the header tells it which name to look up) and checks the signature. If someone changed the message on the way, the check fails.<sup class="cite"><a href="#src-dkim">[3]</a></sup> In Microsoft 365, you publish two <strong>CNAME</strong> records (<code>selector1._domainkey</code> and <code>selector2._domainkey</code>) that point at keys Microsoft hosts, then switch signing on.<sup class="cite"><a href="#src-dkim">[3]</a></sup></li>
+    <li><strong>DMARC is the policy on top.</strong> It passes when SPF or DKIM passes <em>and</em> the domain they checked matches the domain in the visible From address (called alignment). The <code>p=</code> tag says what to do with mail that fails: <code>none</code> (just report), <code>quarantine</code> (accept, but mark it, e.g. junk folder), or <code>reject</code> (refuse it). <code>rua=</code> is where daily summary reports go. Microsoft's advice: start at <code>p=none</code>, read the reports to find legitimate senders you forgot, then move to quarantine and finally reject.<sup class="cite"><a href="#src-dmarc">[4]</a></sup></li>
+  </ul>
+
+  <div class="callout win">
+    <span class="label">Memory hooks</span>
+    <p><strong>SPF = the guest list</strong> (which servers may send). <strong>DKIM = the wax seal</strong> (signed, and not opened on the way). <strong>DMARC = the bouncer's instructions</strong> (what to do when the list or seal doesn't check out, and who to tell). Order to set them up: SPF, then DKIM, then DMARC.</p>
+  </div>
+
+  <h2>Try it (3 minutes)</h2>
+  <p>Read a real domain's records in PowerShell:<sup class="cite"><a href="#src-resolve">[5]</a></sup></p>
+<pre><code>Resolve-DnsName microsoft.com -Type TXT | Where-Object Strings -match 'v=spf1'
+Resolve-DnsName _dmarc.microsoft.com -Type TXT</code></pre>
+  <p>In the SPF answer, find the ending (<code>-all</code> or <code>~all</code>). In the DMARC answer, find <code>p=</code>: is it none, quarantine or reject?</p>
+  <p>Then look at the receiving side. In Outlook on the web, open any email from an outside sender, choose <strong>… → View → View message details</strong>, and search for <code>Authentication-Results</code>. You'll see a line like <code>spf=pass … dkim=pass … dmarc=pass</code>. That one line is all three of today's records, checked.</p>
+  <p class="sidenote">Checking your own organization's domain is a good exercise, but keep the results off any public page.</p>
+
+  <h2>Practice</h2>
+  <p>Answer from memory before scrolling back up.</p>
+
+  <section class="quiz">
+    <p class="q">A company starts sending invoices through a new online billing service. Customers report the invoices land in junk, and headers show <code>spf=fail</code>. What's the fix?</p>
+    <ul class="choices">
+      <li><button class="choice">Add a second SPF record for billing</button></li>
+      <li><button class="choice">Change the MX record to billing service</button></li>
+      <li><button class="choice" data-correct>Add the billing service to existing SPF</button></li>
+      <li><button class="choice">Set the DMARC policy to reject now</button></li>
+    </ul>
+    <div class="explain" hidden>SPF lists the servers allowed to send for the domain, and the new service isn't on it. Edit the one existing SPF record (usually an extra <code>include:</code>). A second SPF record breaks SPF entirely, MX only controls incoming mail, and reject would make things worse.</div>
+  </section>
+
+  <section class="quiz">
+    <p class="q">A receiving server checks a message's signature against a public key it found in DNS, and confirms nothing changed in transit. Which record made that possible?</p>
+    <ul class="choices">
+      <li><button class="choice" data-correct>DKIM, the signature public key</button></li>
+      <li><button class="choice">SPF, the allowed sender list</button></li>
+      <li><button class="choice">DMARC, the failure handling policy</button></li>
+      <li><button class="choice">MX, the receiving mail server</button></li>
+    </ul>
+    <div class="explain" hidden>DKIM is the only one that uses a key pair: the sender signs with a private key, and the public key sits in DNS under <code>selector._domainkey</code>. SPF checks the sending IP, not the content.</div>
+  </section>
+
+  <section class="quiz">
+    <p class="q">An admin is publishing DMARC for the first time and isn't sure every legitimate sender is covered yet. Which policy should they start with?</p>
+    <ul class="choices">
+      <li><button class="choice"><code>p=reject</code>, so spoofed mail is refused</button></li>
+      <li><button class="choice"><code>p=quarantine</code>, so failures go to junk</button></li>
+      <li><button class="choice">No DMARC until SPF is perfect</button></li>
+      <li><button class="choice" data-correct><code>p=none</code>, then read the daily reports</button></li>
+    </ul>
+    <div class="explain" hidden><code>p=none</code> changes nothing about delivery but turns on reports (<code>rua=</code>), which show every server sending as your domain. Fix the forgotten senders, then step up to quarantine and reject.</div>
+  </section>
+
+  <section class="quiz">
+    <p class="q">Phishing mail shows your company's address in the From line. Your SPF and DKIM are set up, but receivers still deliver it to inboxes. What's most likely missing?</p>
+    <ul class="choices">
+      <li><button class="choice">A second DKIM selector record</button></li>
+      <li><button class="choice" data-correct>A DMARC record with enforcement</button></li>
+      <li><button class="choice">A lower MX priority number</button></li>
+      <li><button class="choice">A shorter TTL on SPF</button></li>
+    </ul>
+    <div class="explain" hidden>SPF and DKIM only report pass or fail; DMARC tells the receiver what to do with a failure and checks that the From domain lines up. Without a DMARC policy of quarantine or reject, receivers decide on their own.</div>
+  </section>
+  <p class="quiz-score" data-quiz-score></p>
+
+  <details class="recall">
+    <summary>From memory: say what each of SPF, DKIM and DMARC checks, and the DNS name each one lives at. <span class="hint">(then click to check)</span></summary>
+    <p><strong>SPF</strong>: is the sending server's IP allowed? TXT at the domain itself. <strong>DKIM</strong>: is the signature valid and the message unchanged? Public key at <code>selector._domainkey.domain</code>. <strong>DMARC</strong>: what to do when they fail, and where to send reports. TXT at <code>_dmarc.domain</code>.</p>
+  </details>
+
+  <h2>Review: earlier lessons</h2>
+  <p>Spaced retrieval: pull these from memory first, then check.</p>
+
+  <details class="recall">
+    <summary>Why can't the bare domain (<code>example.com</code>) usually be a CNAME, and which record does Outlook use to find its settings? <span class="hint">(<a href="0012-dns-records.html">lesson 0012</a>, 1 day ago)</span></summary>
+    <p>A name with a CNAME can't hold any other records, and the bare domain needs MX and TXT. Outlook uses the <strong><code>autodiscover</code> CNAME</strong>.</p>
+  </details>
+
+  <details class="recall">
+    <summary>A syslog message arrives marked severity 0, another marked severity 6. Which is more urgent, and which port and transport does classic syslog use? <span class="hint">(<a href="0010-server-roles.html">lesson 0010</a>, 3 days ago)</span></summary>
+    <p><strong>Severity 0</strong> (emergency): lower numbers are more severe; 6 is informational. Classic syslog uses <strong>UDP 514</strong>.</p>
+  </details>
+
+  <details class="recall">
+    <summary>Which three 2.4 GHz channels don't overlap in the US, and why does 5 GHz usually lose more signal through walls? <span class="hint">(<a href="0006-wifi-bands-channels.html">lesson 0006</a>, 7 days ago)</span></summary>
+    <p>Channels <strong>1, 6 and 11</strong>. Higher frequencies are absorbed more by walls and travel less far, so 5 GHz (and 6 GHz) trade range for speed.</p>
+  </details>
+
+  <div class="callout source" id="src-messer">
+    <span class="label">Primary source: watch next</span>
+    <p>[1] Professor Messer, <a href="https://www.professormesser.com/free-a-plus-training/220-1201/220-1201-video/dns-configuration-220-1201/">DNS Configuration (220-1201)</a>. Free. Watch the second half (SPF, DKIM and DMARC) to finish the video.</p>
+    <p id="src-spf">[2] <a href="https://learn.microsoft.com/en-us/defender-office-365/email-authentication-spf-configure">Microsoft Learn, Set up SPF to identify valid email sources for your Microsoft 365 domain</a> (one SPF record per domain, <code>include:spf.protection.outlook.com</code>, <code>-all</code> recommended, no admin portal for SPF).</p>
+    <p id="src-dkim">[3] <a href="https://learn.microsoft.com/en-us/defender-office-365/email-authentication-dkim-configure">Microsoft Learn, How to use DKIM for email in your custom domain</a> (two selector CNAMEs, public/private key pair, <code>s=</code> in the DKIM-Signature header).</p>
+    <p id="src-dmarc">[4] <a href="https://learn.microsoft.com/en-us/defender-office-365/email-authentication-dmarc-configure">Microsoft Learn, Set up DMARC to validate email in Microsoft 365</a> (<code>_dmarc</code> TXT, <code>p=none/quarantine/reject</code>, reports, gradual rollout).</p>
+    <p id="src-resolve">[5] <a href="https://learn.microsoft.com/en-us/powershell/module/dnsclient/resolve-dnsname">Microsoft Learn, Resolve-DnsName</a>.</p>
+  </div>
+
+  <div class="callout ask">
+    <span class="label">Questions?</span>
+    <p>Anything unclear? Ask your teacher. Open Claude in the Teacher repo and ask, for example: <em>"In IT lesson 0013, why can SPF pass but DMARC still fail when mail is forwarded?"</em> Follow-up questions are part of the course.</p>
+  </div>
+</main>
+<nav class="page-footer">
+  <a href="0012-dns-records.html">← DNS records: what a name can answer</a>
+  <a href="../../index.html">Hub</a>
+  <span class="disabled">Next lesson: tomorrow →</span>
+</nav>
+</body>
+</html>
