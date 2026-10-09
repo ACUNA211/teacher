@@ -1,7 +1,7 @@
 /* Hub data. The teacher updates this file after every lesson; index.html renders it.
    Keep it free of personal data: the site is public. */
 window.HUB = {
-  updated: "2026-10-08",
+  updated: "2026-10-09",
   tracks: [
     {
       id: "it", name: "IT and certs", folder: "it", cls: "track-it", status: "active",
@@ -90,6 +90,11 @@ window.HUB = {
       track: "it", num: "0013", date: "2026-10-08", covers: 1,
       title: "SPF, DKIM and DMARC: proving mail is really yours",
       path: "it/lessons/0013-spf-dkim-dmarc.html"
+    },
+    {
+      track: "it", num: "0014", date: "2026-10-09", covers: 1,
+      title: "DHCP scopes and leases: who gets which address",
+      path: "it/lessons/0014-dhcp-scopes-leases.html"
     },
     {
       track: "app", num: "0001", date: "2026-09-28", covers: 0,

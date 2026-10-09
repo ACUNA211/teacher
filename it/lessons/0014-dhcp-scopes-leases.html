@@ -1,0 +1,165 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>DHCP Scopes and Leases</title>
+<meta name="description" content="IT lesson 0014: how a DHCP server is configured. Scope, pool, exclusions, reservations, scope options, and how lease time and renewal work.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=JetBrains+Mono&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../assets/course.css">
+<script src="../../assets/quiz.js" defer></script>
+</head>
+<body class="track-it">
+<nav class="page-header">
+  <a class="home" href="../../index.html">Teacher hub</a>
+  <span>IT and certs</span>
+  <a href="../reference/glossary.html">Glossary</a>
+  <a href="../reference/network-settings.html">Cheat sheet</a>
+</nav>
+<main>
+  <p class="kicker">IT and certs · Lesson 0014 · A+ Core 1, objective 2.4</p>
+  <h1>DHCP scopes and leases: who gets which address, and for how long</h1>
+  <p class="lede">About 10 minutes. You already know what DHCP does (hands out the four IP settings, <a href="0001-four-ip-settings.html">lesson 0001</a>) and which ports it uses (UDP 67/68, <a href="0004-email-dns-dhcp-ports.html">lesson 0004</a>). Today: how the server is <em>set up</em>. Five words cover it: scope, pool, exclusion, reservation, lease.<sup class="cite"><a href="#src-messer">[1]</a></sup></p>
+
+  <div class="callout">
+    <span class="label">Why this matters at work</span>
+    <p>"The printer stopped working after the weekend" (its address changed) and "new laptops get a 169.254 address but older ones are fine" (the server ran out of addresses) are both DHCP <em>configuration</em> problems, not broken hardware. Knowing the five words tells you which setting to ask the network team about.</p>
+  </div>
+
+  <h2>The five words</h2>
+  <p>Example network: <code>192.168.10.0/24</code>, a private range like the ones from lesson 0001.</p>
+
+  <div class="table-wrap">
+  <table>
+    <thead><tr><th>Term</th><th>What it is</th><th>Example</th></tr></thead>
+    <tbody>
+      <tr><td><strong>Scope</strong></td><td>The whole DHCP setup for <strong>one subnet</strong>: its address range plus the settings handed out with it. One scope per subnet.<sup class="cite"><a href="#src-scope">[2]</a></sup></td><td>"Office LAN" scope for <code>192.168.10.0/24</code></td></tr>
+      <tr><td><strong>Pool</strong></td><td>The addresses the server may actually hand out.</td><td><code>.1</code>–<code>.254</code>, minus exclusions</td></tr>
+      <tr><td><strong>Exclusion</strong></td><td>Addresses carved <strong>out</strong> of the range so DHCP never offers them. Used for devices you set by hand (router, servers).<sup class="cite"><a href="#src-scope">[2]</a></sup></td><td><code>.1</code>–<code>.20</code> excluded</td></tr>
+      <tr><td><strong>Reservation</strong></td><td>A fixed pairing of one <strong>MAC address</strong> to one IP. The device still uses DHCP, but always gets the same address.<sup class="cite"><a href="#src-netplus">[3]</a></sup></td><td>Printer <code>AA-BB-…</code> → <code>.50</code></td></tr>
+      <tr><td><strong>Lease</strong></td><td>How long a device may keep its address before it must renew. Unrenewed addresses go back into the pool.<sup class="cite"><a href="#src-netplus">[3]</a></sup></td><td>8 days</td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <p>The scope also carries <strong>scope options</strong>: the other settings that ride along with the address. The important ones are the three you met in lesson 0001: <strong>default gateway</strong> (the "router" option), <strong>DNS servers</strong>, and the subnet mask, plus a DNS domain name.<sup class="cite"><a href="#src-netplus">[3]</a></sup> A wrong DNS option in the scope means every device on that subnet gets the wrong DNS server at once.</p>
+  <p>One server can run scopes for many subnets, even though the Discover broadcast stops at the router. The router forwards it as a <strong>DHCP relay</strong> (Cisco calls this an "IP helper"), so the server knows which subnet's scope to answer from.<sup class="cite"><a href="#src-netplus">[3]</a></sup></p>
+
+  <h3>How a lease renews</h3>
+  <ul>
+    <li><strong>Getting one</strong>: four messages, remembered as <strong>DORA</strong>: <strong>D</strong>iscover (client broadcasts), <strong>O</strong>ffer (server proposes an address), <strong>R</strong>equest (client asks for it), <strong>A</strong>cknowledge (server confirms).<sup class="cite"><a href="#src-netplus">[3]</a></sup></li>
+    <li><strong>At 50% of the lease</strong> (called T1), the client asks the <em>same</em> server to extend it. Usually it says yes and the clock restarts.<sup class="cite"><a href="#src-timers">[4]</a></sup></li>
+    <li><strong>At 87.5%</strong> (T2, seven-eighths), if the first server never answered, the client broadcasts to <em>any</em> DHCP server.<sup class="cite"><a href="#src-timers">[4]</a></sup></li>
+    <li><strong>At 100%</strong>, the address is gone. The client starts DORA again, and if nobody answers, Windows falls back to APIPA (<code>169.254.x.x</code>).</li>
+  </ul>
+  <p>Lease length is a trade-off. Long leases (days) mean less traffic and stable addresses. Short leases (an hour or two) recycle addresses quickly, which suits busy guest Wi-Fi where phones come and go.</p>
+
+  <div class="callout win">
+    <span class="label">Memory hooks</span>
+    <p><strong>Exclusion = "never give out"</strong> (for things set by hand). <strong>Reservation = "always give this one to that MAC"</strong> (for things that should stay put but still use DHCP). <strong>Renew at half, beg anyone at seven-eighths.</strong></p>
+  </div>
+
+  <h2>Try it (2 minutes)</h2>
+  <p>On a Windows PC, run:<sup class="cite"><a href="#src-ipconfig">[5]</a></sup></p>
+<pre><code>ipconfig /all</code></pre>
+  <p>Find your active adapter and read these lines:</p>
+<pre><code>   DHCP Enabled. . . . . . . . . . . : Yes
+   Lease Obtained. . . . . . . . . . : Friday, October 9, 2026 8:02:11 AM
+   Lease Expires . . . . . . . . . . : Saturday, October 10, 2026 8:02:11 AM
+   DHCP Server . . . . . . . . . . . : 192.168.10.1</code></pre>
+  <p>Subtract the two dates: that's the lease length (one day in this example, so the PC will try to renew around 8 PM tonight). Run <code>ipconfig /renew</code> and look again: <em>Lease Obtained</em> jumps to now. Your values will differ; a home router often uses a lease of a day.</p>
+
+  <h2>Practice</h2>
+  <p>Answer from memory before scrolling back up.</p>
+
+  <section class="quiz">
+    <p class="q">A network printer gets its address from DHCP. After a long power outage it comes back with a different IP, and everyone's print jobs fail. What's the best fix?</p>
+    <ul class="choices">
+      <li><button class="choice">Shorten the lease time on scope</button></li>
+      <li><button class="choice" data-correct>Create a reservation for its MAC</button></li>
+      <li><button class="choice">Add the printer's address to exclusions</button></li>
+      <li><button class="choice">Turn off DHCP on the server</button></li>
+    </ul>
+    <div class="explain" hidden>A reservation ties the printer's MAC address to one IP, so DHCP always hands it the same address. An exclusion does the opposite: DHCP would <em>never</em> give that address out, so the printer couldn't get it from DHCP at all.</div>
+  </section>
+
+  <section class="quiz">
+    <p class="q">A scope has about 100 addresses and an 8-day lease. During a busy visitor week, newly arrived laptops get <code>169.254.x.x</code> while devices already on the network work fine. Most likely cause?</p>
+    <ul class="choices">
+      <li><button class="choice">The DNS server stopped answering queries</button></li>
+      <li><button class="choice">The default gateway option is wrong</button></li>
+      <li><button class="choice">Every device needs a static address</button></li>
+      <li><button class="choice" data-correct>The address pool has run out</button></li>
+    </ul>
+    <div class="explain" hidden>Visitors' phones and laptops hold their addresses for 8 days even after they leave, so the pool is used up. Devices already holding a lease keep working; new ones get no offer and fall back to APIPA. Fixes: a bigger scope or a shorter lease. A wrong DNS or gateway option wouldn't cause a 169.254 address.</div>
+  </section>
+
+  <section class="quiz">
+    <p class="q">The scope's range is <code>.1</code>–<code>.254</code>. The router at <code>.1</code> and a file server at <code>.10</code> have addresses typed in by hand. What should you add so DHCP never hands those addresses to another device?</p>
+    <ul class="choices">
+      <li><button class="choice" data-correct>An exclusion range for those addresses</button></li>
+      <li><button class="choice">A shorter lease on the scope</button></li>
+      <li><button class="choice">A second scope on that subnet</button></li>
+      <li><button class="choice">A DNS scope option pointing there</button></li>
+    </ul>
+    <div class="explain" hidden>Devices with static (hand-typed) addresses don't talk to DHCP, so the server doesn't know they exist. Exclude their addresses from the range, or DHCP may hand the same IP to a laptop and cause an address conflict. Only one scope is allowed per subnet.</div>
+  </section>
+
+  <section class="quiz">
+    <p class="q">A laptop received an 8-day lease on Monday morning. When does it first try to renew, and who does it ask?</p>
+    <ul class="choices">
+      <li><button class="choice">On day 8, when it expires</button></li>
+      <li><button class="choice">On day 7, to any server</button></li>
+      <li><button class="choice" data-correct>On day 4, to its server</button></li>
+      <li><button class="choice">Every hour, until the next reboot</button></li>
+    </ul>
+    <div class="explain" hidden>Renewal starts at 50% of the lease (T1): day 4, sent to the server that gave the lease. Only if that fails does it broadcast to any server, at 87.5% (T2): day 7.</div>
+  </section>
+  <p class="quiz-score" data-quiz-score></p>
+
+  <details class="recall">
+    <summary>From memory: explain the difference between an exclusion and a reservation, and say when you'd use each. <span class="hint">(then click to check)</span></summary>
+    <p><strong>Exclusion</strong>: addresses DHCP never offers. Use it for devices with hand-typed (static) addresses, like the router or a server. <strong>Reservation</strong>: one IP always given to one MAC address. Use it for devices that should keep the same address but still get their settings from DHCP, like printers.</p>
+  </details>
+
+  <h2>Review: earlier lessons</h2>
+  <p>Spaced retrieval: pull these from memory first, then check.</p>
+
+  <details class="recall">
+    <summary>Which of SPF, DKIM and DMARC uses a private/public key pair, and at which DNS name does the DMARC record live? <span class="hint">(<a href="0013-spf-dkim-dmarc.html">lesson 0013</a>, 1 day ago)</span></summary>
+    <p><strong>DKIM</strong>: the sender signs with a private key; the public key sits at <code>selector._domainkey.domain</code>. DMARC is a TXT record at <strong><code>_dmarc.domain</code></strong>.</p>
+  </details>
+
+  <details class="recall">
+    <summary>Name the four internet appliances and say what each one sits between. <span class="hint">(<a href="0011-appliances-scada-iot.html">lesson 0011</a>, 3 days ago)</span></summary>
+    <p><strong>Spam gateway</strong>: internet ↔ mail server. <strong>UTM</strong> (all-in-one): internal network ↔ internet. <strong>Load balancer</strong>: users ↔ a group of servers. <strong>Proxy</strong>: users ↔ the internet, making requests for them.</p>
+  </details>
+
+  <details class="recall">
+    <summary>A box says "Wi-Fi 6E". Which 802.11 letters is that, and what does the "E" add? <span class="hint">(<a href="0007-wifi-standards.html">lesson 0007</a>, 7 days ago)</span></summary>
+    <p><strong>802.11ax</strong>. Wi-Fi 6 uses 2.4 and 5 GHz; <strong>6E adds the 6 GHz band</strong>.</p>
+  </details>
+
+  <div class="callout source" id="src-messer">
+    <span class="label">Primary source: watch next</span>
+    <p>[1] Professor Messer, <a href="https://www.professormesser.com/free-a-plus-training/220-1201/220-1201-video/dhcp-configuration-220-1201/">DHCP Configuration (220-1201)</a>. Free. Watch it all: it covers today's lesson with diagrams of the pool and the renewal timers.</p>
+    <p id="src-scope">[2] <a href="https://technet.microsoft.com/en-us/library/dd759218.aspx">Microsoft, Configuring a DHCP Scope</a> (one scope per subnet, one continuous range; set the full range, then exclusions).</p>
+    <p id="src-netplus">[3] Professor Messer, <a href="https://www.professormesser.com/network-plus/n10-008/n10-008-video/configuring-dhcp-n10-008/">Configuring DHCP (Network+ N10-008)</a> (pools, reservations, lease duration, scope options; the deeper Network+ version of today's topic).</p>
+    <p id="src-timers">[4] <a href="https://technet.microsoft.com/en-us/library/cc978471.aspx">Microsoft, DHCP client renewal timers</a> (T1 defaults to half the lease, T2 to seven-eighths).</p>
+    <p id="src-ipconfig">[5] <a href="https://learn.microsoft.com/en-us/windows-server/administration/windows-commands/ipconfig">Microsoft Learn, ipconfig</a>.</p>
+  </div>
+
+  <div class="callout ask">
+    <span class="label">Questions?</span>
+    <p>Anything unclear? Ask your teacher. Open Claude in the Teacher repo and ask, for example: <em>"In IT lesson 0014, what happens if two DHCP servers answer on the same subnet?"</em> Follow-up questions are part of the course.</p>
+  </div>
+</main>
+<nav class="page-footer">
+  <a href="0013-spf-dkim-dmarc.html">← SPF, DKIM and DMARC</a>
+  <a href="../../index.html">Hub</a>
+  <span class="disabled">Next lesson: tomorrow →</span>
+</nav>
+</body>
+</html>

@@ -204,6 +204,22 @@
   </div>
   <p>Read the result in a message header: <code>Authentication-Results: spf=pass dkim=pass dmarc=pass</code>.</p>
 
+  <h2>DHCP configuration (objective 2.4)</h2>
+  <div class="table-wrap">
+  <table>
+    <thead><tr><th>Term</th><th>Means</th><th>Use it for</th></tr></thead>
+    <tbody>
+      <tr><td>Scope</td><td>DHCP setup for one subnet: range + options</td><td>One per subnet</td></tr>
+      <tr><td>Pool</td><td>Addresses actually handed out</td><td>Range minus exclusions</td></tr>
+      <tr><td>Exclusion</td><td>Addresses DHCP never offers</td><td>Statically set devices (router, servers)</td></tr>
+      <tr><td>Reservation</td><td>One MAC always gets one IP</td><td>Printers and devices that must stay put</td></tr>
+      <tr><td>Lease</td><td>How long the address is kept</td><td>Long = stable; short = busy guest Wi-Fi</td></tr>
+      <tr><td>Scope options</td><td>Gateway (router), DNS servers, domain name</td><td>Settings that ride along with the address</td></tr>
+    </tbody>
+  </table>
+  </div>
+  <p>Getting a lease: <strong>DORA</strong> (Discover, Offer, Request, Acknowledge). Renew at <strong>50%</strong> (T1, same server), rebind at <strong>87.5%</strong> (T2, any server), lost at 100% → DORA again or APIPA. <code>ipconfig /all</code> shows <em>Lease Obtained</em> / <em>Lease Expires</em>.</p>
+
   <h2>Commands (Windows)</h2>
   <div class="table-wrap">
   <table>
@@ -223,7 +239,7 @@
     </tbody>
   </table>
   </div>
-  <p class="sidenote">Sources: <a href="https://www.professormesser.com/free-a-plus-training/220-1201/220-1201-video/assigning-ip-addresses-220-1201/">Professor Messer, Assigning IP Addresses</a> · <a href="https://learn.microsoft.com/en-us/windows-server/administration/windows-commands/ipconfig">Microsoft Learn, ipconfig</a> · <a href="https://www.professormesser.com/free-a-plus-training/220-1201/220-1201-video/introduction-to-ip-220-1201/">Professor Messer, Introduction to IP</a> · <a href="https://learn.microsoft.com/en-us/powershell/module/nettcpip/test-netconnection">Microsoft Learn, Test-NetConnection</a> · <a href="https://www.professormesser.com/free-a-plus-training/220-1201/220-1201-video/common-ports-220-1201/">Professor Messer, Common Ports</a> · <a href="https://learn.microsoft.com/en-us/powershell/module/nettcpip/get-nettcpconnection">Microsoft Learn, Get-NetTCPConnection</a> · <a href="https://learn.microsoft.com/en-us/troubleshoot/windows-server/networking/direct-hosting-of-smb-over-tcpip">Microsoft Learn, Direct hosting of SMB over TCP/IP</a> · <a href="https://www.professormesser.com/free-a-plus-training/220-1201/220-1201-video/wireless-network-technologies-220-1201/">Professor Messer, Wireless Network Technologies</a> · <a href="https://www.professormesser.com/free-a-plus-training/220-1201/220-1201-video/network-services-220-1201/">Professor Messer, Network Services</a> · <a href="https://learn.microsoft.com/en-us/windows-server/administration/windows-commands/netsh-winhttp">Microsoft Learn, netsh winhttp</a> · <a href="https://www.professormesser.com/free-a-plus-training/220-1201/220-1201-video/dns-configuration-220-1201/">Professor Messer, DNS Configuration</a> · <a href="https://learn.microsoft.com/en-us/microsoft-365/admin/get-help-with-domains/create-dns-records-at-any-dns-hosting-provider">Microsoft Learn, Add DNS records to connect your domain</a> · <a href="https://learn.microsoft.com/en-us/defender-office-365/email-authentication-spf-configure">Microsoft Learn, SPF</a> · <a href="https://learn.microsoft.com/en-us/defender-office-365/email-authentication-dkim-configure">Microsoft Learn, DKIM</a> · <a href="https://learn.microsoft.com/en-us/defender-office-365/email-authentication-dmarc-configure">Microsoft Learn, DMARC</a></p>
+  <p class="sidenote">Sources: <a href="https://www.professormesser.com/free-a-plus-training/220-1201/220-1201-video/assigning-ip-addresses-220-1201/">Professor Messer, Assigning IP Addresses</a> · <a href="https://learn.microsoft.com/en-us/windows-server/administration/windows-commands/ipconfig">Microsoft Learn, ipconfig</a> · <a href="https://www.professormesser.com/free-a-plus-training/220-1201/220-1201-video/introduction-to-ip-220-1201/">Professor Messer, Introduction to IP</a> · <a href="https://learn.microsoft.com/en-us/powershell/module/nettcpip/test-netconnection">Microsoft Learn, Test-NetConnection</a> · <a href="https://www.professormesser.com/free-a-plus-training/220-1201/220-1201-video/common-ports-220-1201/">Professor Messer, Common Ports</a> · <a href="https://learn.microsoft.com/en-us/powershell/module/nettcpip/get-nettcpconnection">Microsoft Learn, Get-NetTCPConnection</a> · <a href="https://learn.microsoft.com/en-us/troubleshoot/windows-server/networking/direct-hosting-of-smb-over-tcpip">Microsoft Learn, Direct hosting of SMB over TCP/IP</a> · <a href="https://www.professormesser.com/free-a-plus-training/220-1201/220-1201-video/wireless-network-technologies-220-1201/">Professor Messer, Wireless Network Technologies</a> · <a href="https://www.professormesser.com/free-a-plus-training/220-1201/220-1201-video/network-services-220-1201/">Professor Messer, Network Services</a> · <a href="https://learn.microsoft.com/en-us/windows-server/administration/windows-commands/netsh-winhttp">Microsoft Learn, netsh winhttp</a> · <a href="https://www.professormesser.com/free-a-plus-training/220-1201/220-1201-video/dns-configuration-220-1201/">Professor Messer, DNS Configuration</a> · <a href="https://learn.microsoft.com/en-us/microsoft-365/admin/get-help-with-domains/create-dns-records-at-any-dns-hosting-provider">Microsoft Learn, Add DNS records to connect your domain</a> · <a href="https://learn.microsoft.com/en-us/defender-office-365/email-authentication-spf-configure">Microsoft Learn, SPF</a> · <a href="https://learn.microsoft.com/en-us/defender-office-365/email-authentication-dkim-configure">Microsoft Learn, DKIM</a> · <a href="https://learn.microsoft.com/en-us/defender-office-365/email-authentication-dmarc-configure">Microsoft Learn, DMARC</a> · <a href="https://www.professormesser.com/free-a-plus-training/220-1201/220-1201-video/dhcp-configuration-220-1201/">Professor Messer, DHCP Configuration</a> · <a href="https://technet.microsoft.com/en-us/library/dd759218.aspx">Microsoft, Configuring a DHCP Scope</a></p>
 </main>
 </body>
 </html>
