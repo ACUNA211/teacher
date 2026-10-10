@@ -1,0 +1,249 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Weekly Quiz: Oct 4 – Oct 9</title>
+<meta name="description" content="IT lesson 0015: Saturday in-depth quiz on week two (Bluetooth, NFC, RFID, fixed wireless, server roles, appliances, DNS records, SPF/DKIM/DMARC, DHCP configuration) mixed with week one, plus an A+ Core 1 pace check.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=JetBrains+Mono&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../assets/course.css">
+<script src="../../assets/quiz.js" defer></script>
+</head>
+<body class="track-it">
+<nav class="page-header">
+  <a class="home" href="../../index.html">Teacher hub</a>
+  <span>IT and certs</span>
+  <a href="../reference/glossary.html">Glossary</a>
+  <a href="../reference/network-settings.html">Cheat sheet</a>
+</nav>
+<main>
+  <p class="kicker">IT and certs · Lesson 0015 · Saturday quiz · A+ Core 1, objectives 2.1–2.4 &amp; 2.6</p>
+  <h1>Weekly quiz: Oct 4 – Oct 9</h1>
+  <p class="lede">About 20 minutes. Fifteen questions: nine on this week (short-range wireless, server roles, appliances, DNS records, email authentication, DHCP configuration) and six pulled back from week one (IP settings, TCP and UDP, ports, Wi-Fi). They're shuffled on purpose. Most are tickets: work out what's broken before you work out what it's called.</p>
+
+  <div class="callout">
+    <span class="label">How to take it</span>
+    <p>No scrolling back to the lessons until you've answered. A wrong answer followed by the explanation sticks better than a right answer you looked up. Each explanation links to the lesson that taught it, so you know exactly what to reread.</p>
+  </div>
+
+  <p class="quiz-score" data-quiz-score></p>
+
+  <section class="quiz">
+    <p class="q">Over the weekend the router for the second-floor subnet was replaced. Monday, every second-floor PC gets a <code>169.254.x.x</code> address. First-floor PCs are fine, and the one DHCP server sits on the first floor. What's the most likely cause?</p>
+    <ul class="choices">
+      <li><button class="choice">The DNS scope option is wrong</button></li>
+      <li><button class="choice">The lease time is too long</button></li>
+      <li><button class="choice" data-correct>The new router isn't relaying DHCP</button></li>
+      <li><button class="choice">The Wi-Fi channel width is narrow</button></li>
+    </ul>
+    <div class="explain" hidden>A DHCP Discover is a broadcast, and broadcasts stop at the router. To reach a server on another subnet, the router must forward it as a DHCP relay (Cisco's "IP helper"). The old router did; the new one wasn't set up to. A wrong DNS option hands out a bad DNS server, not a 169.254 address. See <a href="0014-dhcp-scopes-leases.html">lesson 0014</a> and <a href="0001-four-ip-settings.html">lesson 0001</a>.</div>
+  </section>
+
+  <section class="quiz">
+    <p class="q">Voice calls in the office sound choppy at busy times. A colleague suggests: "Switch the phones to TCP so no packets are ever lost." Why is that a poor fix?</p>
+    <ul class="choices">
+      <li><button class="choice">TCP cannot carry audio or video</button></li>
+      <li><button class="choice" data-correct>Resent voice packets arrive too late</button></li>
+      <li><button class="choice">UDP already resends every lost packet</button></li>
+      <li><button class="choice">TCP only works on port 443</button></li>
+    </ul>
+    <div class="explain" hidden>TCP re-sends lost data and delivers it in order, so one lost packet stalls everything behind it. For a live call, audio that arrives late is useless: a short glitch (UDP) beats a pause (TCP). UDP never resends anything, and TCP works on any port. See <a href="0002-tcp-udp-ports.html">lesson 0002</a>.</div>
+  </section>
+
+  <section class="quiz">
+    <p class="q">An auditor notes that the company's SPF record ends in <code>~all</code> rather than <code>-all</code>. What does <code>~all</code> tell receivers about mail from a server not on the list?</p>
+    <ul class="choices">
+      <li><button class="choice">Receivers must reject it as forged</button></li>
+      <li><button class="choice">Receivers check the DKIM selector instead</button></li>
+      <li><button class="choice">Receivers send it to rua reports</button></li>
+      <li><button class="choice" data-correct>Receivers mark it suspicious but deliver</button></li>
+    </ul>
+    <div class="explain" hidden><code>~all</code> is a soft fail: treat unlisted senders as suspicious but still accept the message. <code>-all</code> is a hard fail, which Microsoft recommends for Microsoft 365 domains. <code>rua=</code> is a DMARC tag, not SPF. See <a href="0013-spf-dkim-dmarc.html">lesson 0013</a>.</div>
+  </section>
+
+  <section class="quiz">
+    <p class="q">A user typed their network settings by hand. <code>ipconfig /all</code> shows <code>192.168.1.42</code>, mask <code>255.255.255.0</code>, DNS <code>192.168.1.1</code>, and a blank Default Gateway. The printer down the hall works; pinging a public IP fails. What's wrong?</p>
+    <ul class="choices">
+      <li><button class="choice" data-correct>The default gateway is missing entirely</button></li>
+      <li><button class="choice">The DNS server is not answering</button></li>
+      <li><button class="choice">The address came from APIPA instead</button></li>
+      <li><button class="choice">The printer holds a duplicate address</button></li>
+    </ul>
+    <div class="explain" hidden>Local works and everything beyond the subnet fails: that's the no-gateway pattern. A DNS problem would still let a ping to a public <em>IP</em> through. 192.168.1.42 isn't a 169.254 APIPA address, and the printer working rules out a conflict. See <a href="0001-four-ip-settings.html">lesson 0001</a>.</div>
+  </section>
+
+  <section class="quiz">
+    <p class="q">A new laptop's Intune enrollment fails every time on the office network, but succeeds right away on the user's phone hotspot. The same account works everywhere else. What's the most likely cause?</p>
+    <ul class="choices">
+      <li><button class="choice">The office DHCP lease is short</button></li>
+      <li><button class="choice">The user's Entra password has expired</button></li>
+      <li><button class="choice" data-correct>A proxy is inspecting the traffic</button></li>
+      <li><button class="choice">The laptop's Bluetooth radio is off</button></li>
+    </ul>
+    <div class="explain" hidden>"Works on the hotspot, fails at the office" points at a box in the office path. A proxy or security appliance that inspects encrypted traffic can break cloud services; Microsoft lists Intune endpoints that shouldn't be inspected. An expired password would fail on the hotspot too. See <a href="0011-appliances-scada-iot.html">lesson 0011</a>.</div>
+  </section>
+
+  <section class="quiz">
+    <p class="q">A user types the right password, but the MFA prompt never arrives on their phone, so the sign-in stops there. Which part of AAA hasn't completed?</p>
+    <ul class="choices">
+      <li><button class="choice" data-correct>Authentication: proving the user's identity</button></li>
+      <li><button class="choice">Authorization: granting the user's permissions</button></li>
+      <li><button class="choice">Accounting: recording the user's activity</button></li>
+      <li><button class="choice">Syslog: collecting the device's messages</button></li>
+    </ul>
+    <div class="explain" hidden>Password plus MFA is all "who are you?", which is authentication. Authorization (what you may do) only starts once identity is proven. Accounting will log the failed attempt, but it isn't what's blocking. See <a href="0010-server-roles.html">lesson 0010</a>.</div>
+  </section>
+
+  <section class="quiz">
+    <p class="q">A vendor still sends nightly files to your server over FTP on ports 20 and 21. Security flags it. What's the main problem with FTP?</p>
+    <ul class="choices">
+      <li><button class="choice">It only works over UDP 53</button></li>
+      <li><button class="choice">It needs RDP on 3389 open</button></li>
+      <li><button class="choice">It cannot move files between companies</button></li>
+      <li><button class="choice" data-correct>It sends logins in plain text</button></li>
+    </ul>
+    <div class="explain" hidden>FTP, like Telnet and HTTP, is unencrypted: the username, password and files cross the network in the clear. It runs over TCP 20/21, not UDP 53 (DNS), and has nothing to do with RDP. See <a href="0003-web-remote-ports.html">lesson 0003</a>.</div>
+  </section>
+
+  <section class="quiz">
+    <p class="q">Ten minutes ago an admin changed the A record for <code>intranet.example.com</code> to a new server's address. Some users reach the new server; others still land on the old one. What explains it?</p>
+    <ul class="choices">
+      <li><button class="choice">The MX priority still favors old</button></li>
+      <li><button class="choice" data-correct>Clients cache answers until TTL expires</button></li>
+      <li><button class="choice">The record needs a CNAME too</button></li>
+      <li><button class="choice">The DHCP scope still lists old</button></li>
+    </ul>
+    <div class="explain" hidden>Every record carries a TTL: how long clients and other DNS servers may keep a cached answer. Users who looked the name up before the change keep the old address until their copy expires. MX only matters for mail, and the A record alone is enough for a web name. See <a href="0012-dns-records.html">lesson 0012</a>.</div>
+  </section>
+
+  <section class="quiz">
+    <p class="q">Two neighboring access points in a US office are set to 2.4 GHz channels 3 and 5. Users between them report slow, unreliable Wi-Fi. Which change fixes the overlap?</p>
+    <ul class="choices">
+      <li><button class="choice">Move them to channels 2 and 4</button></li>
+      <li><button class="choice">Move them to channels 12 and 13</button></li>
+      <li><button class="choice" data-correct>Move them to channels 1 and 6</button></li>
+      <li><button class="choice">Move them to channels 3 and 4</button></li>
+    </ul>
+    <div class="explain" hidden>Each 2.4 GHz channel overlaps its neighbors, so only 1, 6 and 11 stay clear of each other. Channels 3 and 5 (or 2 and 4, or 3 and 4) interfere; 12 and 13 aren't allowed for normal Wi-Fi in the US. See <a href="0006-wifi-bands-channels.html">lesson 0006</a>.</div>
+  </section>
+
+  <section class="quiz">
+    <p class="q">A fixed wireless link between two buildings runs on unlicensed 5 GHz and keeps dropping when a neighbor's equipment is busy. Which change best removes that interference?</p>
+    <ul class="choices">
+      <li><button class="choice" data-correct>Switch the link to licensed spectrum</button></li>
+      <li><button class="choice">Raise transmit power past the limit</button></li>
+      <li><button class="choice">Replace the link with Bluetooth adapters</button></li>
+      <li><button class="choice">Replace the antennas with omnidirectional ones</button></li>
+    </ul>
+    <div class="explain" hidden>Unlicensed spectrum is free but shared with anyone nearby. Licensed spectrum is paid-for, exclusive use, so no one else is allowed to transmit there. Power is capped by regulators, Bluetooth reaches about 10 meters, and directional antennas are what aim the beam in the first place. See <a href="0009-bluetooth-nfc-rfid-fixed-wireless.html">lesson 0009</a>.</div>
+  </section>
+
+  <section class="quiz">
+    <p class="q">A laptop gets an 8-hour DHCP lease at 9:00 AM. At 10:00 AM the DHCP server that issued it goes offline and stays down. When does the laptop first broadcast to <em>any</em> DHCP server?</p>
+    <ul class="choices">
+      <li><button class="choice">10:00 AM, at once</button></li>
+      <li><button class="choice">1:00 PM, at T1</button></li>
+      <li><button class="choice">5:00 PM, at expiry</button></li>
+      <li><button class="choice" data-correct>4:00 PM, at T2</button></li>
+    </ul>
+    <div class="explain" hidden>At T1 (50%, 1:00 PM) the laptop asks only its own server, which doesn't answer. At T2 (87.5%, seven of eight hours: 4:00 PM) it broadcasts to any server. If nothing answers by 5:00 PM, the lease is gone and it starts DORA again. See <a href="0014-dhcp-scopes-leases.html">lesson 0014</a>.</div>
+  </section>
+
+  <section class="quiz">
+    <p class="q">To authorize a newsletter service, an admin adds a new TXT record, <code>v=spf1 include:news.example.net -all</code>, next to the existing SPF record. Now <em>all</em> company mail fails SPF. Why?</p>
+    <ul class="choices">
+      <li><button class="choice">SPF records must be CNAME records</button></li>
+      <li><button class="choice">The MX record must list it</button></li>
+      <li><button class="choice" data-correct>Two SPF records break SPF entirely</button></li>
+      <li><button class="choice">The -all ending blocks every sender</button></li>
+    </ul>
+    <div class="explain" hidden>A domain may publish only one SPF record; with two, receivers treat SPF as broken for everything. The fix is one record with an extra <code>include:</code>. SPF is a TXT record, MX only handles incoming mail, and <code>-all</code> only fails servers not on the list. See <a href="0013-spf-dkim-dmarc.html">lesson 0013</a>.</div>
+  </section>
+
+  <section class="quiz">
+    <p class="q">A warehouse scanner supports only 802.11n. The new access points broadcast on 5 GHz and 6 GHz only. What happens when the scanner tries to join?</p>
+    <ul class="choices">
+      <li><button class="choice">It cannot connect to either band</button></li>
+      <li><button class="choice" data-correct>It connects on 5 GHz, slower</button></li>
+      <li><button class="choice">It connects on 6 GHz, slower</button></li>
+      <li><button class="choice">It connects after a firmware reset</button></li>
+    </ul>
+    <div class="explain" hidden>802.11n (Wi-Fi 4) runs on both 2.4 and 5 GHz, and standards are backward compatible within a band, so it joins on 5 GHz at n speeds. 6 GHz needs Wi-Fi 6E or 7 on both ends. See <a href="0007-wifi-standards.html">lesson 0007</a>.</div>
+  </section>
+
+  <section class="quiz">
+    <p class="q">A new firewall is set to send its logs to the central syslog server, but nothing arrives. Ping between them works. Which traffic do you check is allowed along the path?</p>
+    <ul class="choices">
+      <li><button class="choice">TCP 445 to the syslog server</button></li>
+      <li><button class="choice">UDP 67 to the syslog server</button></li>
+      <li><button class="choice">TCP 389 to the syslog server</button></li>
+      <li><button class="choice" data-correct>UDP 514 to the syslog server</button></li>
+    </ul>
+    <div class="explain" hidden>Classic syslog sends messages over UDP 514. Ping working proves the path; the port is the next suspect. 445 is SMB, 67 is the DHCP server, and 389 is LDAP. See <a href="0010-server-roles.html">lesson 0010</a>.</div>
+  </section>
+
+  <section class="quiz">
+    <p class="q">A user can open <code>\\192.0.2.20\share</code>, but <code>\\files.example.com\share</code> fails with "path not found." Where is the problem most likely?</p>
+    <ul class="choices">
+      <li><button class="choice" data-correct>Name resolution for the file server</button></li>
+      <li><button class="choice">SMB traffic on TCP port 445</button></li>
+      <li><button class="choice">The DHCP reservation for the server</button></li>
+      <li><button class="choice">Share permissions for the user's account</button></li>
+    </ul>
+    <div class="explain" hidden>The share opens by IP, so the network, SMB on 445 and permissions all work. Only the name fails, so check DNS: does <code>Resolve-DnsName files.example.com</code> return an A record with the right address? See <a href="0001-four-ip-settings.html">lesson 0001</a>, <a href="0012-dns-records.html">lesson 0012</a> and <a href="0005-file-sharing-directory-ports.html">lesson 0005</a>.</div>
+  </section>
+
+  <p class="quiz-score" data-quiz-score></p>
+
+  <h2>Explain it in your own words</h2>
+  <p>Say or write the answer before you open each one. If you can explain it to a coworker, you know it.</p>
+
+  <details class="recall">
+    <summary>A manager asks why the office printer should get a DHCP <em>reservation</em> but the router needs an <em>exclusion</em>. Explain the difference in two sentences. <span class="hint">(<a href="0014-dhcp-scopes-leases.html">lesson 0014</a>)</span></summary>
+    <p>A reservation tells DHCP "always give this address to this MAC," so the printer keeps the same address but still gets its gateway and DNS from DHCP. An exclusion tells DHCP "never hand this address out," which protects devices like the router whose address is typed in by hand.</p>
+  </details>
+
+  <details class="recall">
+    <summary>Someone is spoofing your company's From address. Explain, using the guest-list, wax-seal and bouncer picture, what SPF, DKIM and DMARC each do and which one tells receivers to act. <span class="hint">(<a href="0013-spf-dkim-dmarc.html">lesson 0013</a>)</span></summary>
+    <p>SPF is the guest list: which servers may send for the domain. DKIM is the wax seal: the message was signed by the domain and not changed on the way. DMARC is the bouncer's instructions: if SPF or DKIM doesn't pass (and line up with the From domain), quarantine or reject the message, and report it. Only DMARC tells receivers what to do.</p>
+  </details>
+
+  <details class="recall">
+    <summary>Load balancer vs. proxy: which way does each one "face," and what does an outside website see in each case? <span class="hint">(<a href="0011-appliances-scada-iot.html">lesson 0011</a>)</span></summary>
+    <p>A load balancer faces inward: it sits in front of your servers, and visitors see one address while many servers share the work. A proxy faces outward: it makes requests for your users, so the outside website sees the proxy's address, not each PC's.</p>
+  </details>
+
+  <details class="recall">
+    <summary>Sort fixed wireless, Bluetooth, RFID and NFC by range, and give one work example of each. <span class="hint">(<a href="0009-bluetooth-nfc-rfid-fixed-wireless.html">lesson 0009</a>)</span></summary>
+    <p>Fixed wireless: kilometers (linking a second building). Bluetooth: about 10 meters (headsets, mice). RFID: centimeters to meters (door badges, inventory tags). NFC: about 4 centimeters (tapping a security key to a phone, tap-to-pay).</p>
+  </details>
+
+  <h2>Pace check</h2>
+  <div class="callout">
+    <span class="label">A+ Core 1: 7 of 63 videos covered (about 11%)</span>
+    <div class="meter"><span style="width:11%"></span></div>
+    <p>Fully covered so far: Assigning IP Addresses, Introduction to IP, Common Ports, Wireless Network Technologies, Network Services, DNS Configuration, and DHCP Configuration. Four of those were finished this week.</p>
+    <p><strong>What the calendar needs:</strong> the syllabus puts all new material in weeks 1–17 (Sep 27 – Jan 23), about <strong>3.7 videos a week</strong>. Today ends week 2, so you'd expect about 7.4. You're at 7: <strong>on pace</strong>, less than half a video short. Last week you were about one video behind, so you closed most of the gap.</p>
+    <p><strong>The trend:</strong> this week covered 4 videos in 6 daily lessons, a bit above the 3.7 needed. You're inside the Networking block (objectives 2.1–2.8, through Oct 24) and at 2.4, with VLANs and VPNs likely next. If the pace holds, the plan stands as written and no change is needed.</p>
+    <p>Nothing in the plan was changed. Next Saturday's check will show whether the pace holds through the rest of objective 2.4.</p>
+  </div>
+
+  <div class="callout source" id="src-messer">
+    <span class="label">Primary source: watch next</span>
+    <p>Professor Messer, <a href="https://www.professormesser.com/free-a-plus-training/220-1201/220-1201-video/220-1201-training-course/">Free CompTIA A+ 220-1201 course</a>. Rewatch the video behind whichever question you missed: Network Services, DNS Configuration and DHCP Configuration cover most of this week. Free.</p>
+  </div>
+
+  <div class="callout ask">
+    <span class="label">Questions?</span>
+    <p>Missed one and the explanation didn't settle it? Ask your teacher. Open Claude in the Teacher repo and ask, for example: <em>"In IT lesson 0015, question 1, how does a DHCP relay tell the server which subnet the request came from?"</em> Follow-up questions are part of the course.</p>
+  </div>
+</main>
+<nav class="page-footer">
+  <a href="0014-dhcp-scopes-leases.html">← DHCP scopes and leases</a>
+  <a href="../../index.html">Hub</a>
+  <span class="disabled">Next lesson: tomorrow →</span>
+</nav>
+</body>
+</html>
