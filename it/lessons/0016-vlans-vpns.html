@@ -1,0 +1,166 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>VLANs and VPNs</title>
+<meta name="description" content="IT lesson 0016: VLANs split one physical switch into separate broadcast domains; VPNs join distant devices or sites over an encrypted tunnel. Client-to-site, site-to-site, concentrators, split and full tunnel.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=JetBrains+Mono&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../assets/course.css">
+<script src="../../assets/quiz.js" defer></script>
+</head>
+<body class="track-it">
+<nav class="page-header">
+  <a class="home" href="../../index.html">Teacher hub</a>
+  <span>IT and certs</span>
+  <a href="../reference/glossary.html">Glossary</a>
+  <a href="../reference/network-settings.html">Cheat sheet</a>
+</nav>
+<main>
+  <p class="kicker">IT and certs · Lesson 0016 · A+ Core 1, objective 2.4</p>
+  <h1>VLANs and VPNs: splitting one network, joining distant ones</h1>
+  <p class="lede">About 10 minutes. Two ideas that sound alike but do opposite jobs. A <strong>VLAN</strong> takes one physical switch and splits it into several separate networks. A <strong>VPN</strong> takes devices that are far apart and makes them act as if they were on the same network, through an encrypted tunnel.<sup class="cite"><a href="#src-messer">[1]</a></sup></p>
+
+  <div class="callout">
+    <span class="label">Why this matters at work</span>
+    <p>"I can open the file share in the office but not from home" is usually a VPN question, not a password question. And on managed laptops, the VPN profile is often pushed by Intune rather than set up by hand, so a missing or broken profile is a device-configuration problem you can check in the admin center.<sup class="cite"><a href="#src-intune">[4]</a></sup></p>
+  </div>
+
+  <h2>VLANs: one switch, several networks</h2>
+  <p>A plain switch is one <strong>broadcast domain</strong>: a broadcast (like the DHCP Discover from <a href="0014-dhcp-scopes-leases.html">lesson 0014</a>) reaches every device plugged into it. The old way to separate, say, staff from guests was to buy a second switch. A <strong>VLAN</strong> (virtual LAN) does the same in software: you assign switch ports to VLANs, and each VLAN is its own broadcast domain, as if it were a separate switch.<sup class="cite"><a href="#src-messer">[1]</a></sup></p>
+  <ul>
+    <li><strong>Each VLAN is its own subnet</strong>, so it usually gets its own DHCP scope (one scope per subnet, lesson 0014).</li>
+    <li><strong>VLANs can't talk to each other directly.</strong> Traffic between them has to go through a <strong>router</strong> (or a layer 3 switch), which is where you can filter it.<sup class="cite"><a href="#src-vlan">[2]</a></sup></li>
+    <li>A link that carries <strong>several VLANs</strong> between switches is a <strong>trunk</strong>. Each frame gets a small tag saying which VLAN it belongs to; the standard is <strong>802.1Q</strong>. A normal port for one device, in one VLAN, is an <strong>access port</strong>.<sup class="cite"><a href="#src-vlan">[2]</a></sup></li>
+  </ul>
+  <p>Typical split in a small office: staff, guest Wi-Fi, VoIP phones, printers, and the IoT and cameras from <a href="0011-appliances-scada-iot.html">lesson 0011</a>, each in its own VLAN. A guest can't even see the file server's broadcasts.</p>
+
+  <h2>VPNs: an encrypted tunnel across the internet</h2>
+  <p>A <strong>VPN</strong> (virtual private network) encrypts traffic and sends it through the public internet to a device that decrypts it on the other side. That device is a <strong>VPN concentrator</strong>: often a feature of the firewall, sometimes a dedicated box or a cloud service.<sup class="cite"><a href="#src-messer">[1]</a></sup></p>
+
+  <div class="table-wrap">
+  <table>
+    <thead><tr><th>Type</th><th>Who's at each end</th><th>Example</th></tr></thead>
+    <tbody>
+      <tr><td><strong>Client-to-site</strong> (remote access)</td><td>One device running VPN client software ↔ the office's concentrator</td><td>A laptop at home reaching the file share</td></tr>
+      <tr><td><strong>Site-to-site</strong></td><td>Firewall at one office ↔ firewall at another. Always on; users run nothing.</td><td>A branch office reaching headquarters' servers</td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <p>Two more words you'll see on a client-to-site VPN profile:</p>
+  <ul>
+    <li><strong>Full tunnel</strong>: <em>all</em> traffic goes through the VPN, even web browsing. <strong>Split tunnel</strong>: only traffic for company networks goes through it; the rest goes straight to the internet.<sup class="cite"><a href="#src-profile">[3]</a></sup></li>
+    <li><strong>Always On</strong>: the VPN connects by itself (for example at sign-in), so the user never has to click Connect. Intune can set this in a Windows VPN profile.<sup class="cite"><a href="#src-profile">[3]</a></sup></li>
+  </ul>
+
+  <div class="callout win">
+    <span class="label">Memory hooks</span>
+    <p><strong>VLAN = divide</strong> (one switch, many networks). <strong>VPN = connect</strong> (far away, feels local). <strong>Client-to-site = one person, site-to-site = whole office.</strong></p>
+  </div>
+
+  <h2>Try it (2 minutes)</h2>
+  <p>On a Windows PC, open PowerShell and list the VPN profiles in your user's phone book:<sup class="cite"><a href="#src-getvpn">[5]</a></sup></p>
+<pre><code>Get-VpnConnection | Format-List Name, ServerAddress, TunnelType, SplitTunneling, ConnectionStatus</code></pre>
+  <p>Example output (yours will differ, and a home PC may show nothing at all):</p>
+<pre><code>Name             : Office VPN
+ServerAddress    : vpn.example.com
+TunnelType       : Ikev2
+SplitTunneling   : True
+ConnectionStatus : Disconnected</code></pre>
+  <p><code>SplitTunneling : True</code> means only company traffic uses the tunnel. Add <code>-AllUserConnection</code> to see device-wide profiles. Many company VPNs use a vendor's own app instead of the built-in Windows client; those may not appear here, but they do add an extra adapter in <code>ipconfig /all</code> while connected.</p>
+
+  <h2>Practice</h2>
+  <p>Answer from memory before scrolling back up.</p>
+
+  <section class="quiz">
+    <p class="q">An office wants guest Wi-Fi users kept completely apart from staff PCs, but there's only one switch and no budget for another. What should they set up?</p>
+    <ul class="choices">
+      <li><button class="choice">A site-to-site VPN between both groups</button></li>
+      <li><button class="choice">A shorter DHCP lease for guests</button></li>
+      <li><button class="choice" data-correct>A separate VLAN for guest devices</button></li>
+      <li><button class="choice">A split tunnel on every PC</button></li>
+    </ul>
+    <div class="explain" hidden>A VLAN splits one physical switch into separate broadcast domains, exactly as a second switch would. Guests and staff end up on different subnets, and traffic between them must go through a router where it can be blocked. A VPN connects distant places; it doesn't divide a local network.</div>
+  </section>
+
+  <section class="quiz">
+    <p class="q">A company opens a branch office. Everyone there needs the headquarters file server all day, and nobody should have to start any software. Which option fits?</p>
+    <ul class="choices">
+      <li><button class="choice" data-correct>A site-to-site VPN between the firewalls</button></li>
+      <li><button class="choice">A client-to-site VPN on each laptop</button></li>
+      <li><button class="choice">A trunk port to the branch</button></li>
+      <li><button class="choice">A new VLAN at headquarters only</button></li>
+    </ul>
+    <div class="explain" hidden>Site-to-site joins two whole networks: the firewalls (or concentrators) at each office hold the tunnel up, so users do nothing. Client-to-site is for one device at a time, with client software on it. A trunk carries VLANs between switches in the same building, not across the internet.</div>
+  </section>
+
+  <section class="quiz">
+    <p class="q">A remote worker on VPN reports that video calls and web browsing are very slow, but only while connected. The profile sends every packet to the office. Which setting is most likely involved?</p>
+    <ul class="choices">
+      <li><button class="choice">The 802.1Q tag on their port</button></li>
+      <li><button class="choice">The DHCP reservation for the laptop</button></li>
+      <li><button class="choice">The site-to-site tunnel between the offices</button></li>
+      <li><button class="choice" data-correct>Full tunnel instead of split tunnel</button></li>
+    </ul>
+    <div class="explain" hidden>With a full tunnel, even internet traffic travels to the office first and back out, so the office's connection becomes the bottleneck. A split tunnel sends only company traffic through the VPN. Full tunnel is sometimes chosen on purpose, for inspection; the trade-off is speed.</div>
+  </section>
+
+  <section class="quiz">
+    <p class="q">A printer was moved to a new "Printers" VLAN. Staff PCs, on the staff VLAN, can no longer print to it, though the printer works from its own VLAN. What's missing?</p>
+    <ul class="choices">
+      <li><button class="choice">A VPN client on staff PCs</button></li>
+      <li><button class="choice" data-correct>Routing that allows traffic between VLANs</button></li>
+      <li><button class="choice">A longer lease on printer scope</button></li>
+      <li><button class="choice">A second switch for the printers</button></li>
+    </ul>
+    <div class="explain" hidden>VLANs are separate networks, so traffic between them must pass through a router or layer 3 switch, and the rules there must allow it (here: staff → printer on its print ports). Without that, the VLAN is doing exactly its job: keeping things apart.</div>
+  </section>
+  <p class="quiz-score" data-quiz-score></p>
+
+  <details class="recall">
+    <summary>From memory: explain the difference between a VLAN and a VPN in one sentence each, and name the two kinds of VPN. <span class="hint">(then click to check)</span></summary>
+    <p><strong>VLAN</strong>: splits one physical switch into several separate broadcast domains (networks). <strong>VPN</strong>: an encrypted tunnel over the internet that makes distant devices act as if they're on the company network. Kinds: <strong>client-to-site</strong> (one device with client software) and <strong>site-to-site</strong> (whole office to whole office, between firewalls or concentrators).</p>
+  </details>
+
+  <h2>Review: earlier lessons</h2>
+  <p>Spaced retrieval: pull these from memory first, then check.</p>
+
+  <details class="recall">
+    <summary>A DHCP Discover is a broadcast, which stops at the router. How can one DHCP server still hand out addresses to several subnets (or several VLANs)? <span class="hint">(<a href="0014-dhcp-scopes-leases.html">lesson 0014</a>, 2 days ago)</span></summary>
+    <p>The router forwards the request as a <strong>DHCP relay</strong> (Cisco: "IP helper"). The server sees which subnet it came from and answers from that subnet's <strong>scope</strong>. One scope per subnet.</p>
+  </details>
+
+  <details class="recall">
+    <summary>Which wireless technology works at about 4 cm and is used for tap-to-pay and some security keys, and which uses tags that may have no battery at all? <span class="hint">(<a href="0009-bluetooth-nfc-rfid-fixed-wireless.html">lesson 0009</a>, 7 days ago)</span></summary>
+    <p><strong>NFC</strong> (13.56 MHz, a few centimeters): tap-to-pay, FIDO2 keys. <strong>RFID</strong>: passive tags have no battery and are powered by the reader's signal.</p>
+  </details>
+
+  <details class="recall">
+    <summary>What's an ephemeral port, and which side of a connection picks it? <span class="hint">(<a href="0002-tcp-udp-ports.html">lesson 0002</a>, 14 days ago)</span></summary>
+    <p>A temporary, high-numbered port the <strong>client</strong> picks for its end of a connection, so replies from the server's well-known port (like 443) find their way back to the right app.</p>
+  </details>
+
+  <div class="callout source" id="src-messer">
+    <span class="label">Primary source: watch next</span>
+    <p>[1] Professor Messer, <a href="https://www.professormesser.com/free-a-plus-training/220-1201/220-1201-video/vlans-and-vpns-220-1201/">VLANs and VPNs (220-1201)</a>. Free and short. Watch it all: today's lesson covers the whole video, and his diagrams of one switch becoming several are worth seeing.</p>
+    <p id="src-vlan">[2] NSRC, <a href="https://nsrc.org/workshops/2026/nsrc-nren-cndo/networking/cndo/en/presentations/Layer2-VLANs.pdf">Layer 2 VLANs</a> (broadcast domains, access vs. trunk ports, 802.1Q tags, routing between VLANs). Deeper than A+ needs; useful for Network+.</p>
+    <p id="src-profile">[3] <a href="https://learn.microsoft.com/en-us/windows/security/operating-system-security/network-security/vpn/vpn-profile-options">Microsoft Learn, VPN profile options</a> (Always On, split vs. force tunnel, user vs. device profiles, what Intune can configure).</p>
+    <p id="src-intune">[4] <a href="https://learn.microsoft.com/en-us/intune/device-configuration/templates/ref-vpn-settings-windows">Microsoft Learn, Windows VPN settings in Intune</a>.</p>
+    <p id="src-getvpn">[5] <a href="https://learn.microsoft.com/en-us/powershell/module/vpnclient/Get-VpnConnection">Microsoft Learn, Get-VpnConnection</a>.</p>
+  </div>
+
+  <div class="callout ask">
+    <span class="label">Questions?</span>
+    <p>Anything unclear? Ask your teacher. Open Claude in the Teacher repo and ask, for example: <em>"In IT lesson 0016, why would a company choose a full tunnel even though it's slower?"</em> Follow-up questions are part of the course.</p>
+  </div>
+</main>
+<nav class="page-footer">
+  <a href="0015-week-quiz-2026-10-10.html">← Weekly quiz: Oct 4 – Oct 9</a>
+  <a href="../../index.html">Hub</a>
+  <span class="disabled">Next lesson: tomorrow →</span>
+</nav>
+</body>
+</html>
