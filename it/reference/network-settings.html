@@ -236,6 +236,21 @@
   </table>
   </div>
 
+  <h2>Network types (objective 2.7)</h2>
+  <div class="table-wrap">
+  <table>
+    <thead><tr><th>Type</th><th>Reach / purpose</th><th>Example</th></tr></thead>
+    <tbody>
+      <tr><td>PAN</td><td>Around one person, a few meters</td><td>Bluetooth headset, NFC tap</td></tr>
+      <tr><td>LAN</td><td>Floor, building, nearby buildings</td><td>Office switches; usually fastest links</td></tr>
+      <tr><td>WLAN</td><td>A LAN over 802.11 Wi-Fi</td><td>Access points across a campus</td></tr>
+      <tr><td>MAN</td><td>A city</td><td>City buildings linked across town</td></tr>
+      <tr><td>WAN</td><td>Other cities, countries, world</td><td>Office-to-office links, the internet</td></tr>
+      <tr><td>SAN</td><td>Dedicated storage network, block-level</td><td>Server disk over Fibre Channel or iSCSI (vs. NAS = file shares)</td></tr>
+    </tbody>
+  </table>
+  </div>
+
   <h2>Commands (Windows)</h2>
   <div class="table-wrap">
   <table>
@@ -244,6 +259,7 @@
       <tr><td><code>ipconfig /release</code> then <code>ipconfig /renew</code></td><td>Drop and re-request a DHCP lease</td></tr>
       <tr><td><code>Test-NetConnection host -Port 443</code></td><td>PowerShell: does a TCP connection to that port open? Read <code>TcpTestSucceeded</code></td></tr>
       <tr><td><code>Get-NetTCPConnection -State Established</code></td><td>PowerShell: list open TCP connections with local and remote ports</td></tr>
+      <tr><td><code>Get-NetAdapter</code></td><td>PowerShell: list network adapters (Ethernet, Wi-Fi, Bluetooth PAN) with status and link speed</td></tr>
       <tr><td><code>net use</code></td><td>List mapped drives (SMB connections)</td></tr>
       <tr><td><code>nbtstat -n</code></td><td>Show this PC's NetBIOS names (listed = NetBIOS over TCP/IP enabled)</td></tr>
       <tr><td><code>netsh wlan show interfaces</code></td><td>Current Wi-Fi connection: radio type (802.11 standard), band, channel, signal</td></tr>

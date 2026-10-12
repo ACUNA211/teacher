@@ -1,0 +1,156 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Network Types</title>
+<meta name="description" content="IT lesson 0017: network types by size and purpose. PAN, LAN, WLAN, MAN, WAN and SAN, what each one looks like, and why the farther away a resource is, the slower it usually feels.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=JetBrains+Mono&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../assets/course.css">
+<script src="../../assets/quiz.js" defer></script>
+</head>
+<body class="track-it">
+<nav class="page-header">
+  <a class="home" href="../../index.html">Teacher hub</a>
+  <span>IT and certs</span>
+  <a href="../reference/glossary.html">Glossary</a>
+  <a href="../reference/network-settings.html">Cheat sheet</a>
+</nav>
+<main>
+  <p class="kicker">IT and certs · Lesson 0017 · A+ Core 1, objective 2.7</p>
+  <h1>Network types: from your desk to the other side of the world</h1>
+  <p class="lede">About 10 minutes. The exam sorts networks mostly by <strong>how far they reach</strong>: a few meters (PAN), a building (LAN), a city (MAN), the world (WAN). Two more are defined by <strong>what they're for</strong>: wireless access (WLAN) and storage (SAN). This is a vocabulary lesson, so the win is quick: name the type from a one-line description.<sup class="cite"><a href="#src-messer">[1]</a></sup></p>
+
+  <div class="callout">
+    <span class="label">Why this matters at work</span>
+    <p>"It's fast in the office and slow from home" makes more sense once you see the user went from a LAN to a WAN. Local links are usually the fastest; every step farther out usually means less throughput and more delay.<sup class="cite"><a href="#src-messer">[1]</a></sup> That's a network fact, not a broken account.</p>
+  </div>
+
+  <h2>By reach: smallest to largest</h2>
+  <div class="table-wrap">
+  <table>
+    <thead><tr><th>Type</th><th>Reach</th><th>Looks like</th></tr></thead>
+    <tbody>
+      <tr><td><strong>PAN</strong> (personal area network)</td><td>Around one person, a few meters</td><td>Bluetooth headset, smartwatch, phone tapping an NFC reader. Bluetooth, infrared and NFC are PAN technologies (<a href="0009-bluetooth-nfc-rfid-fixed-wireless.html">lesson 0009</a>).<sup class="cite"><a href="#src-messer">[1]</a></sup></td></tr>
+      <tr><td><strong>LAN</strong> (local area network)</td><td>A floor, a building, a group of nearby buildings</td><td>The office switches and the PCs on them. Usually the fastest links you'll have.<sup class="cite"><a href="#src-messer">[1]</a></sup></td></tr>
+      <tr><td><strong>MAN</strong> (metropolitan area network)</td><td>A city</td><td>Between a LAN and a WAN in size: for example, a city government linking its buildings across town, or a provider's fiber ring around a metro area.<sup class="cite"><a href="#src-messer">[1]</a></sup></td></tr>
+      <tr><td><strong>WAN</strong> (wide area network)</td><td>Other cities, countries, the world</td><td>Links between offices, and the internet itself. Can run over land-based links (fiber, copper) or satellites.<sup class="cite"><a href="#src-messer">[1]</a></sup> The site-to-site VPN from <a href="0016-vlans-vpns.html">lesson 0016</a> runs over a WAN.</td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <h2>By purpose: WLAN and SAN</h2>
+  <ul>
+    <li><strong>WLAN</strong> (wireless LAN): a LAN built on <strong>802.11</strong> Wi-Fi (<a href="0007-wifi-standards.html">lesson 0007</a>). Users move around and keep their connection; more access points stretch it across a whole campus.<sup class="cite"><a href="#src-messer">[1]</a></sup> It's still a LAN in reach. "W" here means wireless, not wide.</li>
+    <li><strong>SAN</strong> (storage area network): a dedicated network of storage that servers treat like <strong>a local disk</strong>. It gives <strong>block-level</strong> access: the server sees raw blocks and formats the volume itself.<sup class="cite"><a href="#src-messer">[1]</a></sup><sup class="cite"><a href="#src-san">[2]</a></sup> SANs are usually kept on their own isolated network with very fast links, running Fibre Channel or iSCSI (SCSI disk commands over IP).<sup class="cite"><a href="#src-san">[2]</a></sup></li>
+  </ul>
+
+  <p>Don't mix up <strong>SAN</strong> and <strong>NAS</strong>. A NAS (network attached storage, a <em>device</em>) shares <strong>files</strong> by name over SMB or NFS, like the file share from <a href="0005-file-sharing-directory-ports.html">lesson 0005</a>. A SAN (a <em>network</em>) hands a server <strong>blocks</strong>, as if it were a disk inside it.<sup class="cite"><a href="#src-san">[2]</a></sup></p>
+
+  <div class="callout win">
+    <span class="label">Memory hooks</span>
+    <p><strong>P-L-M-W</strong> grows outward: <strong>P</strong>erson, <strong>L</strong>ocal building, <strong>M</strong>etro city, <strong>W</strong>orld. <strong>WLAN = LAN without cables.</strong> <strong>SAN = disk</strong> (blocks), <strong>NAS = share</strong> (files).</p>
+  </div>
+
+  <h2>Try it (2 minutes)</h2>
+  <p>Your own PC is often on three network types at once. In PowerShell, list its adapters:</p>
+<pre><code>Get-NetAdapter | Format-Table Name, InterfaceDescription, Status, LinkSpeed</code></pre>
+  <p>Example output (yours will differ):</p>
+<pre><code>Name                         InterfaceDescription                     Status       LinkSpeed
+----                         --------------------                     ------       ---------
+Ethernet                     Intel(R) Ethernet Connection             Up           1 Gbps
+Wi-Fi                        Intel(R) Wi-Fi 6E AX211 160MHz           Disconnected 0 bps
+Bluetooth Network Connection Bluetooth Device (Personal Area Network) Disconnected 3 Mbps</code></pre>
+  <p>Ethernet is your <strong>LAN</strong>, Wi-Fi your <strong>WLAN</strong>, and Windows literally names the Bluetooth adapter <em>Personal Area Network</em>. Compare the LAN link speed with what a speed test to the internet (the <strong>WAN</strong>) gives you.</p>
+
+  <h2>Practice</h2>
+  <p>Answer from memory before scrolling back up.</p>
+
+  <section class="quiz">
+    <p class="q">A user's wireless earbuds keep dropping audio during calls whenever they walk across the room away from the laptop. Which network type is involved?</p>
+    <ul class="choices">
+      <li><button class="choice">A WLAN</button></li>
+      <li><button class="choice" data-correct>A PAN</button></li>
+      <li><button class="choice">A MAN</button></li>
+      <li><button class="choice">A SAN</button></li>
+    </ul>
+    <div class="explain" hidden>Bluetooth earbuds and a laptop form a personal area network: a few meters around one person. Walking away stretches the short Bluetooth range. A WLAN is Wi-Fi (802.11), which covers a whole floor or campus.</div>
+  </section>
+
+  <section class="quiz">
+    <p class="q">A city connects its library, police station and town hall, all a few kilometers apart, with its own high-speed fiber. Which term fits best?</p>
+    <ul class="choices">
+      <li><button class="choice">A LAN</button></li>
+      <li><button class="choice">A PAN</button></li>
+      <li><button class="choice" data-correct>A MAN</button></li>
+      <li><button class="choice">A WLAN</button></li>
+    </ul>
+    <div class="explain" hidden>A metropolitan area network spans a city: bigger than one building or campus (LAN), smaller than links between cities and countries (WAN).</div>
+  </section>
+
+  <section class="quiz">
+    <p class="q">A database server needs storage that it can format with its own file system and that behaves exactly like a local disk, but lives on a separate, fast network. What is being described?</p>
+    <ul class="choices">
+      <li><button class="choice">A NAS sharing files over SMB</button></li>
+      <li><button class="choice">A WLAN with extra access points</button></li>
+      <li><button class="choice">A WAN link through a satellite</button></li>
+      <li><button class="choice" data-correct>A SAN giving block-level access</button></li>
+    </ul>
+    <div class="explain" hidden>A SAN presents storage as raw blocks, so the server formats and uses it like an internal disk. A NAS instead shares files by name; the NAS owns the file system. That block-level access is why databases and virtualization like SANs.</div>
+  </section>
+
+  <section class="quiz">
+    <p class="q">A remote worker says opening big files from the office file server is quick at their desk but slow from home, and their account and permissions are fine. What's the most likely reason?</p>
+    <ul class="choices">
+      <li><button class="choice" data-correct>Home traffic crosses a slower WAN</button></li>
+      <li><button class="choice">Their PAN interferes with the server</button></li>
+      <li><button class="choice">The SAN blocks remote file requests</button></li>
+      <li><button class="choice">Their laptop drops to a MAN</button></li>
+    </ul>
+    <div class="explain" hidden>At the desk the file travels over the LAN, usually the fastest link. From home it crosses the internet (a WAN) and often a VPN, so throughput drops and delay rises. Nothing is wrong with the account; the path is just longer and narrower.</div>
+  </section>
+  <p class="quiz-score" data-quiz-score></p>
+
+  <details class="recall">
+    <summary>From memory: put PAN, WAN, LAN and MAN in order from smallest to largest, with one example each. Then say what makes a SAN different from a NAS. <span class="hint">(then click to check)</span></summary>
+    <p><strong>PAN</strong> (Bluetooth headset) → <strong>LAN</strong> (office building) → <strong>MAN</strong> (city's buildings linked across town) → <strong>WAN</strong> (offices in different cities; the internet). A <strong>SAN</strong> gives servers <strong>block-level</strong> storage that acts like a local disk, on its own fast network; a <strong>NAS</strong> shares <strong>files</strong> over SMB or NFS.</p>
+  </details>
+
+  <h2>Review: earlier lessons</h2>
+  <p>Spaced retrieval: pull these from memory first, then check.</p>
+
+  <details class="recall">
+    <summary>Staff PCs can't print to a printer that was moved into its own VLAN. Why, and what has to be added? <span class="hint">(<a href="0016-vlans-vpns.html">lesson 0016</a>, yesterday)</span></summary>
+    <p>Each VLAN is a separate broadcast domain (and subnet), so traffic between VLANs must go through a <strong>router or layer 3 switch</strong>, with rules that allow staff → printer traffic.</p>
+  </details>
+
+  <details class="recall">
+    <summary>Many devices send their log messages to one central server. What's that server role called, and which port and transport does it traditionally use? <span class="hint">(<a href="0010-server-roles.html">lesson 0010</a>, 7 days ago)</span></summary>
+    <p>A <strong>syslog</strong> server, traditionally on <strong>UDP 514</strong>. Each message carries a severity, from 0 (emergency) to 7 (debug).</p>
+  </details>
+
+  <details class="recall">
+    <summary>Telnet and SSH both give you a remote command line. Which ports do they use, and why should you pick SSH? <span class="hint">(<a href="0003-web-remote-ports.html">lesson 0003</a>, 14 days ago)</span></summary>
+    <p><strong>Telnet: TCP 23</strong>, everything (including the password) in clear text. <strong>SSH: TCP 22</strong>, encrypted. Use SSH.</p>
+  </details>
+
+  <div class="callout source" id="src-messer">
+    <span class="label">Primary source: watch next</span>
+    <p>[1] Professor Messer, <a href="https://www.professormesser.com/free-a-plus-training/220-1201/220-1201-video/network-types-220-1201/">Network Types (220-1201)</a>. Short; today's lesson covers the whole video. Next in his course: <em>Internet Connection Types</em> (satellite, fiber, cable, DSL, cellular, WISP).</p>
+    <p id="src-san">[2] IBM, <a href="https://www.ibm.com/blog/san-vs-nas">SAN vs. NAS</a> (block-level vs. file-level access, Fibre Channel and iSCSI, typical uses). Useful background; more than A+ needs.</p>
+  </div>
+
+  <div class="callout ask">
+    <span class="label">Questions?</span>
+    <p>Anything unclear? Ask your teacher. Open Claude in the Teacher repo and ask, for example: <em>"In IT lesson 0017, is a cloud file share like OneDrive a NAS, a SAN, or neither?"</em> Follow-up questions are part of the course.</p>
+  </div>
+</main>
+<nav class="page-footer">
+  <a href="0016-vlans-vpns.html">← VLANs and VPNs</a>
+  <a href="../../index.html">Hub</a>
+  <span class="disabled">Next lesson: tomorrow →</span>
+</nav>
+</body>
+</html>
