@@ -1,0 +1,163 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Copy, Don't Change</title>
+<meta name="description" content="App building lesson 0003, build review for 2026-10-12: how the filter panel in two-player-bg-finder keeps one useState object, why every update builds a new copy instead of changing it, and how controlled checkboxes stay in sync.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=JetBrains+Mono&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../assets/course.css">
+<script src="../../assets/quiz.js" defer></script>
+</head>
+<body class="track-app">
+<nav class="page-header">
+  <a class="home" href="../../index.html">Teacher hub</a>
+  <span>App building</span>
+  <a href="../reference/glossary.html">Glossary</a>
+</nav>
+<main>
+  <p class="kicker">App building · Lesson 0003 · Build review, week of 2026-10-05</p>
+  <h1>Copy, don't change: how the filter panel holds its state</h1>
+  <p class="lede">About 10 minutes. By the end you can read the <code>update</code> helper in Board Games for Two, say why it builds a new object instead of editing the old one, and predict what the screen does if it didn't.</p>
+
+  <div class="callout">
+    <span class="label">What got built this week</span>
+    <p>Nothing new in <a href="https://github.com/ACUNA211/two-player-bg-finder">two-player-bg-finder</a>: the last commit is still <a href="https://github.com/ACUNA211/two-player-bg-finder/commit/3a77ac7">3a77ac7</a> (2026-09-26). So this week we read code that already exists. Last week was <em>what</em> the filter does (<code>applyFilters</code>). This week is <em>where the filter settings live</em> and how a click changes them: the top of <a href="https://github.com/ACUNA211/two-player-bg-finder/blob/3a77ac7/web/src/GamesBrowser.tsx#L30-L43"><code>web/src/GamesBrowser.tsx</code></a>, from the filter panel commit <a href="https://github.com/ACUNA211/two-player-bg-finder/commit/26bb9e1">26bb9e1</a>.</p>
+  </div>
+
+  <h2>1. One object holds every filter</h2>
+  <p>The whole filter panel (name box, checkboxes, chips, ranges) is driven by one line:</p>
+<pre><code>const [filters, setFilters] = <span class="hl">useState(emptyFilters)</span>;</code></pre>
+  <ul>
+    <li><code>useState</code> gives a component memory that survives between renders. It returns a pair: the current value and a function to replace it.<sup class="cite"><a href="#src-react">[1]</a></sup></li>
+    <li><code>const [a, b] = ...</code> is <em>array destructuring</em>: unpack the pair into two names. It's C#'s tuple deconstruction, <code>var (filters, setFilters) = ...</code>.<sup class="cite"><a href="#src-mdn">[2]</a></sup></li>
+    <li>Notice <code>emptyFilters</code> has <strong>no parentheses</strong>. Passing the function itself makes it an <em>initializer</em>: React calls it once, on the first render, and keeps the result.<sup class="cite"><a href="#src-react">[1]</a></sup> The result is a plain object, typed in <code>filters.ts</code>:</li>
+  </ul>
+<pre><code>export type Filters = {
+  name: string;
+  types: string[];
+  ranges: Partial&lt;Record&lt;RangeKey, Range&gt;&gt;;
+  tags: Partial&lt;Record&lt;TagKey, string[]&gt;&gt;;
+  mustPlay: number[];
+  twoOnly: TwoOnly;
+};</code></pre>
+  <p><strong>Why one object?</strong> Because <code>applyFilters(games, filters)</code> needs all of it at once, and the "Clear all" button can reset everything in one call: <code>setFilters(emptyFilters())</code> (with parentheses this time: a fresh object, built now).</p>
+
+  <h2>2. React only notices a <em>new</em> object</h2>
+  <p>Coming from C#, you might expect the UI to watch the object's fields, like WPF with <code>INotifyPropertyChanged</code>. React doesn't. It learns about a change only when you call <code>setFilters</code>, and then it compares old and new with <code>Object.is</code>, which for objects is like C#'s <code>ReferenceEquals</code>. Same object? <strong>React skips the re-render.</strong><sup class="cite"><a href="#src-react">[1]</a></sup></p>
+  <p>So the rule from the React docs is: treat state as read-only, and <em>replace</em> it rather than mutate it.<sup class="cite"><a href="#src-react-obj">[3]</a></sup> That's exactly what the AI wrote in the helper every input uses:</p>
+<pre><code>const update = (patch: Partial&lt;Filters&gt;) =&gt;
+  setFilters(<span class="hl">(f) =&gt; ({ ...f, ...patch })</span>);</code></pre>
+  <p>Read it in three steps:</p>
+  <ol>
+    <li><code>patch: Partial&lt;Filters&gt;</code>: just the fields that changed, e.g. <code>{ types: ["Family"] }</code> (<code>Partial</code> is from lesson 0002).</li>
+    <li><code>(f) =&gt; ...</code> passed to <code>setFilters</code> is an <em>updater function</em>: React hands it the latest state <code>f</code> and stores whatever it returns.<sup class="cite"><a href="#src-react">[1]</a></sup> The extra parentheses in <code>({ ... })</code> tell JavaScript "this brace is an object, not a function body".</li>
+    <li><code>{ ...f, ...patch }</code>: a <strong>new</strong> object with every field of <code>f</code>, then the patch on top (later wins, as in 0002). In C# terms: <code>f with { Types = ... }</code> on a record. New reference, so React re-renders.</li>
+  </ol>
+  <p>Nested data gets the same treatment one level down. <code>setTag</code> copies <code>tags</code> too, and <code>[key]: values</code> is a <em>computed key</em>: the property's name comes from the variable <code>key</code> (like <code>dict[key] = values</code>, but inside a new object):<sup class="cite"><a href="#src-mdn">[2]</a></sup></p>
+<pre><code>setFilters((f) =&gt; ({ ...f, tags: { ...f.tags, <span class="hl">[key]: values</span> } }));</code></pre>
+  <p>Arrays follow the rule as well. The "Must play" checkbox adds a number with spread instead of <code>push</code>, and removes one with <code>filter</code> (which, from lesson 0002, returns a new array):<sup class="cite"><a href="#src-react-arr">[4]</a></sup></p>
+<pre><code>e.target.checked ? <span class="hl">[...filters.mustPlay, n]</span> : filters.mustPlay.filter((x) =&gt; x !== n)</code></pre>
+
+  <div class="callout win">
+    <span class="label">The big idea</span>
+    <p>State in React is a <strong>snapshot</strong>, like an immutable C# record. To change it, build a new one and hand it to the setter. React compares references, not contents: change the old object in place and React sees "same object", does nothing, and the screen goes stale.</p>
+  </div>
+
+  <h2>3. Controlled checkboxes: the box shows the state</h2>
+  <p>Here is one popular-type chip (from the small <code>Chips</code> component):</p>
+<pre><code>&lt;input
+  type="checkbox"
+  <span class="hl">checked={value.includes(o)}</span>
+  onChange={(e) =&gt; onChange(e.target.checked ? [...value, o] : value.filter((x) =&gt; x !== o))}
+/&gt;</code></pre>
+  <p>In JSX, <code>{ }</code> means "evaluate this JavaScript here". Giving a checkbox a <code>checked</code> value makes it <em>controlled</em>: the tick is drawn from state, and <code>onChange</code> is how a click asks for new state.<sup class="cite"><a href="#src-react-input">[5]</a></sup> The browser's own tick no longer decides anything.</p>
+  <p><strong>Why this matters here:</strong> the panel shows "Family" twice, as a chip and in the "More types" dropdown. Both get <code>value={filters.types}</code>. One state, two views, so they can't disagree. The panel test even says so in a comment: <em>"Popular chips and the full lists share state."</em></p>
+
+  <h2>Practice</h2>
+  <section class="quiz">
+    <p class="q">What does <code>const [filters, setFilters] = useState(emptyFilters);</code> do on the first render?</p>
+    <ul class="choices">
+      <li><button class="choice">Saves the emptyFilters function itself as state</button></li>
+      <li><button class="choice">Calls emptyFilters again on every single render</button></li>
+      <li><button class="choice" data-correct>Starts state with the object emptyFilters returns</button></li>
+      <li><button class="choice">Creates one global variable every component shares</button></li>
+    </ul>
+    <div class="explain" hidden>A function passed to <code>useState</code> is an initializer: React calls it once and stores the return value, the empty <code>Filters</code> object. It isn't called again on later renders (that's the point of leaving off the parentheses), and the state belongs to this one <code>GamesBrowser</code>, not to every component.</div>
+  </section>
+
+  <section class="quiz">
+    <p class="q">Someone "simplifies" the helper to <code>setFilters((f) =&gt; Object.assign(f, patch))</code>. <code>Object.assign</code> copies the patch's fields into <code>f</code> and returns that same <code>f</code>. What happens when you tick "Family"?</p>
+    <ul class="choices">
+      <li><button class="choice">Nothing, since the filter values still change</button></li>
+      <li><button class="choice">TypeScript rejects it, since the types differ</button></li>
+      <li><button class="choice">Every click now resets all the filters</button></li>
+      <li><button class="choice" data-correct>State changes, but the table doesn't update</button></li>
+    </ul>
+    <div class="explain" hidden>The field really changes, but <code>f</code> is the same object, so <code>Object.is(old, new)</code> is <code>true</code> and React skips the re-render. It compiles fine. I tried it: the panel test fails right at the Family click with <code>expected [ '1', '2' ] to deeply equal [ '2' ]</code>, meaning the table still shows both games.</div>
+  </section>
+
+  <section class="quiz">
+    <p class="q">What breaks if we delete <code>checked={value.includes(o)}</code> from the chip checkbox in <code>Chips</code>?</p>
+    <ul class="choices">
+      <li><button class="choice" data-correct>Chips and the More list can disagree</button></li>
+      <li><button class="choice">The checkbox can no longer be clicked</button></li>
+      <li><button class="choice">TypeScript now reports a missing required prop</button></li>
+      <li><button class="choice">The panel test fails on the click</button></li>
+    </ul>
+    <div class="explain" hidden>Without <code>checked</code> the box is <em>uncontrolled</em>: the browser keeps its own tick. Tick "Family" in the More types dropdown and the filter works, but the Family chip stays unticked; press Clear all and the chips stay ticked while the filter is off. <code>checked</code> is optional, so TypeScript is happy. And surprise: I tried it, and all 23 tests still pass. No test checks that the chip's tick follows the state. Passing tests are evidence, not proof.</div>
+  </section>
+
+  <section class="quiz">
+    <p class="q">Which expression adds <code>n</code> to the must-play list the way React wants?</p>
+    <ul class="choices">
+      <li><button class="choice"><code>filters.mustPlay.push(n)</code></button></li>
+      <li><button class="choice"><code>filters.mustPlay.unshift(n)</code></button></li>
+      <li><button class="choice"><code>filters.mustPlay.splice(0, 0, n)</code></button></li>
+      <li><button class="choice" data-correct><code>[...filters.mustPlay, n]</code></button></li>
+    </ul>
+    <div class="explain" hidden>Spread builds a <strong>new</strong> array with the old items plus <code>n</code>. <code>push</code>, <code>unshift</code> and <code>splice</code> all change the existing array in place, which the React docs list as methods to avoid on state.</div>
+  </section>
+  <p class="quiz-score" data-quiz-score></p>
+
+  <h2>Try it in your copy (5 minutes)</h2>
+  <ol>
+    <li>In your local <code>two-player-bg-finder</code>, <code>cd web</code>, then <code>git pull</code> and <code>npm install</code> if you haven't.</li>
+    <li>Open <code>src/GamesBrowser.tsx</code>, find <code>const update</code> (line 41) and change <code>({ ...f, ...patch })</code> to <code>Object.assign(f, patch)</code>.</li>
+    <li><strong>Predict first</strong>: which inputs stop updating the table? (Hint: which ones call <code>update</code>, and which call <code>setTag</code> or <code>setRange</code>?)</li>
+    <li>Run <code>npm run dev</code>, open the page, and try the name box, the Types chips, and the Mechanics chips. Then run <code>npx vitest run src/GamesBrowser.test.tsx</code>.</li>
+    <li>Undo the change: <code>git checkout src/GamesBrowser.tsx</code>.</li>
+  </ol>
+  <details class="recall">
+    <summary>What should you see? <span class="hint">(after trying it)</span></summary>
+    <p>The name box, the Types chips, Must play and the 2p-only radios go "dead": the table and the count don't move. Mechanics chips and ranges still work, because <code>setTag</code> and <code>setRange</code> still build new objects. One test fails, the big panel test, at its first <code>update</code>-driven step (the Family chip). The Mechanics clicks just before it pass, matching your prediction if you traced who calls what. Bonus: after a dead click, tick a Mechanics chip. The table suddenly catches up on <em>both</em> changes, because the earlier mutation was really there; React just hadn't been told.</p>
+  </details>
+
+  <details class="recall">
+    <summary>Spaced review from lesson 0002: <code>emptyFilters()</code> starts with <code>mustPlay: []</code>. Why does that not hide every game? <span class="hint">(answer, then click)</span></summary>
+    <p>The must-play condition is <code>f.mustPlay.every((n) =&gt; plays(g, n))</code>, and <code>every</code> on an empty array is <code>true</code> ("all of nothing"), like LINQ's <code>All</code>. So every game passes. If it were <code>some</code>, an empty array would give <code>false</code> and the list would be empty.</p>
+  </details>
+
+  <div class="callout source" id="src-react-obj">
+    <span class="label">Primary source: read next</span>
+    <p>[3] react.dev, <a href="https://react.dev/learn/updating-objects-in-state">Updating Objects in State</a>, then its sibling <a href="https://react.dev/learn/updating-arrays-in-state">Updating Arrays in State</a> [4] (its table of "avoid" vs "prefer" array methods is worth a screenshot). About 20 minutes, with live sandboxes to break things in.</p>
+    <p id="src-react">[1] react.dev, <a href="https://react.dev/reference/react/useState">useState reference</a> (initializer functions, updater functions, and the <code>Object.is</code> caveat).</p>
+    <p id="src-mdn">[2] MDN Web Docs, <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Destructuring">Destructuring</a> and <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Object_initializer#computed_property_names">Object initializer: computed property names</a>.</p>
+    <p id="src-react-arr">[4] react.dev, <a href="https://react.dev/learn/updating-arrays-in-state">Updating Arrays in State</a>.</p>
+    <p id="src-react-input">[5] react.dev, <a href="https://react.dev/reference/react-dom/components/input">&lt;input&gt; reference</a>: a checkbox with a boolean <code>checked</code> prop is controlled. Every "I tried it" result above was run on the repo at <code>3a77ac7</code>.</p>
+  </div>
+
+  <div class="callout ask">
+    <span class="label">Questions?</span>
+    <p>Anything unclear? Ask your teacher. Open Claude in the Teacher repo and ask, for example: <em>"In app lesson 0003, how would I write a test that catches a chip checkbox losing its <code>checked</code> prop?"</em> Follow-up questions are part of the course.</p>
+  </div>
+</main>
+<nav class="page-footer">
+  <a href="0002-build-review-2026-10-05.html">← 0002 Filtering like LINQ</a>
+  <a href="../../index.html">Hub</a>
+  <span class="disabled">Next build review: next Monday →</span>
+</nav>
+</body>
+</html>

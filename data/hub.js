@@ -120,6 +120,11 @@ window.HUB = {
       track: "app", num: "0002", date: "2026-10-05", covers: 0,
       title: "Build review: filtering like LINQ (filter, some, every)",
       path: "app-building/lessons/0002-build-review-2026-10-05.html"
+    },
+    {
+      track: "app", num: "0003", date: "2026-10-12", covers: 0,
+      title: "Build review: copy, don't change (how the filter panel holds its state)",
+      path: "app-building/lessons/0003-build-review-2026-10-12.html"
     }
   ]
 };
