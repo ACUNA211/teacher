@@ -1,0 +1,158 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Internet Connection Types</title>
+<meta name="description" content="IT lesson 0018: the six ways a home or office reaches the internet for A+ (satellite, fiber, cable, DSL, cellular, WISP), what each one is good and bad at, and why latency matters as much as speed.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=JetBrains+Mono&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../assets/course.css">
+<script src="../../assets/quiz.js" defer></script>
+</head>
+<body class="track-it">
+<nav class="page-header">
+  <a class="home" href="../../index.html">Teacher hub</a>
+  <span>IT and certs</span>
+  <a href="../reference/glossary.html">Glossary</a>
+  <a href="../reference/network-settings.html">Cheat sheet</a>
+</nav>
+<main>
+  <p class="kicker">IT and certs · Lesson 0018 · A+ Core 1, objective 2.7</p>
+  <h1>Internet connections: six ways to reach the WAN</h1>
+  <p class="lede">About 10 minutes. Yesterday's <a href="0017-network-types.html">lesson 0017</a> ended at the WAN. Today is the last stretch: the <strong>connection</strong> that carries a home or office onto the internet. A+ names six: <strong>satellite, fiber, cable, DSL, cellular and WISP</strong>.<sup class="cite"><a href="#src-messer">[1]</a></sup> The win: given a site and a symptom, pick the connection type and its weak spot.</p>
+
+  <div class="callout">
+    <span class="label">Why this matters at work</span>
+    <p>A user on a phone hotspot (cellular) gets an "unusual sign-in location" alert, or a sign-in log shows a city they've never been to. Microsoft notes that mobile providers hand out IP addresses from central pools that are often far from where the device actually is, so the location shown for an IP is only a best guess.<sup class="cite"><a href="#src-entra">[3]</a></sup> Check <em>how</em> they were connected before you assume a stolen password.</p>
+  </div>
+
+  <h2>Two numbers: speed and latency</h2>
+  <p><strong>Speed</strong> (bandwidth, in Mbps) is how much data flows per second. <strong>Latency</strong> (in milliseconds) is how long one trip takes. Downloads care about speed; calls, remote desktop and games care about latency. Most home links are <strong>asymmetric</strong>: download is much faster than upload.<sup class="cite"><a href="#src-pew">[2]</a></sup></p>
+
+  <h2>The six types</h2>
+  <div class="table-wrap">
+  <table>
+    <thead><tr><th>Type</th><th>Runs over</th><th>Good at</th><th>Weak spot</th></tr></thead>
+    <tbody>
+      <tr><td><strong>Fiber</strong></td><td>Glass fiber, light pulses</td><td>Huge bandwidth, the fastest option</td><td>Equipment and installation cost more; not available everywhere<sup class="cite"><a href="#src-messer">[1]</a></sup></td></tr>
+      <tr><td><strong>Cable</strong></td><td>The cable-TV <strong>coax</strong>, using the <strong>DOCSIS</strong> standard</td><td>Fast, widely available; reuses wiring already in the building</td><td>Upload much slower than download; neighbors share the line back to the provider's node<sup class="cite"><a href="#src-messer">[1]</a></sup><sup class="cite"><a href="#src-pew">[2]</a></sup></td></tr>
+      <tr><td><strong>DSL</strong></td><td>Existing <strong>telephone</strong> lines</td><td>Works where phone lines exist; usually <strong>ADSL</strong> (asymmetric)</td><td><strong>Distance</strong>: roughly a 10,000-foot limit from the provider's central office, and slower the farther away you are<sup class="cite"><a href="#src-messer">[1]</a></sup></td></tr>
+      <tr><td><strong>Satellite</strong></td><td>Dish to a satellite and back</td><td>Remote sites where nothing else reaches; around 100 Mbps down, 5 up<sup class="cite"><a href="#src-messer">[1]</a></sup></td><td><strong>Latency</strong> (older systems about ¼ second each way) and <strong>rain fade</strong> in bad weather<sup class="cite"><a href="#src-messer">[1]</a></sup></td></tr>
+      <tr><td><strong>Cellular</strong></td><td>4G/5G mobile network; a phone <strong>hotspot</strong> or <strong>tethering</strong> shares it</td><td>Anywhere with signal; great as a backup link</td><td>Data caps and cost; speed depends on signal and how busy the tower is<sup class="cite"><a href="#src-hotspot">[4]</a></sup></td></tr>
+      <tr><td><strong>WISP</strong> (wireless internet service provider)</td><td>Radio from a tower to an antenna on your roof (fixed wireless, <a href="0009-bluetooth-nfc-rfid-fixed-wireless.html">lesson 0009</a>)</td><td>Rural areas without cable or fiber</td><td>Needs clear <strong>line of sight</strong> to the tower; slower the farther away you are<sup class="cite"><a href="#src-pew">[2]</a></sup></td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <h2>Why satellite latency differs so much</h2>
+  <p>Classic satellite internet uses <strong>geostationary</strong> satellites about 35,786 km up. Even at the speed of light, the round trip takes nearly half a second, so real-world latency lands around 600 ms. Newer <strong>low earth orbit</strong> services such as Starlink fly around 550 km up, so latency drops to roughly 25–60 ms,<sup class="cite"><a href="#src-messer">[1]</a></sup><sup class="cite"><a href="#src-sat">[5]</a></sup> close to wired broadband. On the exam, "satellite" still means: remote site, <strong>high latency</strong>, <strong>rain fade</strong>.</p>
+
+  <div class="callout win">
+    <span class="label">Memory hooks</span>
+    <p>Each type has one word: <strong>Fiber = fastest</strong>. <strong>Cable = coax</strong>. <strong>DSL = distance</strong> (phone line, central office). <strong>Satellite = delay</strong> and rain. <strong>Cellular = cap</strong> (data plan). <strong>WISP = sight</strong> (line of sight to the tower).</p>
+  </div>
+
+  <h2>Try it (2 minutes)</h2>
+  <p>Measure latency yourself. In PowerShell or Command Prompt:</p>
+<pre><code>ping -n 4 1.1.1.1</code></pre>
+  <p>Example output (yours will differ):</p>
+<pre><code>Reply from 1.1.1.1: bytes=32 time=14ms TTL=57
+Reply from 1.1.1.1: bytes=32 time=12ms TTL=57
+...
+    Minimum = 12ms, Maximum = 15ms, Average = 13ms</code></pre>
+  <p>The <code>time=</code> values are round-trip latency. If you can, run it again while connected through your phone's hotspot (cellular) and compare the average. A wired link is often in the teens; cellular is usually higher and jumps around more.</p>
+
+  <h2>Practice</h2>
+  <p>Answer from memory before scrolling back up.</p>
+
+  <section class="quiz">
+    <p class="q">A small field office is miles from any town, with no phone lines, cable or cell signal. Its users mainly need email and web access. Which connection type fits best?</p>
+    <ul class="choices">
+      <li><button class="choice">DSL from central office</button></li>
+      <li><button class="choice">Cable through DOCSIS coax</button></li>
+      <li><button class="choice" data-correct>Satellite with a dish</button></li>
+      <li><button class="choice">Cellular through a hotspot</button></li>
+    </ul>
+    <div class="explain" hidden>Satellite reaches remote sites where nothing else does: all it needs is a clear view of the sky. DSL needs phone lines (and is distance-limited), cable needs coax, and cellular needs a signal. Email and web browsing tolerate satellite latency well.</div>
+  </section>
+
+  <section class="quiz">
+    <p class="q">A home user on DSL says their speed is far lower than a friend's on the same plan across town. Their equipment checks out. What's the most likely reason?</p>
+    <ul class="choices">
+      <li><button class="choice">Rain fade on the line</button></li>
+      <li><button class="choice" data-correct>Distance from the central office</button></li>
+      <li><button class="choice">No clear line of sight</button></li>
+      <li><button class="choice">The data cap was reached</button></li>
+    </ul>
+    <div class="explain" hidden>DSL runs over telephone wire from the provider's central office, and the signal weakens with distance: the farther away, the slower, with a limit of roughly 10,000 feet. Rain fade is satellite, line of sight is WISP, and data caps belong to cellular plans.</div>
+  </section>
+
+  <section class="quiz">
+    <p class="q">Remote desktop sessions from one branch feel sluggish: every click takes about a second to show, yet large downloads finish quickly. Which connection is the branch probably using?</p>
+    <ul class="choices">
+      <li><button class="choice">Fiber to the building</button></li>
+      <li><button class="choice">Cable over existing coax</button></li>
+      <li><button class="choice">DSL near the office</button></li>
+      <li><button class="choice" data-correct>A geostationary satellite service</button></li>
+    </ul>
+    <div class="explain" hidden>Fast downloads but slow responses means good bandwidth and high latency. That's the signature of geostationary satellite: the signal travels about 36,000 km up and back each way. Interactive apps (remote desktop, calls) suffer; bulk downloads don't.</div>
+  </section>
+
+  <section class="quiz">
+    <p class="q">A rural office gets internet from an antenna on its roof pointed at a provider's tower. Since a neighbor's new barn went up, the connection keeps dropping. What's the cause?</p>
+    <ul class="choices">
+      <li><button class="choice" data-correct>The barn blocks line of sight</button></li>
+      <li><button class="choice">The barn shares their coax cable</button></li>
+      <li><button class="choice">The barn lengthened the phone line</button></li>
+      <li><button class="choice">The barn uses their data cap</button></li>
+    </ul>
+    <div class="explain" hidden>A rooftop antenna aimed at a tower is a WISP (fixed wireless). It needs clear line of sight to the tower; a new building in the path weakens or blocks the signal. Coax is cable, phone-line length is DSL, and data caps are cellular.</div>
+  </section>
+  <p class="quiz-score" data-quiz-score></p>
+
+  <details class="recall">
+    <summary>From memory: name all six connection types and the one-word weak spot (or strength) of each. <span class="hint">(then click to check)</span></summary>
+    <p><strong>Fiber</strong> = fastest (but costly). <strong>Cable</strong> = coax (shared, slow upload). <strong>DSL</strong> = distance from the central office. <strong>Satellite</strong> = delay and rain fade. <strong>Cellular</strong> = data cap. <strong>WISP</strong> = line of sight.</p>
+  </details>
+
+  <h2>Review: earlier lessons</h2>
+  <p>Spaced retrieval: pull these from memory first, then check.</p>
+
+  <details class="recall">
+    <summary>What's the difference between a SAN and a NAS? <span class="hint">(<a href="0017-network-types.html">lesson 0017</a>, yesterday)</span></summary>
+    <p>A <strong>SAN</strong> (a network) gives servers <strong>block-level</strong> storage that acts like a local disk, usually on its own fast, isolated network (Fibre Channel or iSCSI). A <strong>NAS</strong> (a device) shares <strong>files</strong> over SMB or NFS.</p>
+  </details>
+
+  <details class="recall">
+    <summary>A load balancer and a proxy both sit in the traffic path. Whom does each one stand in for? <span class="hint">(<a href="0011-appliances-scada-iot.html">lesson 0011</a>, 7 days ago)</span></summary>
+    <p>A <strong>load balancer</strong> guards the <strong>servers</strong>: it spreads incoming requests across several of them. A <strong>proxy</strong> speaks for the <strong>users</strong>: it makes outbound requests on their behalf, so websites see the proxy, not the PC.</p>
+  </details>
+
+  <details class="recall">
+    <summary>POP3 and IMAP both fetch mail. Which ports do they use, and which one keeps mail synced on every device? <span class="hint">(<a href="0004-email-dns-dhcp-ports.html">lesson 0004</a>, 14 days ago)</span></summary>
+    <p><strong>POP3: TCP 110</strong>, downloads mail to one device. <strong>IMAP: TCP 143</strong>, keeps mail on the server, synced to every device.</p>
+  </details>
+
+  <div class="callout source" id="src-messer">
+    <span class="label">Primary source: watch next</span>
+    <p>[1] Professor Messer, <a href="https://www.professormesser.com/free-a-plus-training/220-1201/220-1201-video/internet-connection-types-220-1201/">Internet Connection Types (220-1201)</a>. Today's lesson covers the whole video. Next in his course: the network tools a technician carries (objective 2.8).</p>
+    <p id="src-pew">[2] Pew Research Center, <a href="https://www.pew.org/en/research-and-analysis/fact-sheets/2022/07/how-do-americans-connect-to-the-internet">How do Americans connect to the internet?</a> (cable nodes and coax, asymmetric upload, fixed wireless and line of sight).</p>
+    <p id="src-entra">[3] Microsoft Learn, <a href="https://learn.microsoft.com/en-us/entra/identity/monitoring-health/concept-sign-in-log-activity-details">Sign-in log activity details</a> (why an IP address's location is only a best effort, especially for mobile providers and VPNs).</p>
+    <p id="src-hotspot">[4] Microsoft Support, <a href="https://support.microsoft.com/en-us/windows/use-your-windows-pc-as-a-mobile-hotspot-c89b0fad-72d5-41e8-f7ea-406ad9036b85">Use your Windows device as a mobile hotspot</a> (sharing Wi-Fi, Ethernet or cellular over Wi-Fi or Bluetooth; watch your data plan).</p>
+    <p id="src-sat">[5] SpeedGuide, <a href="https://speedguide.net/faq_in_q.php?qid=122">Satellite latency FAQ</a> (geostationary vs. low earth orbit distance and latency). Background; more than A+ needs.</p>
+  </div>
+
+  <div class="callout ask">
+    <span class="label">Questions?</span>
+    <p>Anything unclear? Ask your teacher. Open Claude in the Teacher repo and ask, for example: <em>"In IT lesson 0018, if an office has fiber and a cellular backup, how does traffic switch over when the fiber goes down?"</em> Follow-up questions are part of the course.</p>
+  </div>
+</main>
+<nav class="page-footer">
+  <a href="0017-network-types.html">← Network types</a>
+  <a href="../../index.html">Hub</a>
+  <span class="disabled">Next lesson: tomorrow →</span>
+</nav>
+</body>
+</html>
