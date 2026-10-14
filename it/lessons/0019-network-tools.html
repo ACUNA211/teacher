@@ -1,0 +1,163 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Network Tools</title>
+<meta name="description" content="IT lesson 0019: the network tools A+ expects a technician to know (crimper, cable stripper, punchdown tool, cable tester, tone generator and probe, loopback plug, Wi-Fi analyzer, network tap) and which one to grab for which symptom.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=JetBrains+Mono&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../assets/course.css">
+<script src="../../assets/quiz.js" defer></script>
+</head>
+<body class="track-it">
+<nav class="page-header">
+  <a class="home" href="../../index.html">Teacher hub</a>
+  <span>IT and certs</span>
+  <a href="../reference/glossary.html">Glossary</a>
+  <a href="../reference/network-settings.html">Cheat sheet</a>
+</nav>
+<main>
+  <p class="kicker">IT and certs · Lesson 0019 · A+ Core 1, objective 2.8</p>
+  <h1>Network tools: what's in the technician's bag</h1>
+  <p class="lede">About 10 minutes. The last few lessons were about how networks are designed. Today is the hands-on side: the tools you use to <strong>build, find, test and watch</strong> cables and wireless links. Objective 2.8 lists eight of them.<sup class="cite"><a href="#src-messer">[1]</a></sup> The win: given a symptom, pick the right tool.</p>
+
+  <div class="callout">
+    <span class="label">Why this matters at work</span>
+    <p>Not every "I can't sign in" ticket is about identity. If a desk's wired connection is dead, the PC can't reach the cloud sign-in service or check in with device management at all. Knowing which tool proves "the cable or port is bad" lets you hand the ticket to the right team quickly, without guessing.</p>
+  </div>
+
+  <h2>Four jobs, eight tools</h2>
+  <p>Group the tools by the job they do. It's easier to remember four jobs than eight names.</p>
+  <div class="table-wrap">
+  <table>
+    <thead><tr><th>Job</th><th>Tool</th><th>What it does</th></tr></thead>
+    <tbody>
+      <tr><td rowspan="3"><strong>Build</strong> a cable</td><td><strong>Cable stripper</strong></td><td>Removes the outer jacket so you can reach the wires inside. Many crimpers have a stripper built in.<sup class="cite"><a href="#src-n10">[2]</a></sup></td></tr>
+      <tr><td><strong>Crimper</strong></td><td>Squeezes a <strong>connector onto the end</strong> of a cable, such as an RJ45 plug onto twisted pair: a patch cable.<sup class="cite"><a href="#src-messer">[1]</a></sup></td></tr>
+      <tr><td><strong>Punchdown tool</strong></td><td>Pushes each wire into a <strong>patch panel</strong>, wall jack or punchdown block and trims the excess: the permanent end of a cable run.<sup class="cite"><a href="#src-messer">[1]</a></sup></td></tr>
+      <tr><td><strong>Find</strong> a cable</td><td><strong>Tone generator and probe</strong> (toner probe)</td><td>The generator puts a tone on one end of the wire; you wave the inductive probe over the bundle at the other end until it beeps.<sup class="cite"><a href="#src-messer">[1]</a></sup> It <em>finds</em> a wire; it doesn't test it.</td></tr>
+      <tr><td rowspan="3"><strong>Test</strong> a link</td><td><strong>Cable tester</strong></td><td>Checks every pin end to end: finds <strong>broken wires, missing pins</strong> and wires in the wrong order.<sup class="cite"><a href="#src-messer">[1]</a></sup></td></tr>
+      <tr><td><strong>Loopback plug</strong></td><td>Wires the port's transmit pins back to its own receive pins, so a port can <strong>test itself</strong> with no cable or switch involved.<sup class="cite"><a href="#src-901">[3]</a></sup></td></tr>
+      <tr><td><strong>Wi-Fi analyzer</strong></td><td>Shows nearby networks, their <strong>signal strength and channels</strong>; used to plan, tune and troubleshoot coverage and find weak spots.<sup class="cite"><a href="#src-messer">[1]</a></sup></td></tr>
+      <tr><td><strong>Watch</strong> traffic</td><td><strong>Network tap</strong></td><td>Sits inline on a link and sends an <strong>exact copy</strong> of the traffic to a monitoring port, while the real traffic passes through unchanged.<sup class="cite"><a href="#src-tap">[4]</a></sup></td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <h2>Two pairs the exam likes to mix up</h2>
+  <p><strong>Crimper vs. punchdown tool.</strong> Ask: <em>which end of the cable?</em> A <strong>plug</strong> on a loose end (patch cable) → crimper. Wires seated into a <strong>panel or jack</strong> in the wall or closet → punchdown tool.</p>
+  <p><strong>Toner probe vs. cable tester.</strong> Ask: <em>do I know which cable it is?</em> No → toner probe to find it. Yes, but is it good? → cable tester. A toner can beep happily on a cable with a broken pair.</p>
+  <p>A <strong>tap</strong> is different from a switch's <strong>port mirror</strong> (SPAN): with a mirror, the switch makes the copy itself and can drop packets when busy; a tap is separate hardware that copies everything on that one link.<sup class="cite"><a href="#src-tap">[4]</a></sup></p>
+
+  <div class="callout win">
+    <span class="label">Memory hook</span>
+    <p><strong>Build</strong> (strip, crimp, punch) → <strong>find</strong> (tone) → <strong>test</strong> (cable tester, loopback, Wi-Fi analyzer) → <strong>watch</strong> (tap). That's the order a cable's life goes in, too.</p>
+  </div>
+
+  <h2>Try it (2 minutes)</h2>
+  <p>Windows has a basic Wi-Fi analyzer built in. On a laptop with Wi-Fi, in PowerShell or Command Prompt:</p>
+<pre><code>netsh wlan show networks mode=bssid</code></pre>
+  <p>Example output (trimmed; yours will differ):</p>
+<pre><code>SSID 1 : ExampleOffice
+    Authentication          : WPA2-Personal
+    BSSID 1                 : 02:00:5e:10:00:01
+         Signal             : 86%
+         Radio type         : 802.11ax
+         Band               : 5 GHz
+         Channel            : 36</code></pre>
+  <p>Each <strong>BSSID</strong> is one access point radio. Look for the same network name on several BSSIDs, and for neighbors crowding your channel (<a href="0006-wifi-bands-channels.html">lesson 0006</a>). Walk to a spot with bad Wi-Fi and run it again: the signal percentage drop is your weak spot. On newer Windows 11 builds the command may ask you to turn on location services first.<sup class="cite"><a href="#src-netsh">[5]</a></sup></p>
+
+  <h2>Practice</h2>
+  <p>Answer from memory before scrolling back up.</p>
+
+  <section class="quiz">
+    <p class="q">In a wiring closet, dozens of unlabeled cables end at a patch panel. You need to know which one runs to a particular desk's wall jack. What do you use?</p>
+    <ul class="choices">
+      <li><button class="choice" data-correct>Tone generator and probe</button></li>
+      <li><button class="choice">Cable tester and remote</button></li>
+      <li><button class="choice">Crimper with built-in stripper</button></li>
+      <li><button class="choice">Loopback plug and port</button></li>
+    </ul>
+    <div class="explain" hidden>Put the tone generator on the wall jack, then wave the probe over the patch panel until it beeps loudest. A cable tester checks a cable you've already identified; a crimper builds cables; a loopback plug tests a single port.</div>
+  </section>
+
+  <section class="quiz">
+    <p class="q">You're terminating new cable runs on the back of a patch panel in the wiring closet. Which tool seats each wire into the panel?</p>
+    <ul class="choices">
+      <li><button class="choice">Crimper for RJ45 plugs</button></li>
+      <li><button class="choice" data-correct>Punchdown tool for panels</button></li>
+      <li><button class="choice">Toner probe for tracing</button></li>
+      <li><button class="choice">Analyzer for wireless signals</button></li>
+    </ul>
+    <div class="explain" hidden>Patch panels, wall jacks and punchdown blocks are the permanent ends of a run: the punchdown tool pushes each wire into its slot and trims it. A crimper puts a plug on a loose cable end (a patch cable) instead.</div>
+  </section>
+
+  <section class="quiz">
+    <p class="q">A desktop shows no link light. A known-good cable plugged into a known-good switch port changes nothing. Which tool tests the PC's network port by itself?</p>
+    <ul class="choices">
+      <li><button class="choice">A Wi-Fi analyzer</button></li>
+      <li><button class="choice">A tone generator</button></li>
+      <li><button class="choice" data-correct>A loopback plug</button></li>
+      <li><button class="choice">A network tap</button></li>
+    </ul>
+    <div class="explain" hidden>A loopback plug sends the port's own transmit signal straight back into its receive pins, so you test the network card with nothing else in the path. You've already ruled out the cable and the switch, so the port is the last suspect.</div>
+  </section>
+
+  <section class="quiz">
+    <p class="q">Users in one corner of an office keep dropping off Wi-Fi; elsewhere it's fine. Which tool shows the signal strength and channels right at that spot?</p>
+    <ul class="choices">
+      <li><button class="choice">A cable tester at the jack</button></li>
+      <li><button class="choice">A loopback plug in the laptop</button></li>
+      <li><button class="choice">A toner probe near the desk</button></li>
+      <li><button class="choice" data-correct>A Wi-Fi analyzer at the spot</button></li>
+    </ul>
+    <div class="explain" hidden>A Wi-Fi analyzer measures what the radio actually hears in that place: signal strength, which networks are there, and which channels they use. That shows a coverage gap or a crowded channel. The other three tools work on cables and ports, not radio.</div>
+  </section>
+  <p class="quiz-score" data-quiz-score></p>
+
+  <details class="recall">
+    <summary>From memory: name the four jobs and the eight tools that do them. <span class="hint">(then click to check)</span></summary>
+    <p><strong>Build</strong>: cable stripper, crimper, punchdown tool. <strong>Find</strong>: tone generator and probe. <strong>Test</strong>: cable tester, loopback plug, Wi-Fi analyzer. <strong>Watch</strong>: network tap.</p>
+  </details>
+
+  <h2>Review: earlier lessons</h2>
+  <p>Spaced retrieval: pull these from memory first, then check.</p>
+
+  <details class="recall">
+    <summary>Which internet connection type is limited by distance from the provider's central office, and which one needs line of sight to a tower? <span class="hint">(<a href="0018-internet-connection-types.html">lesson 0018</a>, yesterday)</span></summary>
+    <p><strong>DSL</strong> runs over phone lines and gets slower the farther you are from the central office (roughly a 10,000-foot limit). A <strong>WISP</strong> (fixed wireless) needs clear line of sight from the rooftop antenna to the tower.</p>
+  </details>
+
+  <details class="recall">
+    <summary>With a VPN, what's the difference between a full tunnel and a split tunnel? <span class="hint">(<a href="0016-vlans-vpns.html">lesson 0016</a>, 3 days ago)</span></summary>
+    <p><strong>Full tunnel</strong>: all traffic goes through the VPN to the company network, even internet browsing. <strong>Split tunnel</strong>: only traffic for company networks goes through the VPN; everything else goes straight to the internet.</p>
+  </details>
+
+  <details class="recall">
+    <summary>Which DNS record type points a name at another name, and which one tells the world where to deliver a domain's email? <span class="hint">(<a href="0012-dns-records.html">lesson 0012</a>, 7 days ago)</span></summary>
+    <p>A <strong>CNAME</strong> is an alias: it points one name at another name. An <strong>MX</strong> record names the mail server for the domain; when there are several, the lowest preference number is tried first.</p>
+  </details>
+
+  <div class="callout source" id="src-messer">
+    <span class="label">Primary source: watch next</span>
+    <p>[1] Professor Messer, <a href="https://www.professormesser.com/free-a-plus-training/220-1201/220-1201-video/network-tools-220-1201/">Network Tools (220-1201)</a>. Today's lesson covers the whole video, and with it the networking domain's tools objective.</p>
+    <p id="src-n10">[2] Professor Messer, <a href="https://www.professormesser.com/professor-messer-archives/n10-007/hardware-tools-2/">Hardware Tools (N10-007)</a> (crimpers that include a wire stripper). Background from his Network+ course.</p>
+    <p id="src-901">[3] Professor Messer, <a href="https://www.professormesser.com/free-a-plus-training/220-901/networking-tools/">Networking Tools (220-901)</a> (a loopback plug sends what the interface transmits straight back into its receive side). Older A+ version, same tool.</p>
+    <p id="src-tap">[4] Wikipedia, <a href="https://en.wikipedia.org/wiki/Network_tap">Network tap</a> (A, B and monitor ports; traffic passes unimpeded while a copy goes to the monitor port; taps vs. switch port mirroring).</p>
+    <p id="src-netsh">[5] Microsoft Learn, <a href="https://learn.microsoft.com/en-us/windows-server/networking/technologies/netsh/netsh-wlan">netsh wlan commands</a> (<code>show networks mode=bssid</code> lists visible networks with signal, radio type and channel).</p>
+  </div>
+
+  <div class="callout ask">
+    <span class="label">Questions?</span>
+    <p>Anything unclear? Ask your teacher. Open Claude in the Teacher repo and ask, for example: <em>"In IT lesson 0019, what's the difference between a cheap cable tester and a cable certifier, and when would I need the expensive one?"</em> Follow-up questions are part of the course.</p>
+  </div>
+</main>
+<nav class="page-footer">
+  <a href="0018-internet-connection-types.html">← Internet connections</a>
+  <a href="../../index.html">Hub</a>
+  <span class="disabled">Next lesson: tomorrow →</span>
+</nav>
+</body>
+</html>
