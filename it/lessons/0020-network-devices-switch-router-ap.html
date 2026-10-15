@@ -1,0 +1,166 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Network Devices</title>
+<meta name="description" content="IT lesson 0020: the boxes in the wiring closet (hub, unmanaged and managed switch, router, access point, patch panel, firewall), what each one decides with, and which one to suspect for which symptom.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=JetBrains+Mono&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../assets/course.css">
+<script src="../../assets/quiz.js" defer></script>
+</head>
+<body class="track-it">
+<nav class="page-header">
+  <a class="home" href="../../index.html">Teacher hub</a>
+  <span>IT and certs</span>
+  <a href="../reference/glossary.html">Glossary</a>
+  <a href="../reference/network-settings.html">Cheat sheet</a>
+</nav>
+<main>
+  <p class="kicker">IT and certs · Lesson 0020 · A+ Core 1, objective 2.5</p>
+  <h1>Network devices: who forwards what, and how</h1>
+  <p class="lede">About 10 minutes. Objective 2.5 is the hardware in the wiring closet.<sup class="cite"><a href="#src-messer">[1]</a></sup> Today is the first half: the boxes that <strong>move traffic inside a building</strong> (switch, router, access point) plus the two that sit beside them (patch panel, firewall). The win: for each box, say <em>what it looks at</em> to make its decision.</p>
+
+  <div class="callout">
+    <span class="label">Why this matters at work</span>
+    <p>When a device can't reach the cloud sign-in page or check in with device management, the cause can sit in any box on the path. "Can reach the printer next to it but nothing else" points at the router or firewall; "nothing at all on this one desk" points at the cable, patch panel or switch port. Knowing what each box does tells you which team to hand the ticket to.</p>
+  </div>
+
+  <h2>One question per box: what does it look at?</h2>
+  <div class="table-wrap">
+  <table>
+    <thead><tr><th>Device</th><th>Looks at</th><th>What it does</th></tr></thead>
+    <tbody>
+      <tr><td><strong>Hub</strong> (obsolete)</td><td>Nothing</td><td>Repeats every frame out <strong>every port</strong>. More traffic means more collisions, so performance falls apart under load. Switches replaced hubs.<sup class="cite"><a href="#src-1101">[2]</a></sup></td></tr>
+      <tr><td><strong>Switch</strong></td><td><strong>MAC address</strong></td><td>Learns which device is on which port and sends each frame <strong>only to the port</strong> where the destination lives.<sup class="cite"><a href="#src-messer">[1]</a></sup></td></tr>
+      <tr><td><strong>Router</strong></td><td><strong>IP address</strong></td><td>Forwards packets <strong>between different IP networks</strong> (subnets). It's the <strong>default gateway</strong> from <a href="0001-four-ip-settings.html">lesson 0001</a>: the way off your own subnet.<sup class="cite"><a href="#src-union">[3]</a></sup></td></tr>
+      <tr><td><strong>Access point</strong></td><td><strong>MAC address</strong></td><td>Bridges Wi-Fi onto the wired network. Like a switch, it decides by destination MAC whether a frame goes out the radio or the cable.<sup class="cite"><a href="#src-messer">[1]</a></sup> It doesn't route.<sup class="cite"><a href="#src-ap">[4]</a></sup></td></tr>
+      <tr><td><strong>Patch panel</strong></td><td>Nothing</td><td>A passive block of jacks. Each desk's cable run is <strong>punched down</strong> on the back (<a href="0019-network-tools.html">lesson 0019</a>); short patch cables in front connect it to a switch port.<sup class="cite"><a href="#src-messer">[1]</a></sup> No power, no decisions.</td></tr>
+      <tr><td><strong>Firewall</strong></td><td><strong>Rules</strong>: ports, and on some, applications</td><td>Allows or blocks traffic against its rule list, for example by <strong>port number</strong>; newer ones can also filter by <strong>application</strong>.<sup class="cite"><a href="#src-messer">[1]</a></sup> Often built into the router at a small site.</td></tr>
+    </tbody>
+  </table>
+  </div>
+  <p>The "wireless router" in a home or small office is <strong>several of these in one box</strong>: router, small switch, access point and firewall.<sup class="cite"><a href="#src-ap">[4]</a></sup> In a bigger building they're separate devices, which is why the exam treats them separately.</p>
+
+  <h2>Unmanaged vs. managed switches</h2>
+  <p>An <strong>unmanaged</strong> switch is plug and play: no settings, nothing to log in to. A <strong>managed</strong> switch can be configured and monitored.<sup class="cite"><a href="#src-messer">[1]</a></sup> What that buys you:</p>
+  <ul>
+    <li><strong>VLANs</strong>: put each port in a network segment (<a href="0016-vlans-vpns.html">lesson 0016</a>).</li>
+    <li><strong>Traffic prioritization</strong> (QoS): voice and video calls go first.</li>
+    <li><strong>Redundancy</strong>: spare links between switches without loops.</li>
+    <li><strong>Port mirroring</strong> and monitoring: copy a port's traffic for troubleshooting (compare the tap in <a href="0019-network-tools.html">lesson 0019</a>).<sup class="cite"><a href="#src-union">[3]</a></sup></li>
+  </ul>
+  <p>Rule of thumb: if anyone needs VLANs, the switch must be managed.</p>
+
+  <div class="callout win">
+    <span class="label">Memory hook</span>
+    <p><strong>Switch and access point: MAC</strong> (same network). <strong>Router: IP</strong> (between networks). <strong>Firewall: rules.</strong> <strong>Hub and patch panel: nothing.</strong></p>
+  </div>
+
+  <h2>Try it (2 minutes)</h2>
+  <p>To send anything off your subnet, your PC needs the router's <strong>MAC</strong> address, because the switch only understands MACs. Windows keeps a table of the MACs it has learned (the ARP cache). In PowerShell:</p>
+<pre><code>ipconfig | findstr /i "gateway"
+Get-NetNeighbor -AddressFamily IPv4 -State Reachable,Stale</code></pre>
+  <p>Example output (trimmed; yours will differ):</p>
+<pre><code>   Default Gateway . . . . . . . . . : 192.0.2.1
+
+ifIndex IPAddress      LinkLayerAddress   State
+------- ---------      ----------------   -----
+12      192.0.2.1      02-00-5E-10-00-01  Reachable
+12      192.0.2.40     02-00-5E-10-00-28  Stale</code></pre>
+  <p>Find the gateway's IP in the list: the <strong>LinkLayerAddress</strong> next to it is the router's MAC.<sup class="cite"><a href="#src-netneighbor">[5]</a></sup> Every frame you send to the internet carries that MAC as its destination, and that's what the switch uses to pick the port. (<code>arp -a</code> shows the same table.)</p>
+
+  <h2>Practice</h2>
+  <p>Answer from memory before scrolling back up.</p>
+
+  <section class="quiz">
+    <p class="q">A small office's wired network crawls whenever anyone copies a large file. In the closet you find an old hub. Why does swapping in a switch help?</p>
+    <ul class="choices">
+      <li><button class="choice">It assigns each device a new address</button></li>
+      <li><button class="choice">It blocks traffic on unused port numbers</button></li>
+      <li><button class="choice" data-correct>It sends each frame to one port</button></li>
+      <li><button class="choice">It boosts the signal on longer cables</button></li>
+    </ul>
+    <div class="explain" hidden>A hub repeats every frame out every port, so one big copy floods every device and collisions pile up. A switch learns where each MAC address lives and sends the frame only to that port. Handing out addresses is DHCP's job; blocking ports is a firewall's.</div>
+  </section>
+
+  <section class="quiz">
+    <p class="q">A new branch needs guest devices kept apart from staff on separate VLANs, and the team wants to mirror one port for troubleshooting. Which do you order?</p>
+    <ul class="choices">
+      <li><button class="choice">An unmanaged switch with more ports</button></li>
+      <li><button class="choice" data-correct>A managed switch you can configure</button></li>
+      <li><button class="choice">A hub with a faster uplink</button></li>
+      <li><button class="choice">An access point in bridge mode</button></li>
+    </ul>
+    <div class="explain" hidden>VLANs and port mirroring are settings, and only a managed switch has settings. An unmanaged switch is plug and play with nothing to configure; a hub can't even keep traffic apart; an access point doesn't replace the wired switch.</div>
+  </section>
+
+  <section class="quiz">
+    <p class="q">A desktop can print to the printer on its own subnet but can't reach anything on other subnets or the internet. Which device's address is most likely wrong in its settings?</p>
+    <ul class="choices">
+      <li><button class="choice">The access point it joined</button></li>
+      <li><button class="choice">The switch in the closet</button></li>
+      <li><button class="choice">The patch panel port used</button></li>
+      <li><button class="choice" data-correct>The router, its default gateway</button></li>
+    </ul>
+    <div class="explain" hidden>Traffic on the same subnet goes straight through the switch, which is why the printer works. Anything off the subnet must go through the router, so a wrong default gateway breaks exactly that. Switches, access points and patch panels don't appear in a PC's IP settings.</div>
+  </section>
+
+  <section class="quiz">
+    <p class="q">Staff can browse websites, but a new internal app listening on TCP 8443 times out from every office PC. On the server itself it works. What most likely needs a change?</p>
+    <ul class="choices">
+      <li><button class="choice" data-correct>A rule on the firewall</button></li>
+      <li><button class="choice">The unmanaged switch's port settings</button></li>
+      <li><button class="choice">The patch panel's front ports</button></li>
+      <li><button class="choice">The access point's radio channel</button></li>
+    </ul>
+    <div class="explain" hidden>Web traffic works, so cables, switches and Wi-Fi are fine. Only one port number fails, and filtering by port number is exactly what a firewall does: it needs a rule allowing TCP 8443 to that server. An unmanaged switch has no settings, and a patch panel makes no decisions.</div>
+  </section>
+  <p class="quiz-score" data-quiz-score></p>
+
+  <details class="recall">
+    <summary>From memory: which devices decide by MAC address, which by IP address, which by rules, and which decide nothing? <span class="hint">(then click to check)</span></summary>
+    <p><strong>MAC</strong>: switch, access point. <strong>IP</strong>: router. <strong>Rules</strong> (ports, applications): firewall. <strong>Nothing</strong>: hub (repeats everything) and patch panel (passive jacks).</p>
+  </details>
+
+  <h2>Review: earlier lessons</h2>
+  <p>Spaced retrieval: pull these from memory first, then check.</p>
+
+  <details class="recall">
+    <summary>You need to find which unlabeled cable in the closet goes to one desk, then check that it's wired correctly. Which two tools, in which order? <span class="hint">(<a href="0019-network-tools.html">lesson 0019</a>, yesterday)</span></summary>
+    <p>First the <strong>tone generator and probe</strong> to find the cable (tone on the wall jack, probe at the patch panel). Then the <strong>cable tester</strong> to check every pin end to end. A toner finds a wire; it doesn't prove it's good.</p>
+  </details>
+
+  <details class="recall">
+    <summary>Where does a domain's DMARC policy live in DNS, and what are its three policy values, from gentlest to strictest? <span class="hint">(<a href="0013-spf-dkim-dmarc.html">lesson 0013</a>, 7 days ago)</span></summary>
+    <p>In a <strong>TXT</strong> record at <code>_dmarc.</code> plus the domain. Policies: <strong>p=none</strong> (just report), <strong>p=quarantine</strong> (send failures to junk), <strong>p=reject</strong> (refuse them). Start at none and tighten.</p>
+  </details>
+
+  <details class="recall">
+    <summary>Which three 2.4 GHz channels don't overlap, and why does that matter when you place access points? <span class="hint">(<a href="0006-wifi-bands-channels.html">lesson 0006</a>, 14 days ago)</span></summary>
+    <p>Channels <strong>1, 6 and 11</strong>. Neighboring access points on overlapping channels interfere with each other, so you spread them across those three.</p>
+  </details>
+
+  <div class="callout source" id="src-messer">
+    <span class="label">Primary source: watch next</span>
+    <p>[1] Professor Messer, <a href="https://www.professormesser.com/free-a-plus-training/220-1201/220-1201-video/network-devices-220-1201/">Network Devices (220-1201)</a>. Watch the whole video: today covered routers, switches, access points, patch panels and firewalls; the next lesson finishes it with Power over Ethernet, cable and DSL modems, ONTs and NICs.</p>
+    <p id="src-1101">[2] Professor Messer, <a href="https://www.professormesser.com/free-a-plus-training/220-1101/220-1101-video/network-devices-220-1101/">Network Devices (220-1101)</a> (hubs repeat traffic to every port, and performance degrades as load grows). Previous A+ version.</p>
+    <p id="src-union">[3] Union Test Prep, <a href="https://uniontestprep.com/comptia-a-core-series-exam/study-guide/220-1201-networking/pages/3">220-1201 Networking study guide</a> (routers forward between IP subnets; managed switch features: QoS, redundancy, port mirroring, VLANs).</p>
+    <p id="src-ap">[4] TechTarget, <a href="https://www.techtarget.com/searchnetworking/answer/The-difference-between-an-access-point-and-a-bridge">The difference between an access point and a bridge</a> (an access point relays frames between wireless clients and the wired LAN).</p>
+    <p id="src-netneighbor">[5] Microsoft Learn, <a href="https://learn.microsoft.com/en-us/powershell/module/nettcpip/get-netneighbor">Get-NetNeighbor</a> (the IPv4 neighbor cache is the ARP cache; the link-layer address is the MAC address).</p>
+  </div>
+
+  <div class="callout ask">
+    <span class="label">Questions?</span>
+    <p>Anything unclear? Ask your teacher. Open Claude in the Teacher repo and ask, for example: <em>"In IT lesson 0020, what's a 'layer 3 switch', and is it a switch or a router?"</em> Follow-up questions are part of the course.</p>
+  </div>
+</main>
+<nav class="page-footer">
+  <a href="0019-network-tools.html">← Network tools</a>
+  <a href="../../index.html">Hub</a>
+  <span class="disabled">Next lesson: tomorrow →</span>
+</nav>
+</body>
+</html>
