@@ -1,0 +1,173 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>PoE, Modems, ONT, NIC</title>
+<meta name="description" content="IT lesson 0021: the rest of the network devices for A+ objective 2.5. Power over Ethernet (injector vs. PoE switch, 802.3af/at/bt), cable and DSL modems, the fiber ONT, and the NIC with its MAC address.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=JetBrains+Mono&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../assets/course.css">
+<script src="../../assets/quiz.js" defer></script>
+</head>
+<body class="track-it">
+<nav class="page-header">
+  <a class="home" href="../../index.html">Teacher hub</a>
+  <span>IT and certs</span>
+  <a href="../reference/glossary.html">Glossary</a>
+  <a href="../reference/network-settings.html">Cheat sheet</a>
+</nav>
+<main>
+  <p class="kicker">IT and certs · Lesson 0021 · A+ Core 1, objective 2.5</p>
+  <h1>Power, modems and the NIC: the ends of the cable</h1>
+  <p class="lede">About 10 minutes. <a href="0020-network-devices-switch-router-ap.html">Yesterday</a> covered the boxes in the middle of the network. Today finishes objective 2.5 with the two <strong>ends</strong>: where the provider's line comes in (cable modem, DSL modem, ONT), where each device plugs in (the NIC), and how a cable can carry <strong>power</strong> as well as data (PoE).<sup class="cite"><a href="#src-messer">[1]</a></sup> The win: look at a wall of gear and say what each box at the edge does.</p>
+
+  <div class="callout">
+    <span class="label">Why this matters at work</span>
+    <p>Device management and sign-in records identify hardware partly by its network adapter, and Wi-Fi and wired adapters on the same laptop have <strong>different MAC addresses</strong>. When a DHCP reservation or an inventory record "doesn't match", the first question is which adapter the device used. And when a desk phone or access point goes dark while the PC beside it still works, think power before network: is its PoE switch port still delivering?</p>
+  </div>
+
+  <h2>Power over Ethernet (PoE)</h2>
+  <p>PoE sends <strong>DC power down the same Ethernet cable</strong> as the data, so an access point on a ceiling or a camera on a wall needs no outlet nearby.<sup class="cite"><a href="#src-messer">[1]</a></sup> The power can come from two places:</p>
+  <ul>
+    <li><strong>PoE switch</strong> (called <strong>endspan</strong>): the switch port itself supplies power. One box powers many devices.</li>
+    <li><strong>PoE injector</strong> (called <strong>midspan</strong>): a small box placed between an ordinary switch and <strong>one</strong> device. Handy when the switch can't do PoE.<sup class="cite"><a href="#src-messer">[1]</a></sup><sup class="cite"><a href="#src-vlad">[2]</a></sup></li>
+  </ul>
+  <div class="table-wrap">
+  <table>
+    <thead><tr><th>Standard</th><th>Nickname</th><th>Sent by the port</th><th>Guaranteed at the device</th></tr></thead>
+    <tbody>
+      <tr><td><strong>802.3af</strong></td><td>PoE</td><td>15.4 W</td><td>12.95 W</td></tr>
+      <tr><td><strong>802.3at</strong></td><td>PoE+</td><td>30 W</td><td>25.5 W</td></tr>
+      <tr><td><strong>802.3bt</strong> Type 3</td><td>PoE++</td><td>60 W</td><td>51 W</td></tr>
+      <tr><td><strong>802.3bt</strong> Type 4</td><td>PoE++</td><td>100 W</td><td>71.3 W</td></tr>
+    </tbody>
+  </table>
+  </div>
+  <p class="sidenote">Some power is lost as heat in the cable, so the device gets less than the port sends.<sup class="cite"><a href="#src-fs">[3]</a></sup> Study guides often quote a mix (15.4, 25.5, 51, 71.3 W);<sup class="cite"><a href="#src-messer">[1]</a></sup> learn the order <strong>af → at → bt</strong> and that each step roughly doubles. Newer standards still power older devices.<sup class="cite"><a href="#src-fs">[3]</a></sup></p>
+
+  <h2>Where the provider's line comes in</h2>
+  <p>Each internet connection from <a href="0018-internet-connection-types.html">lesson 0018</a> ends in its own box, which hands you plain Ethernet for your router.</p>
+  <div class="table-wrap">
+  <table>
+    <thead><tr><th>Box</th><th>Line it takes</th><th>Notes</th></tr></thead>
+    <tbody>
+      <tr><td><strong>Cable modem</strong></td><td>Coax from the cable-TV provider</td><td>Speaks <strong>DOCSIS</strong>; data shares the cable with TV channels.<sup class="cite"><a href="#src-messer">[1]</a></sup></td></tr>
+      <tr><td><strong>DSL modem</strong></td><td>Telephone line</td><td>Usually <strong>asymmetric</strong> (ADSL): download faster than upload.<sup class="cite"><a href="#src-messer">[1]</a></sup></td></tr>
+      <tr><td><strong>ONT</strong> (optical network terminal)</td><td>Fiber</td><td>Converts light to electrical Ethernet. It's the <strong>demarcation point</strong>: the provider owns everything up to and including it; what you plug into it is yours.<sup class="cite"><a href="#src-messer">[1]</a></sup><sup class="cite"><a href="#src-ont">[4]</a></sup></td></tr>
+    </tbody>
+  </table>
+  </div>
+  <p>The <strong>demarc</strong> idea matters for tickets: if the fault is on the provider's side of it, you call the provider; on your side, it's yours to fix.</p>
+
+  <h2>The NIC: every device has one</h2>
+  <p>The <strong>network interface card</strong> is the most basic network device: anything that talks on a network has one, wired or wireless, built in or added as a card or USB adapter.<sup class="cite"><a href="#src-messer">[1]</a></sup> Each NIC carries its own hardware address, the <strong>MAC address</strong>, which is what switches and access points decide by (yesterday's lesson). A laptop with Ethernet, Wi-Fi and Bluetooth has three NICs and three MACs.</p>
+
+  <div class="callout win">
+    <span class="label">Memory hook</span>
+    <p><strong>Coax → cable modem. Phone line → DSL modem. Fiber → ONT (the demarc).</strong> <strong>PoE: af, at, bt; about 15, 30, 60–100 W.</strong> <strong>Switch = endspan, injector = midspan.</strong> <strong>One NIC, one MAC.</strong></p>
+  </div>
+
+  <h2>Try it (2 minutes)</h2>
+  <p>List every NIC on your PC with its MAC and speed.<sup class="cite"><a href="#src-netadapter">[5]</a></sup> In PowerShell:</p>
+<pre><code>Get-NetAdapter | Format-Table Name, InterfaceDescription, MacAddress, LinkSpeed, Status</code></pre>
+  <p>Example output (trimmed; yours will differ):</p>
+<pre><code>Name      InterfaceDescription            MacAddress         LinkSpeed Status
+----      --------------------            ----------         --------- ------
+Ethernet  Realtek PCIe GbE Family Ctrl    02-00-5E-10-00-0A  1 Gbps    Up
+Wi-Fi     Intel(R) Wi-Fi 6 AX201          02-00-5E-10-00-0B  866.7 Mbps Up</code></pre>
+  <p>Two adapters, two MACs. A Wi-Fi adapter may also use a <strong>random</strong> MAC per network (a privacy feature), which is another reason a reservation can miss.</p>
+
+  <h2>Practice</h2>
+  <p>Answer from memory before scrolling back up.</p>
+
+  <section class="quiz">
+    <p class="q">A new ceiling access point must go where there's no power outlet. The closet switch has no PoE, and buying a new switch isn't approved. What's the cheapest fix?</p>
+    <ul class="choices">
+      <li><button class="choice">Add a second access point nearby</button></li>
+      <li><button class="choice" data-correct>Add a PoE injector for it</button></li>
+      <li><button class="choice">Replace the patch panel port</button></li>
+      <li><button class="choice">Swap in a DSL modem instead</button></li>
+    </ul>
+    <div class="explain" hidden>An injector (midspan) sits between a non-PoE switch and one device and adds power to that one cable. A PoE switch (endspan) would also work but was ruled out. Patch panels are passive and never supply power.</div>
+  </section>
+
+  <section class="quiz">
+    <p class="q">A pan-tilt camera needs about 50 W at the device. Which is the oldest PoE standard that can deliver that?</p>
+    <ul class="choices">
+      <li><button class="choice">802.3af, the original PoE</button></li>
+      <li><button class="choice">802.3at, also called PoE+</button></li>
+      <li><button class="choice" data-correct>802.3bt, also called PoE++</button></li>
+      <li><button class="choice">802.11ax, also called Wi-Fi 6</button></li>
+    </ul>
+    <div class="explain" hidden>802.3af guarantees about 13 W at the device and 802.3at about 25.5 W, both too little. 802.3bt Type 3 guarantees 51 W. 802.11ax is a Wi-Fi standard, not a power standard.</div>
+  </section>
+
+  <section class="quiz">
+    <p class="q">A branch office on fiber has no internet. Your router shows no link on its WAN port, and the provider's box on the wall has a red alarm light. Who do you call?</p>
+    <ul class="choices">
+      <li><button class="choice">Your own team, for the router</button></li>
+      <li><button class="choice">The building electrician, for power</button></li>
+      <li><button class="choice">The switch vendor, for support</button></li>
+      <li><button class="choice" data-correct>The provider, it's their ONT</button></li>
+    </ul>
+    <div class="explain" hidden>The ONT is the demarcation point. A fault light on it means the problem is on the provider's side of the demarc, so the provider owns the fix. If the ONT looked healthy and only your router failed, it would be yours.</div>
+  </section>
+
+  <section class="quiz">
+    <p class="q">A laptop has a DHCP reservation, but it gets a random address from the pool today. It's docked with Wi-Fi off. What's the most likely reason?</p>
+    <ul class="choices">
+      <li><button class="choice" data-correct>The reservation uses another NIC's MAC</button></li>
+      <li><button class="choice">The ONT blocks DHCP for laptops</button></li>
+      <li><button class="choice">The PoE budget on the switch ran out</button></li>
+      <li><button class="choice">The DSL line became too asymmetric</button></li>
+    </ul>
+    <div class="explain" hidden>Reservations match one MAC address, and every NIC has its own. A reservation made for the Wi-Fi adapter won't match the dock's Ethernet NIC, so the laptop gets a normal pool address. The ONT, PoE and DSL don't take part in handing out addresses.</div>
+  </section>
+  <p class="quiz-score" data-quiz-score></p>
+
+  <details class="recall">
+    <summary>From memory: which box terminates coax, a phone line and fiber? And what's the difference between an endspan and a midspan? <span class="hint">(then click to check)</span></summary>
+    <p>Coax: <strong>cable modem</strong> (DOCSIS). Phone line: <strong>DSL modem</strong>. Fiber: <strong>ONT</strong>, the demarcation point. <strong>Endspan</strong>: the PoE switch powers the port itself. <strong>Midspan</strong>: an injector adds power between a normal switch and one device.</p>
+  </details>
+
+  <h2>Review: earlier lessons</h2>
+  <p>Spaced retrieval: pull these from memory first, then check.</p>
+
+  <details class="recall">
+    <summary>A switch, a router and a firewall each make forwarding decisions. What does each one look at? <span class="hint">(<a href="0020-network-devices-switch-router-ap.html">lesson 0020</a>, yesterday)</span></summary>
+    <p>Switch: the <strong>MAC address</strong> (same network). Router: the <strong>IP address</strong> (between networks; your default gateway). Firewall: its <strong>rules</strong>, such as port numbers or applications.</p>
+  </details>
+
+  <details class="recall">
+    <summary>A PC has an 8-day DHCP lease. On which day does it first try to renew, who does it ask, and what happens at 87.5%? <span class="hint">(<a href="0014-dhcp-scopes-leases.html">lesson 0014</a>, 7 days ago)</span></summary>
+    <p>At <strong>50% (T1), day 4</strong>, it asks the <strong>same server</strong> that gave the lease. If that server never answers, at <strong>87.5% (T2), day 7</strong>, it broadcasts to <strong>any</strong> DHCP server.</p>
+  </details>
+
+  <details class="recall">
+    <summary>Match 802.11n, ac, ax and be to their Wi-Fi numbers. Which of them is 5 GHz only? <span class="hint">(<a href="0007-wifi-standards.html">lesson 0007</a>, 14 days ago)</span></summary>
+    <p>n = Wi-Fi 4, ac = Wi-Fi 5, ax = Wi-Fi 6 (6E adds 6 GHz), be = Wi-Fi 7. <strong>802.11ac</strong> is the 5 GHz-only one.</p>
+  </details>
+
+  <div class="callout source" id="src-messer">
+    <span class="label">Primary source: watch next</span>
+    <p>[1] Professor Messer, <a href="https://www.professormesser.com/free-a-plus-training/220-1201/220-1201-video/network-devices-220-1201/">Network Devices (220-1201)</a>. Watch the second half: Power over Ethernet (endspan and midspan, the 802.3 standards), cable and DSL modems, the ONT and the NIC. With yesterday's lesson, that's the whole video.</p>
+    <p id="src-vlad">[2] Vlad Talks Tech, <a href="https://vladtalkstech.com/microsoft-learning-and-credential-news/networking-hardware-explained-comptia-a-220-1201-objective-2-5/">Networking hardware explained, 220-1201 objective 2.5</a> (an injector powers one device from a non-PoE switch; a PoE switch powers many).</p>
+    <p id="src-fs">[3] FS Community, <a href="https://community.fs.com/blog/understanding-poe-standards-and-poe-wattage.html">Understanding PoE standards and PoE wattage</a> (power at the port vs. at the device for 802.3af/at/bt; backward compatibility).</p>
+    <p id="src-ont">[4] 123NET, <a href="https://www.123.net/blog/understanding-the-point-of-demarcation/">Understanding the point of demarcation</a> (where the provider's responsibility ends and the customer's begins).</p>
+    <p id="src-netadapter">[5] Microsoft Learn, <a href="https://learn.microsoft.com/en-us/powershell/module/netadapter/get-netadapter">Get-NetAdapter</a> (lists network adapters with their MAC address, link speed and status).</p>
+  </div>
+
+  <div class="callout ask">
+    <span class="label">Questions?</span>
+    <p>Anything unclear? Ask your teacher. Open Claude in the Teacher repo and ask, for example: <em>"In IT lesson 0021, how does a PoE switch know how much power a device needs, and what's a PoE budget?"</em> Follow-up questions are part of the course.</p>
+  </div>
+</main>
+<nav class="page-footer">
+  <a href="0020-network-devices-switch-router-ap.html">← Network devices</a>
+  <a href="../../index.html">Hub</a>
+  <span class="disabled">Next lesson: tomorrow →</span>
+</nav>
+</body>
+</html>

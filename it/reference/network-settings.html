@@ -295,9 +295,27 @@
       <tr><td>Access point</td><td>MAC address</td><td>Bridges Wi-Fi clients onto the wired network; doesn't route</td></tr>
       <tr><td>Patch panel</td><td>Nothing</td><td>Passive jacks: cable runs punched down on the back, patch cables to the switch in front</td></tr>
       <tr><td>Firewall</td><td>Rules</td><td>Allows or blocks traffic by port number (some by application)</td></tr>
+      <tr><td>Cable modem</td><td>—</td><td>Terminates the provider's coax (DOCSIS); hands Ethernet to your router</td></tr>
+      <tr><td>DSL modem</td><td>—</td><td>Terminates a telephone line; usually asymmetric (ADSL)</td></tr>
+      <tr><td>ONT</td><td>—</td><td>Terminates fiber, light to Ethernet; the demarcation point (provider's side ends here)</td></tr>
+      <tr><td>NIC</td><td>—</td><td>Every networked device has one; each NIC has its own MAC address</td></tr>
     </tbody>
   </table>
   </div>
+
+  <h2>Power over Ethernet</h2>
+  <div class="table-wrap">
+  <table>
+    <thead><tr><th>Standard</th><th>Nickname</th><th>From the port</th><th>At the device</th></tr></thead>
+    <tbody>
+      <tr><td>802.3af</td><td>PoE</td><td>15.4 W</td><td>12.95 W</td></tr>
+      <tr><td>802.3at</td><td>PoE+</td><td>30 W</td><td>25.5 W</td></tr>
+      <tr><td>802.3bt Type 3</td><td>PoE++</td><td>60 W</td><td>51 W</td></tr>
+      <tr><td>802.3bt Type 4</td><td>PoE++</td><td>100 W</td><td>71.3 W</td></tr>
+    </tbody>
+  </table>
+  </div>
+  <p>PoE switch = <strong>endspan</strong> (powers many ports). PoE injector = <strong>midspan</strong> (one device, from a non-PoE switch).</p>
 
   <h2>Commands (Windows)</h2>
   <div class="table-wrap">
@@ -308,7 +326,7 @@
       <tr><td><code>Test-NetConnection host -Port 443</code></td><td>PowerShell: does a TCP connection to that port open? Read <code>TcpTestSucceeded</code></td></tr>
       <tr><td><code>Get-NetTCPConnection -State Established</code></td><td>PowerShell: list open TCP connections with local and remote ports</td></tr>
       <tr><td><code>ping -n 4 1.1.1.1</code></td><td>Round-trip latency (<code>time=</code>); compare wired, Wi-Fi and hotspot</td></tr>
-      <tr><td><code>Get-NetAdapter</code></td><td>PowerShell: list network adapters (Ethernet, Wi-Fi, Bluetooth PAN) with status and link speed</td></tr>
+      <tr><td><code>Get-NetAdapter</code></td><td>PowerShell: list network adapters (Ethernet, Wi-Fi, Bluetooth PAN) with status and link speed; add <code>| Format-Table Name, MacAddress, LinkSpeed</code> to see each NIC's MAC</td></tr>
       <tr><td><code>net use</code></td><td>List mapped drives (SMB connections)</td></tr>
       <tr><td><code>nbtstat -n</code></td><td>Show this PC's NetBIOS names (listed = NetBIOS over TCP/IP enabled)</td></tr>
       <tr><td><code>netsh wlan show interfaces</code></td><td>Current Wi-Fi connection: radio type (802.11 standard), band, channel, signal</td></tr>
