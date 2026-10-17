@@ -1,0 +1,249 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Weekly Quiz: Oct 11 – Oct 16</title>
+<meta name="description" content="IT lesson 0022: Saturday in-depth quiz on week three (VLANs and VPNs, network types, internet connections, network tools, network devices, PoE, modems, ONT, NIC) mixed with earlier weeks, plus an A+ Core 1 pace check.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=JetBrains+Mono&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../assets/course.css">
+<script src="../../assets/quiz.js" defer></script>
+</head>
+<body class="track-it">
+<nav class="page-header">
+  <a class="home" href="../../index.html">Teacher hub</a>
+  <span>IT and certs</span>
+  <a href="../reference/glossary.html">Glossary</a>
+  <a href="../reference/network-settings.html">Cheat sheet</a>
+</nav>
+<main>
+  <p class="kicker">IT and certs · Lesson 0022 · Saturday quiz · A+ Core 1, objectives 2.1–2.8</p>
+  <h1>Weekly quiz: Oct 11 – Oct 16</h1>
+  <p class="lede">About 20 minutes. Fifteen questions: nine on this week (VLANs and VPNs, network types, internet connections, network tools, network devices, PoE and the boxes at the ends of the cable) and six pulled back from earlier weeks (ports, TCP, Wi-Fi bands, DNS records). They're shuffled on purpose. Most are tickets: work out what's broken before you work out what it's called.</p>
+
+  <div class="callout">
+    <span class="label">How to take it</span>
+    <p>No scrolling back to the lessons until you've answered. A wrong answer followed by the explanation sticks better than a right answer you looked up. Each explanation links to the lesson that taught it, so you know exactly what to reread.</p>
+  </div>
+
+  <p class="quiz-score" data-quiz-score></p>
+
+  <section class="quiz">
+    <p class="q">The network team creates a new VLAN, on its own subnet, for the security cameras. Every camera on those ports now shows a <code>169.254.x.x</code> address; devices on the old VLAN are fine. What's the most likely cause?</p>
+    <ul class="choices">
+      <li><button class="choice">The cameras still need a PoE injector</button></li>
+      <li><button class="choice" data-correct>The new subnet lacks a DHCP scope</button></li>
+      <li><button class="choice">The trunk link is using 802.1Q tags</button></li>
+      <li><button class="choice">The DNS server has no camera records</button></li>
+    </ul>
+    <div class="explain" hidden>Each VLAN is its own subnet and broadcast domain, and DHCP needs one scope per subnet (plus a relay on the router if the server sits elsewhere). No answer to the Discover means APIPA. The cameras clearly have power, since they're asking for an address, and 802.1Q tags are how a trunk is supposed to work. See <a href="0016-vlans-vpns.html">lesson 0016</a> and <a href="0014-dhcp-scopes-leases.html">lesson 0014</a>.</div>
+  </section>
+
+  <section class="quiz">
+    <p class="q">A user reads email in a desktop app on their laptop and on their phone. Messages opened on the laptop disappear from the phone and from webmail. The laptop app is set to fetch mail on port 110. What's going on?</p>
+    <ul class="choices">
+      <li><button class="choice">IMAP syncs every folder to devices</button></li>
+      <li><button class="choice">SMTP on 25 is deleting mail</button></li>
+      <li><button class="choice" data-correct>POP3 downloads mail and removes it</button></li>
+      <li><button class="choice">DNS on 53 cannot find mail</button></li>
+    </ul>
+    <div class="explain" hidden>Port 110 is POP3: "post office", collect the mail and take it home, usually removing it from the server. The fix is to set the laptop app to IMAP (143, or 993 with TLS), which keeps mail on the server and syncs every device. SMTP only sends. See <a href="0004-email-dns-dhcp-ports.html">lesson 0004</a>.</div>
+  </section>
+
+  <section class="quiz">
+    <p class="q">Security wants every website a company laptop visits to pass through the office's web filtering, even when the user works from home on the VPN. Which VPN setting delivers that?</p>
+    <ul class="choices">
+      <li><button class="choice" data-correct>A full tunnel profile</button></li>
+      <li><button class="choice">A split tunnel profile</button></li>
+      <li><button class="choice">A site-to-site VPN link</button></li>
+      <li><button class="choice">A separate guest VLAN</button></li>
+    </ul>
+    <div class="explain" hidden>Full tunnel sends <em>all</em> traffic through the VPN, web browsing included, so the office's filtering sees it. Split tunnel sends only company traffic through and lets the rest go straight to the internet (<code>SplitTunneling : True</code> in <code>Get-VpnConnection</code>). Site-to-site joins whole offices, not one laptop. See <a href="0016-vlans-vpns.html">lesson 0016</a>.</div>
+  </section>
+
+  <section class="quiz">
+    <p class="q">A Windows server answers ping, but Remote Desktop to it times out. You suspect a firewall. Which test checks exactly the thing that's failing?</p>
+    <ul class="choices">
+      <li><button class="choice">Test-NetConnection to port 443</button></li>
+      <li><button class="choice">Test-NetConnection to port 22</button></li>
+      <li><button class="choice">Test-NetConnection to port 53</button></li>
+      <li><button class="choice" data-correct>Test-NetConnection to port 3389</button></li>
+    </ul>
+    <div class="explain" hidden>Ping proves the machine is reachable; the next question is the port. RDP listens on TCP 3389, and <code>Test-NetConnection server -Port 3389</code> shows <code>TcpTestSucceeded</code> True or False. 443 is HTTPS, 22 is SSH, and 53 is DNS (mostly UDP, which this test can't check anyway). See <a href="0002-tcp-udp-ports.html">lesson 0002</a> and <a href="0003-web-remote-ports.html">lesson 0003</a>.</div>
+  </section>
+
+  <section class="quiz">
+    <p class="q">With a toner probe you found which closet cable runs to desk 14. The PC at desk 14 still shows no link light, even with a known-good patch cable. Which tool do you reach for next?</p>
+    <ul class="choices">
+      <li><button class="choice">A Wi-Fi analyzer</button></li>
+      <li><button class="choice" data-correct>A cable tester</button></li>
+      <li><button class="choice">A network tap</button></li>
+      <li><button class="choice">A crimping tool</button></li>
+    </ul>
+    <div class="explain" hidden>The toner <em>finds</em> a cable; it can beep happily on one with a broken pair. Now you know which cable it is, so test it: a cable tester checks every pin end to end. If a pair is open at the jack or panel, re-terminate it with a punchdown tool (not a crimper: that's for plugs on loose ends). See <a href="0019-network-tools.html">lesson 0019</a>.</div>
+  </section>
+
+  <section class="quiz">
+    <p class="q">A database server needs more storage. It must see the storage as a raw disk it formats itself, over a fast network kept apart from user traffic. What do you set up?</p>
+    <ul class="choices">
+      <li><button class="choice">A NAS sharing over SMB</button></li>
+      <li><button class="choice">A WLAN with more APs</button></li>
+      <li><button class="choice" data-correct>A SAN with block access</button></li>
+      <li><button class="choice">A MAN across the city</button></li>
+    </ul>
+    <div class="explain" hidden>A SAN hands a server raw <em>blocks</em>, as if it were a disk inside it, usually on its own isolated high-speed network (Fibre Channel or iSCSI). A NAS shares <em>files</em> by name over SMB or NFS, so the server can't format it. SAN = disk, NAS = share. See <a href="0017-network-types.html">lesson 0017</a>.</div>
+  </section>
+
+  <section class="quiz">
+    <p class="q">A laptop on 5 GHz shows one bar in a far meeting room, two walls from the access point. The same network name is also offered on 2.4 GHz. Why might 2.4 GHz work better in that room?</p>
+    <ul class="choices">
+      <li><button class="choice">It has many more non-overlapping channels</button></li>
+      <li><button class="choice">It is faster on every standard</button></li>
+      <li><button class="choice">It avoids interference from Bluetooth devices</button></li>
+      <li><button class="choice" data-correct>It reaches farther and through walls</button></li>
+    </ul>
+    <div class="explain" hidden>Low frequency = long range: 2.4 GHz goes farther and through walls better, at the cost of speed. It's the opposite of the other three: 2.4 GHz has only three clean channels (1, 6, 11), is the slower band, and shares the air with Bluetooth. See <a href="0006-wifi-bands-channels.html">lesson 0006</a>.</div>
+  </section>
+
+  <section class="quiz">
+    <p class="q">A 20-person branch office needs constant access to file and app servers at headquarters. Nobody at the branch should have to start any VPN software. What fits best?</p>
+    <ul class="choices">
+      <li><button class="choice" data-correct>Site-to-site VPN between both firewalls</button></li>
+      <li><button class="choice">Client-to-site VPN on every laptop</button></li>
+      <li><button class="choice">One VLAN stretched across the internet</button></li>
+      <li><button class="choice">Split-tunnel profiles on branch PCs</button></li>
+    </ul>
+    <div class="explain" hidden>Site-to-site connects the two offices' firewalls (or concentrators) and stays up all the time; users run nothing. Client-to-site, even set to Always On, needs a VPN client on each device. VLANs divide a local network; they don't join distant ones. See <a href="0016-vlans-vpns.html">lesson 0016</a>.</div>
+  </section>
+
+  <section class="quiz">
+    <p class="q">A new access point needs about 25 W at the device. The closet switch only supports 802.3af PoE. What happens, and what's the fix?</p>
+    <ul class="choices">
+      <li><button class="choice">Fine as is; af gives plenty</button></li>
+      <li><button class="choice">Underpowered; swap the patch panel first</button></li>
+      <li><button class="choice" data-correct>Underpowered; use PoE+ (802.3at) or better</button></li>
+      <li><button class="choice">Underpowered; add a DSL modem instead</button></li>
+    </ul>
+    <div class="explain" hidden>802.3af guarantees only about 13 W at the device. 802.3at (PoE+) guarantees about 25.5 W, and 802.3bt (PoE++) more. Use a PoE+ switch, or a PoE+ injector for this one AP. Patch panels are passive and never supply power. See <a href="0021-poe-modems-ont-nic.html">lesson 0021</a>.</div>
+  </section>
+
+  <section class="quiz">
+    <p class="q">An internal line-of-business app is switched from LDAP to LDAPS so its directory lookups are encrypted. Now it can't reach the directory server at all. The firewall rules weren't touched. Which port is most likely blocked?</p>
+    <ul class="choices">
+      <li><button class="choice">TCP 389 for LDAP</button></li>
+      <li><button class="choice" data-correct>TCP 636 for LDAPS</button></li>
+      <li><button class="choice">TCP 445 for SMB</button></li>
+      <li><button class="choice">UDP 514 for syslog</button></li>
+    </ul>
+    <div class="explain" hidden>LDAPS uses its own port, TCP 636 (encrypted from the first byte), just as HTTPS moved from 80 to 443. A firewall that only ever allowed 389 lets plain LDAP through and silently drops 636. See <a href="0005-file-sharing-directory-ports.html">lesson 0005</a>.</div>
+  </section>
+
+  <section class="quiz">
+    <p class="q">A user gets an "unusual sign-in location" alert placing them in a city 300 miles away. They were working from a café over their phone's hotspot and approved the MFA prompt themselves. What's the most likely explanation?</p>
+    <ul class="choices">
+      <li><button class="choice">Their password was stolen and reused overnight</button></li>
+      <li><button class="choice">The café's proxy server rewrote the location</button></li>
+      <li><button class="choice">Their laptop's NIC changed its MAC address</button></li>
+      <li><button class="choice" data-correct>Cellular carrier IPs often geolocate far away</button></li>
+    </ul>
+    <div class="explain" hidden>Mobile providers hand out IP addresses from central pools, so the location shown for a cellular IP is only a guess and is often far from the device. Check the sign-in log's details and confirm with the user, but a hotspot plus their own MFA approval fits. A MAC address never leaves the local network, so it can't move a sign-in location. See <a href="0018-internet-connection-types.html">lesson 0018</a>.</div>
+  </section>
+
+  <section class="quiz">
+    <p class="q">The office wants its VoIP phones on their own VLAN. The current switch is plug and play: no settings page, nothing to log in to. What's needed?</p>
+    <ul class="choices">
+      <li><button class="choice" data-correct>A managed switch instead</button></li>
+      <li><button class="choice">A PoE injector instead</button></li>
+      <li><button class="choice">A hub for phones</button></li>
+      <li><button class="choice">A bigger patch panel</button></li>
+    </ul>
+    <div class="explain" hidden>An unmanaged switch can't be configured, so it can't assign ports to VLANs. A managed switch adds VLANs, traffic prioritization (handy for voice), redundancy and port mirroring. Rule of thumb: anyone needs VLANs, the switch must be managed. A hub is obsolete and makes no decisions at all. See <a href="0020-network-devices-switch-router-ap.html">lesson 0020</a>.</div>
+  </section>
+
+  <section class="quiz">
+    <p class="q">An audit finds the team still manages some older switches over Telnet. What should replace it, and why?</p>
+    <ul class="choices">
+      <li><button class="choice">HTTP on 80, it's more compatible</button></li>
+      <li><button class="choice">FTP on 21, it copies configs</button></li>
+      <li><button class="choice" data-correct>SSH on 22, it encrypts everything</button></li>
+      <li><button class="choice">RDP on 3389, it shows desktops</button></li>
+    </ul>
+    <div class="explain" hidden>Telnet (23) and SSH (22) do the same job, a text console on a remote device, but Telnet sends everything, passwords included, in the clear. SSH encrypts the whole session. HTTP and FTP are unencrypted too, and RDP is for Windows desktops, not switch consoles. See <a href="0003-web-remote-ports.html">lesson 0003</a>.</div>
+  </section>
+
+  <section class="quiz">
+    <p class="q">Two coworkers in the same rural town have the same DSL plan. One, close to the provider's central office, gets full speed; the other, several miles out, gets a fraction of it. What's the most likely cause?</p>
+    <ul class="choices">
+      <li><button class="choice">Rain fade on the line</button></li>
+      <li><button class="choice" data-correct>Distance from the central office</button></li>
+      <li><button class="choice">Neighbors sharing the coax node</button></li>
+      <li><button class="choice">A data cap being reached</button></li>
+    </ul>
+    <div class="explain" hidden>DSL = distance: it runs over phone lines and slows the farther you are from the central office, with a limit around 10,000 feet. Rain fade is satellite, a shared node is cable, and data caps are cellular. See <a href="0018-internet-connection-types.html">lesson 0018</a>.</div>
+  </section>
+
+  <section class="quiz">
+    <p class="q"><code>example.com</code> has two MX records: <code>10 mail1.example.com</code> and <code>20 mail2.example.com</code>. <code>mail1</code> is down for maintenance. What happens to incoming mail?</p>
+    <ul class="choices">
+      <li><button class="choice">It bounces until mail1 comes back</button></li>
+      <li><button class="choice">It splits evenly between both servers</button></li>
+      <li><button class="choice">It goes to the AAAA record</button></li>
+      <li><button class="choice" data-correct>It goes to mail2, priority 20</button></li>
+    </ul>
+    <div class="explain" hidden>MX priority: lower wins. Senders try 10 (<code>mail1</code>) first and, when it doesn't answer, move on to 20 (<code>mail2</code>). That's exactly why domains publish a second MX. See <a href="0012-dns-records.html">lesson 0012</a>.</div>
+  </section>
+
+  <p class="quiz-score" data-quiz-score></p>
+
+  <h2>Explain it in your own words</h2>
+  <p>Say or write the answer before you open each one. If you can explain it to a coworker, you know it.</p>
+
+  <details class="recall">
+    <summary>A coworker says "VLAN and VPN are basically the same thing." Explain in two sentences why they do opposite jobs. <span class="hint">(<a href="0016-vlans-vpns.html">lesson 0016</a>)</span></summary>
+    <p>A VLAN <strong>divides</strong>: it splits one physical switch into several separate networks (broadcast domains), and traffic between them must go through a router. A VPN <strong>connects</strong>: it joins devices or offices that are far apart through an encrypted tunnel over the internet, so they act as if they were on the same network.</p>
+  </details>
+
+  <details class="recall">
+    <summary>Switch, router, access point, firewall: what does each one look at to decide where traffic goes? And why does a home "wireless router" count as several of them? <span class="hint">(<a href="0020-network-devices-switch-router-ap.html">lesson 0020</a>)</span></summary>
+    <p>Switch and access point: the destination <strong>MAC address</strong> (same network). Router: the <strong>IP address</strong> (between networks; your default gateway). Firewall: its <strong>rules</strong>, such as ports or applications. A home "wireless router" is a router, a small switch, an access point and a firewall in one box.</p>
+  </details>
+
+  <details class="recall">
+    <summary>Why does DHCP have to use UDP rather than TCP, and what are ports 67 and 68 for? <span class="hint">(<a href="0004-email-dns-dhcp-ports.html">lesson 0004</a>, <a href="0002-tcp-udp-ports.html">lesson 0002</a>)</span></summary>
+    <p>A device asking for an address doesn't have one yet, so it can't set up a TCP conversation; it just broadcasts a UDP "is there a DHCP server out there?" The server listens on <strong>67</strong>, the client on <strong>68</strong>.</p>
+  </details>
+
+  <details class="recall">
+    <summary>Name the box that terminates coax, a phone line and fiber. Then explain what "demarcation point" means for who you call when the internet is down. <span class="hint">(<a href="0021-poe-modems-ont-nic.html">lesson 0021</a>, <a href="0018-internet-connection-types.html">lesson 0018</a>)</span></summary>
+    <p>Coax: <strong>cable modem</strong> (DOCSIS). Phone line: <strong>DSL modem</strong>. Fiber: <strong>ONT</strong>. The ONT is the demarc: the provider owns everything up to and including it, you own what plugs into it. A fault on their side means you call the provider; on your side, it's yours to fix.</p>
+  </details>
+
+  <h2>Pace check</h2>
+  <div class="callout">
+    <span class="label">A+ Core 1: 12 of 63 videos covered (about 19%)</span>
+    <div class="meter"><span style="width:19%"></span></div>
+    <p>Fully covered so far: Assigning IP Addresses, Introduction to IP, Common Ports, Wireless Network Technologies, Network Services, DNS Configuration, DHCP Configuration, VLANs and VPNs, Network Types, Internet Connection Types, Network Tools, and Network Devices. Five of those were finished this week.</p>
+    <p><strong>What the calendar needs:</strong> the syllabus puts all new material in weeks 1–17 (Sep 27 – Jan 23), about <strong>3.7 videos a week</strong>. Today ends week 3, so you'd expect about 11. You're at 12: <strong>slightly ahead</strong>, by about one video. Three weeks in a row the gap has moved your way: one behind, then on pace, now one ahead.</p>
+    <p><strong>The trend:</strong> this week covered 5 videos in 6 daily lessons, above the 3.7 needed. The remaining 51 videos fit in the 14 weeks left before review starts at about 3.6 a week, so the February target holds with room to spare. The Networking block (objectives 2.1–2.8, planned through Oct 24) is essentially done a week early; the one open check is whether objective 2.6 (SOHO network configuration) has a video of its own beyond Assigning IP Addresses.</p>
+    <p>Nothing in the plan was changed. Next week's daily lessons will either close out 2.6 or move on in the course order. If the extra week holds, it's yours to spend: bank it for the hardware weeks, or keep it for extra review before the exam.</p>
+  </div>
+
+  <div class="callout source" id="src-messer">
+    <span class="label">Primary source: watch next</span>
+    <p>Professor Messer, <a href="https://www.professormesser.com/free-a-plus-training/220-1201/220-1201-video/220-1201-training-course/">Free CompTIA A+ 220-1201 course</a>. Rewatch the video behind whichever question you missed: VLANs and VPNs, Network Types, Internet Connection Types, Network Tools and Network Devices cover this week. Free.</p>
+  </div>
+
+  <div class="callout ask">
+    <span class="label">Questions?</span>
+    <p>Missed one and the explanation didn't settle it? Ask your teacher. Open Claude in the Teacher repo and ask, for example: <em>"In IT lesson 0022, question 1, how does a router relay DHCP for several VLANs to one server?"</em> Follow-up questions are part of the course.</p>
+  </div>
+</main>
+<nav class="page-footer">
+  <a href="0021-poe-modems-ont-nic.html">← Power, modems and the NIC</a>
+  <a href="../../index.html">Hub</a>
+  <span class="disabled">Next lesson: tomorrow →</span>
+</nav>
+</body>
+</html>
