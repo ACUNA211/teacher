@@ -1,0 +1,173 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Laptop Batteries, Keyboards, SSDs</title>
+<meta name="description" content="IT lesson 0023: the first half of A+ objective 1.1, laptop hardware. Lithium-ion batteries and how to read battery health, keyboard and key cap replacement, and upgrading a laptop from a hard drive to an SSD (form factors, clone vs. fresh install, BitLocker first).">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=JetBrains+Mono&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../assets/course.css">
+<script src="../../assets/quiz.js" defer></script>
+</head>
+<body class="track-it">
+<nav class="page-header">
+  <a class="home" href="../../index.html">Teacher hub</a>
+  <span>IT and certs</span>
+  <a href="../reference/glossary.html">Glossary</a>
+  <a href="../reference/hardware.html">Hardware cheat sheet</a>
+</nav>
+<main>
+  <p class="kicker">IT and certs · Lesson 0023 · A+ Core 1, objective 1.1</p>
+  <h1>Laptop batteries, keyboards and SSDs: the parts you'll actually swap</h1>
+  <p class="lede">About 10 minutes. Networking (objectives 2.1–2.8) is done, so today the course moves to <strong>mobile devices</strong>, starting with laptop hardware.<sup class="cite"><a href="#src-messer">[1]</a></sup> Laptops are cramped and built around their case, so only a few parts are commonly replaced. Today: the <strong>battery</strong>, the <strong>keyboard</strong> and the <strong>drive</strong>. The win: diagnose a dying battery from a report, and plan a hard-drive-to-SSD upgrade without losing anyone's apps.</p>
+
+  <div class="callout">
+    <span class="label">Why this matters at work</span>
+    <p>Company laptops are usually encrypted with <strong>BitLocker</strong>. A planned hardware or firmware change can make the laptop ask for its <strong>recovery key</strong> at the next boot. Microsoft's guidance: <strong>suspend BitLocker</strong> before planned work; the drive stays encrypted, and protection resumes on its own after a reboot.<sup class="cite"><a href="#src-bitlocker">[3]</a></sup> If the prompt appears anyway, the recovery key is often backed up to <strong>Microsoft Entra ID</strong> (or Active Directory), so a technician can look it up instead of the user losing the laptop.<sup class="cite"><a href="#src-bitlocker">[3]</a></sup></p>
+  </div>
+
+  <h2>Batteries: lithium-ion, and they wear out</h2>
+  <p>Laptops use two battery types: <strong>lithium-ion</strong> and <strong>lithium-ion polymer</strong>.<sup class="cite"><a href="#src-messer">[1]</a></sup> On some laptops the battery is <strong>modular</strong>: it slides out and a spare slides in. On most thin laptops it's <strong>built in</strong>, inside the case, and not meant to be swapped by the user.<sup class="cite"><a href="#src-messer">[1]</a></sup></p>
+  <p>Every battery loses capacity with age and charge cycles. Windows can show how much:<sup class="cite"><a href="#src-battery">[4]</a></sup></p>
+  <ul>
+    <li><strong>Design capacity</strong>: what the battery held when new.</li>
+    <li><strong>Full charge capacity</strong>: what it holds today.</li>
+  </ul>
+  <p>Divide the second by the first. A laptop at 40% of its design capacity will run well under half as long as it did new, and no setting will bring that back: the fix is a new battery.</p>
+
+  <h2>Keyboards and key caps</h2>
+  <p>The keyboard takes the most abuse (spills, crumbs, drops), so it's one of the most often replaced laptop parts.<sup class="cite"><a href="#src-utp">[2]</a></sup> Two sizes of repair:</p>
+  <ul>
+    <li><strong>One key cap</strong> popped off or broken: the cap clips onto a small hinge underneath, and a replacement cap can be clipped back on. The clips are fragile, so follow the manufacturer's instructions.<sup class="cite"><a href="#src-utp">[2]</a></sup></li>
+    <li><strong>Whole keyboard</strong> (several dead keys, liquid damage): the keyboard connects with a ribbon cable. On some models it lifts out from the top; on others it's built into the palm rest and the laptop has to come apart. Find the service manual first.</li>
+  </ul>
+  <p class="sidenote">Quick workaround while a part is on order: a USB or Bluetooth keyboard.</p>
+
+  <h2>Hard drive to SSD: the best upgrade a laptop gets</h2>
+  <p>An <strong>SSD</strong> has no moving parts and reads and writes far faster than a spinning hard drive, so swapping one in makes an old laptop feel new.<sup class="cite"><a href="#src-1101">[5]</a></sup> First, match the <strong>form factor</strong> and <strong>interface</strong> the laptop takes:<sup class="cite"><a href="#src-1101">[5]</a></sup><sup class="cite"><a href="#src-utp">[2]</a></sup></p>
+  <div class="table-wrap">
+  <table>
+    <thead><tr><th>Form factor</th><th>What it looks like</th><th>Notes</th></tr></thead>
+    <tbody>
+      <tr><td><strong>2.5-inch</strong></td><td>Small box, same size as a laptop hard drive</td><td>A 2.5-inch SATA SSD drops straight into a hard drive's bay. (Desktops use 3.5-inch.)</td></tr>
+      <tr><td><strong>M.2</strong></td><td>Bare circuit board, like a stick of gum</td><td>Plugs into a slot on the motherboard; most modern laptops use it.</td></tr>
+      <tr><td><strong>1.8-inch</strong></td><td>Smaller box</td><td>Older, rare; just recognize the name.</td></tr>
+    </tbody>
+  </table>
+  </div>
+  <p>Then decide how the data gets there. This is the <strong>migration</strong> choice:</p>
+  <ul>
+    <li><strong>Clone</strong> (image) the old drive onto the SSD: Windows, apps, settings and files all come across, and the user carries on as before. With only one drive bay, connect the SSD by a <strong>USB-to-SATA adapter</strong> or enclosure, clone, then swap.<sup class="cite"><a href="#src-clone">[6]</a></sup></li>
+    <li><strong>Fresh install</strong> on the SSD: a clean start, but apps must be reinstalled and files restored from a backup. In a managed company, this is often the easier path, since the apps and settings come back from device management.</li>
+  </ul>
+  <p>Either way, <strong>back up first</strong>.<sup class="cite"><a href="#src-clone">[6]</a></sup></p>
+
+  <div class="callout win">
+    <span class="label">Memory hook</span>
+    <p><strong>Battery: lithium-ion; full charge ÷ design = health.</strong> <strong>Keyboard: one cap clips, many keys means a new keyboard.</strong> <strong>SSD: 2.5-inch or M.2; clone to keep, install to start clean.</strong> <strong>BitLocker: suspend first.</strong></p>
+  </div>
+
+  <h2>Try it (2 minutes, laptop only)</h2>
+  <p>Create a battery health report.<sup class="cite"><a href="#src-battery">[4]</a></sup> In a terminal (Command Prompt or PowerShell):</p>
+<pre><code>powercfg /batteryreport /output "$env:USERPROFILE\Desktop\battery.html"</code></pre>
+  <p>(In Command Prompt, use <code>powercfg /batteryreport</code> alone; it saves <code>battery-report.html</code> in the current folder.) Open the file and find the <strong>Installed batteries</strong> table. Example (yours will differ):</p>
+<pre><code>DESIGN CAPACITY        50,000 mWh
+FULL CHARGE CAPACITY   41,500 mWh
+CYCLE COUNT            312</code></pre>
+  <p>41,500 ÷ 50,000 = <strong>83%</strong> of design capacity. A little wear, normal for a laptop a couple of years old. The report also shows recent usage and estimated battery life, which is useful evidence when someone says "my battery is terrible".</p>
+
+  <h2>Practice</h2>
+  <p>Answer from memory before scrolling back up.</p>
+
+  <section class="quiz">
+    <p class="q">A two-year-old laptop now lasts about an hour on battery. Its battery report shows design capacity 50,000 mWh and full charge capacity 21,000 mWh. What's the right fix?</p>
+    <ul class="choices">
+      <li><button class="choice">Reinstall Windows to reset it</button></li>
+      <li><button class="choice" data-correct>Replace the worn-out battery pack</button></li>
+      <li><button class="choice">Update the keyboard driver software</button></li>
+      <li><button class="choice">Swap the drive for an SSD</button></li>
+    </ul>
+    <div class="explain" hidden>21,000 ÷ 50,000 is 42%: the battery now holds well under half its original charge. That's physical wear in the cells, so only a new battery fixes it. Software and drive changes can't add capacity back.</div>
+  </section>
+
+  <section class="quiz">
+    <p class="q">After a laptop was dropped in a bag, one key cap popped off. The small hinge and the key's switch underneath look intact. What's the best fix?</p>
+    <ul class="choices">
+      <li><button class="choice">Replace the whole keyboard assembly right away</button></li>
+      <li><button class="choice">Reinstall the keyboard driver in Windows</button></li>
+      <li><button class="choice" data-correct>Clip on a replacement key cap</button></li>
+      <li><button class="choice">Use an external keyboard from now</button></li>
+    </ul>
+    <div class="explain" hidden>Key caps are replaceable one at a time: a new cap clips onto the intact hinge (carefully, following the manufacturer's instructions). Replacing the whole keyboard is for several dead keys or liquid damage. An external keyboard is a stopgap, not a fix.</div>
+  </section>
+
+  <section class="quiz">
+    <p class="q">A user wants their slow laptop upgraded from a hard drive to an SSD, keeping every app and file exactly as it is. The laptop has one drive bay. What's the plan?</p>
+    <ul class="choices">
+      <li><button class="choice">Install a fresh Windows on it</button></li>
+      <li><button class="choice">Copy only the Documents folder across</button></li>
+      <li><button class="choice">Add the SSD as second drive</button></li>
+      <li><button class="choice" data-correct>Clone the old drive onto it</button></li>
+    </ul>
+    <div class="explain" hidden>Cloning copies the whole drive, including Windows and installed apps, so nothing needs reinstalling. With one bay, connect the SSD through a USB-to-SATA adapter or enclosure, clone, then swap it in. A fresh install loses the apps; copying one folder loses everything else; there's no room for a second drive.</div>
+  </section>
+
+  <section class="quiz">
+    <p class="q">You're about to do planned hardware work on a BitLocker-encrypted company laptop. What avoids a recovery-key prompt at the next boot?</p>
+    <ul class="choices">
+      <li><button class="choice" data-correct>Suspend BitLocker protection before the work</button></li>
+      <li><button class="choice">Decrypt the drive and delete keys</button></li>
+      <li><button class="choice">Remove the device from Entra ID</button></li>
+      <li><button class="choice">Unplug the battery during the repair</button></li>
+    </ul>
+    <div class="explain" hidden>Suspending leaves the drive fully encrypted but lets it boot after the change; protection resumes on its own after a reboot (unless a reboot count was set). Decrypting is slow and unnecessary. Removing the device from Entra ID would break sign-in and management, and could make the backed-up recovery key harder to find.</div>
+  </section>
+  <p class="quiz-score" data-quiz-score></p>
+
+  <details class="recall">
+    <summary>From memory: which two numbers in a battery report tell you its health, and what are the two ways to move a user onto a new SSD? <span class="hint">(then click to check)</span></summary>
+    <p><strong>Full charge capacity ÷ design capacity.</strong> Migration: <strong>clone</strong> the old drive (everything comes across) or <strong>fresh install</strong> (clean start; reinstall apps, restore files). Back up first either way.</p>
+  </details>
+
+  <h2>Review: earlier lessons</h2>
+  <p>Spaced retrieval: pull these from memory first, then check.</p>
+
+  <details class="recall">
+    <summary>A small office's network slows to a crawl whenever someone copies a big file, and the closet has an old hub. Why does a switch fix it, and when would you need a <em>managed</em> switch? <span class="hint">(<a href="0020-network-devices-switch-router-ap.html">lesson 0020</a>, 3 days ago)</span></summary>
+    <p>A hub repeats every frame out <strong>every port</strong>; a switch learns which <strong>MAC address</strong> is on which port and sends frames only there. You need a <strong>managed</strong> switch for anything configurable, such as <strong>VLANs</strong>, traffic prioritization or monitoring.</p>
+  </details>
+
+  <details class="recall">
+    <summary>A remote worker on the company VPN says video calls and web browsing are slow, but only while connected. What's the difference between full tunnel and split tunnel, and which one helps here? <span class="hint">(<a href="0016-vlans-vpns.html">lesson 0016</a>, 7 days ago)</span></summary>
+    <p><strong>Full tunnel</strong>: <em>all</em> traffic goes through the VPN. <strong>Split tunnel</strong>: only company traffic does; the rest goes straight to the internet. Split tunnel takes the load of calls and browsing off the VPN (a policy decision, since that traffic then bypasses company controls).</p>
+  </details>
+
+  <details class="recall">
+    <summary>Bluetooth: what frequency band, what typical range, and what step must happen before a headset works? <span class="hint">(<a href="0009-bluetooth-nfc-rfid-fixed-wireless.html">lesson 0009</a>, 14 days ago)</span></summary>
+    <p><strong>2.4 GHz</strong>, about <strong>10 meters</strong>, and the devices must be <strong>paired</strong> first.</p>
+  </details>
+
+  <div class="callout source" id="src-messer">
+    <span class="label">Primary source: watch next</span>
+    <p>[1] Professor Messer, <a href="https://www.professormesser.com/free-a-plus-training/220-1201/220-1201-video/laptop-hardware-220-1201/">Laptop Hardware (220-1201)</a>. Watch the first half: battery technologies, keyboard and key cap replacement, and upgrading laptop drives to SSD. The rest (near-field communication, cameras and microphones) is the next lesson.</p>
+    <p id="src-utp">[2] Union Test Prep, <a href="https://uniontestprep.com/comptia-a-core-series-exam/study-guide/220-1101-mobile-devices/pages/1">Mobile devices study guide</a> (keyboards among the most replaced laptop parts; delicate key replacement; 2.5-inch, 1.8-inch and M.2 laptop drive form factors).</p>
+    <p id="src-bitlocker">[3] Microsoft, <a href="https://learn.microsoft.com/en-us/windows/security/operating-system-security/data-protection/bitlocker/recovery-overview">BitLocker recovery overview</a> (suspend protection for planned hardware or firmware changes; it resumes on reboot unless a reboot count is set; recovery passwords backed up to Microsoft Entra ID or AD DS).</p>
+    <p id="src-battery">[4] How-To Geek, <a href="https://www.howtogeek.com/217010/how-to-generate-a-battery-health-report-on-windows-8-or-windows-10/">How to generate a battery health report on Windows</a> (<code>powercfg /batteryreport</code>, design vs. full charge capacity).</p>
+    <p id="src-1101">[5] Professor Messer, <a href="https://www.professormesser.com/free-a-plus-training/220-1101/220-1101-video/220-1101-laptop-hardware/">Laptop Hardware (220-1101)</a> (the previous exam's version: 2.5-inch drives in laptops vs. 3.5-inch in desktops, SSD replacing a hard drive with the same form factor and interface, M.2).</p>
+    <p id="src-clone">[6] ITPro, <a href="https://www.itpro.com/operating-systems/microsoft-windows/361645/how-to-move-windows-11-from-a-hard-drive-to-an-ssd">How to migrate Windows 11 to an SSD</a> (USB-to-SATA adapter or enclosure for laptops; full backup before cloning).</p>
+  </div>
+
+  <div class="callout ask">
+    <span class="label">Questions?</span>
+    <p>Anything unclear? Ask your teacher. Open Claude in the Teacher repo and ask, for example: <em>"In IT lesson 0023, how do I tell whether a laptop takes a SATA or an NVMe M.2 SSD before I order one?"</em> Follow-up questions are part of the course.</p>
+  </div>
+</main>
+<nav class="page-footer">
+  <a href="0022-week-quiz-2026-10-17.html">← Weekly quiz: Oct 11 – Oct 16</a>
+  <a href="../../index.html">Hub</a>
+  <span class="disabled">Next lesson: tomorrow →</span>
+</nav>
+</body>
+</html>
