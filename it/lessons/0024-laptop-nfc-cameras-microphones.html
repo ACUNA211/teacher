@@ -1,0 +1,172 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Laptop NFC, Cameras, Microphones</title>
+<meta name="description" content="IT lesson 0024: the second half of A+ objective 1.1, laptop hardware. The laptop's NFC reader, built-in webcam and microphones, and a troubleshooting order for 'my camera doesn't work': shutter and keys, Windows privacy settings, the device itself, then company policy.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=JetBrains+Mono&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../assets/course.css">
+<script src="../../assets/quiz.js" defer></script>
+</head>
+<body class="track-it">
+<nav class="page-header">
+  <a class="home" href="../../index.html">Teacher hub</a>
+  <span>IT and certs</span>
+  <a href="../reference/glossary.html">Glossary</a>
+  <a href="../reference/hardware.html">Hardware cheat sheet</a>
+</nav>
+<main>
+  <p class="kicker">IT and certs · Lesson 0024 · A+ Core 1, objective 1.1</p>
+  <h1>NFC, cameras and microphones: the laptop's senses</h1>
+  <p class="lede">About 10 minutes. Yesterday covered the parts you swap: battery, keyboard, drive. Today finishes the laptop hardware video with the parts that <strong>sense</strong> the world: the <strong>NFC reader</strong>, the <strong>webcam</strong> and the <strong>microphones</strong>.<sup class="cite"><a href="#src-messer">[1]</a></sup> The win: a fixed order of checks for the most common ticket they cause, <em>"my camera (or mic) doesn't work in my meeting"</em>.</p>
+
+  <div class="callout">
+    <span class="label">Why this matters at work</span>
+    <p>On managed laptops, the camera can be switched off by <strong>policy</strong>, not just by the user. Intune can set the Windows <strong>Allow Camera</strong> setting to <em>Not allowed</em>, which stops every app from using the camera while the hardware stays in place.<sup class="cite"><a href="#src-intune">[4]</a></sup> When the Windows camera switches are greyed out with <em>"Some settings are managed by your organization"</em>, the fix isn't on the laptop: check which configuration policy the device gets.</p>
+  </div>
+
+  <h2>NFC: tap, don't wave</h2>
+  <p>You met <strong>near-field communication</strong> in <a href="0009-bluetooth-nfc-rfid-fixed-wireless.html">lesson 0009</a>: 13.56 MHz, a few centimeters of range. Some laptops build in an NFC reader, usually under a marked spot on the palm rest.<sup class="cite"><a href="#src-messer">[1]</a></sup> Typical uses:</p>
+  <ul>
+    <li><strong>Authentication</strong>: tap a badge, phone or security key to sign in. Microsoft's passwordless security keys (FIDO2) can connect over USB, Bluetooth or NFC.<sup class="cite"><a href="#src-fido">[5]</a></sup></li>
+    <li><strong>Pairing</strong>: tap a phone or headset to start a Bluetooth pairing without typing codes.</li>
+    <li><strong>Payments</strong>: the same "tap" idea as a phone at a store terminal.<sup class="cite"><a href="#src-messer">[1]</a></sup></li>
+  </ul>
+  <p>Range is about <strong>4 cm</strong>, so "it doesn't read" usually means the card or phone wasn't held flat on the mark long enough.</p>
+
+  <h2>Cameras and microphones</h2>
+  <p>The <strong>webcam</strong> sits in the bezel above the screen; one or more <strong>microphones</strong> sit beside it or along the edges.<sup class="cite"><a href="#src-messer">[1]</a></sup> Three privacy features to recognize:</p>
+  <ul>
+    <li><strong>Privacy shutter</strong>: a small slider that physically covers the lens. Closed, the camera still "works", but every app shows a black image.<sup class="cite"><a href="#src-shutter">[2]</a></sup></li>
+    <li><strong>Function keys</strong>: many laptops have a key (often with a slashed camera or microphone icon) that switches the camera or mic off in hardware.</li>
+    <li><strong>Activity light</strong>: a small LED next to the lens that turns on while the camera is in use.</li>
+  </ul>
+  <p>One more: <strong>Windows Hello face sign-in</strong> needs an <strong>infrared (IR)</strong> camera. A normal webcam works fine in meetings but can't do Hello face; if <em>Facial recognition</em> isn't offered in Sign-in options, the laptop has no IR camera.<sup class="cite"><a href="#src-hello">[6]</a></sup></p>
+
+  <h2>"My camera doesn't work": check in this order</h2>
+  <p>Go from the physical to the managed, cheapest check first:</p>
+  <div class="table-wrap">
+  <table>
+    <thead><tr><th>#</th><th>Layer</th><th>What to check</th></tr></thead>
+    <tbody>
+      <tr><td>1</td><td><strong>Physical</strong></td><td>Shutter open? Camera/mic function key on? (Black image = shutter.)</td></tr>
+      <tr><td>2</td><td><strong>Windows privacy</strong></td><td>Settings → Privacy &amp; security → Camera (or Microphone): <em>Camera access</em> on, the app allowed. Desktop programs have their own switch: <em>Let desktop apps access your camera</em>.<sup class="cite"><a href="#src-privacy">[3]</a></sup></td></tr>
+      <tr><td>3</td><td><strong>Device</strong></td><td>Device Manager or <code>Get-PnpDevice</code>: is the camera present and <code>OK</code>, not <code>Error</code> (disabled or driver problem)?<sup class="cite"><a href="#src-pnp">[7]</a></sup></td></tr>
+      <tr><td>4</td><td><strong>Policy</strong></td><td>Switches greyed out? A management policy (such as Intune's Allow Camera) is blocking it.<sup class="cite"><a href="#src-intune">[4]</a></sup></td></tr>
+    </tbody>
+  </table>
+  </div>
+  <p class="sidenote">Also ask: does it work in the Windows Camera app? If yes, the problem is the meeting app's own device setting (it picked the wrong camera or mic), not the laptop.</p>
+
+  <div class="callout win">
+    <span class="label">Memory hook</span>
+    <p><strong>NFC: tap within 4 cm, for sign-in, pairing, paying.</strong> <strong>Camera and mic: shutter → privacy → device → policy.</strong> <strong>Hello face needs infrared.</strong></p>
+  </div>
+
+  <h2>Try it (2 minutes)</h2>
+  <p>List the cameras Windows sees. In PowerShell:<sup class="cite"><a href="#src-pnp">[7]</a></sup></p>
+<pre><code>Get-PnpDevice -PresentOnly -Class Camera,Image</code></pre>
+  <p>Example (yours will differ):</p>
+<pre><code>Status  Class   FriendlyName
+------  -----   ------------
+OK      Camera  Integrated Camera
+OK      Camera  Integrated IR Camera</code></pre>
+  <p>Two cameras, one of them <strong>IR</strong>: this laptop can do Windows Hello face. Status <code>OK</code> means the device and driver are fine (newer drivers use the <code>Camera</code> class, older ones <code>Image</code>). Then open <strong>Settings → Privacy &amp; security → Camera</strong> and look at which apps have used it recently.</p>
+
+  <h2>Practice</h2>
+  <p>Answer from memory before scrolling back up.</p>
+
+  <section class="quiz">
+    <p class="q">A user says their camera shows only a black picture in every app. The activity light comes on, and Device Manager shows the camera working. What's the likely cause?</p>
+    <ul class="choices">
+      <li><button class="choice">The camera driver is missing</button></li>
+      <li><button class="choice" data-correct>The privacy shutter is closed</button></li>
+      <li><button class="choice">The NFC reader is disabled</button></li>
+      <li><button class="choice">The battery needs a replacement</button></li>
+    </ul>
+    <div class="explain" hidden>A black image with the camera clearly running (light on, device OK) means the lens is covered. A missing driver would make the camera disappear or show an error, not show black. NFC and the battery have nothing to do with the picture.</div>
+  </section>
+
+  <section class="quiz">
+    <p class="q">A laptop's microphone works in the built-in Voice Recorder app but not in a desktop conferencing program installed from an .exe. What should you check first?</p>
+    <ul class="choices">
+      <li><button class="choice">Replace the laptop's built-in microphone hardware</button></li>
+      <li><button class="choice">Reinstall the sound card's audio driver</button></li>
+      <li><button class="choice">Disable the laptop's NFC reader now</button></li>
+      <li><button class="choice" data-correct>Turn on desktop apps microphone access</button></li>
+    </ul>
+    <div class="explain" hidden>The mic hardware and driver are fine: another app records. Windows has a separate privacy switch for traditional desktop programs ("Let desktop apps access your microphone"), so check that layer before touching hardware or drivers.</div>
+  </section>
+
+  <section class="quiz">
+    <p class="q">A laptop has an NFC reader for badge sign-in. A user holds their badge a hand's width above the palm rest and nothing happens. What do you tell them?</p>
+    <ul class="choices">
+      <li><button class="choice" data-correct>Hold it against the mark</button></li>
+      <li><button class="choice">Pair it over Bluetooth first</button></li>
+      <li><button class="choice">Turn on the Wi-Fi radio</button></li>
+      <li><button class="choice">Restart with BitLocker suspended now</button></li>
+    </ul>
+    <div class="explain" hidden>NFC works within about 4 cm, so a hand's width is too far: the badge has to touch (or nearly touch) the marked reader. NFC doesn't need Bluetooth pairing or Wi-Fi, and BitLocker has nothing to do with it.</div>
+  </section>
+
+  <section class="quiz">
+    <p class="q">On a company laptop, the camera works in no app, Device Manager shows it OK, and the camera switches in Windows Settings are greyed out as managed by the organization. What's the cause?</p>
+    <ul class="choices">
+      <li><button class="choice">The camera hardware has failed</button></li>
+      <li><button class="choice">The privacy shutter was closed</button></li>
+      <li><button class="choice" data-correct>A management policy blocks it</button></li>
+      <li><button class="choice">The webcam lacks infrared sensing</button></li>
+    </ul>
+    <div class="explain" hidden>Greyed-out settings "managed by your organization" point to device management: for example an Intune policy with Allow Camera set to Not allowed. The hardware is fine (device OK). A shutter would show black, not block apps. Infrared only matters for Windows Hello face sign-in.</div>
+  </section>
+  <p class="quiz-score" data-quiz-score></p>
+
+  <details class="recall">
+    <summary>From memory: say the four layers to check, in order, when a camera or mic doesn't work. Then: what kind of camera does Windows Hello face sign-in need? <span class="hint">(then click to check)</span></summary>
+    <p><strong>Physical</strong> (shutter, function key) → <strong>Windows privacy settings</strong> (including the desktop-apps switch) → <strong>device</strong> (Device Manager / <code>Get-PnpDevice</code>, status OK) → <strong>policy</strong> (greyed out = managed). Hello face needs an <strong>infrared (IR)</strong> camera.</p>
+  </details>
+
+  <h2>Review: earlier lessons</h2>
+  <p>Spaced retrieval: pull these from memory first, then check.</p>
+
+  <details class="recall">
+    <summary>A new ceiling access point needs power, but the closet switch has no PoE. What small device fixes it, and is that an endspan or a midspan? <span class="hint">(<a href="0021-poe-modems-ont-nic.html">lesson 0021</a>, 3 days ago)</span></summary>
+    <p>A <strong>PoE injector</strong>, placed between the normal switch port and the access point. That's a <strong>midspan</strong>; a PoE switch powering its own ports is an <strong>endspan</strong>.</p>
+  </details>
+
+  <details class="recall">
+    <summary>Servers need storage that behaves like a local disk, on its own fast network. Is that a SAN or a NAS, and what's the difference? <span class="hint">(<a href="0017-network-types.html">lesson 0017</a>, 7 days ago)</span></summary>
+    <p>A <strong>SAN</strong>: <strong>block-level</strong> storage the server treats like its own disk, on an isolated high-speed network. A <strong>NAS</strong> shares <strong>files</strong> over the normal network (SMB or NFS).</p>
+  </details>
+
+  <details class="recall">
+    <summary>Name the three A's of AAA in order, and where you'd find the third one for cloud sign-ins. <span class="hint">(<a href="0010-server-roles.html">lesson 0010</a>, 14 days ago)</span></summary>
+    <p><strong>Authentication</strong> (who are you?), <strong>authorization</strong> (what may you use?), <strong>accounting</strong> (the record of what happened). In Microsoft Entra ID, accounting is the <strong>sign-in logs</strong>.</p>
+  </details>
+
+  <div class="callout source" id="src-messer">
+    <span class="label">Primary source: watch next</span>
+    <p>[1] Professor Messer, <a href="https://www.professormesser.com/free-a-plus-training/220-1201/220-1201-video/laptop-hardware-220-1201/">Laptop Hardware (220-1201)</a>. Watch the second half: near-field communication, and laptop cameras and microphones. That finishes the video.</p>
+    <p id="src-shutter">[2] Direction Forward, <a href="https://directionforward.notion.site/Webcam-privacy-shutters-11868b5c0d538055af3efca94410cc1d">Webcam privacy shutters</a> (a closed shutter stops the webcam from showing an image).</p>
+    <p id="src-privacy">[3] Eleven Forum, <a href="https://www.elevenforum.com/t/enable-or-disable-apps-access-to-camera-in-windows-11.17140/">Enable or disable apps access to camera in Windows 11</a> (Camera access, Let apps access your camera, Let desktop apps access your camera; the microphone page works the same way).</p>
+    <p id="src-intune">[4] Microsoft Learn, <a href="https://learn.microsoft.com/en-us/mem/intune/configuration/device-restrictions-configure">Configure device restriction settings in Microsoft Intune</a> (allow or block the camera); the Windows setting is the Policy CSP <code>Camera/AllowCamera</code>.</p>
+    <p id="src-fido">[5] Microsoft Learn, <a href="https://learn.microsoft.com/en-us/entra/identity/authentication/how-to-enable-passkey-fido2">Enable passkeys (FIDO2) for Microsoft Entra ID</a> (security keys over USB, Bluetooth or NFC).</p>
+    <p id="src-hello">[6] Microsoft Q&amp;A, <a href="https://learn.microsoft.com/answers/a/12895334">Why is Windows Hello facial recognition greyed out?</a> (face sign-in requires a compatible infrared camera; a standard webcam isn't enough).</p>
+    <p id="src-pnp">[7] Microsoft PowerShell docs, <a href="https://learn.microsoft.com/en-us/powershell/module/pnpdevice/get-pnpdevice">Get-PnpDevice</a> (lists Plug and Play devices; filter by class, status OK/Error).</p>
+  </div>
+
+  <div class="callout ask">
+    <span class="label">Questions?</span>
+    <p>Anything unclear? Ask your teacher. Open Claude in the Teacher repo and ask, for example: <em>"In IT lesson 0024, how would I find which Intune policy is blocking a laptop's camera?"</em> Follow-up questions are part of the course.</p>
+  </div>
+</main>
+<nav class="page-footer">
+  <a href="0023-laptop-batteries-keyboards-ssd.html">← Laptop batteries, keyboards and SSDs</a>
+  <a href="../../index.html">Hub</a>
+  <span class="disabled">Next lesson: tomorrow →</span>
+</nav>
+</body>
+</html>

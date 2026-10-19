@@ -1,7 +1,7 @@
 /* Hub data. The teacher updates this file after every lesson; index.html renders it.
    Keep it free of personal data: the site is public. */
 window.HUB = {
-  updated: "2026-10-18",
+  updated: "2026-10-19",
   tracks: [
     {
       id: "it", name: "IT and certs", folder: "it", cls: "track-it", status: "active",
@@ -140,6 +140,11 @@ window.HUB = {
       track: "it", num: "0023", date: "2026-10-18", covers: 0,
       title: "Laptop batteries, keyboards and SSDs: the parts you'll actually swap",
       path: "it/lessons/0023-laptop-batteries-keyboards-ssd.html"
+    },
+    {
+      track: "it", num: "0024", date: "2026-10-19", covers: 1,
+      title: "NFC, cameras and microphones: the laptop's senses",
+      path: "it/lessons/0024-laptop-nfc-cameras-microphones.html"
     },
     {
       track: "app", num: "0001", date: "2026-09-28", covers: 0,

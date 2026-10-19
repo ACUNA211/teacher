@@ -14,7 +14,7 @@
 <main>
   <p class="kicker">IT and certs · Reference</p>
   <h1>Hardware cheat sheet</h1>
-  <p class="lede">Laptop and mobile hardware facts worth looking up later. From lesson <a href="../lessons/0023-laptop-batteries-keyboards-ssd.html">0023</a>.</p>
+  <p class="lede">Laptop and mobile hardware facts worth looking up later. From lessons <a href="../lessons/0023-laptop-batteries-keyboards-ssd.html">0023</a> and <a href="../lessons/0024-laptop-nfc-cameras-microphones.html">0024</a>.</p>
 
   <h2>Laptop parts you'll replace (objective 1.1)</h2>
   <div class="table-wrap">
@@ -24,6 +24,9 @@
       <tr><td>Battery</td><td>Lithium-ion or lithium-ion polymer; modular (removable) or built in</td><td>Health = full charge capacity ÷ design capacity; low = replace</td></tr>
       <tr><td>Keyboard</td><td>One key cap clips back on; many dead keys or a spill = whole keyboard (ribbon cable)</td><td>Fragile clips; follow the service manual</td></tr>
       <tr><td>Drive</td><td>2.5-inch (SATA, same bay as a laptop HDD), M.2 (board in a slot), 1.8-inch (old)</td><td>Match form factor and interface before ordering</td></tr>
+      <tr><td>NFC reader</td><td>13.56 MHz, about 4 cm; tap a badge, phone or security key to sign in, pair or pay</td><td>"Doesn't read" = not held flat on the mark</td></tr>
+      <tr><td>Webcam</td><td>In the screen bezel; privacy shutter, function key, activity LED</td><td>Black image = shutter closed; Windows Hello face needs an IR camera</td></tr>
+      <tr><td>Microphones</td><td>Beside the webcam or along the edges; mute key on many laptops</td><td>Same privacy settings as the camera, own Settings page</td></tr>
     </tbody>
   </table>
   </div>
@@ -40,16 +43,30 @@
   </div>
   <p>Back up first. On a BitLocker laptop, <strong>suspend BitLocker</strong> before planned hardware or firmware work; recovery keys are often backed up to Microsoft Entra ID or AD.</p>
 
+  <h2>Camera or mic not working: check in order</h2>
+  <div class="table-wrap">
+  <table>
+    <thead><tr><th>#</th><th>Layer</th><th>Check</th></tr></thead>
+    <tbody>
+      <tr><td>1</td><td>Physical</td><td>Shutter open, camera/mic function key on</td></tr>
+      <tr><td>2</td><td>Windows privacy</td><td>Settings → Privacy &amp; security → Camera / Microphone; app allowed; <em>Let desktop apps access…</em> on</td></tr>
+      <tr><td>3</td><td>Device</td><td>Device Manager or <code>Get-PnpDevice</code>: present, status OK</td></tr>
+      <tr><td>4</td><td>Policy</td><td>Greyed out "managed by your organization" = MDM policy (Intune Allow Camera / CSP <code>Camera/AllowCamera</code>)</td></tr>
+    </tbody>
+  </table>
+  </div>
+
   <h2>Commands (Windows)</h2>
   <div class="table-wrap">
   <table>
     <tbody>
       <tr><td><code>powercfg /batteryreport</code></td><td>HTML battery report: design vs. full charge capacity, cycle count, usage history. Add <code>/output path</code> to choose where it's saved</td></tr>
       <tr><td><code>Suspend-BitLocker -MountPoint "C:" -RebootCount 1</code></td><td>PowerShell (admin): suspend BitLocker for one reboot before planned hardware work; <code>manage-bde -protectors -disable C:</code> also works</td></tr>
+      <tr><td><code>Get-PnpDevice -PresentOnly -Class Camera,Image</code></td><td>PowerShell: list cameras Windows sees and their status (OK, Error); an "IR Camera" entry means Windows Hello face is possible</td></tr>
     </tbody>
   </table>
   </div>
-  <p class="sidenote">Sources: <a href="https://www.professormesser.com/free-a-plus-training/220-1201/220-1201-video/laptop-hardware-220-1201/">Professor Messer, Laptop Hardware</a> · <a href="https://learn.microsoft.com/en-us/windows/security/operating-system-security/data-protection/bitlocker/recovery-overview">Microsoft, BitLocker recovery overview</a> · <a href="https://learn.microsoft.com/en-us/powershell/module/bitlocker/suspend-bitlocker">Microsoft Learn, Suspend-BitLocker</a> · <a href="https://www.howtogeek.com/217010/how-to-generate-a-battery-health-report-on-windows-8-or-windows-10/">How-To Geek, battery report</a></p>
+  <p class="sidenote">Sources: <a href="https://www.professormesser.com/free-a-plus-training/220-1201/220-1201-video/laptop-hardware-220-1201/">Professor Messer, Laptop Hardware</a> · <a href="https://learn.microsoft.com/en-us/windows/security/operating-system-security/data-protection/bitlocker/recovery-overview">Microsoft, BitLocker recovery overview</a> · <a href="https://learn.microsoft.com/en-us/powershell/module/bitlocker/suspend-bitlocker">Microsoft Learn, Suspend-BitLocker</a> · <a href="https://learn.microsoft.com/en-us/mem/intune/configuration/device-restrictions-configure">Microsoft Learn, Intune device restrictions</a> · <a href="https://learn.microsoft.com/en-us/powershell/module/pnpdevice/get-pnpdevice">Microsoft Learn, Get-PnpDevice</a> · <a href="https://www.howtogeek.com/217010/how-to-generate-a-battery-health-report-on-windows-8-or-windows-10/">How-To Geek, battery report</a></p>
 </main>
 </body>
 </html>
