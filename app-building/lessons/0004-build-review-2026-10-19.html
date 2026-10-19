@@ -1,0 +1,175 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Components Are Functions</title>
+<meta name="description" content="App building lesson 0004, build review for 2026-10-19: how the Info popover in two-player-bg-finder is a function that takes one props object, how JSX children become a prop, and why every copy of a component gets its own state.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=JetBrains+Mono&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../assets/course.css">
+<script src="../../assets/quiz.js" defer></script>
+</head>
+<body class="track-app">
+<nav class="page-header">
+  <a class="home" href="../../index.html">Teacher hub</a>
+  <span>App building</span>
+  <a href="../reference/glossary.html">Glossary</a>
+</nav>
+<main>
+  <p class="kicker">App building · Lesson 0004 · Build review, week of 2026-10-12</p>
+  <h1>Components are functions: props and children in the Info popover</h1>
+  <p class="lede">About 10 minutes. By the end you can read a component's signature in Board Games for Two, say which value goes into which prop when you see <code>&lt;Info ...&gt;...&lt;/Info&gt;</code>, and predict what TypeScript and the tests say when a prop goes missing.</p>
+
+  <div class="callout">
+    <span class="label">What got built this week</span>
+    <p>Nothing new in <a href="https://github.com/ACUNA211/two-player-bg-finder">two-player-bg-finder</a>: the last commit is still <a href="https://github.com/ACUNA211/two-player-bg-finder/commit/3a77ac7">3a77ac7</a> (2026-09-26). So we read existing code again. Three lessons in, we've used components without ever asking what one <em>is</em>. The smallest one in the app is a good place to ask: <a href="https://github.com/ACUNA211/two-player-bg-finder/blob/3a77ac7/web/src/GamesTable.tsx#L32-L45"><code>Info</code> in <code>web/src/GamesTable.tsx</code></a>, the little popover behind every Two-player score. It came in <a href="https://github.com/ACUNA211/two-player-bg-finder/commit/248ed69">248ed69</a> ("score popovers").</p>
+  </div>
+
+  <h2>1. A component is a function that takes one object</h2>
+  <p>Here is the whole component:</p>
+<pre><code>export function Info(<span class="hl">{ label, children, name }: { label: ReactNode; children: ReactNode; name?: string }</span>) {
+  const [open, setOpen] = useState(false);
+  return (
+    &lt;span className={`info${open ? " open" : ""}`}&gt;
+      &lt;button type="button" aria-label={name} aria-expanded={open}
+              onClick={() =&gt; setOpen(!open)} onBlur={() =&gt; setOpen(false)}&gt;
+        {label}
+      &lt;/button&gt;
+      &lt;span role="tooltip" className="info-pop"&gt;{children}&lt;/span&gt;
+    &lt;/span&gt;
+  );
+}</code></pre>
+  <p>Strip away the JSX and it's an ordinary function: it takes <strong>one</strong> argument, an object called the <em>props</em>, and returns a description of what to draw.<sup class="cite"><a href="#src-props">[1]</a></sup> The name starts with a capital letter on purpose: that's how JSX tells your <code>&lt;Info&gt;</code> apart from a built-in tag like <code>&lt;span&gt;</code>.<sup class="cite"><a href="#src-first">[2]</a></sup></p>
+  <p>The highlighted parameter packs two things into one line. Read it from the colon:</p>
+  <ul>
+    <li><strong>After the colon, the type</strong>: <code>{ label: ReactNode; children: ReactNode; name?: string }</code>. An inline object type, like a <code>type Game = {...}</code> from lesson 0001 that was never given a name.</li>
+    <li><strong>Before the colon, destructuring</strong>: <code>{ label, children, name }</code> pulls the three fields out into local variables. It's the object version of the <code>const [a, b] = ...</code> you saw in lesson 0003.<sup class="cite"><a href="#src-mdn">[3]</a></sup></li>
+    <li><code>name?: string</code>: the <code>?</code> makes the prop <em>optional</em>. A caller may leave it out, and inside the function it's then <code>undefined</code>.<sup class="cite"><a href="#src-ts">[4]</a></sup></li>
+    <li><code>ReactNode</code> means "anything React can draw". In the installed <code>@types/react</code> it's a union: an element, a <code>string</code>, a <code>number</code>, a <code>boolean</code>, <code>null</code>, <code>undefined</code>, or a list of those, and a few rarer cases.</li>
+  </ul>
+  <p>In C# terms:</p>
+  <table>
+    <thead><tr><th>TypeScript / React</th><th>Closest C#</th></tr></thead>
+    <tbody>
+      <tr><td><code>function Info(props: {...})</code></td><td><code>static Node Info(InfoProps props)</code> with a record parameter</td></tr>
+      <tr><td><code>name?: string</code></td><td><code>string? Name = null</code> (an optional parameter)</td></tr>
+      <tr><td><code>ReactNode</code></td><td>roughly <code>object</code>, limited to things the UI can render</td></tr>
+      <tr><td><code>{ label, children, name }</code></td><td><code>var (label, children, name) = props;</code> with a <code>Deconstruct</code> method</td></tr>
+    </tbody>
+  </table>
+
+  <h2>2. Calling it: attributes and children become props</h2>
+  <p>You never call <code>Info(...)</code> yourself. You write JSX, and React calls the function. Here's the Two-player score cell:</p>
+<pre><code>&lt;Info <span class="hl">label={fixed(1)(g.score)}</span> <span class="hl">name={`Two-player score ${fixed(1)(g.score)}: show breakdown`}</span>&gt;
+  <span class="hl">Poll at 2 beats {pct(g.poll_pct)} of games · Geek rating beats {pct(g.geek_pct)}</span>
+&lt;/Info&gt;</code></pre>
+  <p>Each attribute becomes a field of the props object. Whatever sits <strong>between</strong> the opening and closing tags becomes one more field, named <code>children</code>.<sup class="cite"><a href="#src-props">[1]</a></sup> So this JSX hands <code>Info</code> roughly <code>{ label: "99.9", name: "Two-player score 99.9: show breakdown", children: [...] }</code>. Two bits of syntax to read:</p>
+  <ul>
+    <li><code>{ }</code> in JSX means "evaluate this JavaScript" (lesson 0003). A plain <code>"..."</code> passes a fixed string, as in <code>label="ⓘ"</code> on the column header.</li>
+    <li><code>`Two-player score ${...}`</code> with backticks is a <em>template literal</em>: C#'s <code>$"Two-player score {...}"</code>.<sup class="cite"><a href="#src-mdn-tl">[5]</a></sup> The same trick builds the class name: <code>`info${open ? " open" : ""}`</code> gives <code>"info"</code> or <code>"info open"</code>.</li>
+  </ul>
+  <p>The compiler checks every one of these calls against the props type. I added a call with no <code>label</code> and ran <code>npx tsc -b</code>:</p>
+<pre><code>error TS2741: Property 'label' is missing in type '{ name: string; children: string; }'
+  but required in type '{ label: ReactNode; children: ReactNode; name?: string | undefined; }'.</code></pre>
+  <p>Look at the left side of that message: <code>children: string</code>. The text <code>hi</code> I'd put between the tags really did arrive as a prop called <code>children</code>. The message is the proof of this section.</p>
+
+  <h2>3. Each copy gets its own state</h2>
+  <p><code>Info</code> calls <code>useState(false)</code>. With 100 rows on a page there are more than 100 <code>Info</code>s on screen, and each one has its <strong>own</strong> <code>open</code>. State belongs to one place in the tree, not to the function.<sup class="cite"><a href="#src-state">[6]</a></sup> Think C# instances: the function is the class, each <code>&lt;Info&gt;</code> on screen is an instance, and <code>open</code> is an instance field. Tap row 1's score and only row 1's popover opens.</p>
+  <p>What does <code>open</code> actually do? It adds the <code>open</code> class, and the CSS in <code>index.css</code> does the rest:</p>
+<pre><code>.info-pop { display: none; ... }
+.info:hover .info-pop, .info.open .info-pop { display: block; }</code></pre>
+  <p>So a mouse gets the popover from CSS <code>:hover</code> alone, with no JavaScript. The state is for touch screens and keyboards, where there is no hover: tap to toggle, and <code>onBlur</code> (focus leaves the button) closes it. <code>aria-expanded={open}</code> tells a screen reader whether it's showing, and <code>aria-label={name}</code> gives the button a readable name, which is also how the tests find it.</p>
+
+  <div class="callout">
+    <span class="label">The big idea</span>
+    <p>A component is a function from <strong>props</strong> (one object, typed like any parameter) to UI. JSX attributes fill the props, and the content between the tags arrives as <code>children</code>. TypeScript checks every call site, just as C# checks method arguments. State lives in each <em>copy</em> on screen, not in the function, so reusable pieces like <code>Info</code> stay independent.</p>
+  </div>
+
+  <h2>Practice</h2>
+  <section class="quiz">
+    <p class="q">In <code>Info</code>'s props type, what does the <code>?</code> in <code>name?: string</code> mean?</p>
+    <ul class="choices">
+      <li><button class="choice">The name may be any type at all</button></li>
+      <li><button class="choice" data-correct>Callers may leave the name prop out</button></li>
+      <li><button class="choice">The name gets checked only at run time</button></li>
+      <li><button class="choice">React fills the name in by itself</button></li>
+    </ul>
+    <div class="explain" hidden><code>?</code> marks an optional property: if the caller omits it, it's <code>undefined</code> inside the function, like a C# optional parameter defaulting to <code>null</code>. It's still a <code>string</code> when given, and the check still happens at compile time (types are erased at run time, lesson 0001).</div>
+  </section>
+
+  <section class="quiz">
+    <p class="q">Someone writes <code>&lt;Info name="x"&gt;hi&lt;/Info&gt;</code> somewhere in the app. What does <code>npm run build</code> do?</p>
+    <ul class="choices">
+      <li><button class="choice">Builds, and the button shows "hi"</button></li>
+      <li><button class="choice">Builds, and the button shows nothing</button></li>
+      <li><button class="choice" data-correct>Fails, because tsc wants a label prop</button></li>
+      <li><button class="choice">Fails, because children must be an element</button></li>
+    </ul>
+    <div class="explain" hidden><code>build</code> runs <code>tsc -b</code> first, and <code>label</code> has no <code>?</code>, so it's required: error TS2741, "Property 'label' is missing". I tried it. <code>"hi"</code> is fine as <code>children</code>, because a <code>string</code> is a <code>ReactNode</code>.</div>
+  </section>
+
+  <section class="quiz">
+    <p class="q">What breaks if we replace <code>{children}</code> inside <code>Info</code> with <code>{null}</code>?</p>
+    <ul class="choices">
+      <li><button class="choice">tsc fails because children is unused now</button></li>
+      <li><button class="choice">Every test in GamesTable.test.tsx now fails</button></li>
+      <li><button class="choice">Only the header ⓘ popover goes blank</button></li>
+      <li><button class="choice" data-correct>Every popover empties and one test fails</button></li>
+    </ul>
+    <div class="explain" hidden>All <code>Info</code>s share the one function, so every popover (score breakdowns, poll bars, the header ⓘ) shows an empty box. An unused variable isn't a type error here. I tried it: only "tapping a score shows its breakdown" fails, because it's the one test that looks for the popover's text. The other 22 still pass.</div>
+  </section>
+
+  <section class="quiz">
+    <p class="q">On a phone, you tap the score in row 1 and its breakdown opens. What happens to row 2's popover?</p>
+    <ul class="choices">
+      <li><button class="choice" data-correct>It stays closed, since it has its own state</button></li>
+      <li><button class="choice">It opens too, since they share one function</button></li>
+      <li><button class="choice">It opens too, since they share the CSS class</button></li>
+      <li><button class="choice">It closes, then reopens after the next render</button></li>
+    </ul>
+    <div class="explain" hidden>Each <code>&lt;Info&gt;</code> on screen keeps its own <code>open</code>. Sharing a function doesn't share state, just as two instances of a C# class don't share instance fields. The CSS rule needs <code>.info.open</code> on <em>that</em> span, and only row 1's span got the class.</div>
+  </section>
+  <p class="quiz-score" data-quiz-score></p>
+
+  <h2>Try it in your copy (5 minutes)</h2>
+  <ol>
+    <li>In your local <code>two-player-bg-finder</code>, <code>cd web</code>, then <code>git pull</code> and <code>npm install</code> if you haven't.</li>
+    <li>Run <code>npx vitest run src/GamesTable.test.tsx</code>. All 10 tests should pass.</li>
+    <li>Open <code>src/GamesTable.tsx</code>, find the header popover (around line 160): <code>&lt;Info label="ⓘ" name="How the Two-player score is calculated"&gt;</code>. Delete the <code>name="..."</code> attribute.</li>
+    <li><strong>Predict first</strong>: does <code>npx tsc -b</code> pass? Does the test file pass? Then run both.</li>
+    <li>Undo it: <code>git checkout src/GamesTable.tsx</code>.</li>
+  </ol>
+  <details class="recall">
+    <summary>What should you see? <span class="hint">(after trying it)</span></summary>
+    <p><code>tsc</code> passes: <code>name</code> is optional, so leaving it out is legal. But one test fails: <em>Unable to find an accessible element with the role "button" and name "How the Two-player score is calculated"</em>. Without <code>aria-label</code> the button's accessible name is just "ⓘ", so a screen reader user, and the test, can't tell what it's for. Types check that calls are <em>allowed</em>; tests check that they're <em>right</em>. You need both.</p>
+  </details>
+
+  <details class="recall">
+    <summary>Spaced review from lesson 0001: TypeScript caught a missing <code>label</code> at build time. Would it catch <code>games.json</code> losing a field that <code>types.ts</code> still lists? <span class="hint">(answer, then click)</span></summary>
+    <p>No. <code>tsc</code> checks your <em>code</em> against the types: every <code>&lt;Info&gt;</code> call is code, so it gets checked. <code>games.json</code> is data that arrives at run time through <code>fetch</code>, after the types have been erased. The build passes and the problem shows up in the browser as <code>undefined</code>.</p>
+  </details>
+
+  <div class="callout source" id="src-props">
+    <span class="label">Primary source: read next</span>
+    <p>[1] react.dev, <a href="https://react.dev/learn/passing-props-to-a-component">Passing Props to a Component</a>. Read it all, especially "Passing JSX as children". About 15 minutes, with sandboxes to edit.</p>
+    <p id="src-first">[2] react.dev, <a href="https://react.dev/learn/your-first-component">Your First Component</a> (why component names start with a capital letter).</p>
+    <p id="src-mdn">[3] MDN Web Docs, <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Destructuring">Destructuring</a> (object destructuring, including in function parameters).</p>
+    <p id="src-ts">[4] TypeScript Handbook, <a href="https://www.typescriptlang.org/docs/handbook/2/objects.html#optional-properties">Object Types: optional properties</a>. See also react.dev, <a href="https://react.dev/learn/typescript">Using TypeScript</a>, for typing props and <code>ReactNode</code>.</p>
+    <p id="src-mdn-tl">[5] MDN Web Docs, <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Template_literals">Template literals</a>.</p>
+    <p id="src-state">[6] react.dev, <a href="https://react.dev/learn/state-a-components-memory">State: A Component's Memory</a> ("State is isolated and private"). The <code>ReactNode</code> union is from the repo's installed <code>@types/react</code>. Every "I tried it" result above was run on the repo at <code>3a77ac7</code>.</p>
+  </div>
+
+  <div class="callout ask">
+    <span class="label">Questions?</span>
+    <p>Anything unclear? Ask your teacher. Open Claude in the Teacher repo and ask, for example: <em>"In app lesson 0004, how is <code>children</code> different from just adding a <code>text</code> prop?"</em> Follow-up questions are part of the course.</p>
+  </div>
+</main>
+<nav class="page-footer">
+  <a href="0003-build-review-2026-10-12.html">← 0003 Copy, don't change</a>
+  <a href="../../index.html">Hub</a>
+  <span class="disabled">Next build review: next Monday →</span>
+</nav>
+</body>
+</html>
