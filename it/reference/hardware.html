@@ -56,17 +56,35 @@
   </table>
   </div>
 
+  <h2>Connecting mobile devices (objective 1.2)</h2>
+  <div class="table-wrap">
+  <table>
+    <thead><tr><th>Item</th><th>Key facts</th></tr></thead>
+    <tbody>
+      <tr><td>Micro-USB / mini-USB</td><td>Older Android and accessories; not reversible</td></tr>
+      <tr><td>Lightning</td><td>Apple proprietary, 8 pins, reversible; older iPhones/iPads (iPhone 15+ use USB-C)</td></tr>
+      <tr><td>USB-C</td><td>24 pins, reversible; data, power and video</td></tr>
+      <tr><td>Bluetooth pairing</td><td>On → discoverable → select → confirm code/PIN → test; PAN, ~10 m</td></tr>
+      <tr><td>NFC</td><td>Tap within a few cm: payments, sharing, quick Bluetooth pairing</td></tr>
+      <tr><td>Tethering</td><td>Phone's cellular shared with <strong>one</strong> device over USB (or Bluetooth); appears as a new network adapter (Android: Remote NDIS based Internet Sharing Device)</td></tr>
+      <tr><td>Hotspot</td><td>Phone becomes a Wi-Fi access point for <strong>several</strong> devices; phone is the default gateway (iPhone typically 172.20.10.1)</td></tr>
+      <tr><td>Policy</td><td>Intune Android Enterprise: <em>Tethering and access to hotspots</em> = Block stops both</td></tr>
+    </tbody>
+  </table>
+  </div>
+
   <h2>Commands (Windows)</h2>
   <div class="table-wrap">
   <table>
     <tbody>
       <tr><td><code>powercfg /batteryreport</code></td><td>HTML battery report: design vs. full charge capacity, cycle count, usage history. Add <code>/output path</code> to choose where it's saved</td></tr>
       <tr><td><code>Suspend-BitLocker -MountPoint "C:" -RebootCount 1</code></td><td>PowerShell (admin): suspend BitLocker for one reboot before planned hardware work; <code>manage-bde -protectors -disable C:</code> also works</td></tr>
+      <tr><td><code>Get-NetAdapter | Where-Object Status -eq Up</code></td><td>PowerShell: adapters that are connected; a USB tether shows up as an extra adapter</td></tr>
       <tr><td><code>Get-PnpDevice -PresentOnly -Class Camera,Image</code></td><td>PowerShell: list cameras Windows sees and their status (OK, Error); an "IR Camera" entry means Windows Hello face is possible</td></tr>
     </tbody>
   </table>
   </div>
-  <p class="sidenote">Sources: <a href="https://www.professormesser.com/free-a-plus-training/220-1201/220-1201-video/laptop-hardware-220-1201/">Professor Messer, Laptop Hardware</a> · <a href="https://learn.microsoft.com/en-us/windows/security/operating-system-security/data-protection/bitlocker/recovery-overview">Microsoft, BitLocker recovery overview</a> · <a href="https://learn.microsoft.com/en-us/powershell/module/bitlocker/suspend-bitlocker">Microsoft Learn, Suspend-BitLocker</a> · <a href="https://learn.microsoft.com/en-us/mem/intune/configuration/device-restrictions-configure">Microsoft Learn, Intune device restrictions</a> · <a href="https://learn.microsoft.com/en-us/powershell/module/pnpdevice/get-pnpdevice">Microsoft Learn, Get-PnpDevice</a> · <a href="https://www.howtogeek.com/217010/how-to-generate-a-battery-health-report-on-windows-8-or-windows-10/">How-To Geek, battery report</a></p>
+  <p class="sidenote">Sources: <a href="https://www.professormesser.com/free-a-plus-training/220-1201/220-1201-video/laptop-hardware-220-1201/">Professor Messer, Laptop Hardware</a> · <a href="https://learn.microsoft.com/en-us/windows/security/operating-system-security/data-protection/bitlocker/recovery-overview">Microsoft, BitLocker recovery overview</a> · <a href="https://learn.microsoft.com/en-us/powershell/module/bitlocker/suspend-bitlocker">Microsoft Learn, Suspend-BitLocker</a> · <a href="https://learn.microsoft.com/en-us/mem/intune/configuration/device-restrictions-configure">Microsoft Learn, Intune device restrictions</a> · <a href="https://learn.microsoft.com/en-us/powershell/module/pnpdevice/get-pnpdevice">Microsoft Learn, Get-PnpDevice</a> · <a href="https://www.professormesser.com/free-a-plus-training/220-1201/220-1201-video/connecting-mobile-devices-220-1201/">Professor Messer, Connecting Mobile Devices</a> · <a href="https://learn.microsoft.com/en-us/intune/device-configuration/templates/ref-device-restrictions-android-enterprise">Microsoft Learn, Android Enterprise restrictions</a> · <a href="https://www.howtogeek.com/217010/how-to-generate-a-battery-health-report-on-windows-8-or-windows-10/">How-To Geek, battery report</a></p>
 </main>
 </body>
 </html>

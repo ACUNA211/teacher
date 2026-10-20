@@ -1,0 +1,178 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Connecting Mobile Devices</title>
+<meta name="description" content="IT lesson 0025: A+ objective 1.2, connecting mobile devices. Wired connectors (micro-USB, Lightning, USB-C), Bluetooth pairing, NFC, and the difference between tethering and a hotspot, with a check of what a tethered laptop's network looks like.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=JetBrains+Mono&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../assets/course.css">
+<script src="../../assets/quiz.js" defer></script>
+</head>
+<body class="track-it">
+<nav class="page-header">
+  <a class="home" href="../../index.html">Teacher hub</a>
+  <span>IT and certs</span>
+  <a href="../reference/glossary.html">Glossary</a>
+  <a href="../reference/hardware.html">Hardware cheat sheet</a>
+</nav>
+<main>
+  <p class="kicker">IT and certs · Lesson 0025 · A+ Core 1, objective 1.2</p>
+  <h1>Tethers, hotspots and plugs: connecting a phone</h1>
+  <p class="lede">About 10 minutes. The laptop is done; now the phone. A phone connects to other things in two ways: with a <strong>cable</strong> (USB or Lightning) or <strong>wirelessly</strong> (Bluetooth, NFC, Wi-Fi).<sup class="cite"><a href="#src-messer">[1]</a></sup> The win: knowing the difference between <strong>tethering</strong> and a <strong>hotspot</strong>, and what a laptop's network looks like when it borrows a phone's connection.</p>
+
+  <div class="callout">
+    <span class="label">Why this matters at work</span>
+    <p>When a user's laptop rides on a phone's connection, its sign-ins come from the <strong>mobile carrier's public IP</strong>, not the office's (<a href="0018-internet-connection-types.html">lesson 0018</a>). A sign-in policy that trusts only office addresses will treat it as "outside", so expect an extra MFA prompt or a block. And on company-owned Android phones, Intune can switch sharing off entirely: its <strong>Tethering and access to hotspots</strong> setting set to <em>Block</em> stops both.<sup class="cite"><a href="#src-intune">[4]</a></sup></p>
+  </div>
+
+  <h2>Wired: three plugs to recognize</h2>
+  <div class="table-wrap">
+  <table>
+    <thead><tr><th>Connector</th><th>Where you'll see it</th><th>Reversible?</th></tr></thead>
+    <tbody>
+      <tr><td><strong>Micro-USB</strong> (and older mini-USB)</td><td>Older Android phones, cheap accessories</td><td>No: one way up</td></tr>
+      <tr><td><strong>Lightning</strong></td><td>Apple's own 8-pin plug: older iPhones and iPads<sup class="cite"><a href="#src-messer">[1]</a></sup></td><td>Yes</td></tr>
+      <tr><td><strong>USB-C</strong></td><td>Almost everything new: Android, iPhone 15 and later, laptops. 24 pins; carries data, power and video<sup class="cite"><a href="#src-messer">[1]</a></sup></td><td>Yes</td></tr>
+    </tbody>
+  </table>
+  </div>
+  <p>Apple moved the iPhone from Lightning to USB-C in 2023 (iPhone 15), after the EU made USB-C the common charging port for phones.<sup class="cite"><a href="#src-eu">[5]</a></sup> So "my old cable doesn't fit my new phone" is usually Lightning vs. USB-C, not a broken port.</p>
+
+  <h2>Wireless: Bluetooth and NFC</h2>
+  <p><strong>Bluetooth</strong> builds a <strong>PAN</strong> (personal area network, <a href="0017-network-types.html">lesson 0017</a>), about 10 m of range. Devices must <strong>pair</strong> once before they talk:<sup class="cite"><a href="#src-messer-old">[2]</a></sup></p>
+  <ol>
+    <li>Turn Bluetooth on for both devices.</li>
+    <li>Put the accessory into <strong>discoverable</strong> (pairing) mode, often by holding its power or Bluetooth button.</li>
+    <li>Select it from the list on the phone or laptop.</li>
+    <li>Confirm the matching code or PIN if asked, so you know it's the right device.</li>
+    <li>Test it.</li>
+  </ol>
+  <p><strong>NFC</strong> (<a href="0024-laptop-nfc-cameras-microphones.html">yesterday</a>) is tap-to-connect: a few centimeters, used for payments, sharing, and starting a Bluetooth pairing without the steps above.<sup class="cite"><a href="#src-messer">[1]</a></sup></p>
+
+  <h2>Tethering vs. hotspot</h2>
+  <p>Both share the phone's <strong>cellular</strong> internet. The difference is how many devices and over what link:<sup class="cite"><a href="#src-messer-old">[2]</a></sup></p>
+  <div class="table-wrap">
+  <table>
+    <thead><tr><th></th><th>Tethering</th><th>Hotspot</th></tr></thead>
+    <tbody>
+      <tr><td>Devices</td><td><strong>One</strong> device</td><td><strong>Several</strong> devices</td></tr>
+      <tr><td>Link</td><td>USB cable (or Bluetooth)</td><td>The phone becomes a <strong>Wi-Fi access point</strong></td></tr>
+      <tr><td>Bonus</td><td>Over USB, the phone charges too</td><td>No cable; drains the phone's battery</td></tr>
+    </tbody>
+  </table>
+  </div>
+  <p class="sidenote">Either can be limited or charged extra by the mobile carrier's plan.<sup class="cite"><a href="#src-messer-old">[2]</a></sup> Windows can also join a phone's hotspot over Bluetooth: Settings → Bluetooth &amp; devices → the phone → <em>Join Personal Area Network</em>.<sup class="cite"><a href="#src-btpan">[3]</a></sup></p>
+
+  <div class="callout win">
+    <span class="label">Memory hook</span>
+    <p><strong>Lightning = old Apple, 8 pins. USB-C = everything new, 24 pins, either way up.</strong> <strong>Pair: on, discoverable, select, confirm, test.</strong> <strong>Tether = one device by cable; hotspot = many devices by Wi-Fi.</strong></p>
+  </div>
+
+  <h2>Try it (3 minutes)</h2>
+  <p>Next time you share your phone's connection with a laptop, run this in PowerShell:<sup class="cite"><a href="#src-adapter">[6]</a></sup></p>
+<pre><code>Get-NetAdapter | Where-Object Status -eq Up
+ipconfig</code></pre>
+  <ul>
+    <li><strong>USB tether</strong>: a <em>new adapter</em> appears. From an Android phone it's usually named <strong>Remote NDIS based Internet Sharing Device</strong>: the phone shows up as a wired network card.<sup class="cite"><a href="#src-rndis">[7]</a></sup></li>
+    <li><strong>Hotspot</strong>: no new adapter; your normal Wi-Fi adapter joins the phone's network.</li>
+  </ul>
+  <p>Either way, look at <code>ipconfig</code>'s <strong>default gateway</strong> (<a href="0001-four-ip-settings.html">lesson 0001</a>): it's the phone. An iPhone hotspot, for example, typically hands out <code>172.20.10.x</code> addresses with the phone at <code>172.20.10.1</code>.<sup class="cite"><a href="#src-iphone">[8]</a></sup> The phone is acting as a small router with its own DHCP server.</p>
+
+  <h2>Practice</h2>
+  <p>Answer from memory before scrolling back up.</p>
+
+  <section class="quiz">
+    <p class="q">Three coworkers at an offsite meeting need internet for their laptops. The venue has no Wi-Fi, but one of them has a phone with a good cellular signal. What's the best option?</p>
+    <ul class="choices">
+      <li><button class="choice">Tether one laptop by USB cable</button></li>
+      <li><button class="choice">Pair every laptop with Bluetooth headsets</button></li>
+      <li><button class="choice" data-correct>Turn on the phone's Wi-Fi hotspot</button></li>
+      <li><button class="choice">Tap each laptop on the NFC</button></li>
+    </ul>
+    <div class="explain" hidden>Several devices sharing one phone's cellular connection is exactly what a hotspot does: the phone becomes a Wi-Fi access point. USB tethering serves only the one device plugged in. Headsets and NFC don't carry an internet connection.</div>
+  </section>
+
+  <section class="quiz">
+    <p class="q">A user upgrades from an iPhone 12 to an iPhone 16 and says the charging cable from their old phone "doesn't fit, so the new port must be broken". What's most likely?</p>
+    <ul class="choices">
+      <li><button class="choice" data-correct>The new phone uses USB-C, not Lightning</button></li>
+      <li><button class="choice">The new phone needs a micro-USB adapter</button></li>
+      <li><button class="choice">The cable must be plugged upside down</button></li>
+      <li><button class="choice">The port is blocked by an MDM policy</button></li>
+    </ul>
+    <div class="explain" hidden>Apple switched the iPhone from its 8-pin Lightning connector to USB-C starting with the iPhone 15 (2023). An iPhone 12 cable is Lightning, so it won't fit. Both connectors are reversible, so orientation isn't the issue, and MDM doesn't change a plug's shape.</div>
+  </section>
+
+  <section class="quiz">
+    <p class="q">A user's new Bluetooth headset never appears in the laptop's list of devices to add. Bluetooth is on and working on the laptop. What should they do next?</p>
+    <ul class="choices">
+      <li><button class="choice">Plug the headset into USB-C</button></li>
+      <li><button class="choice">Turn on the laptop's mobile hotspot</button></li>
+      <li><button class="choice">Reinstall the laptop's Wi-Fi driver</button></li>
+      <li><button class="choice" data-correct>Put the headset into pairing mode</button></li>
+    </ul>
+    <div class="explain" hidden>The laptop can only list devices that are discoverable. New headsets usually need a long press of the power or Bluetooth button to enter pairing (discoverable) mode. Wi-Fi drivers and hotspots have nothing to do with Bluetooth pairing.</div>
+  </section>
+
+  <section class="quiz">
+    <p class="q">On a company-owned, fully managed Android phone, the hotspot and USB tethering options are greyed out. The user's carrier plan includes tethering. What's the likely cause?</p>
+    <ul class="choices">
+      <li><button class="choice">The phone has no cellular signal</button></li>
+      <li><button class="choice" data-correct>A device policy blocks sharing it</button></li>
+      <li><button class="choice">The USB cable is not reversible</button></li>
+      <li><button class="choice">Bluetooth was turned off by them</button></li>
+    </ul>
+    <div class="explain" hidden>Greyed-out options on a managed phone point to device management. Intune's Android Enterprise restriction "Tethering and access to hotspots" set to Block turns off both. No signal wouldn't grey out the settings, and the cable and Bluetooth don't control the hotspot switch.</div>
+  </section>
+  <p class="quiz-score" data-quiz-score></p>
+
+  <details class="recall">
+    <summary>From memory: name the five Bluetooth pairing steps. Then: what does a USB-tethered Android phone look like to Windows? <span class="hint">(then click to check)</span></summary>
+    <p><strong>Turn on</strong> both → make the accessory <strong>discoverable</strong> → <strong>select</strong> it → <strong>confirm</strong> the code/PIN → <strong>test</strong>. A USB-tethered Android phone appears as a <strong>new network adapter</strong> (Remote NDIS based Internet Sharing Device), and <code>ipconfig</code> shows the phone as the <strong>default gateway</strong>.</p>
+  </details>
+
+  <h2>Review: earlier lessons</h2>
+  <p>Spaced retrieval: pull these from memory first, then check.</p>
+
+  <details class="recall">
+    <summary>A company laptop's camera works in no app, Device Manager shows it OK, and the Windows camera switches are greyed out. What's the cause, and what's the first check if the picture were just black? <span class="hint">(<a href="0024-laptop-nfc-cameras-microphones.html">lesson 0024</a>, 1 day ago)</span></summary>
+    <p>Greyed out "managed by your organization" = a <strong>management policy</strong> (for example Intune's Allow Camera set to Not allowed). A black picture with the light on = the <strong>privacy shutter</strong> is closed.</p>
+  </details>
+
+  <details class="recall">
+    <summary>Why can a sign-in from a laptop on a phone's connection appear to come from a city far away? <span class="hint">(<a href="0018-internet-connection-types.html">lesson 0018</a>, 7 days ago)</span></summary>
+    <p>On <strong>cellular</strong>, the public IP belongs to the mobile carrier, and carrier addresses often geolocate to a regional hub far from the device. The sign-in log records that IP, not the user's real location.</p>
+  </details>
+
+  <details class="recall">
+    <summary>What's the difference between an embedded system and a SCADA system, and why do both usually sit on their own network segment? <span class="hint">(<a href="0011-appliances-scada-iot.html">lesson 0011</a>, 14 days ago)</span></summary>
+    <p>An <strong>embedded system</strong> is a purpose-built device whose software you can't easily change or patch. <strong>SCADA</strong> supervises and controls industrial equipment across a site. Both are hard to patch, so they're <strong>isolated</strong> on their own segment to limit what can reach them.</p>
+  </details>
+
+  <div class="callout source" id="src-messer">
+    <span class="label">Primary source: watch next</span>
+    <p>[1] Professor Messer, <a href="https://www.professormesser.com/free-a-plus-training/220-1201/220-1201-video/connecting-mobile-devices-220-1201/">Connecting Mobile Devices (220-1201, 1.2)</a>. About 6 minutes: USB, Lightning, NFC, Bluetooth, hotspots and tethering. Next in the course: Mobile Device Accessories.</p>
+    <p id="src-messer-old">[2] Professor Messer, <a href="https://www.professormesser.com/professor-messer-archives/220-1001/mobile-device-connectivity-2/">Mobile Device Connectivity (220-1001)</a> and <a href="https://www.professormesser.com/free-a-plus-training/220-1101/220-1101-video/220-1101-mobile-device-connectivity/">(220-1101)</a>: Bluetooth pairing steps, PIN confirmation, tethering vs. hotspot, carrier limits.</p>
+    <p id="src-btpan">[3] Microsoft Support, <a href="https://support.microsoft.com/en-us/windows/connect-to-a-bluetooth-network-in-windows">Connect to a Bluetooth network in Windows</a> (Bluetooth PAN to a phone's hotspot).</p>
+    <p id="src-intune">[4] Microsoft Learn, <a href="https://learn.microsoft.com/en-us/intune/device-configuration/templates/ref-device-restrictions-android-enterprise">Android Enterprise device restriction settings in Intune</a> (General: Tethering and access to hotspots, Block).</p>
+    <p id="src-eu">[5] 9to5Mac, <a href="https://9to5mac.com/2022/06/07/usb-c-iphones/">EU agrees on USB-C as the common charging port</a>; Apple switched with the iPhone 15 in September 2023.</p>
+    <p id="src-adapter">[6] Microsoft Learn, <a href="https://learn.microsoft.com/en-us/powershell/module/netadapter/get-netadapter">Get-NetAdapter</a> and <a href="https://learn.microsoft.com/en-us/windows-server/administration/windows-commands/ipconfig">ipconfig</a>.</p>
+    <p id="src-rndis">[7] Microsoft Q&amp;A, <a href="https://answers.microsoft.com/en-us/windows/forum/all/usb-tethering-not-working/4237f469-e9ce-48bc-be8e-f65a3afc6009">USB tethering not working</a> (the Remote NDIS based Internet Sharing Device adapter; community answer).</p>
+    <p id="src-iphone">[8] OSXDaily, <a href="https://osxdaily.com/2013/10/13/personal-hotspot-drop-connection-fix/">Personal Hotspot dropping connections</a> (iPhone hotspot gateway 172.20.10.1; community source, check on your own device).</p>
+  </div>
+
+  <div class="callout ask">
+    <span class="label">Questions?</span>
+    <p>Anything unclear? Ask your teacher. Open Claude in the Teacher repo and ask, for example: <em>"In IT lesson 0025, why would a sign-in from a tethered laptop trigger an extra MFA prompt?"</em> Follow-up questions are part of the course.</p>
+  </div>
+</main>
+<nav class="page-footer">
+  <a href="0024-laptop-nfc-cameras-microphones.html">← NFC, cameras and microphones</a>
+  <a href="../../index.html">Hub</a>
+  <span class="disabled">Next lesson: tomorrow →</span>
+</nav>
+</body>
+</html>
