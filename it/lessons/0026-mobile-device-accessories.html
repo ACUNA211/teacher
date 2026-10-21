@@ -1,0 +1,166 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Mobile Device Accessories</title>
+<meta name="description" content="IT lesson 0026: A+ objective 1.2, mobile device accessories. Styluses (active vs. passive), headsets and speakers, webcams, docking stations vs. port replicators, trackpads and drawing pads, with a check of the dock's own network adapter.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=JetBrains+Mono&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../assets/course.css">
+<script src="../../assets/quiz.js" defer></script>
+</head>
+<body class="track-it">
+<nav class="page-header">
+  <a class="home" href="../../index.html">Teacher hub</a>
+  <span>IT and certs</span>
+  <a href="../reference/glossary.html">Glossary</a>
+  <a href="../reference/hardware.html">Hardware cheat sheet</a>
+</nav>
+<main>
+  <p class="kicker">IT and certs · Lesson 0026 · A+ Core 1, objective 1.2</p>
+  <h1>Pens, headsets and docks: what plugs into a mobile device</h1>
+  <p class="lede">About 10 minutes. Yesterday was <em>how</em> a phone or laptop connects; today is <em>what</em> you connect: styluses, audio, cameras, docks and touch pads.<sup class="cite"><a href="#src-messer">[1]</a></sup> The win: telling a <strong>docking station</strong> from a <strong>port replicator</strong>, and knowing why a Bluetooth headset sounds worse the moment a call starts.</p>
+
+  <div class="callout">
+    <span class="label">Why this matters at work</span>
+    <p>A laptop on a dock usually gets its wired network from a <strong>network adapter inside the dock</strong>, not from the laptop itself. That adapter has its <strong>own MAC address</strong> (<a href="0021-poe-modems-ont-nic.html">lesson 0021</a>). So the "same" laptop can look like a different device to a DHCP reservation or a network access rule depending on whether it's docked. When a docked laptop gets the wrong address or no network, check which adapter it's really using.<sup class="cite"><a href="#src-adapter">[5]</a></sup></p>
+  </div>
+
+  <h2>Input: styluses, trackpads and drawing pads</h2>
+  <div class="table-wrap">
+  <table>
+    <thead><tr><th>Accessory</th><th>What to know</th></tr></thead>
+    <tbody>
+      <tr><td><strong>Passive (capacitive) stylus</strong></td><td>No battery, no electronics: it acts like a fingertip on the touchscreen. Cheap, works on any touch screen, but no pressure sensitivity.<sup class="cite"><a href="#src-stylus">[3]</a></sup></td></tr>
+      <tr><td><strong>Active stylus</strong></td><td>Has electronics (and usually a battery or charge). The screen's <strong>digitizer</strong> reads it, which gives <strong>pressure sensitivity</strong> and <strong>palm rejection</strong>. Works only with devices and apps that support it.<sup class="cite"><a href="#src-stylus">[3]</a></sup></td></tr>
+      <tr><td><strong>Trackpad / touchpad</strong></td><td>An external pointing device, often Bluetooth, for when the built-in one is too small or the device has none (a tablet).<sup class="cite"><a href="#src-messer">[1]</a></sup></td></tr>
+      <tr><td><strong>Drawing pad</strong></td><td>A flat tablet you draw on with a pen while the picture appears on the screen; for signatures, design and note-taking.<sup class="cite"><a href="#src-messer">[1]</a></sup></td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <h2>Audio and video: headsets, speakers, webcams</h2>
+  <p>Headsets and speakers connect by cable (3.5 mm, USB, USB-C) or <strong>Bluetooth</strong>; an external <strong>webcam</strong> usually by USB.<sup class="cite"><a href="#src-messer">[1]</a></sup> One Bluetooth quirk causes a lot of tickets: a headset plays music in high-quality stereo, but the moment its <strong>microphone</strong> turns on (a call starts), it switches to the <strong>Hands-Free Profile</strong>, which carries only low-quality mono audio both ways.<sup class="cite"><a href="#src-hfp">[4]</a></sup> "Sounds fine on YouTube, terrible in meetings" is usually that, not a broken headset.</p>
+  <p class="sidenote">Common workaround: keep the headset as the speaker and pick the laptop's built-in mic (or a USB headset) as the microphone in the meeting app.<sup class="cite"><a href="#src-hfp">[4]</a></sup> External webcams and mics follow the same troubleshooting order as built-in ones (<a href="0024-laptop-nfc-cameras-microphones.html">lesson 0024</a>).</p>
+
+  <h2>Docking station vs. port replicator</h2>
+  <p>Both turn one connection into a desk full of ports: monitors, keyboard, mouse, wired network. The terms are often used interchangeably, and USB-C/Thunderbolt docks have blurred the line, but the classic exam difference is:<sup class="cite"><a href="#src-dock">[2]</a></sup></p>
+  <div class="table-wrap">
+  <table>
+    <thead><tr><th></th><th>Port replicator</th><th>Docking station</th></tr></thead>
+    <tbody>
+      <tr><td>Does</td><td><strong>Copies</strong> the laptop's ports to a box on the desk</td><td>Copies ports <strong>and adds</strong> more (extra ports, sometimes expansion slots or drives)</td></tr>
+      <tr><td>Power</td><td>Traditionally doesn't charge the laptop</td><td>Charges the laptop through the same connection</td></tr>
+      <tr><td>Connector</td><td>Often generic USB</td><td>Often a vendor-specific (proprietary) connector</td></tr>
+      <tr><td>Size</td><td>Smaller, less expandable</td><td>Bigger</td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <div class="callout win">
+    <span class="label">Memory hook</span>
+    <p><strong>Passive pen = a fingertip; active pen = pressure and palm rejection.</strong> <strong>Mic on = Hands-Free Profile = mono, lower quality.</strong> <strong>Port replicator = replicates; docking station = replicates, adds, and charges.</strong></p>
+  </div>
+
+  <h2>Try it (3 minutes)</h2>
+  <p>On a laptop that uses a dock, run this in PowerShell once undocked and once docked:<sup class="cite"><a href="#src-adapter">[5]</a></sup></p>
+<pre><code>Get-NetAdapter | Format-Table Name, InterfaceDescription, Status, MacAddress</code></pre>
+  <ul>
+    <li>Docked, a <strong>new adapter</strong> usually appears, often described as a <em>USB</em> Ethernet or GbE controller. That's the dock's network card.</li>
+    <li>Compare its <strong>MacAddress</strong> with the laptop's own Ethernet or Wi-Fi adapter: different. That's the address the network sees while docked.</li>
+  </ul>
+
+  <h2>Practice</h2>
+  <p>Answer from memory before scrolling back up.</p>
+
+  <section class="quiz">
+    <p class="q">A designer's new stylus draws on their tablet, but every line is the same thickness no matter how hard they press, and the pen has no battery or charging port. What's the explanation?</p>
+    <ul class="choices">
+      <li><button class="choice">The tablet's digitizer driver is outdated</button></li>
+      <li><button class="choice" data-correct>It is a passive capacitive stylus</button></li>
+      <li><button class="choice">The Bluetooth pairing never fully completed</button></li>
+      <li><button class="choice">Palm rejection is cancelling pressure input</button></li>
+    </ul>
+    <div class="explain" hidden>No battery and no electronics means a passive (capacitive) stylus: the screen sees it like a fingertip, so there's no pressure data to vary line thickness. Pressure sensitivity needs an active stylus read by the device's digitizer.</div>
+  </section>
+
+  <section class="quiz">
+    <p class="q">A user's Bluetooth headset sounds great for music, but colleagues say they sound muffled and the audio turns flat and mono as soon as a meeting starts. What's most likely?</p>
+    <ul class="choices">
+      <li><button class="choice">The headset battery is almost fully drained</button></li>
+      <li><button class="choice">The laptop's Wi-Fi is interfering with audio</button></li>
+      <li><button class="choice">The headset needs to be paired again</button></li>
+      <li><button class="choice" data-correct>Using the mic switches to hands-free profile</button></li>
+    </ul>
+    <div class="explain" hidden>When a Bluetooth headset's microphone is in use, it switches to the Hands-Free Profile, which carries only low-quality mono audio. That's expected behavior. A common fix is to use the laptop's own mic (or a USB headset) for calls while keeping the headset as the speaker.</div>
+  </section>
+
+  <section class="quiz">
+    <p class="q">A user wants one cable from their laptop to a desk box that drives two monitors, adds extra USB ports and wired network, and charges the laptop. Which accessory fits?</p>
+    <ul class="choices">
+      <li><button class="choice" data-correct>A docking station</button></li>
+      <li><button class="choice">A port replicator</button></li>
+      <li><button class="choice">A drawing pad</button></li>
+      <li><button class="choice">A USB trackpad</button></li>
+    </ul>
+    <div class="explain" hidden>Adding ports beyond the laptop's own and charging through the same connection is the classic docking-station description. A port replicator traditionally only copies the existing ports and doesn't charge. Drawing pads and trackpads are input devices.</div>
+  </section>
+
+  <section class="quiz">
+    <p class="q">A laptop gets its reserved IP address on Wi-Fi, but a random address from the pool when it sits on its desk dock with a network cable. Nothing else changed. Why?</p>
+    <ul class="choices">
+      <li><button class="choice">The dock blocks DHCP requests from laptops</button></li>
+      <li><button class="choice">The reservation only works for wireless clients</button></li>
+      <li><button class="choice" data-correct>The dock's own adapter has another MAC</button></li>
+      <li><button class="choice">The cable is in the wrong port</button></li>
+    </ul>
+    <div class="explain" hidden>A DHCP reservation matches a MAC address (<a href="0014-dhcp-scopes-leases.html">lesson 0014</a>). Docked, the laptop uses the dock's network adapter, which has its own MAC, so the server sees a different client and hands out a normal pool address. Reserve the dock adapter's MAC too, or use the one that matters.</div>
+  </section>
+  <p class="quiz-score" data-quiz-score></p>
+
+  <details class="recall">
+    <summary>From memory: two differences between an active and a passive stylus, and two between a docking station and a port replicator. <span class="hint">(then click to check)</span></summary>
+    <p><strong>Active stylus</strong>: has electronics/battery; pressure sensitivity and palm rejection via the digitizer; needs device support. <strong>Passive</strong>: none of that, works like a finger anywhere. <strong>Docking station</strong>: adds ports beyond the laptop's own and charges it, often a proprietary connector. <strong>Port replicator</strong>: copies existing ports, traditionally no charging, smaller.</p>
+  </details>
+
+  <h2>Review: earlier lessons</h2>
+  <p>Spaced retrieval: pull these from memory first, then check.</p>
+
+  <details class="recall">
+    <summary>You're replacing a laptop's HDD with an SSD and keeping the user's files and apps. Which two things do you do before the swap? <span class="hint">(<a href="0023-laptop-batteries-keyboards-ssd.html">lesson 0023</a>, 3 days ago)</span></summary>
+    <p><strong>Clone</strong> the old drive to the new one (for example with a USB-to-SATA adapter), and <strong>suspend BitLocker</strong> first so the hardware change doesn't trigger a recovery-key prompt. Check the form factor too: 2.5-inch or M.2.</p>
+  </details>
+
+  <details class="recall">
+    <summary>Put these tools in the order a cable's life uses them: cable tester, crimper, tap, toner probe, cable stripper. <span class="hint">(<a href="0019-network-tools.html">lesson 0019</a>, 7 days ago)</span></summary>
+    <p><strong>Build</strong>: stripper, crimper (punch-down for the wall end) → <strong>find</strong>: toner probe → <strong>test</strong>: cable tester → <strong>watch</strong>: tap.</p>
+  </details>
+
+  <details class="recall">
+    <summary>A domain has two MX records, preference 10 and 20. Which server gets mail first, and what record type would you use to make <code>www</code> an alias of another name? <span class="hint">(<a href="0012-dns-records.html">lesson 0012</a>, 14 days ago)</span></summary>
+    <p>The <strong>lowest number wins</strong>: preference 10 first, 20 is the backup. An alias is a <strong>CNAME</strong> record.</p>
+  </details>
+
+  <div class="callout source" id="src-messer">
+    <span class="label">Primary source: watch next</span>
+    <p>[1] Professor Messer, <a href="https://www.professormesser.com/free-a-plus-training/220-1201/220-1201-video/mobile-device-accessories-220-1201/">Mobile Device Accessories (220-1201, 1.2)</a>. About 7 minutes: styluses, headsets and speakers, webcams, docks and port replicators, trackpads and drawing pads. Next in the course: Mobile Device Networks.</p>
+    <p id="src-dock">[2] CDW, <a href="https://cdw.com/content/cdw/en/articles/hardware/docking-stations-and-port-replicators.html">Docking Station vs. Port Replicator</a> (power, proprietary ports, how USB-C narrowed the difference).</p>
+    <p id="src-stylus">[3] Parka Blogs, <a href="https://www.parkablogs.com/node/12897">Artist Guide to Active vs Capacitive Styluses</a> (pressure sensitivity via digitizer, palm rejection; third-party source).</p>
+    <p id="src-hfp">[4] Microsoft Q&amp;A, <a href="https://learn.microsoft.com/en-us/answers/a/1270220">Trouble with Bluetooth headphones with Teams</a>, and Terence Eden, <a href="https://shkspr.mobi/blog/2023/09/better-bluetooth-sound-quality-on-microsoft-teams-in-windows-11/">Better Bluetooth sound quality on Teams</a> (Hands-Free Profile is mono and lower quality; community sources).</p>
+    <p id="src-adapter">[5] Microsoft Learn, <a href="https://learn.microsoft.com/en-us/powershell/module/netadapter/get-netadapter">Get-NetAdapter</a> (Name, InterfaceDescription, Status, MacAddress).</p>
+  </div>
+
+  <div class="callout ask">
+    <span class="label">Questions?</span>
+    <p>Anything unclear? Ask your teacher. Open Claude in the Teacher repo and ask, for example: <em>"In IT lesson 0026, how do Thunderbolt docks differ from USB-C docks?"</em> Follow-up questions are part of the course.</p>
+  </div>
+</main>
+<nav class="page-footer">
+  <a href="0025-connecting-mobile-devices.html">← Connecting a phone</a>
+  <a href="../../index.html">Hub</a>
+  <span class="disabled">Next lesson: tomorrow →</span>
+</nav>
+</body>
+</html>

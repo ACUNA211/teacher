@@ -73,6 +73,21 @@
   </table>
   </div>
 
+  <h2>Mobile device accessories (objective 1.2)</h2>
+  <div class="table-wrap">
+  <table>
+    <thead><tr><th>Item</th><th>Key facts</th></tr></thead>
+    <tbody>
+      <tr><td>Passive stylus</td><td>No battery or electronics; acts like a fingertip; no pressure sensitivity</td></tr>
+      <tr><td>Active stylus</td><td>Electronics/battery; digitizer gives pressure sensitivity and palm rejection; needs device support</td></tr>
+      <tr><td>Trackpad / drawing pad</td><td>External pointing device; pen tablet for signatures, drawing, notes</td></tr>
+      <tr><td>Bluetooth headset</td><td>Mic in use → Hands-Free Profile → mono, lower quality; workaround: laptop or USB mic for calls</td></tr>
+      <tr><td>Port replicator</td><td>Copies the laptop's ports; traditionally no charging; often generic USB; smaller</td></tr>
+      <tr><td>Docking station</td><td>Copies and adds ports, charges the laptop; often proprietary connector. Its network port is its own adapter with its own MAC</td></tr>
+    </tbody>
+  </table>
+  </div>
+
   <h2>Commands (Windows)</h2>
   <div class="table-wrap">
   <table>
@@ -80,6 +95,7 @@
       <tr><td><code>powercfg /batteryreport</code></td><td>HTML battery report: design vs. full charge capacity, cycle count, usage history. Add <code>/output path</code> to choose where it's saved</td></tr>
       <tr><td><code>Suspend-BitLocker -MountPoint "C:" -RebootCount 1</code></td><td>PowerShell (admin): suspend BitLocker for one reboot before planned hardware work; <code>manage-bde -protectors -disable C:</code> also works</td></tr>
       <tr><td><code>Get-NetAdapter | Where-Object Status -eq Up</code></td><td>PowerShell: adapters that are connected; a USB tether shows up as an extra adapter</td></tr>
+      <tr><td><code>Get-NetAdapter | Format-Table Name, InterfaceDescription, Status, MacAddress</code></td><td>PowerShell: see which adapter (and MAC) a docked laptop really uses; a dock usually adds a USB Ethernet adapter</td></tr>
       <tr><td><code>Get-PnpDevice -PresentOnly -Class Camera,Image</code></td><td>PowerShell: list cameras Windows sees and their status (OK, Error); an "IR Camera" entry means Windows Hello face is possible</td></tr>
     </tbody>
   </table>
