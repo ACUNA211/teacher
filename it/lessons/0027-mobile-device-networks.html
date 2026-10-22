@@ -1,0 +1,167 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Mobile Device Networks</title>
+<meta name="description" content="IT lesson 0027: A+ objective 1.3, mobile device networks. Cellular cells and generations (3G, 4G LTE, 5G sub-6 and mmWave), airplane mode, SIM and eSIM identifiers (ICCID, IMSI, IMEI, EID), GPS versus IP-based location, with a quick recap of Wi-Fi, hotspots and Bluetooth.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=JetBrains+Mono&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../assets/course.css">
+<script src="../../assets/quiz.js" defer></script>
+</head>
+<body class="track-it">
+<nav class="page-header">
+  <a class="home" href="../../index.html">Teacher hub</a>
+  <span>IT and certs</span>
+  <a href="../reference/glossary.html">Glossary</a>
+  <a href="../reference/hardware.html">Hardware cheat sheet</a>
+</nav>
+<main>
+  <p class="kicker">IT and certs · Lesson 0027 · A+ Core 1, objective 1.3</p>
+  <h1>Cells, SIMs and satellites: the networks a phone lives on</h1>
+  <p class="lede">About 10 minutes. A phone talks to several networks at once: <strong>cellular</strong> for voice and data, <strong>Wi-Fi</strong>, <strong>Bluetooth</strong>, and it listens to <strong>GPS</strong> satellites.<sup class="cite"><a href="#src-messer">[1]</a></sup> You already know Wi-Fi, Bluetooth and hotspots (lessons <a href="0007-wifi-standards.html">0007</a>, <a href="0009-bluetooth-nfc-rfid-fixed-wireless.html">0009</a>, <a href="0025-connecting-mobile-devices.html">0025</a>). The win today: the cellular generations, what a SIM really identifies, and why "where the phone is" and "where the sign-in came from" are two different answers.</p>
+
+  <div class="callout">
+    <span class="label">Why this matters at work</span>
+    <p>A sign-in log shows a location worked out from the <strong>IP address</strong>, not from the phone's GPS. On cellular data, that IP often belongs to the carrier's gateway, which can be a city or two away (<a href="0018-internet-connection-types.html">lesson 0018</a>). So "sign-in from a strange city" on a phone is often just the carrier. Where you do need the device's real position (a lost company phone), MDM tools such as Intune's <em>Locate device</em> use the device's own <strong>location services</strong>, and only on supported, corporate-managed devices with location turned on.<sup class="cite"><a href="#src-locate">[4]</a></sup></p>
+  </div>
+
+  <h2>Cellular: cells and generations</h2>
+  <p>Carriers split land into <strong>cells</strong>, each served by an antenna; your phone hands off from cell to cell as you move. The cellular network carries both <strong>voice and data</strong>. <strong>Airplane mode</strong> turns off all the radios (you can usually switch Wi-Fi and Bluetooth back on by hand).<sup class="cite"><a href="#src-messer">[1]</a></sup></p>
+  <div class="table-wrap">
+  <table>
+    <thead><tr><th>Generation</th><th>What to know</th></tr></thead>
+    <tbody>
+      <tr><td><strong>3G</strong></td><td>Around 1998 onward. Enough data throughput for real mobile data, which made phone GPS and maps practical.<sup class="cite"><a href="#src-messer">[1]</a></sup></td></tr>
+      <tr><td><strong>4G / LTE</strong></td><td>"Long Term Evolution". One converged standard replacing the old split between the two 3G families (GSM and CDMA). Messer cites up to about 150 Mbps.<sup class="cite"><a href="#src-messer">[1]</a></sup></td></tr>
+      <tr><td><strong>5G</strong></td><td>Arrived around 2020; much faster (peaks in the gigabits) with lower latency, and built for many devices at once, including IoT.<sup class="cite"><a href="#src-messer">[1]</a></sup> Two flavors:<br><strong>Sub-6 GHz</strong>: wide coverage, typically hundreds of Mbps.<br><strong>mmWave</strong>: very high frequency, multi-gigabit peaks, but short range and blocked by walls and trees.<sup class="cite"><a href="#src-5g">[2]</a></sup></td></tr>
+    </tbody>
+  </table>
+  </div>
+  <p class="sidenote">Same physics as Wi-Fi bands (<a href="0006-wifi-bands-channels.html">lesson 0006</a>): higher frequency means more speed and less reach.</p>
+
+  <h2>The SIM: who you are to the carrier</h2>
+  <p>The <strong>SIM</strong> (Subscriber Identity Module) holds the subscription that lets a phone join the carrier's network. It can be a physical card or an <strong>eSIM</strong>: a chip soldered into the phone that downloads one or more carrier <em>profiles</em>, so switching carriers needs no card swap.<sup class="cite"><a href="#src-sim">[3]</a></sup> Four numbers get confused on tickets:</p>
+  <div class="table-wrap">
+  <table>
+    <thead><tr><th>Number</th><th>Identifies</th></tr></thead>
+    <tbody>
+      <tr><td><strong>IMEI</strong></td><td>The <strong>phone</strong> itself (the hardware). Stays the same when you change SIMs.</td></tr>
+      <tr><td><strong>ICCID</strong></td><td>The <strong>SIM</strong> (card or eSIM profile). Printed on a physical SIM.</td></tr>
+      <tr><td><strong>IMSI</strong></td><td>The <strong>subscriber</strong>: the account or line on the carrier's side.</td></tr>
+      <tr><td><strong>EID</strong></td><td>The <strong>eSIM chip</strong>; carriers ask for it to send an eSIM profile.</td></tr>
+    </tbody>
+  </table>
+  </div>
+  <p class="sidenote">Source for the table: <a href="#src-sim">[3]</a>. The phone number itself is a separate thing again, assigned to the line.</p>
+
+  <h2>GPS: the phone only listens</h2>
+  <p><strong>GPS</strong> is a constellation of at least 24 satellites. A receiver measures how long each satellite's signal took to arrive, turns that into a distance, and combines distances: <strong>at least four satellites</strong> give latitude, longitude and altitude, the fourth correcting the receiver's own clock error.<sup class="cite"><a href="#src-gps">[5]</a></sup> The phone never transmits to the satellites. Indoors, where satellites are hard to hear, phones fill in with nearby Wi-Fi networks and cell towers, which is why location gets less precise inside buildings.</p>
+
+  <div class="callout win">
+    <span class="label">Memory hook</span>
+    <p><strong>4G = LTE; 5G = sub-6 (far) or mmWave (fast, near).</strong> <strong>IMEI = the phone, ICCID = the SIM, IMSI = the subscriber, EID = the eSIM chip.</strong> <strong>GPS = listen to four satellites. Sign-in location = the IP, not GPS.</strong></p>
+  </div>
+
+  <h2>Try it (2 minutes)</h2>
+  <p>On your own phone, find its identifiers (don't share them anywhere):</p>
+  <ul>
+    <li><strong>iPhone</strong>: Settings → General → About. Scroll down: IMEI, ICCID and, if it supports eSIM, EID.</li>
+    <li><strong>Android</strong>: Settings → About phone (sometimes under Status or SIM status). Dialing <code>*#06#</code> shows the IMEI on most phones.</li>
+  </ul>
+  <p>Notice which numbers would change if you moved to another carrier (ICCID, IMSI) and which wouldn't (IMEI, EID).</p>
+
+  <h2>Practice</h2>
+  <p>Answer from memory before scrolling back up.</p>
+
+  <section class="quiz">
+    <p class="q">A user is moving their company line to a new phone using eSIM. The carrier's support asks for a number that identifies the new phone's eSIM chip so they can send the profile. Which number?</p>
+    <ul class="choices">
+      <li><button class="choice">The old SIM's ICCID</button></li>
+      <li><button class="choice">The account's IMSI number</button></li>
+      <li><button class="choice" data-correct>The new phone's EID</button></li>
+      <li><button class="choice">The old phone's IMEI</button></li>
+    </ul>
+    <div class="explain" hidden>The EID identifies the eSIM chip itself, so the carrier uses it to deliver a profile to that exact phone. The ICCID names a SIM or profile, the IMSI names the subscriber, and the IMEI names a phone's hardware (and the old phone isn't the target anyway).</div>
+  </section>
+
+  <section class="quiz">
+    <p class="q">A phone shows "5G" and runs a speed test at over 1 Gbps on a street corner, then drops to a few hundred Mbps after the user walks into an office building. What's the likely reason?</p>
+    <ul class="choices">
+      <li><button class="choice">The SIM card is badly seated</button></li>
+      <li><button class="choice" data-correct>The mmWave signal doesn't penetrate walls</button></li>
+      <li><button class="choice">The phone switched into airplane mode</button></li>
+      <li><button class="choice">The building's Wi-Fi is blocking cellular</button></li>
+    </ul>
+    <div class="explain" hidden>Multi-gigabit 5G comes from mmWave, which has short range and is easily blocked by walls and even trees. Indoors the phone falls back to sub-6 GHz 5G (or LTE): wider coverage, lower speed. A seated SIM or airplane mode would cut service, not just slow it.</div>
+  </section>
+
+  <section class="quiz">
+    <p class="q">A sign-in log shows a user's phone signing in from a city 300 km away, but the user is at their desk and Wi-Fi is off on the phone. What's the most likely explanation?</p>
+    <ul class="choices">
+      <li><button class="choice">The phone's GPS receiver is faulty</button></li>
+      <li><button class="choice">Someone cloned the user's SIM card</button></li>
+      <li><button class="choice">The phone's location services are off</button></li>
+      <li><button class="choice" data-correct>The carrier's IP geolocates far away</button></li>
+    </ul>
+    <div class="explain" hidden>Sign-in locations come from the public IP address, not GPS. On cellular data, the IP belongs to the carrier's gateway, which often geolocates to another city. Check the device and the user's other sign-ins before assuming compromise; GPS and location services play no part in that log entry.</div>
+  </section>
+
+  <section class="quiz">
+    <p class="q">Why does a phone's GPS need signals from at least four satellites for a reliable 3D position?</p>
+    <ul class="choices">
+      <li><button class="choice">Each satellite only covers one region</button></li>
+      <li><button class="choice" data-correct>The fourth corrects the receiver's clock</button></li>
+      <li><button class="choice">The phone must transmit to each</button></li>
+      <li><button class="choice">The cellular network requires four confirmations</button></li>
+    </ul>
+    <div class="explain" hidden>Distance comes from signal travel time, so the receiver's imprecise clock is a fourth unknown alongside latitude, longitude and altitude. Four measurements solve all four. GPS receivers only listen; they never transmit to satellites.</div>
+  </section>
+  <p class="quiz-score" data-quiz-score></p>
+
+  <details class="recall">
+    <summary>From memory: what each of IMEI, ICCID, IMSI and EID identifies, and the trade-off between 5G sub-6 and mmWave. <span class="hint">(then click to check)</span></summary>
+    <p><strong>IMEI</strong>: the phone. <strong>ICCID</strong>: the SIM (or eSIM profile). <strong>IMSI</strong>: the subscriber/line. <strong>EID</strong>: the eSIM chip. <strong>Sub-6</strong>: wide coverage, hundreds of Mbps. <strong>mmWave</strong>: gigabit speeds, short range, blocked by walls.</p>
+  </details>
+
+  <h2>Review: earlier lessons</h2>
+  <p>Spaced retrieval: pull these from memory first, then check.</p>
+
+  <details class="recall">
+    <summary>A user's webcam shows only a black image, but Windows lists the camera as working and the meeting app has permission. What do you check first, physically? <span class="hint">(<a href="0024-laptop-nfc-cameras-microphones.html">lesson 0024</a>, 3 days ago)</span></summary>
+    <p>A <strong>privacy shutter</strong> (or a camera kill key/switch). A closed shutter gives a black image while the device itself reports OK.</p>
+  </details>
+
+  <details class="recall">
+    <summary>A switch and a router both forward traffic. What does each one look at to decide where a frame or packet goes? <span class="hint">(<a href="0020-network-devices-switch-router-ap.html">lesson 0020</a>, 7 days ago)</span></summary>
+    <p>A <strong>switch</strong> forwards frames by <strong>destination MAC address</strong> inside one network. A <strong>router</strong> forwards packets by <strong>destination IP address</strong> between networks (subnets).</p>
+  </details>
+
+  <details class="recall">
+    <summary>A domain's DMARC record says <code>p=none</code>. What happens to a spoofed message that fails SPF and DKIM, and what's that setting good for? <span class="hint">(<a href="0013-spf-dkim-dmarc.html">lesson 0013</a>, 14 days ago)</span></summary>
+    <p>It's <strong>delivered anyway</strong>; <code>p=none</code> only monitors. It's the safe <strong>starting point</strong>: collect the aggregate (rua) reports, fix legitimate senders, then move to <code>quarantine</code> and <code>reject</code>.</p>
+  </details>
+
+  <div class="callout source" id="src-messer">
+    <span class="label">Primary source: watch next</span>
+    <p>[1] Professor Messer, <a href="https://www.professormesser.com/free-a-plus-training/220-1201/220-1201-video/mobile-device-networks-220-1201/">Mobile Device Networks (220-1201, 1.3)</a>. About 10 minutes: cellular 3G/4G/5G, Wi-Fi, hotspots, SIMs, Bluetooth, GPS. Next in the course: Mobile Device Management.</p>
+    <p id="src-5g">[2] MacRumors, <a href="https://www.macrumors.com/guide/mmwave-vs-sub-6ghz-5g/">mmWave vs. Sub-6GHz 5G</a>, and Android Authority, <a href="https://www.androidauthority.com/sub-6ghz-vs-mmwave-5g-3051246/">Sub-6GHz vs mmWave 5G</a> (range, speed, building penetration; third-party sources).</p>
+    <p id="src-sim">[3] Hologram, <a href="https://hologram.io/blog/whats-an-iccid-number-and-why-does-it-matter-for-cellular-iot/">What's an ICCID number</a> (ICCID vs. IMSI vs. IMEI; eSIM profiles each with their own ICCID; EID for the eUICC chip; vendor source).</p>
+    <p id="src-locate">[4] Microsoft Learn, <a href="https://learn.microsoft.com/intune/device-management/actions/locate">Locate lost or stolen devices with Intune</a> (supported corporate-managed platforms; location services must be on).</p>
+    <p id="src-gps">[5] HowStuffWorks, <a href="https://electronics.howstuffworks.com/gps.htm">How GPS Receivers Work</a> (travel time to distance, four satellites for 3D position and clock correction; at least 24 satellites).</p>
+  </div>
+
+  <div class="callout ask">
+    <span class="label">Questions?</span>
+    <p>Anything unclear? Ask your teacher. Open Claude in the Teacher repo and ask, for example: <em>"In IT lesson 0027, how does a phone decide between Wi-Fi and cellular data?"</em> Follow-up questions are part of the course.</p>
+  </div>
+</main>
+<nav class="page-footer">
+  <a href="0026-mobile-device-accessories.html">← Pens, headsets and docks</a>
+  <a href="../../index.html">Hub</a>
+  <span class="disabled">Next lesson: tomorrow →</span>
+</nav>
+</body>
+</html>
