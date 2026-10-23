@@ -1,0 +1,178 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Mobile Device Management</title>
+<meta name="description" content="IT lesson 0028: A+ objective 1.3, mobile device management. What an MDM does, BYOD versus COPE (and fully managed and dedicated devices), the partitioned work area, app protection without enrollment, retire versus wipe, data synchronization and business apps.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=JetBrains+Mono&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../assets/course.css">
+<script src="../../assets/quiz.js" defer></script>
+</head>
+<body class="track-it">
+<nav class="page-header">
+  <a class="home" href="../../index.html">Teacher hub</a>
+  <span>IT and certs</span>
+  <a href="../reference/glossary.html">Glossary</a>
+  <a href="../reference/hardware.html">Hardware cheat sheet</a>
+</nav>
+<main>
+  <p class="kicker">IT and certs · Lesson 0028 · A+ Core 1, objective 1.3</p>
+  <h1>Whose phone, whose data: mobile device management</h1>
+  <p class="lede">About 10 minutes. An organization with many phones needs a <strong>mobile device manager (MDM)</strong>: one console that sets policy on every device, whether the company owns it or the employee does.<sup class="cite"><a href="#src-messer">[1]</a></sup> The win today: match the <strong>ownership model</strong> to the right amount of control, and know which button removes only the company's data.</p>
+
+  <div class="callout">
+    <span class="label">Why this matters at work</span>
+    <p>This is Intune's home turf. Most "I can't get email on my phone" tickets come down to one question: <em>is this phone enrolled, or only its apps protected?</em> The answer decides what IT can see, what a policy can block, and what happens when someone leaves. Users worry IT can read their photos; knowing the ownership model lets you answer that honestly.</p>
+  </div>
+
+  <h2>What an MDM does</h2>
+  <p>From one console, an administrator can:<sup class="cite"><a href="#src-messer">[1]</a></sup></p>
+  <ul>
+    <li><strong>Allow or block apps</strong>, and push the business apps people need.</li>
+    <li><strong>Turn features off</strong>, such as the camera or GPS, where policy requires it.</li>
+    <li><strong>Require security settings</strong>: a screen lock, encryption, a minimum OS version.</li>
+    <li><strong>Partition</strong> a personal phone: a separate work area for company apps and data, with the rest of the phone left private.</li>
+    <li><strong>Remove company data</strong> remotely when a device is lost or its owner leaves.</li>
+  </ul>
+
+  <h2>Ownership models</h2>
+  <div class="table-wrap">
+  <table>
+    <thead><tr><th>Model</th><th>Who owns it</th><th>How much IT controls</th></tr></thead>
+    <tbody>
+      <tr><td><strong>BYOD</strong><br>Bring your own device</td><td>The employee</td><td>Only the work area or the work apps. Personal apps, photos and messages stay private.<sup class="cite"><a href="#src-messer">[1]</a></sup></td></tr>
+      <tr><td><strong>COPE</strong><br>Corporate-owned, personally enabled</td><td>The company</td><td>Full control of the device (configuration, encryption, updates), but the employee may also use it personally.<sup class="cite"><a href="#src-cope">[2]</a></sup></td></tr>
+      <tr><td><strong>Fully managed</strong><br>(corporate-owned, business only)</td><td>The company</td><td>Everything; work use only.</td></tr>
+      <tr><td><strong>Dedicated</strong><br>(kiosk, shared)</td><td>The company</td><td>Locked to a few apps, no single user (a scanner in a warehouse, a sign-in tablet at reception).</td></tr>
+    </tbody>
+  </table>
+  </div>
+  <p class="sidenote">The exam names BYOD and COPE. Intune's Android enrollment options map one-to-one onto all four rows: personally owned work profile, corporate-owned work profile, fully managed, dedicated.<sup class="cite"><a href="#src-android">[3]</a></sup></p>
+
+  <h2>Two levels: manage the device, or only the apps</h2>
+  <p><strong>MDM</strong> enrolls the whole device. <strong>MAM</strong> (mobile application management) skips enrollment and protects company data <em>inside</em> work apps: require a PIN for the app, block copy-paste and "save as" to personal apps and storage, and wipe only the company data from the app.<sup class="cite"><a href="#src-app">[4]</a></sup> MAM is the lightest-touch option for BYOD. The trade-off: without enrollment, IT can't push apps, certificates, or company Wi-Fi and VPN settings to the phone.<sup class="cite"><a href="#src-app">[4]</a></sup></p>
+
+  <h2>Removing data: retire vs. wipe</h2>
+  <div class="table-wrap">
+  <table>
+    <thead><tr><th>Action</th><th>What it removes</th><th>Use for</th></tr></thead>
+    <tbody>
+      <tr><td><strong>Retire</strong> (selective wipe)</td><td>Company apps, data, email profiles and settings. Personal data stays.</td><td>BYOD offboarding</td></tr>
+      <tr><td><strong>Wipe</strong></td><td>Everything: a factory reset. Data can't be recovered.</td><td>Company-owned devices: lost, stolen or being reassigned</td></tr>
+    </tbody>
+  </table>
+  </div>
+  <p class="sidenote">Source: <a href="#src-retire">[5]</a>. A full wipe isn't even offered for some personal-device enrollments, by design.</p>
+
+  <h2>Data sync and business apps</h2>
+  <p>Phones sync constantly: mail, contacts and calendar from the work account, and photos and files to the owner's cloud backup. The MDM challenge is keeping those two streams apart, so company files don't end up in a personal cloud, and business apps arrive configured (the right account, the right settings) rather than set up by hand on every phone.<sup class="cite"><a href="#src-messer">[1]</a></sup></p>
+
+  <div class="callout win">
+    <span class="label">Memory hook</span>
+    <p><strong>BYOD = their phone, your work area. COPE = your phone, their personal use.</strong> <strong>MDM manages the device; MAM manages only the apps.</strong> <strong>Retire = take the company's data back. Wipe = take everything.</strong></p>
+  </div>
+
+  <h2>Try it (2 minutes)</h2>
+  <p>See what's managing your own devices:</p>
+  <ul>
+    <li><strong>Windows</strong>: Settings → Accounts → <em>Access work or school</em>. A connected work account with an <em>Info</em> button means the PC is enrolled in an MDM.</li>
+    <li><strong>iPhone</strong>: Settings → General → <em>VPN &amp; Device Management</em>. Any management profile is listed there, with what it can do.</li>
+    <li><strong>Android</strong>: a work profile shows up as a separate <em>Work</em> tab in the app drawer, with briefcase badges on work apps.</li>
+  </ul>
+  <p>If nothing is listed but your work email app still asks for an app PIN, that's app protection (MAM) without enrollment.</p>
+
+  <h2>Practice</h2>
+  <p>Answer from memory before scrolling back up.</p>
+
+  <section class="quiz">
+    <p class="q">A user wants work email on their personal phone but refuses to enroll it: they don't want IT able to see or erase personal content. What fits best?</p>
+    <ul class="choices">
+      <li><button class="choice">Full device enrollment with wipe</button></li>
+      <li><button class="choice" data-correct>App protection policies, no enrollment</button></li>
+      <li><button class="choice">Corporate-owned fully managed device mode</button></li>
+      <li><button class="choice">Disable the phone's camera remotely</button></li>
+    </ul>
+    <div class="explain" hidden>App protection (MAM without enrollment) protects company data inside the work apps only: an app PIN, no copy-paste or save to personal apps, and a wipe that touches only company data. The device isn't enrolled, so IT has no device-level control over personal content. Fully managed mode is for company-owned phones.</div>
+  </section>
+
+  <section class="quiz">
+    <p class="q">An employee leaves. Their personal phone has a work profile. You must remove company email and files but leave their photos alone. Which action?</p>
+    <ul class="choices">
+      <li><button class="choice">Wipe the device to factory</button></li>
+      <li><button class="choice">Delete the user's directory account</button></li>
+      <li><button class="choice" data-correct>Retire the device from management</button></li>
+      <li><button class="choice">Reset the phone's SIM profile</button></li>
+    </ul>
+    <div class="explain" hidden>Retire (a selective wipe) removes company apps, data and settings and leaves personal data intact. Wipe is a factory reset, wrong for a personal phone. Deleting the account blocks new sign-ins but doesn't remove data already on the phone, and the SIM has nothing to do with company data.</div>
+  </section>
+
+  <section class="quiz">
+    <p class="q">A company buys phones for its sales team. IT wants full control (encryption, updates, configuration) but staff may also install personal apps. Which model is this?</p>
+    <ul class="choices">
+      <li><button class="choice">Bring your own device</button></li>
+      <li><button class="choice">Dedicated shared kiosk devices</button></li>
+      <li><button class="choice">App protection without enrollment</button></li>
+      <li><button class="choice" data-correct>Corporate-owned, personally enabled devices</button></li>
+    </ul>
+    <div class="explain" hidden>COPE: the company owns and fully manages the phone but lets the employee use it personally too. BYOD would mean the employee owns it; dedicated devices have no single user; app protection without enrollment gives the least control, not full control.</div>
+  </section>
+
+  <section class="quiz">
+    <p class="q">On a personal phone, a user tries to save a work attachment from the managed email app to their personal cloud storage, and the app refuses. Why?</p>
+    <ul class="choices">
+      <li><button class="choice" data-correct>App protection restricts save-as locations</button></li>
+      <li><button class="choice">The phone's storage is full</button></li>
+      <li><button class="choice">Cellular data is turned off</button></li>
+      <li><button class="choice">The SIM card is locked</button></li>
+    </ul>
+    <div class="explain" hidden>App protection policies can block "save as" to unmanaged locations and copy-paste into personal apps, so company data can't leak into personal sync and backup. It's working as designed; the fix is to save to the approved work storage instead.</div>
+  </section>
+  <p class="quiz-score" data-quiz-score></p>
+
+  <details class="recall">
+    <summary>From memory: the difference between BYOD and COPE, between MDM and MAM, and between retire and wipe. <span class="hint">(then click to check)</span></summary>
+    <p><strong>BYOD</strong>: employee owns it; IT controls only the work area. <strong>COPE</strong>: company owns and fully manages it; personal use allowed. <strong>MDM</strong>: enrolls and manages the whole device. <strong>MAM</strong>: protects data inside work apps, no enrollment. <strong>Retire</strong>: removes company data only. <strong>Wipe</strong>: factory reset.</p>
+  </details>
+
+  <h2>Review: earlier lessons</h2>
+  <p>Spaced retrieval: pull these from memory first, then check.</p>
+
+  <details class="recall">
+    <summary>A user switches carriers and gets a new SIM. Which identifier stays the same, the IMEI or the ICCID, and why? <span class="hint">(<a href="0027-mobile-device-networks.html">lesson 0027</a>, 1 day ago)</span></summary>
+    <p>The <strong>IMEI</strong> stays: it identifies the phone hardware. The <strong>ICCID</strong> identifies the SIM (or eSIM profile), so it changes with the new SIM.</p>
+  </details>
+
+  <details class="recall">
+    <summary>A new access point needs PoE but the closet switch doesn't supply power. What can you add, and what's it called in endspan/midspan terms? <span class="hint">(<a href="0021-poe-modems-ont-nic.html">lesson 0021</a>, 7 days ago)</span></summary>
+    <p>A <strong>PoE injector</strong> between the switch and the AP. That's <strong>midspan</strong>; power from the switch port itself is <strong>endspan</strong>.</p>
+  </details>
+
+  <details class="recall">
+    <summary>With an 8-day DHCP lease, when does a client first try to renew, and what's the difference between a reservation and an exclusion? <span class="hint">(<a href="0014-dhcp-scopes-leases.html">lesson 0014</a>, 14 days ago)</span></summary>
+    <p>At <strong>T1 = half the lease</strong> (day 4), with the server that gave the lease. A <strong>reservation</strong> always gives one device (by MAC) the same address; an <strong>exclusion</strong> keeps addresses out of the pool so DHCP never hands them out.</p>
+  </details>
+
+  <div class="callout source" id="src-messer">
+    <span class="label">Primary source: watch next</span>
+    <p>[1] Professor Messer, <a href="https://www.professormesser.com/free-a-plus-training/220-1201/220-1201-video/mobile-device-management-220-1201/">Mobile Device Management (220-1201, 1.3)</a>. A short video: MDM, BYOD and COPE, data synchronization, business applications.</p>
+    <p id="src-cope">[2] Ferrum IT, <a href="https://ferrumit.com/resources/cope-and-byod-two-options-for-mobile-device-management">COPE and BYOD: Two Options for Mobile Device Management</a> (COPE gives IT full authority over configuration, encryption, access and updates; third-party source).</p>
+    <p id="src-android">[3] Microsoft Learn, <a href="https://learn.microsoft.com/en-us/intune/device-enrollment/android/guide">Enrollment guide: Android devices in Intune</a> (personally owned work profile for BYOD; fully managed, corporate-owned work profile and dedicated for company devices).</p>
+    <p id="src-app">[4] Microsoft Learn, <a href="https://learn.microsoft.com/mem/intune/apps/app-protection-policy">App protection policies overview</a> and <a href="https://learn.microsoft.com/en-us/intune/fundamentals/deploy-protect-apps-step-2">Protect apps (step 2)</a> (PIN, save-as and clipboard restrictions, selective wipe; MAM without enrollment can't push apps, certificates, Wi-Fi or VPN).</p>
+    <p id="src-retire">[5] Microsoft Learn, <a href="https://learn.microsoft.com/en-us/intune/devices-wipe">Remove devices by using wipe, retire, or manually unenrolling</a> (retire keeps personal data; wipe restores factory defaults).</p>
+  </div>
+
+  <div class="callout ask">
+    <span class="label">Questions?</span>
+    <p>Anything unclear? Ask your teacher. Open Claude in the Teacher repo and ask, for example: <em>"In IT lesson 0028, when would I pick app protection over full enrollment for a personal phone?"</em> Follow-up questions are part of the course.</p>
+  </div>
+</main>
+<nav class="page-footer">
+  <a href="0027-mobile-device-networks.html">← Cells, SIMs and satellites</a>
+  <a href="../../index.html">Hub</a>
+  <span class="disabled">Next lesson: tomorrow →</span>
+</nav>
+</body>
+</html>
