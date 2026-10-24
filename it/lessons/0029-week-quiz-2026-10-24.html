@@ -1,0 +1,255 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Weekly Quiz: Oct 18 – Oct 23</title>
+<meta name="description" content="IT lesson 0029: Saturday in-depth quiz on week four (laptop batteries and SSDs, laptop cameras and microphones, connecting mobile devices, accessories and docks, mobile networks and SIMs, mobile device management) mixed with earlier weeks, plus an A+ Core 1 pace check.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=JetBrains+Mono&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../assets/course.css">
+<script src="../../assets/quiz.js" defer></script>
+</head>
+<body class="track-it">
+<nav class="page-header">
+  <a class="home" href="../../index.html">Teacher hub</a>
+  <span>IT and certs</span>
+  <a href="../reference/glossary.html">Glossary</a>
+  <a href="../reference/network-settings.html">Cheat sheet</a>
+  <a href="../reference/hardware.html">Hardware cheat sheet</a>
+</nav>
+<main>
+  <p class="kicker">IT and certs · Lesson 0029 · Saturday quiz · A+ Core 1, objectives 1.1–1.3 and 2.x review</p>
+  <h1>Weekly quiz: Oct 18 – Oct 23</h1>
+  <p class="lede">About 20 minutes. Fifteen questions: nine on this week (laptop batteries and drives, cameras and microphones, connecting phones, accessories and docks, cellular networks and SIMs, mobile device management) and six pulled back from the first two weeks (IP settings, Wi-Fi standards, RFID, server roles, middleboxes, SPF). They're shuffled on purpose. Most are tickets: work out what's broken before you work out what it's called.</p>
+
+  <div class="callout">
+    <span class="label">How to take it</span>
+    <p>No scrolling back to the lessons until you've answered. A wrong answer followed by the explanation sticks better than a right answer you looked up. Each explanation links to the lesson that taught it, so you know exactly what to reread.</p>
+  </div>
+
+  <p class="quiz-score" data-quiz-score></p>
+
+  <section class="quiz">
+    <p class="q">A user says their three-year-old laptop now lasts under an hour away from the charger. The battery report shows a design capacity of 50,000 mWh and a full charge capacity of 19,000 mWh. What's the right next step?</p>
+    <ul class="choices">
+      <li><button class="choice">Recalibrate it by draining to zero</button></li>
+      <li><button class="choice" data-correct>Replace the battery: it holds 38%</button></li>
+      <li><button class="choice">Update the BIOS to restore capacity</button></li>
+      <li><button class="choice">Switch to a balanced power plan</button></li>
+    </ul>
+    <div class="explain" hidden>Battery health = full charge capacity ÷ design capacity: 19,000 ÷ 50,000 = 38%. Lithium-ion wears out with age and charge cycles, and no setting, firmware or calibration brings lost capacity back. The fix is a new battery (built in on most thin laptops, so check the service manual). See <a href="0023-laptop-batteries-keyboards-ssd.html">lesson 0023</a>.</div>
+  </section>
+
+  <section class="quiz">
+    <p class="q">A user can print to the printer down the hall and open a folder on the local file server, but no website loads. <code>ipconfig /all</code> shows <code>192.168.1.42</code>, mask <code>255.255.255.0</code>, a DNS server, and a blank Default Gateway line. What's wrong?</p>
+    <ul class="choices">
+      <li><button class="choice">APIPA address: DHCP never answered it</button></li>
+      <li><button class="choice">Wrong subnet mask: hides local hosts</button></li>
+      <li><button class="choice">Broken DNS: names cannot be resolved</button></li>
+      <li><button class="choice" data-correct>Missing gateway: nothing leaves the subnet</button></li>
+    </ul>
+    <div class="explain" hidden>Local works, everything else fails: that's the default gateway's job. Without one, the device has nowhere to send traffic that isn't on its own subnet. It isn't APIPA (that would be <code>169.254.x.x</code>), local hosts are clearly reachable, and DNS can't help when there's no route out. See <a href="0001-four-ip-settings.html">lesson 0001</a>.</div>
+  </section>
+
+  <section class="quiz">
+    <p class="q">On a train, a user shares their phone's connection with their laptop over a USB cable. Signing in to work apps now asks for an extra MFA prompt that never appears in the office. What's the most likely reason?</p>
+    <ul class="choices">
+      <li><button class="choice" data-correct>Sign-ins now come from carrier IPs</button></li>
+      <li><button class="choice">USB tethering breaks the laptop's certificates</button></li>
+      <li><button class="choice">The phone's DHCP server blocks sign-in</button></li>
+      <li><button class="choice">Tethering is slower, so tokens expire</button></li>
+    </ul>
+    <div class="explain" hidden>Tethered (one device, by cable) or on a hotspot (many devices, by Wi-Fi), the laptop reaches the internet through the phone, so its sign-ins come from the mobile carrier's public IP, not the office's. A sign-in policy that trusts only office addresses sees "outside" and asks for more proof. That's the policy working, not a fault. See <a href="0025-connecting-mobile-devices.html">lesson 0025</a> and <a href="0018-internet-connection-types.html">lesson 0018</a>.</div>
+  </section>
+
+  <section class="quiz">
+    <p class="q">A user can't use their camera in any app. In Settings → Privacy &amp; security → Camera, the switches are greyed out with "Some settings are managed by your organization." The privacy shutter is open. Where's the fix?</p>
+    <ul class="choices">
+      <li><button class="choice">In Device Manager, by reinstalling drivers</button></li>
+      <li><button class="choice">In the meeting app's video settings</button></li>
+      <li><button class="choice" data-correct>In the assigned device management policy</button></li>
+      <li><button class="choice">In the laptop's camera function key</button></li>
+    </ul>
+    <div class="explain" hidden>Greyed-out switches plus "managed by your organization" is layer 4 of the order (physical → Windows privacy → device → policy). A setting such as Intune's Allow Camera = Not allowed stops every app while the hardware and driver stay fine, so the fix is in the policy the device receives, not on the laptop. See <a href="0024-laptop-nfc-cameras-microphones.html">lesson 0024</a>.</div>
+  </section>
+
+  <section class="quiz">
+    <p class="q">A warehouse wants cheap tags on thousands of boxes, read automatically as pallets roll through the dock door. The tags can't have batteries. Which technology fits?</p>
+    <ul class="choices">
+      <li><button class="choice">NFC: two-way, works at four centimeters</button></li>
+      <li><button class="choice">Bluetooth: pairs once, reaches ten meters</button></li>
+      <li><button class="choice" data-correct>Passive RFID: the reader powers it</button></li>
+      <li><button class="choice">Active RFID: battery gives longer range</button></li>
+    </ul>
+    <div class="explain" hidden>A passive RFID tag has no battery: the reader's radio signal powers it just long enough to answer, which is why the tags are tiny and cheap. Active RFID needs a battery (ruled out). NFC means a deliberate tap at a few centimeters, not a pallet rolling past, and Bluetooth devices need power and pairing. See <a href="0009-bluetooth-nfc-rfid-fixed-wireless.html">lesson 0009</a>.</div>
+  </section>
+
+  <section class="quiz">
+    <p class="q">An employee is leaving. Their personal phone was set up under BYOD for work email and apps. Policy says remove all company data but leave personal photos and apps untouched. Which action do you run?</p>
+    <ul class="choices">
+      <li><button class="choice">Wipe: restores the phone to factory</button></li>
+      <li><button class="choice" data-correct>Retire: removes company apps and data</button></li>
+      <li><button class="choice">Locate: shows where the phone is</button></li>
+      <li><button class="choice">Reset passcode: clears the screen lock</button></li>
+    </ul>
+    <div class="explain" hidden>Retire (selective wipe) takes back the company's apps, data, email profiles and settings and leaves the owner's data alone: exactly BYOD offboarding. Wipe is a factory reset of everything, for company-owned devices that are lost, stolen or being reassigned; on some personal enrollments it isn't even offered. See <a href="0028-mobile-device-management.html">lesson 0028</a>.</div>
+  </section>
+
+  <section class="quiz">
+    <p class="q">The office installs new Wi-Fi 7 access points, but one laptop's speed doesn't change at all. On that laptop, <code>netsh wlan show drivers</code> lists radio types up to <code>802.11ac</code>. What explains it?</p>
+    <ul class="choices">
+      <li><button class="choice" data-correct>The link runs at Wi-Fi 5 speeds</button></li>
+      <li><button class="choice">Wi-Fi 7 needs the 2.4 GHz band</button></li>
+      <li><button class="choice">The access point blocks older 802.11ac clients</button></li>
+      <li><button class="choice">The laptop needs a new DNS server</button></li>
+    </ul>
+    <div class="explain" hidden>802.11ac is Wi-Fi 5 (n4, ac5, ax6, be7). Standards are backward compatible, so the Wi-Fi 7 access point still serves the laptop, but a connection runs at the best standard <em>both</em> ends share. The ceiling is the laptop's adapter, not the network. See <a href="0007-wifi-standards.html">lesson 0007</a>.</div>
+  </section>
+
+  <section class="quiz">
+    <p class="q">A user's Bluetooth headset sounds great for music. The moment a video meeting starts, the audio turns thin and muffled, and others say the user's voice sounds just as bad. What's the most likely cause?</p>
+    <ul class="choices">
+      <li><button class="choice">The headset's battery is nearly empty</button></li>
+      <li><button class="choice">Bluetooth interference from nearby Wi-Fi channels</button></li>
+      <li><button class="choice">The meeting app lowers audio quality</button></li>
+      <li><button class="choice" data-correct>The mic switches it to Hands-Free</button></li>
+    </ul>
+    <div class="explain" hidden>When a Bluetooth headset's microphone turns on, it switches from its stereo music profile to the Hands-Free Profile, which carries only low-quality mono audio both ways. "Fine on music, terrible in meetings" is that, not a broken headset. Workaround: keep the headset as the speaker and pick the laptop's built-in mic (or a USB headset) in the meeting app. See <a href="0026-mobile-device-accessories.html">lesson 0026</a>.</div>
+  </section>
+
+  <section class="quiz">
+    <p class="q">IT tracks company phones in an asset list. A user moves to a new carrier with an eSIM, keeping the same phone. Which identifier in the asset list still matches the device?</p>
+    <ul class="choices">
+      <li><button class="choice">The ICCID, which identifies the SIM</button></li>
+      <li><button class="choice">The IMSI, which identifies the subscriber</button></li>
+      <li><button class="choice" data-correct>The IMEI, which identifies the hardware</button></li>
+      <li><button class="choice">The number, which identifies the line</button></li>
+    </ul>
+    <div class="explain" hidden>The IMEI belongs to the phone itself and survives any SIM or carrier change, which is why it's the one to track assets by. A new carrier means a new SIM profile (new ICCID) and a new subscription (new IMSI), and the number may change too. (The EID, the eSIM chip's ID, also stays, since it's the same phone.) See <a href="0027-mobile-device-networks.html">lesson 0027</a>.</div>
+  </section>
+
+  <section class="quiz">
+    <p class="q">A user signs in to the company portal successfully, MFA and all, but gets "Access denied" when opening the finance app. Which part of AAA is doing its job here?</p>
+    <ul class="choices">
+      <li><button class="choice">Authentication: checking who the user is</button></li>
+      <li><button class="choice" data-correct>Authorization: deciding what they may access</button></li>
+      <li><button class="choice">Accounting: recording what the user did</button></li>
+      <li><button class="choice">Auditing: reviewing logs after the fact</button></li>
+    </ul>
+    <div class="explain" hidden>The sign-in worked, so authentication (who are you?) passed. "Access denied" to one app is authorization (what may you do?): groups, roles and policies. Accounting is the record of it in the sign-in logs. "Auditing" isn't one of the three A's. Next step: check the user's group or role for that app, not their password. See <a href="0010-server-roles.html">lesson 0010</a>.</div>
+  </section>
+
+  <section class="quiz">
+    <p class="q">A user's laptop has one 2.5-inch drive bay and a slow spinning hard drive. They want an SSD but must keep every app and setting exactly as it is today. What's the plan?</p>
+    <ul class="choices">
+      <li><button class="choice">M.2 SSD, fresh install, then restore files</button></li>
+      <li><button class="choice">3.5-inch SSD, clone over USB, then swap</button></li>
+      <li><button class="choice">2.5-inch SSD, fresh install, then restore files</button></li>
+      <li><button class="choice" data-correct>2.5-inch SSD, clone over USB, then swap</button></li>
+    </ul>
+    <div class="explain" hidden>Match the form factor first: a 2.5-inch SATA SSD drops straight into a laptop hard drive's bay (3.5-inch is desktop size, and this laptop has no M.2 slot mentioned). "Keep everything" means clone, not a fresh install; with one bay, connect the SSD by a USB-to-SATA adapter, clone, then swap. Back up first, and suspend BitLocker before the work. See <a href="0023-laptop-batteries-keyboards-ssd.html">lesson 0023</a>.</div>
+  </section>
+
+  <section class="quiz">
+    <p class="q">Enrolling new laptops in device management fails on the office network with certificate or connection errors. The same laptops enroll fine over a phone hotspot. What's the most likely cause?</p>
+    <ul class="choices">
+      <li><button class="choice" data-correct>An inspecting proxy in the office path</button></li>
+      <li><button class="choice">The office DHCP scope is now full</button></li>
+      <li><button class="choice">An expired license on each new laptop</button></li>
+      <li><button class="choice">The laptops' Wi-Fi standard is too old</button></li>
+    </ul>
+    <div class="explain" hidden>"Works at home (or on a hotspot), fails at the office" points at a box in the path. A proxy or security appliance that inspects encrypted traffic breaks the certificate checks that enrollment relies on; Microsoft lists Intune service addresses that should bypass that inspection. A full DHCP scope would mean no address at all (169.254), and the license and Wi-Fi standard don't change between networks. See <a href="0011-appliances-scada-iot.html">lesson 0011</a>.</div>
+  </section>
+
+  <section class="quiz">
+    <p class="q">A contractor needs work email on their personal phone but refuses to let IT enroll the device. Security still wants a PIN on the mail app and no copying company data into personal apps. What fits?</p>
+    <ul class="choices">
+      <li><button class="choice">COPE enrollment with a work profile</button></li>
+      <li><button class="choice">A fully managed corporate device profile</button></li>
+      <li><button class="choice" data-correct>App protection (MAM) without device enrollment</button></li>
+      <li><button class="choice">A dedicated device locked to email</button></li>
+    </ul>
+    <div class="explain" hidden>MAM protects company data <em>inside</em> work apps (app PIN, no copy-paste or "save as" to personal apps, selective wipe of the app's data) without enrolling the phone. The other three are company-owned models that need full enrollment. The trade-off: without enrollment, IT can't push apps, certificates, Wi-Fi or VPN settings. See <a href="0028-mobile-device-management.html">lesson 0028</a>.</div>
+  </section>
+
+  <section class="quiz">
+    <p class="q">A laptop has a DHCP reservation so it always gets the same address, which a firewall rule depends on. Undocked on Wi-Fi, it works. On its desk dock with a network cable and Wi-Fi off, it gets a different address and the rule fails. What's the most likely cause?</p>
+    <ul class="choices">
+      <li><button class="choice" data-correct>The dock's network adapter has another MAC</button></li>
+      <li><button class="choice">The dock is only a port replicator</button></li>
+      <li><button class="choice">The reservation expires on a wired connection</button></li>
+      <li><button class="choice">The dock blocks DHCP traffic from laptops</button></li>
+    </ul>
+    <div class="explain" hidden>A DHCP reservation is tied to one MAC address. Docked, the wired network usually comes from a network adapter inside the dock, with its own MAC, so the DHCP server sees a different device and hands out a pool address. <code>Get-NetAdapter</code> docked and undocked shows the two MACs; reserve the one actually used (or both). The dock clearly passes DHCP, since the laptop got an address. See <a href="0026-mobile-device-accessories.html">lesson 0026</a> and <a href="0014-dhcp-scopes-leases.html">lesson 0014</a>.</div>
+  </section>
+
+  <section class="quiz">
+    <p class="q">Marketing starts using a newsletter service. Someone adds a second SPF TXT record for it, next to the existing Microsoft 365 one. Now ordinary staff mail starts failing SPF too. What's the fix?</p>
+    <ul class="choices">
+      <li><button class="choice">Add a DKIM CNAME for newsletters</button></li>
+      <li><button class="choice">Change the DMARC policy to none</button></li>
+      <li><button class="choice">Lower the TTL on both records</button></li>
+      <li><button class="choice" data-correct>Merge both senders into one record</button></li>
+    </ul>
+    <div class="explain" hidden>A domain may have only <em>one</em> SPF record; publishing a second breaks both. Combine them: one <code>v=spf1</code> record with both <code>include:</code> entries and a single <code>-all</code> at the end. DKIM and DMARC don't repair a broken SPF record, and setting DMARC to none only hides the damage. See <a href="0013-spf-dkim-dmarc.html">lesson 0013</a>.</div>
+  </section>
+
+  <p class="quiz-score" data-quiz-score></p>
+
+  <h2>Explain it in your own words</h2>
+  <p>Say or write the answer before you open each one. If you can explain it to a coworker, you know it.</p>
+
+  <details class="recall">
+    <summary>A coworker asks for "a dock" for a new laptop. Explain the classic difference between a docking station and a port replicator in two sentences. <span class="hint">(<a href="0026-mobile-device-accessories.html">lesson 0026</a>)</span></summary>
+    <p>A <strong>port replicator</strong> just copies the laptop's ports to a box on the desk, is usually smaller, and traditionally doesn't charge the laptop. A <strong>docking station</strong> copies the ports, adds more (sometimes expansion slots or drives), and charges the laptop through the same connection, often with a vendor-specific connector. Modern USB-C/Thunderbolt docks blur the line.</p>
+  </details>
+
+  <details class="recall">
+    <summary>You're about to update a BitLocker-encrypted laptop's firmware. What do you do first, and what's the plan if it asks for a recovery key anyway? <span class="hint">(<a href="0023-laptop-batteries-keyboards-ssd.html">lesson 0023</a>)</span></summary>
+    <p><strong>Suspend BitLocker</strong> before the planned change: the drive stays encrypted, and protection resumes on its own after a reboot. If the recovery screen appears anyway, look up the <strong>recovery key</strong> where it's backed up (often Microsoft Entra ID or Active Directory) instead of reinstalling.</p>
+  </details>
+
+  <details class="recall">
+    <summary>A user sees 5G at multi-gigabit speed outdoors downtown, but it drops sharply the moment they walk inside. Explain why, and connect it to what you know about Wi-Fi bands. <span class="hint">(<a href="0027-mobile-device-networks.html">lesson 0027</a>, <a href="0006-wifi-bands-channels.html">lesson 0006</a>)</span></summary>
+    <p>That's <strong>mmWave</strong> 5G: very high frequency, multi-gigabit peaks, but short range and blocked by walls and trees. Indoors the phone falls back to <strong>sub-6 GHz</strong> 5G (or LTE): wider coverage, lower speed. Same physics as 2.4 vs. 5 GHz Wi-Fi: higher frequency means more speed and less reach.</p>
+  </details>
+
+  <details class="recall">
+    <summary>Explain SPF, DKIM and DMARC to a non-technical manager, using one picture for each. <span class="hint">(<a href="0013-spf-dkim-dmarc.html">lesson 0013</a>, 16 days ago)</span></summary>
+    <p><strong>SPF</strong> is the guest list: which servers may send mail for the domain. <strong>DKIM</strong> is the wax seal: the message was signed by the domain and not changed on the way. <strong>DMARC</strong> is the bouncer's instructions: what the receiver should do when the list or the seal doesn't check out (none, quarantine, reject), and who gets the reports.</p>
+  </details>
+
+  <details class="recall">
+    <summary>A load balancer and a proxy server both sit "in the middle." Who does each one stand in front of? <span class="hint">(<a href="0011-appliances-scada-iot.html">lesson 0011</a>, 18 days ago)</span></summary>
+    <p>A <strong>load balancer</strong> faces inward: it stands in front of your <em>servers</em>, spreading requests across them behind one address. A <strong>proxy</strong> faces outward: it stands in for your <em>users</em>, making their requests to the internet (and can cache, filter and log them).</p>
+  </details>
+
+  <h2>Pace check</h2>
+  <div class="callout">
+    <span class="label">A+ Core 1: 17 of 63 videos covered (about 27%)</span>
+    <div class="meter"><span style="width:27%"></span></div>
+    <p>Fully covered so far: Assigning IP Addresses, Introduction to IP, Common Ports, Wireless Network Technologies, Network Services, DNS Configuration, DHCP Configuration, VLANs and VPNs, Network Types, Internet Connection Types, Network Tools, Network Devices, Laptop Hardware, Connecting Mobile Devices, Mobile Device Accessories, Mobile Device Networks, and Mobile Device Management. Five of those were finished this week.</p>
+    <p><strong>What the calendar needs:</strong> the syllabus puts all new material in weeks 1–17 (Sep 27 – Jan 23), about <strong>3.7 videos a week</strong>. Today ends week 4, so you'd expect about 15. You're at 17: <strong>ahead, by about two videos</strong>. The gap has moved your way four weeks running: one behind, on pace, one ahead, now two ahead.</p>
+    <p><strong>The trend:</strong> five videos in five daily lessons this week, well above the 3.7 needed. The remaining 46 videos fit in the 13 weeks left before review starts at about 3.5 a week, so the February target holds comfortably. By domain you're further ahead still: the syllabus gives Mobile devices (objectives 1.1–1.3) the next two weeks, Oct 25 – Nov 7, and that domain now appears complete.</p>
+    <p>Nothing in the plan was changed. Next week's daily lessons follow the syllabus's domain order into Virtualization &amp; cloud (objectives 4.1–4.2). The two spare weeks are yours to spend: bank them for the six hardware weeks over the holidays, or keep them for extra review and practice exams before February.</p>
+  </div>
+
+  <div class="callout source" id="src-messer">
+    <span class="label">Primary source: watch next</span>
+    <p>Professor Messer, <a href="https://www.professormesser.com/free-a-plus-training/220-1201/220-1201-video/220-1201-training-course/">Free CompTIA A+ 220-1201 course</a>. Rewatch the video behind whichever question you missed: Laptop Hardware, Connecting Mobile Devices, Mobile Device Accessories, Mobile Device Networks and Mobile Device Management cover this week. Free.</p>
+  </div>
+
+  <div class="callout ask">
+    <span class="label">Questions?</span>
+    <p>Missed one and the explanation didn't settle it? Ask your teacher. Open Claude in the Teacher repo and ask, for example: <em>"In IT lesson 0029, question 13, what exactly can IT see on a phone that only has app protection?"</em> Follow-up questions are part of the course.</p>
+  </div>
+</main>
+<nav class="page-footer">
+  <a href="0028-mobile-device-management.html">← Whose phone, whose data</a>
+  <a href="../../index.html">Hub</a>
+  <span class="disabled">Next lesson: tomorrow →</span>
+</nav>
+</body>
+</html>
