@@ -1,7 +1,7 @@
 /* Hub data. The teacher updates this file after every lesson; index.html renders it.
    Keep it free of personal data: the site is public. */
 window.HUB = {
-  updated: "2026-10-24",
+  updated: "2026-10-25",
   tracks: [
     {
       id: "it", name: "IT and certs", folder: "it", cls: "track-it", status: "active",
@@ -170,6 +170,11 @@ window.HUB = {
       track: "it", num: "0029", date: "2026-10-24", covers: 0,
       title: "Weekly quiz: Oct 18 – Oct 23",
       path: "it/lessons/0029-week-quiz-2026-10-24.html"
+    },
+    {
+      track: "it", num: "0030", date: "2026-10-25", covers: 1,
+      title: "A computer inside a computer: why we run virtual machines",
+      path: "it/lessons/0030-virtualization-concepts.html"
     },
     {
       track: "app", num: "0001", date: "2026-09-28", covers: 0,

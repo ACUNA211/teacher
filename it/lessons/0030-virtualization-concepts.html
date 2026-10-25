@@ -1,0 +1,165 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Virtualization Concepts</title>
+<meta name="description" content="IT lesson 0030: A+ objective 4.1, virtualization concepts. Host, guest and hypervisor; the four reasons to run a virtual machine (sandboxing, developing and testing software, legacy software, cross-platform); snapshots; Windows Sandbox as a hands-on example.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=JetBrains+Mono&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../assets/course.css">
+<script src="../../assets/quiz.js" defer></script>
+</head>
+<body class="track-it">
+<nav class="page-header">
+  <a class="home" href="../../index.html">Teacher hub</a>
+  <span>IT and certs</span>
+  <a href="../reference/glossary.html">Glossary</a>
+  <a href="../reference/virtualization-cloud.html">Virtualization &amp; cloud cheat sheet</a>
+</nav>
+<main>
+  <p class="kicker">IT and certs · Lesson 0030 · A+ Core 1, objective 4.1</p>
+  <h1>A computer inside a computer: why we run virtual machines</h1>
+  <p class="lede">About 10 minutes. New domain: <strong>Virtualization &amp; cloud</strong> (11% of Core 1). A <strong>virtual machine (VM)</strong> is a whole computer made of software: its own operating system, with CPU time, memory, disk and network handed to it by the real machine underneath.<sup class="cite"><a href="#src-messer">[1]</a></sup> The win today: for any "can we safely try this?" problem, name which of the <strong>four uses</strong> of a VM fits.</p>
+
+  <div class="callout">
+    <span class="label">Why this matters at work</span>
+    <p>Rolling a change out to every laptop at once is how one bad setting becomes a hundred tickets. A test VM lets you try a new app, an update or a device policy on a machine nobody depends on, and throw it away afterwards. Windows VMs can be enrolled as test devices too, so a policy can reach a pilot VM before it reaches real users.</p>
+  </div>
+
+  <h2>Three words first</h2>
+  <ul>
+    <li><strong>Host</strong>: the physical computer, and the operating system running on it.</li>
+    <li><strong>Guest</strong>: an operating system running inside a VM. One host can run several guests at once, each separated from the others.</li>
+    <li><strong>Hypervisor</strong> (virtual machine manager): the software that creates the VMs, shares out CPU, memory and networking, and keeps the guests apart.<sup class="cite"><a href="#src-hv">[2]</a></sup> Its two types are the next lesson.</li>
+  </ul>
+
+  <h2>Four reasons to run a VM</h2>
+  <div class="table-wrap">
+  <table>
+    <thead><tr><th>Use</th><th>The problem it solves</th><th>Example</th></tr></thead>
+    <tbody>
+      <tr><td><strong>Sandboxing</strong></td><td>Try something without risk to the host or the production network. The sandbox is isolated, and when it's thrown away its data goes with it.<sup class="cite"><a href="#src-messer">[1]</a></sup></td><td>Open an unknown installer, test a risky setting</td></tr>
+      <tr><td><strong>Developing and testing software</strong></td><td>Developers need clean, repeatable machines to build and test on, without breaking their own computer.<sup class="cite"><a href="#src-messer">[1]</a></sup></td><td>Test an app update on a fresh Windows build</td></tr>
+      <tr><td><strong>Legacy software</strong></td><td>An application only runs on an older operating system. Build a VM with that old OS and keep the modern desktop for everything else.<sup class="cite"><a href="#src-hv">[2]</a></sup></td><td>An old line-of-business app that needs an old Windows version</td></tr>
+      <tr><td><strong>Cross-platform</strong></td><td>Run a different operating system than the host: Linux on a Windows PC, Windows on a Mac, several OS versions side by side.<sup class="cite"><a href="#src-messer">[1]</a></sup></td><td>Check that a web app works on another OS and browser</td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <h2>Snapshots: the undo button</h2>
+  <p>Most hypervisors can save a VM's exact state as a <strong>snapshot</strong> (Hyper-V calls it a <strong>checkpoint</strong>). Break something, revert, and you're back to the moment before the test. That's what makes a VM such a good sandbox: the same clean starting point, every time.</p>
+
+  <div class="callout">
+    <span class="label">Watch out: legacy VMs</span>
+    <p>A VM keeps old software running, but it doesn't make an unsupported OS safe. It still gets no security updates, so give a legacy VM only the network access it truly needs.</p>
+  </div>
+
+  <div class="callout win">
+    <span class="label">Memory hook</span>
+    <p><strong>Host = the real machine. Guest = the OS inside the VM. Hypervisor = the referee between them.</strong> The four uses: <strong>sandbox, develop, legacy, cross-platform</strong>.</p>
+  </div>
+
+  <h2>Try it (3 minutes)</h2>
+  <p>Windows has a disposable VM built in: <strong>Windows Sandbox</strong>. Everything you do inside it is discarded when you close it.<sup class="cite"><a href="#src-sandbox">[3]</a></sup></p>
+  <ol>
+    <li><strong>Is virtualization on?</strong> Task Manager → Performance → CPU. Look for <em>Virtualization: Enabled</em>. If it says Disabled, it's switched off in the UEFI/BIOS settings.</li>
+    <li>Or run <code>systeminfo</code> and read the last lines. Either you'll see <em>Hyper-V Requirements</em> (each should say Yes), or <em>"A hypervisor has been detected"</em>, which means one is already running.<sup class="cite"><a href="#src-req">[4]</a></sup></li>
+    <li><strong>On Pro, Enterprise or Education</strong> (not Home): search for <em>Turn Windows features on or off</em>, tick <em>Windows Sandbox</em>, restart. Or, in an admin PowerShell:
+      <pre><code>Enable-WindowsOptionalFeature -Online -FeatureName Containers-DisposableClientVM</code></pre></li>
+    <li>Open Windows Sandbox, create a file on its desktop, close it, open it again. The file is gone: a sandbox in one click.</li>
+  </ol>
+  <p class="sidenote">Needs at least 4 GB of RAM (8 GB recommended) and two CPU cores.<sup class="cite"><a href="#src-sandbox">[3]</a></sup> On a work laptop, check with whoever manages it before turning on Windows features.</p>
+
+  <h2>Practice</h2>
+  <p>Answer from memory before scrolling back up.</p>
+
+  <section class="quiz">
+    <p class="q">A department still relies on an old accounting app that won't install on current Windows. Staff have modern laptops. What's the cleanest fix?</p>
+    <ul class="choices">
+      <li><button class="choice">Downgrade every laptop's operating system</button></li>
+      <li><button class="choice">Disable updates on all laptops</button></li>
+      <li><button class="choice" data-correct>Run the old OS in a VM</button></li>
+      <li><button class="choice">Buy new laptops for that department</button></li>
+    </ul>
+    <div class="explain" hidden>That's the <strong>legacy software</strong> use: a VM runs the older OS the app needs, and the laptop keeps its supported, patched OS for everything else. Downgrading or stopping updates makes every laptop less secure. Keep the legacy VM's network access to the minimum, since its OS gets no updates.</div>
+  </section>
+
+  <section class="quiz">
+    <p class="q">You want to test a new device setting on a Windows machine, break it on purpose, and get back to the exact starting point several times. What makes that fastest?</p>
+    <ul class="choices">
+      <li><button class="choice">Reinstall Windows after each test</button></li>
+      <li><button class="choice" data-correct>Revert a VM to a snapshot</button></li>
+      <li><button class="choice">Use a second physical laptop</button></li>
+      <li><button class="choice">Run System File Checker afterwards</button></li>
+    </ul>
+    <div class="explain" hidden>A <strong>snapshot</strong> (a checkpoint, in Hyper-V) saves the VM's exact state; reverting returns to it in seconds. Reinstalling or using a second laptop works but is slow, and a file checker only repairs system files, not your settings.</div>
+  </section>
+
+  <section class="quiz">
+    <p class="q">A web developer on a Windows PC must check that their site works on a Linux desktop browser, without buying another computer. Which use of virtualization is this?</p>
+    <ul class="choices">
+      <li><button class="choice">Legacy software support</button></li>
+      <li><button class="choice">Sandboxing untrusted code</button></li>
+      <li><button class="choice">Virtual desktop infrastructure</button></li>
+      <li><button class="choice" data-correct>Cross-platform virtualization</button></li>
+    </ul>
+    <div class="explain" hidden><strong>Cross-platform</strong>: a guest OS different from the host (Linux on Windows here). Legacy is about an <em>older</em> OS an app needs; sandboxing is about isolating risk; virtual desktop infrastructure (desktops served from a data center) comes in the next lesson.</div>
+  </section>
+
+  <section class="quiz">
+    <p class="q">A user turns on Windows Sandbox, tests an installer inside it, closes it, and reopens it the next day. The installed program is gone. Why?</p>
+    <ul class="choices">
+      <li><button class="choice" data-correct>The sandbox discards everything when closed</button></li>
+      <li><button class="choice">The installer failed without an error</button></li>
+      <li><button class="choice">An update removed the installed program</button></li>
+      <li><button class="choice">The host blocked the program overnight</button></li>
+    </ul>
+    <div class="explain" hidden>Windows Sandbox is disposable by design: nothing persists after it closes, and the next launch starts clean. That's exactly what a sandbox is for. To keep a test machine between sessions, use a full VM (Hyper-V, for example) with snapshots instead.</div>
+  </section>
+  <p class="quiz-score" data-quiz-score></p>
+
+  <details class="recall">
+    <summary>From memory: host, guest, hypervisor, and the four uses of a VM. <span class="hint">(then click to check)</span></summary>
+    <p><strong>Host</strong>: the physical machine and its OS. <strong>Guest</strong>: the OS inside a VM. <strong>Hypervisor</strong>: creates the VMs, shares out the hardware and keeps them apart. Uses: <strong>sandboxing</strong> (isolated, throwaway), <strong>developing/testing</strong> software, <strong>legacy</strong> software (old OS in a VM), <strong>cross-platform</strong> (a different OS than the host).</p>
+  </details>
+
+  <h2>Review: earlier lessons</h2>
+  <p>Spaced retrieval: pull these from memory first, then check.</p>
+
+  <details class="recall">
+    <summary>What does a phone need to work out its own position by GPS, and what does it lean on indoors? <span class="hint">(<a href="0027-mobile-device-networks.html">lesson 0027</a>, 3 days ago)</span></summary>
+    <p>Signals from <strong>at least four satellites</strong> (three for position, one more to correct the clock). Indoors it falls back on nearby <strong>Wi-Fi and cell towers</strong> to estimate location, which is why it gets less precise inside buildings.</p>
+  </details>
+
+  <details class="recall">
+    <summary>A technician is about to replace a laptop's drive. What should they do first if the drive is BitLocker-encrypted, and what are the two ways to move to the new SSD? <span class="hint">(<a href="0023-laptop-batteries-keyboards-ssd.html">lesson 0023</a>, 7 days ago)</span></summary>
+    <p>Make sure the <strong>recovery key</strong> is available (and suspend BitLocker for planned hardware work, so the change doesn't trigger recovery). Then either <strong>clone</strong> the old drive (keeps Windows, apps and files) or do a <strong>fresh install</strong> and restore files from backup.</p>
+  </details>
+
+  <details class="recall">
+    <summary>A remote user's VPN is set to full tunnel. Their video calls are slow. What does full tunnel do, and what would split tunnel change? <span class="hint">(<a href="0016-vlans-vpns.html">lesson 0016</a>, 14 days ago)</span></summary>
+    <p><strong>Full tunnel</strong> sends <em>all</em> traffic through the VPN to the company network first. <strong>Split tunnel</strong> sends only company traffic through the VPN, so internet and cloud traffic (like video calls) goes straight out, faster.</p>
+  </details>
+
+  <div class="callout source" id="src-messer">
+    <span class="label">Primary source: watch next</span>
+    <p>[1] Professor Messer, <a href="https://www.professormesser.com/free-a-plus-training/220-1201/220-1201-video/virtualization-concepts-220-1201/">Virtualization Concepts (220-1201, 4.1)</a>. Sandboxing, developing software, legacy software and cross-platform virtualization. Free.</p>
+    <p id="src-hv">[2] Professor Messer, <a href="https://www.professormesser.com/free-a-plus-training/220-1101/220-1101-video/client-side-virtualization-220-1101/">Client-side Virtualization (220-1101)</a> (the hypervisor, or virtual machine manager, allocates CPU, memory and networking and keeps VMs separated; legacy software on an older OS in a VM).</p>
+    <p id="src-sandbox">[3] Microsoft Learn, <a href="https://learn.microsoft.com/en-us/windows/security/application-security/application-isolation/windows-sandbox/windows-sandbox-overview">Windows Sandbox</a> (nothing persists; Pro, Enterprise and Education, not Home; virtualization enabled in BIOS; 4 GB RAM minimum, 8 GB recommended; two CPU cores).</p>
+    <p id="src-req">[4] Microsoft Learn, <a href="https://learn.microsoft.com/en-us/virtualization/hyper-v-on-windows/reference/hyper-v-requirements">Windows Hyper-V system requirements</a> (64-bit Pro or Enterprise; SLAT, VT-x or AMD-V; 4 GB RAM; check with <code>systeminfo</code>).</p>
+  </div>
+
+  <div class="callout ask">
+    <span class="label">Questions?</span>
+    <p>Anything unclear? Ask your teacher. Open Claude in the Teacher repo and ask, for example: <em>"In IT lesson 0030, how is Windows Sandbox different from a normal Hyper-V virtual machine?"</em> Follow-up questions are part of the course.</p>
+  </div>
+</main>
+<nav class="page-footer">
+  <a href="0029-week-quiz-2026-10-24.html">← Weekly quiz: Oct 18 – Oct 23</a>
+  <a href="../../index.html">Hub</a>
+  <span class="disabled">Next lesson: tomorrow →</span>
+</nav>
+</body>
+</html>
