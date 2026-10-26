@@ -1,0 +1,158 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The Zero Trap</title>
+<meta name="description" content="App building lesson 0005, build review for 2026-10-26: how two-player-bg-finder shows or hides parts of the page with ?: and &&, what truthy and falsy mean in JavaScript, and why the Filters button says active > 0 instead of just active.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=JetBrains+Mono&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../assets/course.css">
+<script src="../../assets/quiz.js" defer></script>
+</head>
+<body class="track-app">
+<nav class="page-header">
+  <a class="home" href="../../index.html">Teacher hub</a>
+  <span>App building</span>
+  <a href="../reference/glossary.html">Glossary</a>
+</nav>
+<main>
+  <p class="kicker">App building · Lesson 0005 · Build review, week of 2026-10-19</p>
+  <h1>Show it or hide it: conditional rendering and the zero trap</h1>
+  <p class="lede">About 10 minutes. By the end you can read the <code>?:</code> and <code>&amp;&amp;</code> lines in Board Games for Two's JSX, say what appears on screen in each case, and explain why the code writes <code>active &gt; 0 &amp;&amp;</code> instead of the shorter <code>active &amp;&amp;</code>.</p>
+
+  <div class="callout">
+    <span class="label">New activity elsewhere</span>
+    <p>New activity in <strong>calorie-manager</strong> (and in two private repos). Want it registered for Monday reviews? Tell your teacher.</p>
+  </div>
+
+  <div class="callout">
+    <span class="label">What got built this week</span>
+    <p>Nothing new in <a href="https://github.com/ACUNA211/two-player-bg-finder">two-player-bg-finder</a>: the last commit is still <a href="https://github.com/ACUNA211/two-player-bg-finder/commit/3a77ac7">3a77ac7</a> (2026-09-26). So we read existing code again. Last week you learned a component is a function that returns UI. This week: how that function decides <em>which</em> UI to return. The app does it with two operators, all over the place, starting in <a href="https://github.com/ACUNA211/two-player-bg-finder/blob/3a77ac7/web/src/App.tsx#L19-L20"><code>web/src/App.tsx</code></a>.</p>
+  </div>
+
+  <h2>1. Three screens in one line: <code>?:</code></h2>
+  <p><code>App</code> has two pieces of state from lesson 0001: <code>data</code> (starts <code>null</code>, becomes the parsed <code>games.json</code>) and <code>error</code> (starts <code>null</code>, becomes a message if the download fails). Its JSX turns those into one of three screens:</p>
+<pre><code>{<span class="hl">error ?</span> &lt;p&gt;Could not load games: {error}&lt;/p&gt; <span class="hl">: data ?</span> &lt;GamesBrowser games={data.games} /&gt; <span class="hl">:</span> &lt;p&gt;Loading…&lt;/p&gt;}
+{<span class="hl">data &amp;&amp;</span> &lt;Footer dumpDate={data.dump_date} scrapeDate={data.scrape_date} /&gt;}</code></pre>
+  <p>The first line is the conditional operator, exactly C#'s <code>cond ? a : b</code>, chained. Read it like an <code>if / else if / else</code>:</p>
+  <table>
+    <thead><tr><th>State</th><th>What shows</th></tr></thead>
+    <tbody>
+      <tr><td><code>error</code> is set</td><td>"Could not load games: HTTP 404" (or whatever went wrong)</td></tr>
+      <tr><td>no error, <code>data</code> is set</td><td>the filters and table (<code>GamesBrowser</code>)</td></tr>
+      <tr><td>neither yet</td><td>"Loading…"</td></tr>
+    </tbody>
+  </table>
+  <p>Why an expression and not an <code>if</code> statement? Inside JSX's <code>{ }</code> you can only put an <em>expression</em>, something that produces a value, the same reason you can't put an <code>if</code> inside a C# <code>$"..."</code> string. So React code uses <code>?:</code> and <code>&amp;&amp;</code> where C# UI code would use <code>if</code>.<sup class="cite"><a href="#src-cond">[1]</a></sup></p>
+  <p>Notice <code>data.games</code> in the middle branch. <code>data</code> is typed <code>GamesFile | null</code>, yet TypeScript lets you read <code>.games</code> there. That's <em>narrowing</em>: inside the "<code>data</code> is set" branch, the compiler knows it can't be <code>null</code>.<sup class="cite"><a href="#src-narrow">[2]</a></sup> C# does the same flow analysis with nullable reference types.</p>
+
+  <h2>2. <code>&amp;&amp;</code> hands back a value, not a <code>bool</code></h2>
+  <p>The second line, <code>{data &amp;&amp; &lt;Footer ... /&gt;}</code>, means "the footer, but only once there's data". It works because of two JavaScript rules that C# doesn't have.</p>
+  <p><strong>Rule 1: any value can stand in for true or false.</strong> In C#, <code>if (count)</code> won't compile. In JavaScript it's fine: a few values count as false, called <em>falsy</em>, and everything else is <em>truthy</em>.<sup class="cite"><a href="#src-falsy">[3]</a></sup> The falsy ones you'll meet:</p>
+  <p><code>false</code> &nbsp; <code>0</code> &nbsp; <code>""</code> (empty string) &nbsp; <code>null</code> &nbsp; <code>undefined</code> &nbsp; <code>NaN</code></p>
+  <p>Empty arrays and objects (<code>[]</code>, <code>{}</code>) are <em>truthy</em>, a classic surprise. The app uses this rule in <code>CheckList</code>: <code>const shown = q ? options.filter(...) : options;</code> where <code>q</code> is the search text. An empty search box is <code>""</code>, which is falsy, so you see every option.</p>
+  <p><strong>Rule 2: <code>&amp;&amp;</code> returns one of its operands.</strong> C#'s <code>&amp;&amp;</code> always gives a <code>bool</code>. JavaScript's gives back the <em>left</em> value if it's falsy, otherwise the <em>right</em> value.<sup class="cite"><a href="#src-and">[4]</a></sup></p>
+<pre><code>null &amp;&amp; "footer"     // null       (left is falsy: stop, return it)
+data &amp;&amp; "footer"     // "footer"   (data is loaded, so truthy: return the right)
+0 &amp;&amp; "footer"        // 0</code></pre>
+  <p>Put those together with one React rule: <code>false</code>, <code>null</code> and <code>undefined</code> render <strong>nothing</strong>.<sup class="cite"><a href="#src-cond">[1]</a></sup> While loading, <code>data &amp;&amp; &lt;Footer/&gt;</code> is <code>null</code>, so no footer. Once loaded, it's the <code>&lt;Footer/&gt;</code> element, so the footer appears.</p>
+
+  <h2>3. The zero trap, and why the code dodges it</h2>
+  <p>Now look at the last line of that table of falsy values: <code>0</code>. React <em>does</em> render numbers, including zero. react.dev calls this out directly: don't put numbers on the left of <code>&amp;&amp;</code>, because if the left side is <code>0</code> the whole expression is <code>0</code>, and React draws a <code>0</code> instead of nothing.<sup class="cite"><a href="#src-cond">[1]</a></sup></p>
+  <p>That's exactly why the Filters button, added in <a href="https://github.com/ACUNA211/two-player-bg-finder/commit/4e8bdb1">4e8bdb1</a>, is written like this (<a href="https://github.com/ACUNA211/two-player-bg-finder/blob/3a77ac7/web/src/GamesBrowser.tsx#L53"><code>GamesBrowser.tsx</code> line 53</a>):</p>
+<pre><code>Filters{<span class="hl">active &gt; 0</span> &amp;&amp; ` (${active})`}</code></pre>
+  <p><code>active</code> is the number of filters in use. <code>active &gt; 0</code> is a real <code>boolean</code>, so with no filters the expression is <code>false</code> and the button just says "Filters". With two filters it's the string <code>" (2)"</code> (a template literal, lesson 0004) and the button says "Filters (2)". If you shortened it to <code>active &amp;&amp; ...</code>, then with no filters it would be <code>0</code>, and the button would read <strong>Filters0</strong>.</p>
+  <p>The same guard appears everywhere a count is involved: <code>{value.length &gt; 0 &amp;&amp; ...}</code> in <code>CheckList</code>, <code>MultiSelect</code> and <code>RangeInput</code>. The AI was consistent here, which is a habit worth copying when you steer it.</p>
+
+  <div class="callout">
+    <span class="label">The big idea</span>
+    <p>JSX takes expressions, so React chooses what to show with <code>cond ? a : b</code> (pick one of two) and <code>cond &amp;&amp; a</code> (show or show nothing). JavaScript's <code>&amp;&amp;</code> returns an operand, not a <code>bool</code>, and React skips <code>false</code>, <code>null</code> and <code>undefined</code> but draws <code>0</code>. So when the left side is a number, turn it into a real boolean first: <code>count &gt; 0 &amp;&amp; ...</code>.</p>
+  </div>
+
+  <h2>Practice</h2>
+  <section class="quiz">
+    <p class="q">The page has just opened and <code>games.json</code> is still downloading. What does <code>App</code> show?</p>
+    <ul class="choices">
+      <li><button class="choice">An empty table and footer</button></li>
+      <li><button class="choice" data-correct>Loading… and no footer below</button></li>
+      <li><button class="choice">Loading… and the footer below</button></li>
+      <li><button class="choice">An error message and footer</button></li>
+    </ul>
+    <div class="explain" hidden><code>error</code> and <code>data</code> are both still <code>null</code>, so the chain falls through to the last branch, "Loading…". The footer line is <code>null &amp;&amp; &lt;Footer/&gt;</code>, which is <code>null</code>, and React renders nothing for <code>null</code>.</div>
+  </section>
+
+  <section class="quiz">
+    <p class="q">In plain JavaScript, what does the expression <code>0 &amp;&amp; "hi"</code> evaluate to?</p>
+    <ul class="choices">
+      <li><button class="choice"><code>false</code></button></li>
+      <li><button class="choice"><code>"hi"</code></button></li>
+      <li><button class="choice"><code>null</code></button></li>
+      <li><button class="choice" data-correct><code>0</code></button></li>
+    </ul>
+    <div class="explain" hidden><code>&amp;&amp;</code> returns its left operand when that's falsy, without looking at the right. <code>0</code> is falsy, so you get <code>0</code> itself, not <code>false</code>. This is the difference from C#, where <code>&amp;&amp;</code> only works on <code>bool</code> and always gives a <code>bool</code>.</div>
+  </section>
+
+  <section class="quiz">
+    <p class="q">What breaks if line 53 changes from <code>active &gt; 0 &amp;&amp;</code> to <code>active &amp;&amp;</code>?</p>
+    <ul class="choices">
+      <li><button class="choice" data-correct>The button reads Filters0, failing a test</button></li>
+      <li><button class="choice">tsc fails because active is a number</button></li>
+      <li><button class="choice">Nothing changes, since zero counts as false</button></li>
+      <li><button class="choice">The button hides whenever no filter's active</button></li>
+    </ul>
+    <div class="explain" hidden>With no filters, <code>active &amp;&amp; ...</code> is <code>0</code>, and React draws numbers, so the label becomes "Filters0". TypeScript is happy: a number is something React can render. But the panel test in <code>GamesBrowser.test.tsx</code> starts by clicking <code>getByRole("button", { name: "Filters" })</code>, which no longer matches. Falsy decides <em>which operand</em> comes back; it doesn't make React hide it.</div>
+  </section>
+
+  <section class="quiz">
+    <p class="q">What breaks if we delete <code>data &amp;&amp;</code> from the footer line in <code>App.tsx</code>?</p>
+    <ul class="choices">
+      <li><button class="choice">Nothing, since React skips null data</button></li>
+      <li><button class="choice">The footer shows empty dates while loading</button></li>
+      <li><button class="choice" data-correct>tsc fails: data is possibly null there</button></li>
+      <li><button class="choice">The page crashes only in npm test</button></li>
+    </ul>
+    <div class="explain" hidden>Without the guard there's no narrowing, so <code>data.dump_date</code> reads a property of something typed <code>GamesFile | null</code>. With <code>"strict": true</code> in <code>tsconfig.json</code>, tsc reports that <code>data</code> is possibly null, and <code>npm run build</code> stops. The dev server would still start (Vite strips types without checking them<sup class="cite"><a href="#src-vite">[5]</a></sup>), and the page would then crash on load reading <code>dump_date</code> of <code>null</code>. The guard is doing real work.</div>
+  </section>
+  <p class="quiz-score" data-quiz-score></p>
+
+  <h2>Try it in your copy (5 minutes)</h2>
+  <ol>
+    <li>In your local <code>two-player-bg-finder</code>, <code>cd web</code>, then <code>git pull</code> and <code>npm install</code> if you haven't.</li>
+    <li>Open <code>src/GamesBrowser.tsx</code> and find <code>CheckList</code> (around line 202): <code>{value.length &gt; 0 &amp;&amp; ` (${value.length})`}</code>. Change it to <code>{value.length &amp;&amp; ` (${value.length})`}</code>.</li>
+    <li><strong>Predict first</strong>: does <code>npx tsc -b</code> pass? What will the "More types" and "More mechanics" dropdowns say when nothing is ticked? And after you tick one box?</li>
+    <li>Run <code>npx tsc -b</code>, then <code>npm run dev</code>, open the page, and open the Filters panel to check.</li>
+    <li>Undo it: <code>git checkout src/GamesBrowser.tsx</code>.</li>
+  </ol>
+  <details class="recall">
+    <summary>What should you see? <span class="hint">(after trying it)</span></summary>
+    <p><code>tsc</code> passes: <code>0</code> and a string are both things React can render, so there's no type error. On screen, the dropdowns read <strong>More types0</strong> and <strong>More mechanics0</strong>. Tick one box and the count is <code>1</code> (truthy), so <code>&amp;&amp;</code> returns the string and you see "More types (1)", which looks correct. That's what makes the zero trap sneaky: it only shows up in the empty case. Types check that code is <em>allowed</em>; you (and tests) check it's <em>right</em>.</p>
+  </details>
+
+  <details class="recall">
+    <summary>Spaced review from lesson 0003: the Must play checkbox does <code>update({ mustPlay: [...filters.mustPlay, n] })</code>. Why build a new array instead of calling <code>filters.mustPlay.push(n)</code>? <span class="hint">(answer, then click)</span></summary>
+    <p>React decides whether to redraw by checking if the state is a <em>different object</em>. <code>push</code> changes the old array in place, so the state looks the same and the screen may not update. <code>[...old, n]</code> copies the old items into a new array with <code>n</code> on the end, so React sees a new value and re-renders.</p>
+  </details>
+
+  <div class="callout source" id="src-cond">
+    <span class="label">Primary source: read next</span>
+    <p>[1] react.dev, <a href="https://react.dev/learn/conditional-rendering">Conditional Rendering</a>. Read it all, especially the "Logical AND operator" section and its pitfall about numbers. About 15 minutes, with sandboxes to edit.</p>
+    <p id="src-narrow">[2] TypeScript Handbook, <a href="https://www.typescriptlang.org/docs/handbook/2/narrowing.html">Narrowing</a> (truthiness narrowing and how <code>if</code>, <code>?:</code> and <code>&amp;&amp;</code> narrow a union).</p>
+    <p id="src-falsy">[3] MDN Web Docs, <a href="https://developer.mozilla.org/en-US/docs/Glossary/Falsy">Falsy</a> and <a href="https://developer.mozilla.org/en-US/docs/Glossary/Truthy">Truthy</a> (the full list, including rarer values like <code>-0</code> and <code>0n</code>).</p>
+    <p id="src-and">[4] MDN Web Docs, <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Logical_AND">Logical AND (&amp;&amp;)</a> (it returns an operand, not necessarily a boolean).</p>
+    <p id="src-vite">[5] Vite Guide, <a href="https://vite.dev/guide/features.html#typescript">Features: TypeScript</a> ("Vite only performs transpilation on <code>.ts</code> files and does NOT perform type checking"). Code quoted above is from the repo at <code>3a77ac7</code>; the "what breaks" answers come from reading that code and its tests.</p>
+  </div>
+
+  <div class="callout ask">
+    <span class="label">Questions?</span>
+    <p>Anything unclear? Ask your teacher. Open Claude in the Teacher repo and ask, for example: <em>"In app lesson 0005, when should I use <code>??</code> instead of <code>&amp;&amp;</code> or <code>||</code>?"</em> Follow-up questions are part of the course.</p>
+  </div>
+</main>
+<nav class="page-footer">
+  <a href="0004-build-review-2026-10-19.html">← 0004 Components are functions</a>
+  <a href="../../index.html">Hub</a>
+  <span class="disabled">Next build review: next Monday →</span>
+</nav>
+</body>
+</html>

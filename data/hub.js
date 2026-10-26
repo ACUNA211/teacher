@@ -200,6 +200,11 @@ window.HUB = {
       track: "app", num: "0004", date: "2026-10-19", covers: 0,
       title: "Build review: components are functions (props and children in the Info popover)",
       path: "app-building/lessons/0004-build-review-2026-10-19.html"
+    },
+    {
+      track: "app", num: "0005", date: "2026-10-26", covers: 0,
+      title: "Build review: the zero trap (conditional rendering with ?: and &&)",
+      path: "app-building/lessons/0005-build-review-2026-10-26.html"
     }
   ]
 };
