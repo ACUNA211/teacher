@@ -1,0 +1,178 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Virtualization Services</title>
+<meta name="description" content="IT lesson 0031: A+ objective 4.1, virtualization services. Type 1 vs. type 2 hypervisors, CPU support (VT-x / AMD-V), VM network modes (NAT, bridged, private), virtual desktop infrastructure (VDI), and containers vs. VMs.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=JetBrains+Mono&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../assets/course.css">
+<script src="../../assets/quiz.js" defer></script>
+</head>
+<body class="track-it">
+<nav class="page-header">
+  <a class="home" href="../../index.html">Teacher hub</a>
+  <span>IT and certs</span>
+  <a href="../reference/glossary.html">Glossary</a>
+  <a href="../reference/virtualization-cloud.html">Virtualization &amp; cloud cheat sheet</a>
+</nav>
+<main>
+  <p class="kicker">IT and certs · Lesson 0031 · A+ Core 1, objective 4.1</p>
+  <h1>Where the hypervisor lives: type 1, type 2, VDI and containers</h1>
+  <p class="lede">About 10 minutes. <a href="0030-virtualization-concepts.html">Yesterday</a> was <em>why</em> we run virtual machines. Today is <em>how</em> they're delivered: where the hypervisor sits, what the CPU and network must provide, and two neighbours of the VM, <strong>virtual desktops</strong> and <strong>containers</strong>.<sup class="cite"><a href="#src-messer">[1]</a></sup> The win: given a scenario, pick the right one of these and say why.</p>
+
+  <div class="callout">
+    <span class="label">Why this matters at work</span>
+    <p>Cloud PCs and hosted virtual desktops are VDI. They're enrolled and managed in Intune like a physical laptop, with the same Entra sign-in and the same compliance and configuration policies.<sup class="cite"><a href="#src-w365">[5]</a></sup> When a user says "my computer is slow" and their computer is a virtual desktop, the problem may be in the data center or their home connection, not in the device on their desk.</p>
+  </div>
+
+  <h2>Type 1 vs. type 2 hypervisor</h2>
+  <div class="table-wrap">
+  <table>
+    <thead><tr><th></th><th>Type 1 (bare metal, native)</th><th>Type 2 (hosted)</th></tr></thead>
+    <tbody>
+      <tr><td><strong>Runs on</strong></td><td>Directly on the hardware<sup class="cite"><a href="#src-messer">[1]</a></sup></td><td>On top of a normal OS (Windows, macOS, Linux)<sup class="cite"><a href="#src-sec">[2]</a></sup></td></tr>
+      <tr><td><strong>Typical home</strong></td><td>Servers and data centers</td><td>A technician's or developer's desktop</td></tr>
+      <tr><td><strong>Overhead</strong></td><td>Less: no host OS in the way</td><td>More: the host OS takes its share first</td></tr>
+      <tr><td><strong>Examples</strong></td><td>VMware ESXi, Microsoft Hyper-V, Proxmox</td><td>Oracle VirtualBox, VMware Workstation</td></tr>
+    </tbody>
+  </table>
+  </div>
+  <p class="sidenote">Gotcha: turning on Hyper-V in Windows 11 doesn't make it type 2. The hypervisor loads first, and Windows itself then runs on top of it in the <em>root partition</em>, the one partition allowed to touch the hardware.<sup class="cite"><a href="#src-hvarch">[3]</a></sup> That's why <code>systeminfo</code> says <em>"A hypervisor has been detected"</em> once Hyper-V is on.</p>
+
+  <h2>What the hardware must give</h2>
+  <ul>
+    <li><strong>CPU support</strong>: the processor needs virtualization extensions, <strong>Intel VT-x</strong> or <strong>AMD-V</strong>, switched on in the UEFI/BIOS.<sup class="cite"><a href="#src-messer">[1]</a></sup> <a href="0030-virtualization-concepts.html">Lesson 0030</a>'s Task Manager check (<em>Virtualization: Enabled</em>) is this. Hyper-V also wants <strong>SLAT</strong> (second-level address translation), a CPU feature that speeds up VM memory.<sup class="cite"><a href="#src-req">[8]</a></sup></li>
+    <li><strong>Enough memory and disk</strong>: every running VM takes its RAM out of the host's.</li>
+    <li><strong>A network plan</strong>: the hypervisor gives each VM a virtual NIC plugged into a virtual switch. Three modes to know:</li>
+  </ul>
+  <div class="table-wrap">
+  <table>
+    <thead><tr><th>Mode</th><th>What the VM gets</th><th>Hyper-V switch name</th></tr></thead>
+    <tbody>
+      <tr><td><strong>Shared address (NAT)</strong></td><td>Goes out using the host's IP address. Can reach the network; others can't start a connection to it.</td><td>(the built-in <em>Default Switch</em>)</td></tr>
+      <tr><td><strong>Bridged</strong></td><td>Its own MAC and its own IP from the real network's DHCP server. Looks like any other device on the LAN.</td><td>External</td></tr>
+      <tr><td><strong>Private / host-only</strong></td><td>Talks only to other VMs (and sometimes the host). No route out: good for isolated tests.</td><td>Private (VMs only) or Internal (VMs + host)</td></tr>
+    </tbody>
+  </table>
+  </div>
+  <p class="sidenote">Sources: VM network modes <a href="#src-net">[4]</a>; Hyper-V external, internal and private switches <a href="#src-switch">[6]</a>.</p>
+
+  <h2>VDI: the desktop lives elsewhere</h2>
+  <p><strong>Virtual desktop infrastructure (VDI)</strong> runs each user's desktop as a VM in a data center or the cloud. The user's device only shows the screen and sends keyboard and mouse input, so it can be a thin client, an old laptop, or a tablet.<sup class="cite"><a href="#src-messer">[1]</a></sup> Data stays in the data center, the desktop follows the user to any device, and a lost laptop holds nothing. The cost: no network, no desktop, and lag shows up as a "slow computer".</p>
+
+  <h2>Containers: share the kernel, ship the app</h2>
+  <p>A <strong>VM</strong> carries a whole operating system, kernel included. A <strong>container</strong> carries only the app and what it needs, and <strong>shares the host OS kernel</strong>.<sup class="cite"><a href="#src-cont">[7]</a></sup> So containers are small and start in seconds, and the same container image runs the same way on a laptop, a server or the cloud (Docker is the well-known tool). The trade-off: containers are more lightly isolated than VMs, and a container built for Linux needs a Linux kernel underneath.<sup class="cite"><a href="#src-cont">[7]</a></sup></p>
+
+  <div class="callout win">
+    <span class="label">Memory hook</span>
+    <p><strong>Type 1 sits on the metal; type 2 sits on an OS.</strong> <strong>NAT shares the host's address; bridged gets its own; private goes nowhere.</strong> <strong>VDI moves the desktop; containers share the kernel.</strong></p>
+  </div>
+
+  <h2>Try it (3 minutes)</h2>
+  <ol>
+    <li>Run <code>systeminfo</code> and read the last lines again. <em>"A hypervisor has been detected"</em> means a type 1 hypervisor is already running underneath your Windows (Hyper-V, or a feature built on it such as Windows Sandbox or WSL 2).</li>
+    <li>If Hyper-V is on (Pro, Enterprise or Education), open an admin PowerShell and list the virtual switches:
+      <pre><code>Get-VMSwitch | Select-Object Name, SwitchType</code></pre>
+      You'll likely see <em>Default Switch</em> as <em>Internal</em> with NAT behind it. Hyper-V Manager → <em>Virtual Switch Manager</em> shows the three types you can create: External, Internal, Private.</li>
+    <li>Inside any VM, Task Manager → Performance → CPU shows <em>Virtual machine: Yes</em>. Handy when you're not sure whether the desktop you've remoted into is real or virtual.</li>
+  </ol>
+  <p class="sidenote">On a work laptop, look but don't change switches: a new external switch takes over the physical network adapter.</p>
+
+  <h2>Practice</h2>
+  <p>Answer from memory before scrolling back up.</p>
+
+  <section class="quiz">
+    <p class="q">A small company wants to replace five aging servers with one powerful server running five VMs, with as little overhead as possible. What should run on the new server?</p>
+    <ul class="choices">
+      <li><button class="choice">Keep five separate physical servers running</button></li>
+      <li><button class="choice" data-correct>A type 1 hypervisor on hardware</button></li>
+      <li><button class="choice">A type 2 hypervisor on Windows</button></li>
+      <li><button class="choice">Windows Sandbox on the new server</button></li>
+    </ul>
+    <div class="explain" hidden>A <strong>type 1</strong> (bare-metal) hypervisor runs directly on the hardware, so no host OS takes its share of the resources first. That's the data-center choice. Type 2 runs on top of a desktop OS (more overhead), Windows Sandbox is a disposable single VM, and five physical servers is what they're replacing.</div>
+  </section>
+
+  <section class="quiz">
+    <p class="q">A technician builds a test VM that must get its own IP address from the office DHCP server and appear on the network like any other computer. Which network mode?</p>
+    <ul class="choices">
+      <li><button class="choice">Shared-address NAT mode</button></li>
+      <li><button class="choice">Private isolated mode</button></li>
+      <li><button class="choice" data-correct>Bridged networking mode</button></li>
+      <li><button class="choice">Internal host-only mode</button></li>
+    </ul>
+    <div class="explain" hidden><strong>Bridged</strong> (a Hyper-V <em>external</em> switch) connects the VM straight to the real network: its own MAC, its own DHCP lease. NAT hides it behind the host's address; private and internal keep it off the real network entirely.</div>
+  </section>
+
+  <section class="quiz">
+    <p class="q">Contractors need a company Windows desktop with internal apps, from their own laptops, and company data must never be stored on those laptops. What fits best?</p>
+    <ul class="choices">
+      <li><button class="choice">Install apps on laptops</button></li>
+      <li><button class="choice">Run a local container</button></li>
+      <li><button class="choice">Sync files to laptops</button></li>
+      <li><button class="choice" data-correct>Use virtual desktop infrastructure</button></li>
+    </ul>
+    <div class="explain" hidden>With <strong>VDI</strong> the desktop and its data stay in the data center or cloud; the contractor's laptop only shows the screen. Installing, syncing or running a container locally all put company software or data on a device the company doesn't own.</div>
+  </section>
+
+  <section class="quiz">
+    <p class="q">A developer's app starts in about a second as a container, but takes minutes when packaged as a full VM. What explains the difference?</p>
+    <ul class="choices">
+      <li><button class="choice" data-correct>It shares the host's kernel</button></li>
+      <li><button class="choice">It runs on faster hardware</button></li>
+      <li><button class="choice">It skips the network stack</button></li>
+      <li><button class="choice">It boots a smaller BIOS</button></li>
+    </ul>
+    <div class="explain" hidden>A container doesn't boot an operating system: it <strong>shares the host's kernel</strong> and carries only the app and its dependencies. A VM has to start its own complete OS first. Containers still have networking, and they don't boot a BIOS at all.</div>
+  </section>
+  <p class="quiz-score" data-quiz-score></p>
+
+  <details class="recall">
+    <summary>From memory: type 1 vs. type 2, the two CPU extensions, the three network modes, and how a container differs from a VM. <span class="hint">(then click to check)</span></summary>
+    <p><strong>Type 1</strong>: on the hardware (ESXi, Hyper-V). <strong>Type 2</strong>: on a host OS (VirtualBox, Workstation). CPU: <strong>Intel VT-x / AMD-V</strong>, enabled in UEFI/BIOS. Network: <strong>NAT</strong> (share the host's IP), <strong>bridged</strong> (own IP on the real LAN), <strong>private</strong> (VMs only). A <strong>container</strong> shares the host's kernel and carries only the app; a <strong>VM</strong> carries a whole OS.</p>
+  </details>
+
+  <h2>Review: earlier lessons</h2>
+  <p>Spaced retrieval: pull these from memory first, then check.</p>
+
+  <details class="recall">
+    <summary>An employee leaves. Their personal phone was enrolled as BYOD with work email. Retire or wipe, and what does each remove? <span class="hint">(<a href="0028-mobile-device-management.html">lesson 0028</a>, 3 days ago)</span></summary>
+    <p><strong>Retire</strong> (selective wipe): removes company apps, data, email profiles and settings, and leaves personal data alone. That's the right one for BYOD. <strong>Wipe</strong> is a factory reset of the whole phone, for company-owned devices.</p>
+  </details>
+
+  <details class="recall">
+    <summary>A laptop's camera shows a black image in a video call. Name the four layers to check, in order. <span class="hint">(<a href="0024-laptop-nfc-cameras-microphones.html">lesson 0024</a>, 7 days ago)</span></summary>
+    <p><strong>Physical</strong> (privacy shutter, function key) → <strong>Windows privacy settings</strong> (including the desktop-apps switch) → <strong>device</strong> (Device Manager / <code>Get-PnpDevice</code>, status OK) → <strong>policy</strong> (greyed-out settings mean it's managed). A black image with everything else fine is usually a closed shutter.</p>
+  </details>
+
+  <details class="recall">
+    <summary>You bridge a new VM onto a test network that has no DHCP server. It shows an address starting with 169.254 and no gateway. What happened? <span class="hint">(<a href="0001-four-ip-settings.html">lesson 0001</a>, 30 days ago)</span></summary>
+    <p>No DHCP server answered, so Windows gave itself an <strong>APIPA</strong> (link-local) address in <code>169.254.0.0/16</code>. It has no gateway and no DNS server, so it can reach almost nothing. Add a DHCP server to that network or set a static address.</p>
+  </details>
+
+  <div class="callout source" id="src-messer">
+    <span class="label">Primary source: watch next</span>
+    <p>[1] Professor Messer, <a href="https://www.professormesser.com/free-a-plus-training/220-1201/220-1201-video/virtualization-services-220-1201/">Virtualization Services (220-1201, 4.1)</a>. Hypervisors, type 1 and type 2, CPU support, network requirements, VDI and containerization. Free.</p>
+    <p id="src-sec">[2] Professor Messer, <a href="https://www.professormesser.com/security-plus/sy0-501/virtualization-overview/">Virtualization Overview (Security+ SY0-501)</a> (type 1 is native/bare metal; type 2 runs on an existing host OS; containers run an app without a whole VM).</p>
+    <p id="src-hvarch">[3] Microsoft Learn, <a href="https://learn.microsoft.com/en-us/windows-server/administration/performance-tuning/role/hyper-v-server/architecture">Hyper-V architecture</a> (type 1 hypervisor; the root partition runs Windows and has direct hardware access; child partitions see virtual devices).</p>
+    <p id="src-net">[4] NSRC, <a href="https://www.nsrc.org/workshops/2016/sanog27/raw-attachment/wiki/Track2Virt/virt-network-modes.pdf">Virtualization network modes</a> (NAT, bridged, host-only/private).</p>
+    <p id="src-w365">[5] Microsoft Learn, <a href="https://learn.microsoft.com/en-us/windows-365/enterprise/overview">What is Windows 365 Enterprise?</a> (Cloud PCs managed by Intune, Entra ID for identity, Azure Virtual Desktop for connectivity).</p>
+    <p id="src-switch">[6] Microsoft Learn, <a href="https://learn.microsoft.com/en-us/training/modules/configure-manage-hyper-v/5-configure-hyper-v-networking">Configure Hyper-V networking</a> (external, internal and private virtual switches).</p>
+    <p id="src-cont">[7] Microsoft Learn, <a href="https://learn.microsoft.com/en-us/virtualization/windowscontainers/about/containers-vs-vm">Containers vs. virtual machines</a> (containers share the host kernel; VMs run a full OS with their own kernel; VMs isolate more strongly).</p>
+    <p id="src-req">[8] Microsoft Learn, <a href="https://learn.microsoft.com/en-us/virtualization/hyper-v-on-windows/reference/hyper-v-requirements">Windows Hyper-V system requirements</a> (SLAT, VT-x or AMD-V; check with <code>systeminfo</code>).</p>
+  </div>
+
+  <div class="callout ask">
+    <span class="label">Questions?</span>
+    <p>Anything unclear? Ask your teacher. Open Claude in the Teacher repo and ask, for example: <em>"In IT lesson 0031, why does turning on Hyper-V make my own Windows run inside the hypervisor?"</em> Follow-up questions are part of the course.</p>
+  </div>
+</main>
+<nav class="page-footer">
+  <a href="0030-virtualization-concepts.html">← A computer inside a computer: why we run virtual machines</a>
+  <a href="../../index.html">Hub</a>
+  <span class="disabled">Next lesson: tomorrow →</span>
+</nav>
+</body>
+</html>
