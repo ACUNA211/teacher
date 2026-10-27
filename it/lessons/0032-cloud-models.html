@@ -1,0 +1,165 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Cloud Models</title>
+<meta name="description" content="IT lesson 0032: A+ objective 4.2, cloud models. Deployment models (public, private, hybrid, community), service models (IaaS, PaaS, SaaS), and who is responsible for what in each.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=JetBrains+Mono&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../assets/course.css">
+<script src="../../assets/quiz.js" defer></script>
+</head>
+<body class="track-it">
+<nav class="page-header">
+  <a class="home" href="../../index.html">Teacher hub</a>
+  <span>IT and certs</span>
+  <a href="../reference/glossary.html">Glossary</a>
+  <a href="../reference/virtualization-cloud.html">Virtualization &amp; cloud cheat sheet</a>
+</nav>
+<main>
+  <p class="kicker">IT and certs · Lesson 0032 · A+ Core 1, objective 4.2</p>
+  <h1>Whose cloud, and how much of it: deployment and service models</h1>
+  <p class="lede">About 10 minutes. <a href="0031-virtualization-services.html">Yesterday</a> ended with VMs running in someone else's data center. That's the cloud. A+ asks two questions about any cloud service: <strong>who owns and shares it</strong> (public, private, hybrid, community) and <strong>how much of the stack you rent</strong> (IaaS, PaaS, SaaS).<sup class="cite"><a href="#src-messer">[1]</a></sup> The win: read a scenario and name both.</p>
+
+  <div class="callout">
+    <span class="label">Why this matters at work</span>
+    <p>Microsoft 365 is <strong>SaaS</strong>: Microsoft runs the servers, the OS and the app. But in every model the customer still owns its <strong>data, accounts, access and devices</strong>.<sup class="cite"><a href="#src-shared">[3]</a></sup> So a phished account or an over-shared file is your job, not the provider's. And a company that syncs its on-premises Active Directory accounts into Entra ID is running a <strong>hybrid</strong> setup; Microsoft literally calls it <em>hybrid identity</em>.<sup class="cite"><a href="#src-hybrid">[4]</a></sup></p>
+  </div>
+
+  <h2>Deployment models: who owns and shares it</h2>
+  <div class="table-wrap">
+  <table>
+    <thead><tr><th>Model</th><th>What it is</th><th>Trade-off</th></tr></thead>
+    <tbody>
+      <tr><td><strong>Public</strong></td><td>A provider's cloud, open to anyone who pays; many customers share huge pools of hardware<sup class="cite"><a href="#src-messer">[1]</a></sup></td><td>No hardware to buy, scales fast; less control</td></tr>
+      <tr><td><strong>Private</strong></td><td>One organization's own cloud, usually in its own data center<sup class="cite"><a href="#src-messer">[1]</a></sup></td><td>Full control of the data; you buy and run everything</td></tr>
+      <tr><td><strong>Hybrid</strong></td><td>A mix: some parts private, some in a public cloud, working together<sup class="cite"><a href="#src-messer">[1]</a></sup></td><td>Keep sensitive pieces in-house, burst the rest; more to connect and secure</td></tr>
+      <tr><td><strong>Community</strong></td><td>Several organizations with the same needs (say, the same regulations) chip in for shared cloud equipment<sup class="cite"><a href="#src-messer">[1]</a></sup></td><td>Private-cloud benefits at a shared cost</td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <h2>Service models: how much you rent</h2>
+  <p>Picture the stack from the bottom: <em>building, hardware, network → virtualization → OS → runtime → app → data</em>. Each model moves the line where the provider stops and you start.<sup class="cite"><a href="#src-nist">[2]</a></sup></p>
+  <div class="table-wrap">
+  <table>
+    <thead><tr><th>Model</th><th>Provider runs</th><th>You run</th><th>Examples</th></tr></thead>
+    <tbody>
+      <tr><td><strong>IaaS</strong> (infrastructure)</td><td>Hardware, storage, network, hypervisor</td><td>The OS, its patches, the apps, the data</td><td>Cloud VMs (Azure Virtual Machines, Amazon EC2)</td></tr>
+      <tr><td><strong>PaaS</strong> (platform)</td><td>All of the above plus the OS and runtime</td><td>Your code and its data</td><td>App hosting (Azure App Service, Google App Engine)</td></tr>
+      <tr><td><strong>SaaS</strong> (software)</td><td>Everything up to the finished app<sup class="cite"><a href="#src-messer">[1]</a></sup></td><td>Your data, users and settings</td><td>Microsoft 365, Gmail, Salesforce</td></tr>
+    </tbody>
+  </table>
+  </div>
+  <p class="sidenote">Responsibility shrinks as you go up: IaaS leaves the most to the customer, SaaS the least, PaaS sits in between.<sup class="cite"><a href="#src-shared">[3]</a></sup> What never moves: your data, your endpoints, your accounts and who gets access.</p>
+
+  <div class="callout win">
+    <span class="label">Memory hook</span>
+    <p><strong>IaaS: you get a server. PaaS: you get a place to run code. SaaS: you get the app.</strong> Pizza version: IaaS is a rented kitchen, PaaS is take-and-bake, SaaS is eating at the restaurant. <strong>Public = shared by strangers, private = yours alone, hybrid = both, community = shared by peers.</strong></p>
+  </div>
+
+  <h2>Try it (3 minutes)</h2>
+  <p>Sort the cloud services you touch in a normal workday. For each, write <em>IaaS</em>, <em>PaaS</em> or <em>SaaS</em>, and one thing that's still yours to manage.</p>
+  <ol>
+    <li>Your email and chat (Outlook, Teams): <em>SaaS</em>; yours: the accounts, MFA, and who sees which mailbox.</li>
+    <li>A cloud VM someone built to run an old line-of-business app: <em>IaaS</em>; yours: Windows updates, antivirus, backups inside the VM.</li>
+    <li>A small internal web app a developer deployed by uploading code: <em>PaaS</em>; yours: the code and its sign-in settings.</li>
+  </ol>
+  <details class="recall">
+    <summary>One more: your company's device management console (Intune). Which model, and what's still yours? <span class="hint">(then click to check)</span></summary>
+    <p><strong>SaaS</strong>: Microsoft runs the service end to end. Still yours: the policies you write, which admins can change them, and the devices you enroll. A wrong compliance policy is a customer mistake, not a provider outage.</p>
+  </details>
+
+  <h2>Practice</h2>
+  <p>Answer from memory before scrolling back up.</p>
+
+  <section class="quiz">
+    <p class="q">A company wants to run its own hardened OS image and install its own software, but doesn't want to buy or house any servers. Which service model fits?</p>
+    <ul class="choices">
+      <li><button class="choice">Software as a Service</button></li>
+      <li><button class="choice">Platform as a Service</button></li>
+      <li><button class="choice" data-correct>Infrastructure as a Service</button></li>
+      <li><button class="choice">An on-premises private cloud</button></li>
+    </ul>
+    <div class="explain" hidden><strong>IaaS</strong> rents the hardware, storage and network and leaves the OS to you, so you can bring your own image. PaaS and SaaS hide the OS from you; an on-premises private cloud means buying the servers they want to avoid.</div>
+  </section>
+
+  <section class="quiz">
+    <p class="q">A developer wants to upload web app code and have it run, without ever patching an OS or managing a server. Which service model fits?</p>
+    <ul class="choices">
+      <li><button class="choice" data-correct>Platform as a Service</button></li>
+      <li><button class="choice">Infrastructure as a Service</button></li>
+      <li><button class="choice">Software as a Service</button></li>
+      <li><button class="choice">A community cloud deployment</button></li>
+    </ul>
+    <div class="explain" hidden><strong>PaaS</strong> gives a ready platform (OS and runtime managed by the provider); the developer brings only code and data. IaaS would leave OS patching to them, SaaS is a finished app with no place for their code, and community is a deployment model, not a service model.</div>
+  </section>
+
+  <section class="quiz">
+    <p class="q">Five regional hospitals that follow the same health-privacy rules pool their budgets to buy cloud equipment that only they will use. Which deployment model is this?</p>
+    <ul class="choices">
+      <li><button class="choice">A public cloud deployment</button></li>
+      <li><button class="choice">A private cloud deployment</button></li>
+      <li><button class="choice">A hybrid cloud deployment</button></li>
+      <li><button class="choice" data-correct>A community cloud deployment</button></li>
+    </ul>
+    <div class="explain" hidden><strong>Community</strong>: several organizations with shared needs share the cost of one cloud. It isn't public (strangers can't use it), not private (more than one owner), and nothing says it's mixed with another cloud, so it isn't hybrid.</div>
+  </section>
+
+  <section class="quiz">
+    <p class="q">A company uses a SaaS email service. An attacker phishes a user's password and reads their mailbox. Whose responsibility was protecting that account?</p>
+    <ul class="choices">
+      <li><button class="choice">The provider, because it's SaaS</button></li>
+      <li><button class="choice" data-correct>The customer: accounts stay theirs</button></li>
+      <li><button class="choice">Nobody, since email is public</button></li>
+      <li><button class="choice">The internet service provider only</button></li>
+    </ul>
+    <div class="explain" hidden>In every cloud model the customer keeps <strong>accounts, access, data and devices</strong>. The SaaS provider runs the servers and the app; turning on MFA and spotting risky sign-ins is the customer's side of the line.</div>
+  </section>
+  <p class="quiz-score" data-quiz-score></p>
+
+  <details class="recall">
+    <summary>From memory: the four deployment models in one phrase each, and what you manage in IaaS, PaaS and SaaS. <span class="hint">(then click to check)</span></summary>
+    <p><strong>Public</strong>: a provider's cloud shared by many customers. <strong>Private</strong>: one organization's own. <strong>Hybrid</strong>: private and public together. <strong>Community</strong>: several like-minded organizations share one. <strong>IaaS</strong>: you run the OS and up. <strong>PaaS</strong>: you run code and data. <strong>SaaS</strong>: you run data, users and settings. Always yours: data, accounts, access, devices.</p>
+  </details>
+
+  <h2>Review: earlier lessons</h2>
+  <p>Spaced retrieval: pull these from memory first, then check.</p>
+
+  <details class="recall">
+    <summary>You turn on Hyper-V in Windows 11 Pro. Is the hypervisor now type 1 or type 2, and where does your own Windows run? <span class="hint">(<a href="0031-virtualization-services.html">lesson 0031</a>, yesterday)</span></summary>
+    <p><strong>Type 1.</strong> The hypervisor loads first, directly on the hardware, and your Windows runs on top of it in the <strong>root partition</strong>, the one partition allowed to touch the hardware. <code>systeminfo</code> then says "A hypervisor has been detected".</p>
+  </details>
+
+  <details class="recall">
+    <summary>A user plugs their Android phone into a laptop by USB to share its data connection. What is this called, and what appears in the laptop's network adapters? <span class="hint">(<a href="0025-connecting-mobile-devices.html">lesson 0025</a>, 7 days ago)</span></summary>
+    <p><strong>USB tethering</strong> (one device, by cable; a hotspot shares to many by Wi-Fi). A new adapter appears, usually named <strong>Remote NDIS based Internet Sharing Device</strong>: the phone looks like a wired network card. Sign-ins then come from the carrier's public IP.</p>
+  </details>
+
+  <details class="recall">
+    <summary>A remote cabin office on classic satellite internet complains that video calls lag and drop during storms, though downloads are fine. Name the two weaknesses. <span class="hint">(<a href="0018-internet-connection-types.html">lesson 0018</a>, 14 days ago)</span></summary>
+    <p><strong>High latency</strong> (geostationary satellites are about 35,786 km up, so around 600 ms round trip, which calls feel) and <strong>rain fade</strong> (weather blocks the signal). Low earth orbit services cut the latency to roughly 25–60 ms.</p>
+  </details>
+
+  <div class="callout source" id="src-messer">
+    <span class="label">Primary source: watch next</span>
+    <p>[1] Professor Messer, <a href="https://www.professormesser.com/free-a-plus-training/220-1201/220-1201-video/cloud-models-220-1201/">Cloud Models (220-1201, 4.2)</a>. Public, private, hybrid and community deployments; IaaS, PaaS and SaaS. Free.</p>
+    <p id="src-nist">[2] NIST, <a href="https://csrc.nist.gov/pubs/sp/800/145/final">SP 800-145: The NIST Definition of Cloud Computing</a> (the standard definitions of the three service models and four deployment models).</p>
+    <p id="src-shared">[3] Microsoft Learn, <a href="https://learn.microsoft.com/en-us/azure/security/fundamentals/shared-responsibility">Shared responsibility in the cloud</a> (IaaS leaves the most to the customer, SaaS the least; the customer always keeps data, endpoints, accounts and access management).</p>
+    <p id="src-hybrid">[4] Microsoft Learn, <a href="https://learn.microsoft.com/en-us/entra/identity/hybrid/whatis-hybrid-identity">What is hybrid identity with Microsoft Entra ID?</a> (one identity across on-premises directories and cloud apps).</p>
+  </div>
+
+  <div class="callout ask">
+    <span class="label">Questions?</span>
+    <p>Anything unclear? Ask your teacher. Open Claude in the Teacher repo and ask, for example: <em>"In IT lesson 0032, is a Cloud PC from yesterday's lesson IaaS, PaaS or SaaS?"</em> Follow-up questions are part of the course.</p>
+  </div>
+</main>
+<nav class="page-footer">
+  <a href="0031-virtualization-services.html">← Where the hypervisor lives: type 1, type 2, VDI and containers</a>
+  <a href="../../index.html">Hub</a>
+  <span class="disabled">Next lesson: tomorrow →</span>
+</nav>
+</body>
+</html>
