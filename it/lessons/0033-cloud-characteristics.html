@@ -1,0 +1,162 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Cloud Characteristics</title>
+<meta name="description" content="IT lesson 0033: A+ objective 4.2, cloud characteristics. Shared vs. dedicated resources, metered utilization, ingress and egress, rapid elasticity, high availability, file synchronization and multitenancy.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=JetBrains+Mono&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../assets/course.css">
+<script src="../../assets/quiz.js" defer></script>
+</head>
+<body class="track-it">
+<nav class="page-header">
+  <a class="home" href="../../index.html">Teacher hub</a>
+  <span>IT and certs</span>
+  <a href="../reference/glossary.html">Glossary</a>
+  <a href="../reference/virtualization-cloud.html">Virtualization &amp; cloud cheat sheet</a>
+</nav>
+<main>
+  <p class="kicker">IT and certs · Lesson 0033 · A+ Core 1, objective 4.2</p>
+  <h1>Pay for what you use, grow when you need it: cloud characteristics</h1>
+  <p class="lede">About 10 minutes. <a href="0032-cloud-models.html">Yesterday</a> sorted clouds by <em>who owns them</em> and <em>how much you rent</em>. Today is the other half of objective 4.2: what makes something behave like a cloud at all. Messer lists seven characteristics: shared or dedicated resources, metered utilization, ingress and egress, rapid elasticity, high availability, file synchronization and multitenancy.<sup class="cite"><a href="#src-messer">[1]</a></sup> The win: hear a scenario and name the characteristic.</p>
+
+  <div class="callout">
+    <span class="label">Why this matters at work</span>
+    <p>Two of these show up on the help desk every week. <strong>File synchronization</strong>: when a company points users' Desktop, Documents and Pictures folders at OneDrive (Microsoft calls this <em>Known Folder Move</em>, and Intune can turn it on), a dead laptop no longer means lost files.<sup class="cite"><a href="#src-kfm">[3]</a></sup> And <strong>multitenancy</strong> is why your organization is called a <em>tenant</em>: Microsoft 365 runs many customers on shared infrastructure, kept apart by tenant isolation.<sup class="cite"><a href="#src-isolation">[4]</a></sup></p>
+  </div>
+
+  <h2>Seven characteristics, three groups</h2>
+  <p>Group them by the question they answer. Three groups are easier to hold than seven names.</p>
+  <div class="table-wrap">
+  <table>
+    <thead><tr><th>Question</th><th>Characteristic</th><th>What it means</th></tr></thead>
+    <tbody>
+      <tr><td rowspan="3"><strong>Who owns the hardware?</strong></td><td>Shared resources</td><td>You use a provider's data center, shared with others; costs are metered or paid up front<sup class="cite"><a href="#src-messer">[1]</a></sup></td></tr>
+      <tr><td>Dedicated resources</td><td>Nothing is shared: you build your own data center (or rent hardware only you use) and pay up front<sup class="cite"><a href="#src-messer">[1]</a></sup></td></tr>
+      <tr><td>Multitenancy</td><td>Many customers (<em>tenants</em>) share the same hardware and software, but each one's data stays separate<sup class="cite"><a href="#src-messer">[1]</a></sup></td></tr>
+      <tr><td rowspan="2"><strong>How do I pay?</strong></td><td>Metered utilization</td><td>You pay for what you actually use: storage, processing, data moved, like an electric meter<sup class="cite"><a href="#src-messer">[1]</a></sup></td></tr>
+      <tr><td>Ingress and egress</td><td><strong>Ingress</strong> = data going into the cloud, often free. <strong>Egress</strong> = data coming out, often charged<sup class="cite"><a href="#src-egress">[2]</a></sup></td></tr>
+      <tr><td rowspan="3"><strong>How does it behave?</strong></td><td>Rapid elasticity</td><td>Capacity grows and shrinks with demand, quickly and usually automatically; users never see it happen<sup class="cite"><a href="#src-messer">[1]</a></sup></td></tr>
+      <tr><td>High availability</td><td>The service stays up when a part fails: redundant servers, links and whole data centers, with automatic failover<sup class="cite"><a href="#src-messer">[1]</a></sup></td></tr>
+      <tr><td>File synchronization</td><td>The same files kept up to date on every device and in the cloud: change it on the laptop, see it on the phone<sup class="cite"><a href="#src-messer">[1]</a></sup></td></tr>
+    </tbody>
+  </table>
+  </div>
+  <p class="sidenote">Egress example: Azure says inbound data transfer is free and outbound is billed, after a free monthly allowance.<sup class="cite"><a href="#src-egress">[2]</a></sup> That's why pulling a huge backup <em>out</em> of the cloud can surprise the person paying the bill, while uploading it cost nothing.</p>
+
+  <h2>Two pairs the exam likes to mix up</h2>
+  <p><strong>Elasticity vs. availability.</strong> Ask: <em>is the problem too much demand, or something breaking?</em> A holiday rush that needs more servers → <strong>elasticity</strong>. A data center or internet link that fails while the service stays up → <strong>availability</strong>.<sup class="cite"><a href="#src-messer">[1]</a></sup></p>
+  <p><strong>Shared resources vs. multitenancy.</strong> Shared is about <em>where the hardware lives</em> (a provider's data center, not yours). Multitenancy is about <em>many customers on the same system, kept apart</em>. A SaaS service like Microsoft 365 is both.</p>
+
+  <div class="callout win">
+    <span class="label">Memory hook</span>
+    <p><strong>Owner</strong> (shared, dedicated, multitenant) · <strong>bill</strong> (metered; in free, out costs) · <strong>behavior</strong> (stretches, stays up, stays in sync). <em>Elastic stretches for demand; available survives failure.</em></p>
+  </div>
+
+  <h2>Try it (3 minutes)</h2>
+  <p>On a Windows PC signed in to OneDrive, open File Explorer and look at the <em>Status</em> column of a synced folder. The icons show file synchronization at work:<sup class="cite"><a href="#src-kfm">[3]</a></sup></p>
+  <ol>
+    <li>A <strong>cloud</strong> icon: the file lives only in the cloud. It downloads when you open it (Files On-Demand), so it takes no disk space.</li>
+    <li>A <strong>green check</strong>: the file is on this device as well as in the cloud.</li>
+    <li>Right-click a file and choose <em>Free up space</em>: it turns back into a cloud icon. Choose <em>Always keep on this device</em> to pin it.</li>
+    <li>Then: OneDrive settings → <em>Sync and backup</em> → <em>Manage backup</em> shows whether Desktop, Documents and Pictures are being backed up (Known Folder Move).</li>
+  </ol>
+  <details class="recall">
+    <summary>A user says "I deleted a file to free up space, and it vanished from my other laptop too." Which characteristic explains it, and what should they have done? <span class="hint">(then click to check)</span></summary>
+    <p><strong>File synchronization</strong>: a delete is a change, and sync copies changes everywhere. To save disk space without deleting, use <em>Free up space</em> (keep it cloud-only). The deleted file is usually still in the OneDrive recycle bin for a while.</p>
+  </details>
+
+  <h2>Practice</h2>
+  <p>Answer from memory before scrolling back up.</p>
+
+  <section class="quiz">
+    <p class="q">An online store's cloud service automatically adds web servers during the holiday rush and removes them in January. Which cloud characteristic is this?</p>
+    <ul class="choices">
+      <li><button class="choice">High availability</button></li>
+      <li><button class="choice" data-correct>Rapid elasticity</button></li>
+      <li><button class="choice">Metered utilization</button></li>
+      <li><button class="choice">File synchronization</button></li>
+    </ul>
+    <div class="explain" hidden><strong>Rapid elasticity</strong>: capacity stretches and shrinks with demand. Nothing failed, so it isn't availability; metering is how they're billed for those extra servers, not the scaling itself.</div>
+  </section>
+
+  <section class="quiz">
+    <p class="q">A company uploaded 5 TB of backups to a cloud provider at no transfer cost. The month they restored all of it to their office, the bill jumped. What did they most likely pay for?</p>
+    <ul class="choices">
+      <li><button class="choice" data-correct>Egress charges for outbound data</button></li>
+      <li><button class="choice">Ingress charges for inbound data</button></li>
+      <li><button class="choice">Charges for dedicated server hardware</button></li>
+      <li><button class="choice">Charges for file synchronization conflicts</button></li>
+    </ul>
+    <div class="explain" hidden><strong>Egress</strong> is data leaving the cloud, and providers often charge for it, while <strong>ingress</strong> (the upload) is often free. Restoring 5 TB out of the cloud is a lot of egress.</div>
+  </section>
+
+  <section class="quiz">
+    <p class="q">A provider runs each service in two data centers, each with internet links from two different ISPs. One data center loses power and users notice nothing. Which characteristic is this?</p>
+    <ul class="choices">
+      <li><button class="choice">Rapid elasticity</button></li>
+      <li><button class="choice">Metered utilization</button></li>
+      <li><button class="choice" data-correct>High availability</button></li>
+      <li><button class="choice">Shared resources</button></li>
+    </ul>
+    <div class="explain" hidden><strong>High availability</strong>: redundant data centers and links keep the service up when one part fails. Elasticity is about demand, not failure.</div>
+  </section>
+
+  <section class="quiz">
+    <p class="q">Thousands of companies use the same SaaS email platform on the same servers, yet no company can see another's mailboxes. Which characteristic describes this design?</p>
+    <ul class="choices">
+      <li><button class="choice">Dedicated resources</button></li>
+      <li><button class="choice">Rapid elasticity</button></li>
+      <li><button class="choice">High availability</button></li>
+      <li><button class="choice" data-correct>Multitenant architecture</button></li>
+    </ul>
+    <div class="explain" hidden><strong>Multitenancy</strong>: many tenants share one system while each tenant's data stays isolated. Dedicated would mean nobody shares the hardware at all.</div>
+  </section>
+  <p class="quiz-score" data-quiz-score></p>
+
+  <details class="recall">
+    <summary>From memory: all seven characteristics, sorted into owner, bill and behavior. <span class="hint">(then click to check)</span></summary>
+    <p><strong>Owner</strong>: shared resources, dedicated resources, multitenancy. <strong>Bill</strong>: metered utilization; ingress (in, often free) and egress (out, often charged). <strong>Behavior</strong>: rapid elasticity (scales with demand), high availability (survives failures), file synchronization (same files everywhere).</p>
+  </details>
+
+  <h2>Review: earlier lessons</h2>
+  <p>Spaced retrieval: pull these from memory first, then check.</p>
+
+  <details class="recall">
+    <summary>A vendor's line-of-business app only runs on an old Windows version. Which of the four VM uses is this, and what's the catch? <span class="hint">(<a href="0030-virtualization-concepts.html">lesson 0030</a>, 3 days ago)</span></summary>
+    <p><strong>Legacy software</strong>: build a VM with the old OS and keep the modern desktop for everything else. The catch: the old OS still gets no security updates, so give the VM only the network access it truly needs.</p>
+  </details>
+
+  <details class="recall">
+    <summary>A user's Bluetooth headset sounds great for music but terrible the moment a meeting starts. Why, and what's the common workaround? <span class="hint">(<a href="0026-mobile-device-accessories.html">lesson 0026</a>, 7 days ago)</span></summary>
+    <p>When the headset's mic turns on, it switches to the <strong>Hands-Free Profile</strong>, which carries only low-quality mono audio both ways. Workaround: keep the headset as the speaker and pick the laptop's built-in mic (or a USB headset) as the microphone.</p>
+  </details>
+
+  <details class="recall">
+    <summary>You know exactly which cable runs to a user's desk, but you suspect a broken pair. Toner probe or cable tester? <span class="hint">(<a href="0019-network-tools.html">lesson 0019</a>, 14 days ago)</span></summary>
+    <p><strong>Cable tester</strong>: it checks every pin end to end. A toner probe <em>finds</em> a cable and can beep happily on one with a broken pair.</p>
+  </details>
+
+  <div class="callout source" id="src-messer">
+    <span class="label">Primary source: watch next</span>
+    <p>[1] Professor Messer, <a href="https://www.professormesser.com/free-a-plus-training/220-1201/220-1201-video/cloud-characteristics-220-1201/">Cloud Characteristics (220-1201, 4.2)</a>. Shared and dedicated resources, metered utilization, ingress and egress, elasticity, availability, file synchronization, multitenancy. Free.</p>
+    <p id="src-egress">[2] Microsoft Azure, <a href="https://azure.microsoft.com/en-us/pricing/details/bandwidth/">Bandwidth pricing</a> (inbound data transfer is free; outbound is charged after a free monthly allowance).</p>
+    <p id="src-kfm">[3] Microsoft Learn, <a href="https://learn.microsoft.com/en-us/sharepoint/redirect-known-folders">Redirect and move Windows known folders to OneDrive</a> (Desktop, Documents and Pictures; set by Group Policy or Intune).</p>
+    <p id="src-isolation">[4] Microsoft Learn, <a href="https://learn.microsoft.com/en-us/training/modules/audit-architecture/understand-isolation">Understand network, service, and tenant isolation in Microsoft 365</a> (shared infrastructure, one tenant can't reach another's content).</p>
+  </div>
+
+  <div class="callout ask">
+    <span class="label">Questions?</span>
+    <p>Anything unclear? Ask your teacher. Open Claude in the Teacher repo and ask, for example: <em>"In IT lesson 0033, is a company running its own private cloud multitenant?"</em> Follow-up questions are part of the course.</p>
+  </div>
+</main>
+<nav class="page-footer">
+  <a href="0032-cloud-models.html">← Whose cloud, and how much of it: deployment and service models</a>
+  <a href="../../index.html">Hub</a>
+  <span class="disabled">Next lesson: tomorrow →</span>
+</nav>
+</body>
+</html>
