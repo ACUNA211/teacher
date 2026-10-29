@@ -1,0 +1,159 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Display Types</title>
+<meta name="description" content="IT lesson 0034: A+ objective 3.1, display types. LCD panels (TN, IPS, VA), backlights and inverters, OLED, Mini-LED, touchscreens and digitizers.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=JetBrains+Mono&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../assets/course.css">
+<script src="../../assets/quiz.js" defer></script>
+</head>
+<body class="track-it">
+<nav class="page-header">
+  <a class="home" href="../../index.html">Teacher hub</a>
+  <span>IT and certs</span>
+  <a href="../reference/glossary.html">Glossary</a>
+  <a href="../reference/hardware.html">Hardware cheat sheet</a>
+</nav>
+<main>
+  <p class="kicker">IT and certs · Lesson 0034 · A+ Core 1, objective 3.1</p>
+  <h1>Where the light comes from: LCD, OLED, Mini-LED and touchscreens</h1>
+  <p class="lede">About 10 minutes. Virtualization and cloud are done, so today starts the biggest exam domain: <strong>Hardware</strong> (25%). First video: display types. Messer covers LCD technologies, OLED, Mini-LED, touchscreens, digitizers and inverters.<sup class="cite"><a href="#src-messer">[1]</a></sup> One question sorts almost all of it: <em>where does the light come from?</em> The win: hear a symptom or a requirement and name the display part involved.</p>
+
+  <div class="callout">
+    <span class="label">Why this matters at work</span>
+    <p>"My laptop screen is black" is a classic ticket. Knowing that an LCD is a light source <em>plus</em> a picture layer gives you a 30-second test that decides between a remote fix (graphics driver, display settings) and a hardware repair (backlight). The same split, picture vs. touch layer, tells you whether a tablet with dead taps needs a new screen or just a reboot.</p>
+  </div>
+
+  <h2>LCD: a picture that needs a light behind it</h2>
+  <p>Liquid crystals don't make light. An <strong>LCD</strong> shines a <strong>backlight</strong> through the crystals and color filters, and the crystals twist to let more or less light through each pixel.<sup class="cite"><a href="#src-messer">[1]</a></sup><sup class="cite"><a href="#src-panels">[2]</a></sup> Three panel types twist the crystals differently:</p>
+  <div class="table-wrap">
+  <table>
+    <thead><tr><th>Panel</th><th>Strength</th><th>Weakness</th><th>Pick it for</th></tr></thead>
+    <tbody>
+      <tr><td><strong>TN</strong> (twisted nematic)</td><td>Fastest response, cheapest; the oldest design</td><td>Colors shift when viewed off-center; weaker color</td><td>Competitive gaming, budget monitors<sup class="cite"><a href="#src-panels">[2]</a></sup></td></tr>
+      <tr><td><strong>IPS</strong> (in-plane switching)</td><td>Best color accuracy, widest viewing angles</td><td>Costs more than TN</td><td>Photo and graphic design, shared screens<sup class="cite"><a href="#src-panels">[2]</a></sup></td></tr>
+      <tr><td><strong>VA</strong> (vertical alignment)</td><td>Best contrast of the three (deep blacks)</td><td>Slower response than TN</td><td>A good middle ground; movies<sup class="cite"><a href="#src-panels">[2]</a></sup></td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <h3>The backlight, and the inverter</h3>
+  <p>Older LCDs were lit by a <strong>CCFL</strong> (cold cathode fluorescent lamp), a thin tube that needs high-voltage AC. A laptop runs on DC, so a small board called the <strong>inverter</strong> converts DC to AC for the lamp.<sup class="cite"><a href="#src-messer">[1]</a></sup><sup class="cite"><a href="#src-flashlight">[4]</a></sup> Modern LCDs use an <strong>LED backlight</strong> instead, which runs on DC and needs no inverter. A screen sold as an "LED display" is almost always an <strong>LCD with LED backlighting</strong>, not a new kind of panel.<sup class="cite"><a href="#src-panels">[2]</a></sup></p>
+  <p><strong>Mini-LED</strong> is still an LCD, but the backlight is thousands of tiny LEDs grouped into <strong>local dimming zones</strong>. Zones behind dark parts of the picture turn down, so blacks get deeper and highlights brighter. Zones are bigger than pixels, so a bright object on black can show a faint halo ("blooming").<sup class="cite"><a href="#src-messer">[1]</a></sup><sup class="cite"><a href="#src-mini">[3]</a></sup></p>
+
+  <h2>OLED: every pixel is its own light</h2>
+  <p>In an <strong>OLED</strong> (organic light-emitting diode) display, each pixel glows by itself. There's <strong>no backlight</strong>, so a black pixel is simply off: perfect blacks, thin and light panels.<sup class="cite"><a href="#src-messer">[1]</a></sup><sup class="cite"><a href="#src-panels">[2]</a></sup> The catch: the organic material wears with use, so an image left on screen for a very long time (a taskbar, a logo) can leave a permanent ghost, called <strong>burn-in</strong>. Mini-LED uses inorganic LEDs and doesn't burn in.<sup class="cite"><a href="#src-mini">[3]</a></sup></p>
+
+  <h2>Touchscreens and digitizers</h2>
+  <p>A touchscreen is two layers doing two jobs. The <strong>display</strong> shows the picture; the <strong>digitizer</strong> is a layer that senses touch (or an active pen, as in <a href="0026-mobile-device-accessories.html">lesson 0026</a>) and converts it into screen coordinates.<sup class="cite"><a href="#src-messer">[1]</a></sup> So "the picture is fine but taps don't work" points at the digitizer; "taps work but the picture is broken" points at the display. On many phones and tablets the two are fused to the glass and replaced as one part.</p>
+
+  <div class="callout win">
+    <span class="label">Memory hook</span>
+    <p><strong>Ask where the light comes from.</strong> Behind the crystals → LCD (CCFL needs an <em>inverter</em>; LED doesn't; Mini-LED = many dimming zones). From each pixel → OLED (perfect black, can burn in). <em>TN is fast, IPS is true color, VA is deep black.</em> Picture layer ≠ touch layer (digitizer).</p>
+  </div>
+
+  <h2>Try it (3 minutes)</h2>
+  <ol>
+    <li><strong>The flashlight test.</strong> Next time a laptop screen looks black but the PC is clearly running (fan, power light, Caps Lock toggles), dim the room and shine a flashlight at an angle onto the screen. A faint picture means the LCD is drawing the image but nothing is lighting it: <strong>backlight</strong> (or, on old CCFL laptops, the <strong>inverter</strong>). No picture at all points toward the graphics, the cable or the panel itself; connecting an external monitor narrows it further.<sup class="cite"><a href="#src-flashlight">[4]</a></sup></li>
+    <li><strong>Do I have a digitizer?</strong> On your Windows PC open <em>Settings → System → About</em> and find the <em>Pen and touch</em> line. It says whether the screen has touch or pen support, or "No pen or touch input is available for this display."</li>
+  </ol>
+  <details class="recall">
+    <summary>A user's laptop shows a very faint picture under a flashlight, and an external monitor works perfectly. Remote fix or hardware repair, and which part? <span class="hint">(then click to check)</span></summary>
+    <p><strong>Hardware repair: the backlight</strong> (or its inverter on an older CCFL screen). The graphics are fine, since the external monitor works and the panel is drawing the image; only the light behind it is missing. No driver update will fix that.</p>
+  </details>
+
+  <h2>Practice</h2>
+  <p>Answer from memory before scrolling back up.</p>
+
+  <section class="quiz">
+    <p class="q">A graphic designer needs an LCD monitor with the most accurate color, and clients often look at it from the side of the desk. Which panel type fits best?</p>
+    <ul class="choices">
+      <li><button class="choice">TN panel</button></li>
+      <li><button class="choice">VA panel</button></li>
+      <li><button class="choice" data-correct>IPS panel</button></li>
+      <li><button class="choice">Mini-LED backlight</button></li>
+    </ul>
+    <div class="explain" hidden><strong>IPS</strong> gives the best color accuracy and the widest viewing angles. TN shifts color off-center, VA is strongest at contrast, and Mini-LED is a backlight, not a panel type.</div>
+  </section>
+
+  <section class="quiz">
+    <p class="q">An older laptop with a CCFL-lit screen boots normally, but the display is nearly black. With a flashlight you can just make out the desktop. What is the most likely cause?</p>
+    <ul class="choices">
+      <li><button class="choice" data-correct>Failed backlight or its inverter</button></li>
+      <li><button class="choice">Failed graphics chip or driver</button></li>
+      <li><button class="choice">Cracked touchscreen digitizer glass layer</button></li>
+      <li><button class="choice">Incorrect resolution set in Windows</button></li>
+    </ul>
+    <div class="explain" hidden>A faint image means the LCD is drawing the picture but nothing lights it. On a CCFL screen that's the lamp or the <strong>inverter</strong> that powers it. A graphics fault would leave no image to see at all.</div>
+  </section>
+
+  <section class="quiz">
+    <p class="q">After a drop, a tablet's picture looks perfect, but taps along the bottom edge do nothing. Which part has most likely failed?</p>
+    <ul class="choices">
+      <li><button class="choice">The LCD backlight</button></li>
+      <li><button class="choice" data-correct>The digitizer layer</button></li>
+      <li><button class="choice">The power inverter</button></li>
+      <li><button class="choice">The OLED pixels</button></li>
+    </ul>
+    <div class="explain" hidden>The picture is fine, so the display side works. The <strong>digitizer</strong> is the layer that senses touch, so dead taps in one area point at it.</div>
+  </section>
+
+  <section class="quiz">
+    <p class="q">A lobby sign will show the same logo and menu bar 12 hours a day for years. The buyer wants deep contrast but no risk of burn-in. Which display fits best?</p>
+    <ul class="choices">
+      <li><button class="choice">OLED display panel</button></li>
+      <li><button class="choice">CCFL backlit LCD</button></li>
+      <li><button class="choice">Standard edge-lit LCD</button></li>
+      <li><button class="choice" data-correct>Mini-LED backlit LCD</button></li>
+    </ul>
+    <div class="explain" hidden><strong>Mini-LED</strong> gives deep contrast through local dimming zones, and its inorganic LEDs don't burn in. OLED has the best blacks, but static images for years are exactly what causes burn-in.</div>
+  </section>
+  <p class="quiz-score" data-quiz-score></p>
+
+  <details class="recall">
+    <summary>From memory: the three LCD panel types and their strengths, what an inverter does, and how OLED and Mini-LED differ. <span class="hint">(then click to check)</span></summary>
+    <p><strong>TN</strong> fast and cheap, <strong>IPS</strong> best color and angles, <strong>VA</strong> best contrast. The <strong>inverter</strong> turns DC into the high-voltage AC a CCFL backlight needs (LED backlights don't need one). <strong>OLED</strong>: each pixel makes its own light, no backlight, can burn in. <strong>Mini-LED</strong>: an LCD whose backlight is many small LEDs in local dimming zones, no burn-in.</p>
+  </details>
+
+  <h2>Review: earlier lessons</h2>
+  <p>Spaced retrieval: pull these from memory first, then check.</p>
+
+  <details class="recall">
+    <summary>A company uploads all its archives to the cloud for free, then gets a big bill the month it downloads them again. Name the two terms, and which one usually costs money. <span class="hint">(<a href="0033-cloud-characteristics.html">lesson 0033</a>, yesterday)</span></summary>
+    <p><strong>Ingress</strong> (data in) is usually free; <strong>egress</strong> (data out) is usually charged. Both belong to <em>metered utilization</em>: you pay for what you use.</p>
+  </details>
+
+  <details class="recall">
+    <summary>Hyper-V on a server and VirtualBox on a laptop: which is type 1 and which is type 2, and what's the difference? <span class="hint">(<a href="0031-virtualization-services.html">lesson 0031</a>, 3 days ago)</span></summary>
+    <p><strong>Hyper-V is type 1</strong> (bare metal: the hypervisor runs directly on the hardware). <strong>VirtualBox is type 2</strong> (hosted: it's an app on top of a normal OS). Type 1 is leaner and used in data centers; type 2 is convenient on a desktop.</p>
+  </details>
+
+  <details class="recall">
+    <summary>Two PCs on the same switch talk fine, but neither reaches the internet. Which device decides by MAC address, which by IP address, and which one do you suspect? <span class="hint">(<a href="0020-network-devices-switch-router-ap.html">lesson 0020</a>, 14 days ago)</span></summary>
+    <p>A <strong>switch</strong> forwards by MAC address inside the local network; a <strong>router</strong> forwards by IP address between networks. Local traffic works, so suspect the <strong>router</strong> (or the PCs' default gateway setting that points at it).</p>
+  </details>
+
+  <div class="callout source" id="src-messer">
+    <span class="label">Primary source: watch next</span>
+    <p>[1] Professor Messer, <a href="https://www.professormesser.com/free-a-plus-training/220-1201/220-1201-video/display-types-220-1201/">Display Types (220-1201, 3.1)</a>. LCD technologies, OLED, Mini-LED, touchscreens, digitizers and inverters. Free. Next in the course: <em>Display Attributes</em> (pixel density, refresh rate, resolution, color gamut).</p>
+    <p id="src-panels">[2] Electropages, <a href="https://electropages.com/blog/2020/07/oled-vs-lcd-vs-led-vs-tn-vs-ips-vs-va">LCD vs LED vs OLED vs TN vs IPS vs VA: a breakdown of display technologies</a> (backlights, panel trade-offs, why "LED" usually means an LED-backlit LCD).</p>
+    <p id="src-mini">[3] ViewSonic Library, <a href="https://www.viewsonic.com/library/gaming/mini-led-vs-oled-for-gaming/">Mini-LED vs OLED</a> (local dimming zones, blooming, burn-in).</p>
+    <p id="src-flashlight">[4] Technibble forums, <a href="https://www.technibble.com/forums/threads/inverter-or-backlight-how-to-tell.20923">Inverter or backlight: how to tell?</a> (technicians on the flashlight test and what it can and can't tell apart).</p>
+  </div>
+
+  <div class="callout ask">
+    <span class="label">Questions?</span>
+    <p>Anything unclear? Ask your teacher. Open Claude in the Teacher repo and ask, for example: <em>"In IT lesson 0034, why would anyone still buy a TN monitor?"</em> Follow-up questions are part of the course.</p>
+  </div>
+</main>
+<nav class="page-footer">
+  <a href="0033-cloud-characteristics.html">← Pay for what you use, grow when you need it: cloud characteristics</a>
+  <a href="../../index.html">Hub</a>
+  <span class="disabled">Next lesson: tomorrow →</span>
+</nav>
+</body>
+</html>

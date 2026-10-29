@@ -1,7 +1,7 @@
 /* Hub data. The teacher updates this file after every lesson; index.html renders it.
    Keep it free of personal data: the site is public. */
 window.HUB = {
-  updated: "2026-10-28",
+  updated: "2026-10-29",
   tracks: [
     {
       id: "it", name: "IT and certs", folder: "it", cls: "track-it", status: "active",
@@ -190,6 +190,11 @@ window.HUB = {
       track: "it", num: "0033", date: "2026-10-28", covers: 1,
       title: "Pay for what you use, grow when you need it: cloud characteristics",
       path: "it/lessons/0033-cloud-characteristics.html"
+    },
+    {
+      track: "it", num: "0034", date: "2026-10-29", covers: 1,
+      title: "Where the light comes from: LCD, OLED, Mini-LED and touchscreens",
+      path: "it/lessons/0034-display-types.html"
     },
     {
       track: "app", num: "0001", date: "2026-09-28", covers: 0,
