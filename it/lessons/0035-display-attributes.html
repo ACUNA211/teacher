@@ -1,0 +1,175 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Display Attributes</title>
+<meta name="description" content="IT lesson 0035: A+ objective 3.1, display attributes. Resolution and native resolution, pixel density (PPI), refresh rate (Hz) and color gamut (sRGB, Adobe RGB, DCI-P3).">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=JetBrains+Mono&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../assets/course.css">
+<script src="../../assets/quiz.js" defer></script>
+</head>
+<body class="track-it">
+<nav class="page-header">
+  <a class="home" href="../../index.html">Teacher hub</a>
+  <span>IT and certs</span>
+  <a href="../reference/glossary.html">Glossary</a>
+  <a href="../reference/hardware.html">Hardware cheat sheet</a>
+</nav>
+<main>
+  <p class="kicker">IT and certs · Lesson 0035 · A+ Core 1, objective 3.1</p>
+  <h1>How many, how close, how fast, how colorful: display attributes</h1>
+  <p class="lede">About 10 minutes. <a href="0034-display-types.html">Yesterday</a> sorted displays by where the light comes from. Today covers the four numbers on every monitor's spec sheet: <strong>resolution</strong>, <strong>pixel density</strong>, <strong>refresh rate</strong> and <strong>color gamut</strong>.<sup class="cite"><a href="#src-messer">[1]</a></sup> The win: read a spec sheet, or a "my screen looks wrong" ticket, and name the attribute it's about.</p>
+
+  <div class="callout">
+    <span class="label">Why this matters at work</span>
+    <p>"Everything looks blurry on my new monitor" and "the screen feels choppy since I docked" are common tickets after someone gets new hardware. They usually have nothing to do with the account or the device's management: the fix is a Windows display setting. Knowing the four attributes lets you check the right one in a minute instead of swapping cables.</p>
+  </div>
+
+  <h2>1. Resolution: how many pixels</h2>
+  <p><strong>Resolution</strong> is the pixel count, written width × height: 1920×1080 (1080p, "Full HD"), 2560×1440 (1440p), 3840×2160 (4K UHD). An LCD or OLED panel has a fixed grid of physical pixels, its <strong>native resolution</strong>. Windows marks it <em>(Recommended)</em> in the resolution list.<sup class="cite"><a href="#src-ms">[2]</a></sup> Set anything else and the panel has to stretch the image across pixels that don't line up, so text looks soft or blurry.</p>
+  <p class="sidenote">Text too small at native resolution? Don't lower the resolution: raise <strong>Scale</strong> (125%, 150%) in the same Settings page. Scaling makes things bigger and keeps them sharp.</p>
+
+  <h2>2. Pixel density: how close together</h2>
+  <p><strong>Pixel density</strong> is how many pixels fit in one inch of screen, in <strong>pixels per inch (PPI)</strong>. Higher density looks crisper.<sup class="cite"><a href="#src-messer">[1]</a></sup> It depends on resolution <em>and</em> size together, which is the point the exam likes to test:</p>
+  <div class="table-wrap">
+  <table>
+    <thead><tr><th>Screen</th><th>Resolution</th><th>About</th></tr></thead>
+    <tbody>
+      <tr><td>24-inch monitor</td><td>1920×1080</td><td>92 PPI</td></tr>
+      <tr><td>27-inch monitor</td><td>2560×1440</td><td>109 PPI</td></tr>
+      <tr><td>14-inch laptop</td><td>1920×1080</td><td>157 PPI</td></tr>
+      <tr><td>27-inch monitor</td><td>3840×2160</td><td>163 PPI</td></tr>
+    </tbody>
+  </table>
+  </div>
+  <p>Same 1080p, very different sharpness: the small laptop packs those pixels into much less space. (The math: diagonal in pixels, √(width² + height²), divided by the diagonal in inches.)</p>
+
+  <h2>3. Refresh rate: how fast</h2>
+  <p>The <strong>refresh rate</strong> is how many times per second the display redraws the picture, in <strong>hertz (Hz)</strong>: 1 Hz = one refresh per second. <strong>60 Hz</strong> is the common standard; gaming displays go up to about <strong>240 Hz</strong>. Higher means smoother motion.<sup class="cite"><a href="#src-messer">[1]</a></sup> Two traps: Windows often starts a new monitor at 60 Hz, so a 144 Hz monitor can quietly run at 60 until someone changes it; and the cable or port must be able to carry the higher rate at that resolution.<sup class="cite"><a href="#src-ms">[2]</a></sup></p>
+
+  <h2>4. Color gamut: how colorful</h2>
+  <p>The <strong>color gamut</strong> is the range of colors a display can show. Spec sheets give it as a percentage of a standard color space:<sup class="cite"><a href="#src-messer">[1]</a></sup><sup class="cite"><a href="#src-gamut">[3]</a></sup></p>
+  <div class="table-wrap">
+  <table>
+    <thead><tr><th>Color space</th><th>Size</th><th>Used for</th></tr></thead>
+    <tbody>
+      <tr><td><strong>sRGB</strong></td><td>Smallest; the baseline</td><td>The web, office work, most everyday screens</td></tr>
+      <tr><td><strong>Adobe RGB</strong></td><td>Wider than sRGB (more greens)</td><td>Photography and <em>print</em></td></tr>
+      <tr><td><strong>DCI-P3</strong></td><td>Wider than sRGB, about as wide as Adobe RGB</td><td><em>Video</em>, cinema, HDR</td></tr>
+    </tbody>
+  </table>
+  </div>
+  <p>"100% sRGB" is fine for a spreadsheet. A photographer preparing prints wants high Adobe RGB coverage; a video editor wants high DCI-P3 coverage.</p>
+
+  <div class="callout win">
+    <span class="label">Memory hook</span>
+    <p><strong>How many, how close, how fast, how colorful.</strong> Resolution = how many pixels (use <em>native</em>). Pixel density = how close (PPI; size matters). Refresh rate = how fast (Hz; 60 standard, up to 240 gaming). Color gamut = how colorful (sRGB web, Adobe RGB print, DCI-P3 video).</p>
+  </div>
+
+  <h2>Try it (3 minutes)</h2>
+  <ol>
+    <li>Open <em>Settings → System → Display</em>. Under <em>Display resolution</em>, find the entry marked <em>(Recommended)</em>: that's your panel's native resolution. Note the <em>Scale</em> value too.</li>
+    <li>Click <em>Advanced display</em>. Under <em>Choose a refresh rate</em>, check whether you're running the highest rate your monitor offers.<sup class="cite"><a href="#src-ms">[2]</a></sup></li>
+    <li>Or ask PowerShell:
+      <pre><code>Get-CimInstance Win32_VideoController |
+  Select-Object Name, CurrentHorizontalResolution, CurrentVerticalResolution, CurrentRefreshRate</code></pre>
+    </li>
+  </ol>
+  <details class="recall">
+    <summary>A user's new 27-inch 1440p monitor makes text look fuzzy. Settings show 1920×1080. What do you change, and what if they then say the text is too small? <span class="hint">(then click to check)</span></summary>
+    <p>Set the resolution back to <strong>2560×1440</strong>, the native one marked <em>(Recommended)</em>; a non-native resolution gets stretched and blurs. If text is then too small, raise <strong>Scale</strong> (for example 125%) instead of lowering the resolution.</p>
+  </details>
+
+  <h2>Practice</h2>
+  <p>Answer from memory before scrolling back up.</p>
+
+  <section class="quiz">
+    <p class="q">A user says their new 144 Hz monitor feels no smoother than the old one. The picture is sharp and colors look right. What should you check first?</p>
+    <ul class="choices">
+      <li><button class="choice">The panel's color gamut</button></li>
+      <li><button class="choice" data-correct>The configured refresh rate</button></li>
+      <li><button class="choice">The display's pixel density</button></li>
+      <li><button class="choice">The Windows scaling percentage</button></li>
+    </ul>
+    <div class="explain" hidden>Smoothness of motion is the <strong>refresh rate</strong>. Windows often runs a new monitor at 60 Hz until someone picks a higher rate under <em>Advanced display</em>; the cable must also support it.</div>
+  </section>
+
+  <section class="quiz">
+    <p class="q">Two monitors both run at 1920×1080. One is 24 inches, the other 32 inches. Which statement is true?</p>
+    <ul class="choices">
+      <li><button class="choice">Both have identical pixel density</button></li>
+      <li><button class="choice">The 32-inch looks sharper up close</button></li>
+      <li><button class="choice" data-correct>The 24-inch has higher pixel density</button></li>
+      <li><button class="choice">The 32-inch has more total pixels</button></li>
+    </ul>
+    <div class="explain" hidden>Same number of pixels spread over a smaller area means more pixels per inch, so the <strong>24-inch has the higher pixel density</strong> and looks crisper. Total pixels are the same.</div>
+  </section>
+
+  <section class="quiz">
+    <p class="q">A marketing team's video editor needs a monitor for color-accurate film and HDR work. Which spec matters most?</p>
+    <ul class="choices">
+      <li><button class="choice">High sRGB color coverage</button></li>
+      <li><button class="choice">A 240 Hz refresh</button></li>
+      <li><button class="choice">The highest pixel density</button></li>
+      <li><button class="choice" data-correct>High DCI-P3 color coverage</button></li>
+    </ul>
+    <div class="explain" hidden><strong>DCI-P3</strong> is the cinema and HDR color space, so its coverage is what a video editor needs. sRGB is the small everyday baseline; Adobe RGB would suit photography for print.</div>
+  </section>
+
+  <section class="quiz">
+    <p class="q">A laptop screen's text looks soft and slightly smeared, but icons are the expected size. Settings show a resolution not marked (Recommended). What's the fix?</p>
+    <ul class="choices">
+      <li><button class="choice" data-correct>Select the native resolution again</button></li>
+      <li><button class="choice">Lower the refresh rate setting</button></li>
+      <li><button class="choice">Replace the panel's backlight unit</button></li>
+      <li><button class="choice">Switch the color profile to sRGB</button></li>
+    </ul>
+    <div class="explain" hidden>A fixed-pixel panel looks sharp only at its <strong>native resolution</strong>. Anything else is scaled across pixels that don't line up, which softens text. Use Scale, not resolution, to change size.</div>
+  </section>
+  <p class="quiz-score" data-quiz-score></p>
+
+  <details class="recall">
+    <summary>From memory: the four display attributes, the unit for two of them, and the three color spaces with what each is for. <span class="hint">(then click to check)</span></summary>
+    <p><strong>Resolution</strong> (pixel count; use native), <strong>pixel density</strong> (PPI), <strong>refresh rate</strong> (Hz; 60 standard, up to 240 gaming), <strong>color gamut</strong>. <strong>sRGB</strong> web and everyday, <strong>Adobe RGB</strong> photography and print, <strong>DCI-P3</strong> video and cinema.</p>
+  </details>
+
+  <h2>Review: earlier lessons</h2>
+  <p>Spaced retrieval: pull these from memory first, then check.</p>
+
+  <details class="recall">
+    <summary>A laptop is running (fan, Caps Lock light) but the screen is black. What 30-second test splits "backlight" from "graphics", and what does each result mean? <span class="hint">(<a href="0034-display-types.html">lesson 0034</a>, yesterday)</span></summary>
+    <p>The <strong>flashlight test</strong>: shine a light at an angle on the screen. A faint picture means the LCD is drawing the image but the <strong>backlight</strong> (or an old CCFL screen's <strong>inverter</strong>) has failed. No picture points at graphics, cable or panel; an external monitor narrows it down.</p>
+  </details>
+
+  <details class="recall">
+    <summary>An employee leaves. On their personal phone (BYOD) you should remove only work data; on a company-owned phone you can erase everything. Which two actions are these? <span class="hint">(<a href="0028-mobile-device-management.html">lesson 0028</a>, 7 days ago)</span></summary>
+    <p><strong>Retire</strong> (selective wipe) removes company data, apps and settings and leaves personal data alone: right for BYOD. <strong>Wipe</strong> restores the device to factory settings: for corporate-owned devices.</p>
+  </details>
+
+  <details class="recall">
+    <summary>A user can't open a mapped drive on a file server, and a firewall rule is suspected. Which TCP port does modern SMB use, and which older protocol used 137–139? <span class="hint">(<a href="0005-file-sharing-directory-ports.html">lesson 0005</a>, 30 days ago)</span></summary>
+    <p>Modern <strong>SMB</strong> runs directly over <strong>TCP 445</strong>. <strong>NetBIOS</strong> (over TCP/IP) used ports <strong>137–139</strong>, which older SMB rode on.</p>
+  </details>
+
+  <div class="callout source" id="src-messer">
+    <span class="label">Primary source: watch next</span>
+    <p>[1] Professor Messer, <a href="https://www.professormesser.com/free-a-plus-training/220-1201/220-1201-video/display-attributes-220-1201/">Display Attributes (220-1201, 3.1)</a>. Pixel density, refresh rate, screen resolution, color gamut. Free. Next in the course: <em>Network Cables</em> (3.2).</p>
+    <p id="src-ms">[2] Microsoft Support, <a href="https://support.microsoft.com/en-us/windows/change-display-refresh-rate-in-windows-c8ea729e-0678-015c-c415-f806f04aae5a">Change the refresh rate on your monitor in Windows</a> (Settings → System → Display → Advanced display; available rates depend on the monitor).</p>
+    <p id="src-gamut">[3] ViewSonic Library, <a href="https://www.viewsonic.com/library/tech/what-is-color-gamut/">What is color gamut? (sRGB, Adobe RGB, and DCI-P3)</a> (what each color space is used for).</p>
+  </div>
+
+  <div class="callout ask">
+    <span class="label">Questions?</span>
+    <p>Anything unclear? Ask your teacher. Open Claude in the Teacher repo and ask, for example: <em>"In IT lesson 0035, why does a lower resolution look blurry instead of just bigger?"</em> Follow-up questions are part of the course.</p>
+  </div>
+</main>
+<nav class="page-footer">
+  <a href="0034-display-types.html">← Where the light comes from: LCD, OLED, Mini-LED and touchscreens</a>
+  <a href="../../index.html">Hub</a>
+  <span class="disabled">Next lesson: tomorrow →</span>
+</nav>
+</body>
+</html>

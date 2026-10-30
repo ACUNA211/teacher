@@ -138,10 +138,24 @@
   </div>
   <p class="sidenote">Black screen, PC running: shine a flashlight on it. Faint picture = backlight/inverter. Nothing = graphics, cable or panel; try an external monitor.</p>
 
+  <h2>Display attributes (objective 3.1)</h2>
+  <div class="table-wrap">
+  <table>
+    <thead><tr><th>Attribute</th><th>Unit / values</th><th>Remember</th></tr></thead>
+    <tbody>
+      <tr><td>Resolution</td><td>Width × height (1920×1080, 2560×1440, 3840×2160)</td><td>Use the <strong>native</strong> one, marked (Recommended); other values blur. Make things bigger with Scale, not resolution</td></tr>
+      <tr><td>Pixel density</td><td>PPI (pixels per inch)</td><td>Depends on resolution <em>and</em> size: same 1080p is ~92 PPI at 24", ~157 PPI at 14"</td></tr>
+      <tr><td>Refresh rate</td><td>Hz (redraws per second)</td><td>60 Hz standard, up to ~240 Hz gaming; new monitors often start at 60 (Settings → Display → Advanced display)</td></tr>
+      <tr><td>Color gamut</td><td>% of a color space</td><td><strong>sRGB</strong> web/everyday (smallest), <strong>Adobe RGB</strong> photo/print, <strong>DCI-P3</strong> video/HDR</td></tr>
+    </tbody>
+  </table>
+  </div>
+
   <h2>Commands (Windows)</h2>
   <div class="table-wrap">
   <table>
     <tbody>
+      <tr><td><code>Get-CimInstance Win32_VideoController | Select-Object Name, CurrentHorizontalResolution, CurrentVerticalResolution, CurrentRefreshRate</code></td><td>PowerShell: current resolution and refresh rate per graphics adapter</td></tr>
       <tr><td><code>powercfg /batteryreport</code></td><td>HTML battery report: design vs. full charge capacity, cycle count, usage history. Add <code>/output path</code> to choose where it's saved</td></tr>
       <tr><td><code>Suspend-BitLocker -MountPoint "C:" -RebootCount 1</code></td><td>PowerShell (admin): suspend BitLocker for one reboot before planned hardware work; <code>manage-bde -protectors -disable C:</code> also works</td></tr>
       <tr><td><code>Get-NetAdapter | Where-Object Status -eq Up</code></td><td>PowerShell: adapters that are connected; a USB tether shows up as an extra adapter</td></tr>
