@@ -1,0 +1,256 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Weekly Quiz: Oct 25 – Oct 30</title>
+<meta name="description" content="IT lesson 0036: Saturday in-depth quiz on week five (virtual machines, hypervisors and containers, cloud models, cloud characteristics, display types and display attributes) mixed with earlier weeks, plus an A+ Core 1 pace check.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=JetBrains+Mono&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../assets/course.css">
+<script src="../../assets/quiz.js" defer></script>
+</head>
+<body class="track-it">
+<nav class="page-header">
+  <a class="home" href="../../index.html">Teacher hub</a>
+  <span>IT and certs</span>
+  <a href="../reference/glossary.html">Glossary</a>
+  <a href="../reference/network-settings.html">Cheat sheet</a>
+  <a href="../reference/virtualization-cloud.html">Virtualization &amp; cloud cheat sheet</a>
+  <a href="../reference/hardware.html">Hardware cheat sheet</a>
+</nav>
+<main>
+  <p class="kicker">IT and certs · Lesson 0036 · Saturday quiz · A+ Core 1, objectives 4.1–4.2, 3.1 and 2.x review</p>
+  <h1>Weekly quiz: Oct 25 – Oct 30</h1>
+  <p class="lede">About 20 minutes. Fifteen questions: nine on this week (virtual machines, hypervisors and containers, cloud models, cloud characteristics, display types, display attributes) and six pulled back from the networking weeks (mail ports, DHCP leases, VLAN trunks, SANs, switches, PoE). They're shuffled on purpose. Most are tickets: work out what's broken before you work out what it's called.</p>
+
+  <div class="callout">
+    <span class="label">How to take it</span>
+    <p>No scrolling back to the lessons until you've answered. A wrong answer followed by the explanation sticks better than a right answer you looked up. Each explanation links to the lesson that taught it, so you know exactly what to reread.</p>
+  </div>
+
+  <p class="quiz-score" data-quiz-score></p>
+
+  <section class="quiz">
+    <p class="q">A cloud-hosted ticketing system crawls every Monday at 9 AM when the whole company signs in, then is fast again by noon. Nothing has failed or gone offline. Which cloud characteristic would fix this?</p>
+    <ul class="choices">
+      <li><button class="choice">High availability with automatic failover</button></li>
+      <li><button class="choice" data-correct>Rapid elasticity that adds capacity</button></li>
+      <li><button class="choice">Metered utilization of every resource</button></li>
+      <li><button class="choice">File synchronization across every device</button></li>
+    </ul>
+    <div class="explain" hidden>The problem is <em>too much demand</em>, not something breaking, so the answer is <strong>rapid elasticity</strong>: capacity grows for the Monday rush and shrinks afterwards, without users noticing. High availability is about surviving a failure; metering is how the extra capacity is billed. See <a href="0033-cloud-characteristics.html">lesson 0033</a>.</div>
+  </section>
+
+  <section class="quiz">
+    <p class="q">A user reads work email on an old desktop that was set up years ago with incoming mail on port 110. They just added the same account to their phone, and the phone's inbox is nearly empty, while the desktop shows every message. What explains it?</p>
+    <ul class="choices">
+      <li><button class="choice">SMTP is blocking outgoing mail delivery</button></li>
+      <li><button class="choice">DNS cannot resolve the mail server</button></li>
+      <li><button class="choice">The phone's calendar sync is broken</button></li>
+      <li><button class="choice" data-correct>POP3 downloaded and removed the mail</button></li>
+    </ul>
+    <div class="explain" hidden>Port 110 is <strong>POP3</strong>, the "post office": the desktop collects the mail and typically removes it from the server, so there's nothing left for the phone to see. <strong>IMAP</strong> (143, or 993 with TLS) keeps mail on the server and syncs every device. SMTP (25/587) only sends. Fix: move the desktop to IMAP. See <a href="0004-email-dns-dhcp-ports.html">lesson 0004</a>.</div>
+  </section>
+
+  <section class="quiz">
+    <p class="q">A technician builds a test VM on their laptop using the hypervisor's default shared-address (NAT) network. The VM browses the web fine, but a coworker on the office LAN can't reach the test web server running inside it. Why?</p>
+    <ul class="choices">
+      <li><button class="choice" data-correct>NAT hides it behind the host</button></li>
+      <li><button class="choice">The VM lacks a virtual NIC</button></li>
+      <li><button class="choice">Its type 2 hypervisor blocks traffic</button></li>
+      <li><button class="choice">The office DHCP server rejected it</button></li>
+    </ul>
+    <div class="explain" hidden>In <strong>NAT</strong> mode the VM goes out using the host's IP address: it can start connections, but others can't start one to it. To make it look like any other device on the LAN, switch it to <strong>bridged</strong> (a Hyper-V external switch), where it gets its own MAC and its own DHCP lease. It browses, so it clearly has a virtual NIC. See <a href="0031-virtualization-services.html">lesson 0031</a>.</div>
+  </section>
+
+  <section class="quiz">
+    <p class="q">A shared conference-room monitor looks sharp and fast, but people sitting at the sides of the table say the colors look washed out and shifted. The person straight in front sees it fine. Which panel type is this most likely?</p>
+    <ul class="choices">
+      <li><button class="choice">An IPS LCD panel</button></li>
+      <li><button class="choice">A VA LCD panel</button></li>
+      <li><button class="choice" data-correct>A TN LCD panel</button></li>
+      <li><button class="choice">An OLED display panel</button></li>
+    </ul>
+    <div class="explain" hidden><strong>TN</strong> (twisted nematic) is the fastest and cheapest LCD, and its known weakness is that colors shift when viewed off-center. <strong>IPS</strong> is the one with the widest viewing angles (the right pick for a shared screen); VA is the contrast champion; OLED has no viewing-angle problem of this kind. See <a href="0034-display-types.html">lesson 0034</a>.</div>
+  </section>
+
+  <section class="quiz">
+    <p class="q">The lobby guest Wi-Fi is a single /24 whose router is also the DHCP server, with an 8-day lease. About 400 different visitors' phones joined during a busy conference this week. Now new visitors get a <code>169.254.x.x</code> address, while staff phones that joined earlier still work. What's the most likely cause?</p>
+    <ul class="choices">
+      <li><button class="choice">The router stopped relaying DHCP broadcasts</button></li>
+      <li><button class="choice" data-correct>The pool has no free addresses</button></li>
+      <li><button class="choice">The scope's DNS server option changed</button></li>
+      <li><button class="choice">The new phones need DHCP reservations</button></li>
+    </ul>
+    <div class="explain" hidden>A /24 has at most 254 addresses, and an 8-day lease keeps each one tied to a phone that left days ago. Phones that already hold a lease keep renewing at T1 (half the lease); new ones get no Offer, so Windows and phones fall back to APIPA. Fix: shorten the lease to hours (normal for guest Wi-Fi) or enlarge the scope. A wrong DNS option would still hand out addresses, and there's no relay when the server is on the same subnet. See <a href="0014-dhcp-scopes-leases.html">lesson 0014</a>.</div>
+  </section>
+
+  <section class="quiz">
+    <p class="q">Your company's Microsoft 365 tenant runs on the same infrastructure as thousands of other organizations, yet none of them can see your mail or files, and Microsoft runs everything up to the finished apps. Which set of terms fits it?</p>
+    <ul class="choices">
+      <li><button class="choice">IaaS, private cloud, dedicated</button></li>
+      <li><button class="choice">PaaS, community cloud, multitenant</button></li>
+      <li><button class="choice">SaaS, private cloud, dedicated</button></li>
+      <li><button class="choice" data-correct>SaaS, public cloud, multitenant</button></li>
+    </ul>
+    <div class="explain" hidden>Microsoft runs the whole stack up to the app: <strong>SaaS</strong>. It's a provider's cloud open to any paying customer: <strong>public</strong>. Many customers share the same system while each one's data stays separate: <strong>multitenant</strong> (that's why your organization is called a <em>tenant</em>). Dedicated would mean nobody shares the hardware. See <a href="0032-cloud-models.html">lesson 0032</a> and <a href="0033-cloud-characteristics.html">lesson 0033</a>.</div>
+  </section>
+
+  <section class="quiz">
+    <p class="q">A new database server must use a volume on central storage as if it were its own internal disk, formatting it itself, over a dedicated high-speed network. Which do you build?</p>
+    <ul class="choices">
+      <li><button class="choice" data-correct>A SAN giving block-level disk access</button></li>
+      <li><button class="choice">A NAS sharing files over SMB</button></li>
+      <li><button class="choice">A MAN linking buildings across town</button></li>
+      <li><button class="choice">A WLAN joining servers without cables</button></li>
+    </ul>
+    <div class="explain" hidden>"Like its own disk" and "formats it itself" mean <strong>block-level</strong> access: that's a <strong>SAN</strong>, usually on its own isolated fast network (Fibre Channel or iSCSI). A <strong>NAS</strong> is a device sharing <em>files</em> by name over SMB or NFS. SAN = disk (blocks), NAS = share (files). See <a href="0017-network-types.html">lesson 0017</a>.</div>
+  </section>
+
+  <section class="quiz">
+    <p class="q">A technician installs VirtualBox on a new desktop. Creating a 64-bit VM fails, and Task Manager → Performance → CPU shows <code>Virtualization: Disabled</code>. What's the fix?</p>
+    <ul class="choices">
+      <li><button class="choice">Switch the VM to bridged networking</button></li>
+      <li><button class="choice">Add more memory to the host</button></li>
+      <li><button class="choice" data-correct>Enable VT-x or AMD-V in UEFI</button></li>
+      <li><button class="choice">Install a type 1 hypervisor instead</button></li>
+    </ul>
+    <div class="explain" hidden>Every hypervisor, type 1 or type 2, needs the CPU's virtualization extensions: <strong>Intel VT-x</strong> or <strong>AMD-V</strong>. "Disabled" in Task Manager means they're switched off in the UEFI/BIOS settings, so turn them on there. A type 1 hypervisor would need them just as much; memory and networking don't change the flag. See <a href="0031-virtualization-services.html">lesson 0031</a> and <a href="0030-virtualization-concepts.html">lesson 0030</a>.</div>
+  </section>
+
+  <section class="quiz">
+    <p class="q">Staff and guest VLANs both span two switches joined by a single cable. Staff PCs on switch A reach each other fine, as do staff PCs on switch B, but staff on A can't reach staff on B. What's the most likely misconfiguration?</p>
+    <ul class="choices">
+      <li><button class="choice">The router lacks a VPN</button></li>
+      <li><button class="choice">The PCs need static addresses</button></li>
+      <li><button class="choice">DHCP relay is turned off</button></li>
+      <li><button class="choice" data-correct>The switch link isn't trunked</button></li>
+    </ul>
+    <div class="explain" hidden>A link that carries <em>several</em> VLANs between switches must be a <strong>trunk</strong>, tagging each frame with its VLAN (802.1Q). If it's set up as an access port for one VLAN, the other VLAN can't cross it, so each switch is an island for that VLAN. A VPN is for joining distant sites, not two switches in one building. See <a href="0016-vlans-vpns.html">lesson 0016</a>.</div>
+  </section>
+
+  <section class="quiz">
+    <p class="q">Both screens below run at their native resolution. User A moved from a 14-inch 1080p laptop to a 27-inch 1080p monitor and says text looks "bigger but grainy." User B moved from that 27-inch 1080p monitor to a 27-inch 4K one and says text is "crisp." Which attribute explains both?</p>
+    <ul class="choices">
+      <li><button class="choice">Refresh rate, measured in hertz</button></li>
+      <li><button class="choice" data-correct>Pixel density, measured in PPI</button></li>
+      <li><button class="choice">Color gamut, measured against sRGB</button></li>
+      <li><button class="choice">Panel type, measured by response</button></li>
+    </ul>
+    <div class="explain" hidden><strong>Pixel density</strong> (pixels per inch) depends on resolution <em>and</em> size together. The same 1080p spread over 27 inches is about 82 PPI instead of 157 on the 14-inch laptop: bigger, grainier. 4K on 27 inches is about 163 PPI: crisp. Refresh rate is smoothness of motion, gamut is range of color. See <a href="0035-display-attributes.html">lesson 0035</a>.</div>
+  </section>
+
+  <section class="quiz">
+    <p class="q">A company moved an old line-of-business app off its own server onto a Windows VM it rents from a cloud provider. A month later the VM is infected through a Windows flaw that had a patch available for weeks. Whose job was installing that patch?</p>
+    <ul class="choices">
+      <li><button class="choice" data-correct>The customer's: IaaS leaves the OS</button></li>
+      <li><button class="choice">The provider's: it's their data center</button></li>
+      <li><button class="choice">The provider's: cloud VMs patch themselves</button></li>
+      <li><button class="choice">The vendor's: it's their app's server</button></li>
+    </ul>
+    <div class="explain" hidden>A rented VM is <strong>IaaS</strong>: the provider runs the hardware, network and hypervisor; the customer runs the OS, its patches, the apps and the data. IaaS leaves the most to the customer of the three service models. With PaaS or SaaS the provider would patch the OS. See <a href="0032-cloud-models.html">lesson 0032</a>.</div>
+  </section>
+
+  <section class="quiz">
+    <p class="q">A new access point needs about 25 W. Plugged into a closet switch's PoE port, it powers up, then keeps rebooting. A laptop plugged into that same port gets a network connection fine. What's the likely cause?</p>
+    <ul class="choices">
+      <li><button class="choice">The ONT is limiting the bandwidth</button></li>
+      <li><button class="choice">Wrong VLAN on that switch port</button></li>
+      <li><button class="choice" data-correct>The port supplies only 802.3af power</button></li>
+      <li><button class="choice">The access point's MAC is blocked</button></li>
+    </ul>
+    <div class="explain" hidden>Data works (the laptop proves the port and VLAN), so think <strong>power</strong>. Plain PoE (<strong>802.3af</strong>) guarantees only about 13 W at the device; 25 W needs <strong>PoE+ (802.3at)</strong> or better. Fix: a PoE+ port, or a PoE+ injector (midspan) between the switch and the access point. The ONT sits at the internet edge, not in the closet. See <a href="0021-poe-modems-ont-nic.html">lesson 0021</a>.</div>
+  </section>
+
+  <section class="quiz">
+    <p class="q">A tablet was dropped and its glass cracked in one corner. Taps work everywhere, even over the crack, but a dark blotch near the crack is slowly spreading across the picture. Which part is damaged?</p>
+    <ul class="choices">
+      <li><button class="choice">The touch digitizer layer</button></li>
+      <li><button class="choice" data-correct>The LCD display panel</button></li>
+      <li><button class="choice">The graphics driver software</button></li>
+      <li><button class="choice">The CCFL backlight inverter</button></li>
+    </ul>
+    <div class="explain" hidden>A touchscreen is two layers doing two jobs. Touch works everywhere, so the <strong>digitizer</strong> is fine; the <em>picture</em> is what's broken, so it's the <strong>display panel</strong>. A driver can't cause damage that grows from a crack, and a backlight fault darkens the whole screen evenly. On many tablets the two layers are fused and replaced as one part anyway. See <a href="0034-display-types.html">lesson 0034</a>.</div>
+  </section>
+
+  <section class="quiz">
+    <p class="q">Security asks you to open a suspicious attachment to see what it does, without risk to your Windows 11 Pro laptop, and with nothing left behind afterwards. What's the quickest built-in way?</p>
+    <ul class="choices">
+      <li><button class="choice">A container sharing your kernel</button></li>
+      <li><button class="choice">A bridged Hyper-V virtual machine</button></li>
+      <li><button class="choice">A dual-boot second Windows install</button></li>
+      <li><button class="choice" data-correct>Windows Sandbox, discarded when closed</button></li>
+    </ul>
+    <div class="explain" hidden>That's the <strong>sandboxing</strong> use of a VM, and <strong>Windows Sandbox</strong> is built into Pro: isolated from the host, and everything in it is thrown away when it closes. A container shares the host's kernel (lighter isolation), a bridged VM sits right on the office network, and a dual boot shares the same disk. See <a href="0030-virtualization-concepts.html">lesson 0030</a>.</div>
+  </section>
+
+  <section class="quiz">
+    <p class="q">To troubleshoot a slow app, a technician plugs a laptop running a packet capture into a spare port on an unmanaged switch, hoping to watch traffic between two other PCs. The capture shows only broadcasts and the laptop's own traffic. Why?</p>
+    <ul class="choices">
+      <li><button class="choice">Switches forward by destination IP</button></li>
+      <li><button class="choice">The laptop needs APIPA addressing</button></li>
+      <li><button class="choice" data-correct>Switches forward by destination MAC</button></li>
+      <li><button class="choice">Captures need a router port</button></li>
+    </ul>
+    <div class="explain" hidden>A switch learns which MAC address lives on which port and sends each frame only to the port of its <strong>destination MAC</strong>, so a third port never sees the conversation (a hub would have flooded it everywhere). Routers, not switches, decide by IP. To watch it, use port mirroring on a <em>managed</em> switch, or a network tap. See <a href="0020-network-devices-switch-router-ap.html">lesson 0020</a> and <a href="0019-network-tools.html">lesson 0019</a>.</div>
+  </section>
+
+  <p class="quiz-score" data-quiz-score></p>
+
+  <h2>Explain it in your own words</h2>
+  <p>Say or write the answer before you open each one. If you can explain it to a coworker, you know it.</p>
+
+  <details class="recall">
+    <summary>A developer asks why their app should ship as a container instead of a VM. Explain the one structural difference, one advantage it brings, and one trade-off. <span class="hint">(<a href="0031-virtualization-services.html">lesson 0031</a>)</span></summary>
+    <p>A <strong>VM</strong> carries a whole operating system, kernel included. A <strong>container</strong> carries only the app and what it needs, and <strong>shares the host's kernel</strong>. Advantage: small, starts in seconds, runs the same on a laptop, a server or the cloud. Trade-off: lighter isolation than a VM, and a Linux container needs a Linux kernel underneath.</p>
+  </details>
+
+  <details class="recall">
+    <summary>A manager says "we moved to the cloud, so security is the provider's problem now." Explain where the line sits in IaaS, PaaS and SaaS, and what never moves. <span class="hint">(<a href="0032-cloud-models.html">lesson 0032</a>)</span></summary>
+    <p><strong>IaaS</strong>: the provider runs hardware and hypervisor; you run the OS and everything above. <strong>PaaS</strong>: the provider also runs the OS and runtime; you bring code and data. <strong>SaaS</strong>: the provider runs the finished app; you run users and settings. In every model the customer keeps its <strong>data, accounts, access and devices</strong>, so a phished account is still yours.</p>
+  </details>
+
+  <details class="recall">
+    <summary>A user lowered their new monitor's resolution "to make the text bigger," and now it's blurry. Explain why, and what they should have done. <span class="hint">(<a href="0035-display-attributes.html">lesson 0035</a>)</span></summary>
+    <p>An LCD or OLED panel has a fixed grid of pixels, its <strong>native resolution</strong> (marked Recommended). Any other resolution gets stretched across pixels that don't line up, which softens text. Set it back to native and raise <strong>Scale</strong> (125%, 150%) instead: bigger and still sharp.</p>
+  </details>
+
+  <details class="recall">
+    <summary>Walk through how a laptop gets a DHCP address, and what it does at 50%, 87.5% and 100% of its lease. <span class="hint">(<a href="0014-dhcp-scopes-leases.html">lesson 0014</a>, 22 days ago)</span></summary>
+    <p><strong>DORA</strong>: Discover (client broadcasts), Offer (server proposes), Request (client asks for it), Acknowledge (server confirms). At <strong>50% (T1)</strong> it asks the same server to renew. At <strong>87.5% (T2)</strong> it broadcasts to any DHCP server. At <strong>100%</strong> the address is gone; it starts DORA again, and with no answer Windows falls back to APIPA (169.254.x.x).</p>
+  </details>
+
+  <details class="recall">
+    <summary>The office internet is down. Explain what the demarcation point is, which box it usually is on a fiber line, and why it decides who you call. <span class="hint">(<a href="0021-poe-modems-ont-nic.html">lesson 0021</a>, 15 days ago)</span></summary>
+    <p>The <strong>demarcation point</strong> is where the provider's responsibility ends and yours begins. On fiber it's usually the <strong>ONT</strong>, which converts light to Ethernet: the provider owns everything up to and including it. A fault on their side means calling the provider; on your side (router, switch, cabling) it's yours to fix.</p>
+  </details>
+
+  <h2>Pace check</h2>
+  <div class="callout">
+    <span class="label">A+ Core 1: 23 of 63 videos covered (about 37%)</span>
+    <div class="meter"><span style="width:37%"></span></div>
+    <p>Fully covered so far: the 12 networking videos (objectives 2.1–2.8), the 5 mobile device videos (1.1–1.3), all 4 virtualization and cloud videos (Virtualization Concepts, Virtualization Services, Cloud Models, Cloud Characteristics), and the first 2 hardware videos (Display Types, Display Attributes). Six of those were finished this week.</p>
+    <p><strong>What the calendar needs:</strong> the syllabus puts all new material in weeks 1–17 (Sep 27 – Jan 23), about <strong>3.7 videos a week</strong>. Today ends week 5, so you'd expect about 18 or 19. You're at 23: <strong>ahead, by about four to five videos</strong>. The gap has grown five weeks running: one behind, on pace, one ahead, two ahead, now four or five ahead.</p>
+    <p><strong>The trend:</strong> six videos in six daily lessons this week. The remaining 40 videos fit in the 12 weeks left before review starts at about 3.3 a week, so the February target holds with room to spare. By domain: Networking, Mobile devices and Virtualization &amp; cloud are done, and Hardware (objectives 3.1–3.8) started on Oct 29, about two and a half weeks before its syllabus slot (Nov 15).</p>
+    <p>Nothing in the plan was changed. Next week's daily lessons continue in Hardware with Network Cables (3.2). The spare weeks are yours to spend: keep them as slack for the hardware weeks over the holidays, or turn them into extra practice exams before February. Hardware and troubleshooting together are over half the exam, so extra practice there pays off most.</p>
+  </div>
+
+  <div class="callout source" id="src-messer">
+    <span class="label">Primary source: watch next</span>
+    <p>Professor Messer, <a href="https://www.professormesser.com/free-a-plus-training/220-1201/220-1201-video/220-1201-training-course/">Free CompTIA A+ 220-1201 course</a>. Rewatch the video behind whichever question you missed: Virtualization Concepts, Virtualization Services, Cloud Models, Cloud Characteristics, Display Types and Display Attributes cover this week. Free.</p>
+  </div>
+
+  <div class="callout ask">
+    <span class="label">Questions?</span>
+    <p>Missed one and the explanation didn't settle it? Ask your teacher. Open Claude in the Teacher repo and ask, for example: <em>"In IT lesson 0036, question 5, how short should a guest Wi-Fi lease be, and what's the downside of going too short?"</em> Follow-up questions are part of the course.</p>
+  </div>
+</main>
+<nav class="page-footer">
+  <a href="0035-display-attributes.html">← How many, how close, how fast, how colorful</a>
+  <a href="../../index.html">Hub</a>
+  <span class="disabled">Next lesson: tomorrow →</span>
+</nav>
+</body>
+</html>

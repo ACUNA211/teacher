@@ -1,7 +1,7 @@
 /* Hub data. The teacher updates this file after every lesson; index.html renders it.
    Keep it free of personal data: the site is public. */
 window.HUB = {
-  updated: "2026-10-30",
+  updated: "2026-10-31",
   tracks: [
     {
       id: "it", name: "IT and certs", folder: "it", cls: "track-it", status: "active",
@@ -200,6 +200,11 @@ window.HUB = {
       track: "it", num: "0035", date: "2026-10-30", covers: 1,
       title: "How many, how close, how fast, how colorful: display attributes",
       path: "it/lessons/0035-display-attributes.html"
+    },
+    {
+      track: "it", num: "0036", date: "2026-10-31", covers: 0,
+      title: "Weekly quiz: Oct 25 – Oct 30",
+      path: "it/lessons/0036-week-quiz-2026-10-31.html"
     },
     {
       track: "app", num: "0001", date: "2026-09-28", covers: 0,
