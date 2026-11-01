@@ -1,0 +1,173 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Network Cables</title>
+<meta name="description" content="IT lesson 0037: A+ objective 3.2, network cables. Why twisted pair is twisted, UTP vs. STP, Cat 5e/6/6A speeds and distances, direct burial cable, and plenum vs. PVC jackets.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=JetBrains+Mono&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../assets/course.css">
+<script src="../../assets/quiz.js" defer></script>
+</head>
+<body class="track-it">
+<nav class="page-header">
+  <a class="home" href="../../index.html">Teacher hub</a>
+  <span>IT and certs</span>
+  <a href="../reference/glossary.html">Glossary</a>
+  <a href="../reference/hardware.html">Hardware cheat sheet</a>
+</nav>
+<main>
+  <p class="kicker">IT and certs · Lesson 0037 · A+ Core 1, objective 3.2</p>
+  <h1>Twisted, shielded, buried or in the ceiling: network cables</h1>
+  <p class="lede">About 10 minutes. The Hardware domain moves from screens to cables. Today is the copper Ethernet cable: why its wires are <strong>twisted</strong>, when it needs a <strong>shield</strong>, which <strong>category</strong> carries which speed, and the two special jackets, <strong>direct burial</strong> and <strong>plenum</strong>.<sup class="cite"><a href="#src-messer">[1]</a></sup> The win: read the text printed on a cable's jacket and know where that cable is allowed to go.</p>
+
+  <div class="callout">
+    <span class="label">Why this matters at work</span>
+    <p>"My wired connection is slow" sometimes has nothing to do with the network or the account: the PC linked at 100 Mbps instead of 1 Gbps because of an old or damaged patch cable. And when an office gets new cabling, someone has to know that the cable above the ceiling tiles isn't the same as the cheap one in the box under the desk.</p>
+  </div>
+
+  <h2>1. Twisted pair: why the twists</h2>
+  <p>An Ethernet cable holds <strong>four pairs</strong> of copper wires, eight wires in all, and each pair is twisted around itself. The two wires in a pair carry the same signal in opposite polarity. Any electrical noise that hits the cable hits both wires about equally, and because the receiver looks at the <em>difference</em> between them, the noise cancels out. Each pair has a slightly different twist rate, which keeps the pairs from picking up each other's signal (<strong>crosstalk</strong>).<sup class="cite"><a href="#src-messer">[1]</a></sup><sup class="cite"><a href="#src-messer-np">[2]</a></sup></p>
+
+  <h2>2. Unshielded vs. shielded</h2>
+  <div class="table-wrap">
+  <table>
+    <thead><tr><th>Type</th><th>What it has</th><th>Use it</th></tr></thead>
+    <tbody>
+      <tr><td><strong>UTP</strong> (unshielded twisted pair)</td><td>Only the twists; no shielding around the pairs or wires</td><td>Almost everywhere: offices, homes, patch cables. Cheaper, thinner, easier to bend</td></tr>
+      <tr><td><strong>STP</strong> (shielded twisted pair)</td><td>A foil or braided shield inside the jacket, around the pairs and/or the whole bundle</td><td>Electrically noisy places: near motors, factory floors, heavy power lines. The shield must be <strong>grounded</strong> to work</td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <h2>3. Categories: speed and distance</h2>
+  <p>The <strong>category</strong> (Cat) is printed on the jacket. Higher category means the cable is built to carry higher frequencies, so it supports faster Ethernet. Copper Ethernet's standard maximum run is <strong>100 meters</strong> (about 328 feet).<sup class="cite"><a href="#src-cisco">[3]</a></sup></p>
+  <div class="table-wrap">
+  <table>
+    <thead><tr><th>Category</th><th>Ethernet</th><th>Max distance</th></tr></thead>
+    <tbody>
+      <tr><td>Cat 5</td><td>100 Mbps (legacy)</td><td>100 m</td></tr>
+      <tr><td><strong>Cat 5e</strong></td><td>1 Gbps (1000BASE-T)</td><td>100 m</td></tr>
+      <tr><td><strong>Cat 6</strong></td><td>1 Gbps at 100 m; <strong>10 Gbps only up to 55 m</strong></td><td>100 m / 55 m</td></tr>
+      <tr><td><strong>Cat 6A</strong></td><td>10 Gbps (10GBASE-T)</td><td>100 m</td></tr>
+    </tbody>
+  </table>
+  </div>
+  <p>The exam's favorite contrast: <strong>Cat 6 does 10 Gbps, but only to 55 m; Cat 6A ("augmented") does 10 Gbps the full 100 m.</strong><sup class="cite"><a href="#src-cisco">[3]</a></sup></p>
+
+  <h2>4. Special jackets: buried and in the ceiling</h2>
+  <p><strong>Direct burial</strong> cable goes straight into the ground with no conduit, for example between two buildings. It has a tough, waterproof jacket (often gel-filled to keep water out) and is usually <strong>shielded</strong>; the shield helps against interference and can be used to ground the cable.<sup class="cite"><a href="#src-messer">[1]</a></sup></p>
+  <p>A <strong>plenum</strong> is a space that moves air for heating and cooling, most often the gap above a drop ceiling or under a raised floor. In a fire, air in the plenum spreads smoke through the whole building. Ordinary cable has a <strong>PVC</strong> jacket, which gives off toxic smoke when it burns. <strong>Plenum-rated</strong> cable uses a fire-resistant, low-smoke jacket (such as FEP or low-smoke PVC). It's safer, but stiffer and costlier.<sup class="cite"><a href="#src-messer">[1]</a></sup><sup class="cite"><a href="#src-plenum">[4]</a></sup></p>
+  <p class="sidenote">On the jacket, look for <strong>CMP</strong> (communications plenum: required in air-handling spaces) or <strong>CMR</strong> (riser: vertical runs between floors). CMP can replace CMR, never the other way around. Local fire code decides the details.<sup class="cite"><a href="#src-plenum">[4]</a></sup></p>
+
+  <div class="callout win">
+    <span class="label">Memory hook</span>
+    <p><strong>Twists cancel noise; shields block more of it (if grounded).</strong> <strong>5e = 1 gig. 6 = 10 gig to 55. 6A = 10 gig to 100.</strong> <strong>Ground = direct burial. Ceiling air = plenum (CMP).</strong></p>
+  </div>
+
+  <h2>Try it (3 minutes)</h2>
+  <ol>
+    <li>Find any Ethernet cable and read the text printed along its jacket. Look for the category (<em>CAT5E</em>, <em>CAT6</em>), <em>UTP</em> or <em>STP</em>/<em>FTP</em>, and a fire rating such as <em>CM</em>, <em>CMR</em> or <em>CMP</em>.</li>
+    <li>On a wired Windows PC, check what speed the link actually negotiated:
+      <pre><code>Get-NetAdapter | Where-Object Status -eq Up |
+  Format-Table Name, InterfaceDescription, LinkSpeed</code></pre>
+      A gigabit network card on a gigabit switch showing <em>100 Mbps</em> points at the cable (a damaged pair or an old Cat 5 patch cable) or the port.</li>
+  </ol>
+  <details class="recall">
+    <summary>A new hire's desktop shows <em>LinkSpeed 100 Mbps</em> while every neighbor shows 1 Gbps on the same switch. Cheapest first step? <span class="hint">(then click to check)</span></summary>
+    <p>Swap the <strong>patch cable</strong> for a known-good Cat 5e or Cat 6 one. Gigabit Ethernet needs all four pairs; one broken pair, or a cable that isn't rated for it, makes the link fall back to 100 Mbps, which needs only two pairs. If the speed stays at 100, try another wall or switch port.</p>
+  </details>
+
+  <h2>Practice</h2>
+  <p>Answer from memory before scrolling back up.</p>
+
+  <section class="quiz">
+    <p class="q">A company wants 10 Gbps copper Ethernet to a wiring closet 90 meters away. Which cable category is the minimum that meets this?</p>
+    <ul class="choices">
+      <li><button class="choice">Category 5e unshielded cable</button></li>
+      <li><button class="choice">Category 6 unshielded cable</button></li>
+      <li><button class="choice" data-correct>Category 6A twisted-pair cable</button></li>
+      <li><button class="choice">Category 5 shielded cable</button></li>
+    </ul>
+    <div class="explain" hidden><strong>Cat 6A</strong> carries 10GBASE-T the full 100 m. Cat 6 manages 10 Gbps only up to about 55 m, and Cat 5e tops out at 1 Gbps.</div>
+  </section>
+
+  <section class="quiz">
+    <p class="q">Network cable must run through the space above a drop ceiling that the building uses for return air. Which cable should you install?</p>
+    <ul class="choices">
+      <li><button class="choice" data-correct>Plenum-rated cable marked CMP</button></li>
+      <li><button class="choice">Direct burial cable, gel-filled</button></li>
+      <li><button class="choice">Standard PVC-jacketed patch cable</button></li>
+      <li><button class="choice">Riser-rated cable marked CMR</button></li>
+    </ul>
+    <div class="explain" hidden>An air-handling space is a <strong>plenum</strong>, so the cable needs a <strong>plenum (CMP)</strong> rating: its jacket resists fire and gives off little toxic smoke. PVC and riser-rated cable aren't allowed there.</div>
+  </section>
+
+  <section class="quiz">
+    <p class="q">Workstations on a factory floor next to large electric motors keep dropping their wired connections. The cables are new Cat 6 UTP. What's the best change?</p>
+    <ul class="choices">
+      <li><button class="choice">Use plenum-rated jackets on all runs</button></li>
+      <li><button class="choice">Upgrade the runs to Cat 6A</button></li>
+      <li><button class="choice">Shorten every run below 55 m</button></li>
+      <li><button class="choice" data-correct>Replace them with grounded STP cable</button></li>
+    </ul>
+    <div class="explain" hidden>Motors create electromagnetic interference. <strong>Shielded twisted pair</strong>, with the shield properly <strong>grounded</strong>, blocks far more of it than the twists alone. A plenum jacket is about fire safety, not noise.</div>
+  </section>
+
+  <section class="quiz">
+    <p class="q">Why are the two wires in each pair of an Ethernet cable twisted together?</p>
+    <ul class="choices">
+      <li><button class="choice">To make the cable more flexible</button></li>
+      <li><button class="choice" data-correct>So outside noise cancels itself out</button></li>
+      <li><button class="choice">To double the cable's maximum length</button></li>
+      <li><button class="choice">So it can carry electrical power</button></li>
+    </ul>
+    <div class="explain" hidden>Noise hits both wires of a twisted pair about equally; the receiver reads the <strong>difference</strong> between them, so the <strong>noise cancels</strong>. Different twist rates per pair also cut crosstalk between pairs.</div>
+  </section>
+  <p class="quiz-score" data-quiz-score></p>
+
+  <details class="recall">
+    <summary>From memory: UTP vs. STP in one line each, the speed and distance for Cat 5e, Cat 6 and Cat 6A, and what direct burial and plenum cable are for. <span class="hint">(then click to check)</span></summary>
+    <p><strong>UTP</strong>: twists only, used almost everywhere. <strong>STP</strong>: adds a grounded shield for noisy places. <strong>Cat 5e</strong> 1 Gbps / 100 m; <strong>Cat 6</strong> 1 Gbps / 100 m or 10 Gbps / 55 m; <strong>Cat 6A</strong> 10 Gbps / 100 m. <strong>Direct burial</strong>: waterproof, usually shielded, straight into the ground. <strong>Plenum (CMP)</strong>: fire-resistant, low-smoke jacket for air-handling spaces.</p>
+  </details>
+
+  <h2>Review: earlier lessons</h2>
+  <p>Spaced retrieval: pull these from memory first, then check.</p>
+
+  <details class="recall">
+    <summary>Before testing a risky update in a VM, what do you take so you can roll back in seconds? And in VM terms, what are the host and the guest? <span class="hint">(<a href="0030-virtualization-concepts.html">lesson 0030</a>, 7 days ago)</span></summary>
+    <p>Take a <strong>snapshot</strong>: it saves the VM's state so you can revert if the update breaks something. The <strong>host</strong> is the real machine; the <strong>guest</strong> is the operating system running inside the VM; the <strong>hypervisor</strong> sits between them.</p>
+  </details>
+
+  <details class="recall">
+    <summary>A battery report shows design capacity 50,000 mWh and full charge capacity 30,000 mWh. What's the battery's health, and what two drive form factors could replace an old laptop hard drive? <span class="hint">(<a href="0023-laptop-batteries-keyboards-ssd.html">lesson 0023</a>, 14 days ago)</span></summary>
+    <p>Health = full charge ÷ design = <strong>60%</strong>; worn enough to plan a replacement. An SSD in the <strong>2.5-inch</strong> form factor (drop-in for the old drive) or an <strong>M.2</strong> card, if the laptop has an M.2 slot.</p>
+  </details>
+
+  <details class="recall">
+    <summary>Which 802.11 standard works only on 5 GHz, and what's its Wi-Fi generation name? <span class="hint">(<a href="0007-wifi-standards.html">lesson 0007</a>, 30 days ago)</span></summary>
+    <p><strong>802.11ac</strong>, called <strong>Wi-Fi 5</strong>: it's the 5 GHz-only one. 802.11n (Wi-Fi 4) and 802.11ax (Wi-Fi 6) use both 2.4 and 5 GHz.</p>
+  </details>
+
+  <div class="callout source" id="src-messer">
+    <span class="label">Primary source: watch next</span>
+    <p>[1] Professor Messer, <a href="https://www.professormesser.com/free-a-plus-training/220-1201/220-1201-video/network-cables-220-1201/">Network Cables (220-1201, 3.2)</a>. Twisted pair, unshielded vs. shielded, direct burial STP, plenum-rated cable. Free. Next in the course: <em>568A and 568B Colors</em> (3.2).</p>
+    <p id="src-messer-np">[2] Professor Messer, <a href="https://www.professormesser.com/network-plus/n10-009/n10-009-video/copper-cabling-n10-009/">Copper Cabling (Network+ N10-009, 1.5)</a> (twisted pair and categories in more depth, for later).</p>
+    <p id="src-cisco">[3] Virginia IT Agency glossary, <a href="https://www.vita.virginia.gov/policy--governance/glossary/cov-itrm-glossary/c/category-cat-5--cat-5e--cat-6--cat-6a--cat-7--cat-7a--cat-81--cat-82.html">Category (Cat 5 to Cat 8)</a> (Cat 6 limited to 55 m at 10GBASE-T; Cat 6A the full 100 m), matching Cisco's 10GBASE-T cabling white paper.</p>
+    <p id="src-plenum">[4] Waveform, <a href="https://www.waveform.com/guides/plenum-cable-why-and-when">Why and when to use plenum-rated (CMP) cable</a> (plenum spaces, CMP vs. CMR; check local fire code).</p>
+  </div>
+
+  <div class="callout ask">
+    <span class="label">Questions?</span>
+    <p>Anything unclear? Ask your teacher. Open Claude in the Teacher repo and ask, for example: <em>"In IT lesson 0037, how does a shield actually stop interference, and why does it need to be grounded?"</em> Follow-up questions are part of the course.</p>
+  </div>
+</main>
+<nav class="page-footer">
+  <a href="0036-week-quiz-2026-10-31.html">← Weekly quiz: Oct 25 – Oct 30</a>
+  <a href="../../index.html">Hub</a>
+  <span class="disabled">Next lesson: tomorrow →</span>
+</nav>
+</body>
+</html>

@@ -151,6 +151,23 @@
   </table>
   </div>
 
+  <h2>Network cables (objective 3.2)</h2>
+  <div class="table-wrap">
+  <table>
+    <thead><tr><th>Cable</th><th>Speed / distance or purpose</th><th>Remember</th></tr></thead>
+    <tbody>
+      <tr><td>UTP</td><td>Twisted pairs, no shield</td><td>Used almost everywhere; twists cancel noise and crosstalk</td></tr>
+      <tr><td>STP</td><td>Foil or braid shield inside the jacket</td><td>Noisy places (motors, factory floors); shield must be <strong>grounded</strong></td></tr>
+      <tr><td>Cat 5e</td><td>1 Gbps, 100 m</td><td>The gigabit baseline</td></tr>
+      <tr><td>Cat 6</td><td>1 Gbps at 100 m; 10 Gbps only to <strong>55 m</strong></td><td>"10 gig, short runs"</td></tr>
+      <tr><td>Cat 6A</td><td>10 Gbps, <strong>100 m</strong></td><td>A = augmented; full-length 10 gig</td></tr>
+      <tr><td>Direct burial</td><td>Straight into the ground, no conduit</td><td>Waterproof (often gel-filled) jacket, usually shielded</td></tr>
+      <tr><td>Plenum (CMP)</td><td>Air-handling spaces: above drop ceilings, under raised floors</td><td>Fire-resistant, low-smoke jacket; PVC isn't allowed there. CMR = riser (between floors)</td></tr>
+    </tbody>
+  </table>
+  </div>
+  <p class="sidenote">Gigabit card showing 100 Mbps? Suspect the patch cable (a broken pair or an old cable) or the port. Check with <code>Get-NetAdapter</code> below.</p>
+
   <h2>Commands (Windows)</h2>
   <div class="table-wrap">
   <table>
@@ -158,13 +175,14 @@
       <tr><td><code>Get-CimInstance Win32_VideoController | Select-Object Name, CurrentHorizontalResolution, CurrentVerticalResolution, CurrentRefreshRate</code></td><td>PowerShell: current resolution and refresh rate per graphics adapter</td></tr>
       <tr><td><code>powercfg /batteryreport</code></td><td>HTML battery report: design vs. full charge capacity, cycle count, usage history. Add <code>/output path</code> to choose where it's saved</td></tr>
       <tr><td><code>Suspend-BitLocker -MountPoint "C:" -RebootCount 1</code></td><td>PowerShell (admin): suspend BitLocker for one reboot before planned hardware work; <code>manage-bde -protectors -disable C:</code> also works</td></tr>
+      <tr><td><code>Get-NetAdapter | Where-Object Status -eq Up | Format-Table Name, InterfaceDescription, LinkSpeed</code></td><td>PowerShell: the speed each connected adapter negotiated; 100 Mbps on a gigabit network points at the cable or port</td></tr>
       <tr><td><code>Get-NetAdapter | Where-Object Status -eq Up</code></td><td>PowerShell: adapters that are connected; a USB tether shows up as an extra adapter</td></tr>
       <tr><td><code>Get-NetAdapter | Format-Table Name, InterfaceDescription, Status, MacAddress</code></td><td>PowerShell: see which adapter (and MAC) a docked laptop really uses; a dock usually adds a USB Ethernet adapter</td></tr>
       <tr><td><code>Get-PnpDevice -PresentOnly -Class Camera,Image</code></td><td>PowerShell: list cameras Windows sees and their status (OK, Error); an "IR Camera" entry means Windows Hello face is possible</td></tr>
     </tbody>
   </table>
   </div>
-  <p class="sidenote">Sources: <a href="https://www.professormesser.com/free-a-plus-training/220-1201/220-1201-video/laptop-hardware-220-1201/">Professor Messer, Laptop Hardware</a> · <a href="https://learn.microsoft.com/en-us/windows/security/operating-system-security/data-protection/bitlocker/recovery-overview">Microsoft, BitLocker recovery overview</a> · <a href="https://learn.microsoft.com/en-us/powershell/module/bitlocker/suspend-bitlocker">Microsoft Learn, Suspend-BitLocker</a> · <a href="https://learn.microsoft.com/en-us/mem/intune/configuration/device-restrictions-configure">Microsoft Learn, Intune device restrictions</a> · <a href="https://learn.microsoft.com/en-us/powershell/module/pnpdevice/get-pnpdevice">Microsoft Learn, Get-PnpDevice</a> · <a href="https://www.professormesser.com/free-a-plus-training/220-1201/220-1201-video/connecting-mobile-devices-220-1201/">Professor Messer, Connecting Mobile Devices</a> · <a href="https://learn.microsoft.com/en-us/intune/device-configuration/templates/ref-device-restrictions-android-enterprise">Microsoft Learn, Android Enterprise restrictions</a> · <a href="https://www.howtogeek.com/217010/how-to-generate-a-battery-health-report-on-windows-8-or-windows-10/">How-To Geek, battery report</a></p>
+  <p class="sidenote">Sources: <a href="https://www.professormesser.com/free-a-plus-training/220-1201/220-1201-video/laptop-hardware-220-1201/">Professor Messer, Laptop Hardware</a> · <a href="https://learn.microsoft.com/en-us/windows/security/operating-system-security/data-protection/bitlocker/recovery-overview">Microsoft, BitLocker recovery overview</a> · <a href="https://learn.microsoft.com/en-us/powershell/module/bitlocker/suspend-bitlocker">Microsoft Learn, Suspend-BitLocker</a> · <a href="https://learn.microsoft.com/en-us/mem/intune/configuration/device-restrictions-configure">Microsoft Learn, Intune device restrictions</a> · <a href="https://learn.microsoft.com/en-us/powershell/module/pnpdevice/get-pnpdevice">Microsoft Learn, Get-PnpDevice</a> · <a href="https://www.professormesser.com/free-a-plus-training/220-1201/220-1201-video/connecting-mobile-devices-220-1201/">Professor Messer, Connecting Mobile Devices</a> · <a href="https://learn.microsoft.com/en-us/intune/device-configuration/templates/ref-device-restrictions-android-enterprise">Microsoft Learn, Android Enterprise restrictions</a> · <a href="https://www.professormesser.com/free-a-plus-training/220-1201/220-1201-video/network-cables-220-1201/">Professor Messer, Network Cables</a> · <a href="https://www.howtogeek.com/217010/how-to-generate-a-battery-health-report-on-windows-8-or-windows-10/">How-To Geek, battery report</a></p>
 </main>
 </body>
 </html>
