@@ -1,0 +1,173 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>568A and 568B Colors</title>
+<meta name="description" content="IT lesson 0038: A+ objective 3.2, T568A and T568B wire color order, which pins swap between them, straight-through vs. crossover cables, and why Auto-MDIX made crossovers rare.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=JetBrains+Mono&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../assets/course.css">
+<script src="../../assets/quiz.js" defer></script>
+</head>
+<body class="track-it">
+<nav class="page-header">
+  <a class="home" href="../../index.html">Teacher hub</a>
+  <span>IT and certs</span>
+  <a href="../reference/glossary.html">Glossary</a>
+  <a href="../reference/hardware.html">Hardware cheat sheet</a>
+</nav>
+<main>
+  <p class="kicker">IT and certs · Lesson 0038 · A+ Core 1, objective 3.2</p>
+  <h1>Eight wires, two orders: T568A and T568B</h1>
+  <p class="lede">About 10 minutes. Yesterday's cable had four twisted pairs. Today: which color goes on which pin of the RJ45 plug. There are two standard orders, <strong>T568A</strong> and <strong>T568B</strong>, and they differ in just two pairs.<sup class="cite"><a href="#src-messer">[1]</a></sup> The win: look through the clear plastic of a plug and tell which standard it uses, and whether the cable is straight-through or crossover.</p>
+
+  <div class="callout">
+    <span class="label">Why this matters at work</span>
+    <p>Most cables come pre-made, but wall jacks and patch panels are wired by hand, and so is the odd cable someone crimped themselves. A jack wired with the pairs in the wrong order can still show a link light yet run slowly, drop out, or not connect at all. Knowing the color order lets you spot that in seconds instead of blaming the PC or the user's account.</p>
+  </div>
+
+  <h2>1. Why there's a standard at all</h2>
+  <p>An Ethernet cable has eight wires and an RJ45 plug has eight pins. The colors are standardized so that every technician, in every building, puts the same wire on the same pin, and a cable or jack wired by one person works with one wired by someone else.<sup class="cite"><a href="#src-messer">[1]</a></sup> Each pair has a solid color and a white-striped partner: <strong>orange, green, blue, brown</strong>.</p>
+
+  <h2>2. The two orders</h2>
+  <p>Pin 1 is on the left when you hold the plug with the <strong>gold contacts facing you</strong>, the <strong>clip on the back</strong>, and the cable hanging down.<sup class="cite"><a href="#src-pinout">[2]</a></sup></p>
+  <div class="table-wrap">
+  <table>
+    <thead><tr><th>Pin</th><th>T568A</th><th>T568B</th></tr></thead>
+    <tbody>
+      <tr><td>1</td><td><strong>White-green</strong></td><td><strong>White-orange</strong></td></tr>
+      <tr><td>2</td><td><strong>Green</strong></td><td><strong>Orange</strong></td></tr>
+      <tr><td>3</td><td><strong>White-orange</strong></td><td><strong>White-green</strong></td></tr>
+      <tr><td>4</td><td>Blue</td><td>Blue</td></tr>
+      <tr><td>5</td><td>White-blue</td><td>White-blue</td></tr>
+      <tr><td>6</td><td><strong>Orange</strong></td><td><strong>Green</strong></td></tr>
+      <tr><td>7</td><td>White-brown</td><td>White-brown</td></tr>
+      <tr><td>8</td><td>Brown</td><td>Brown</td></tr>
+    </tbody>
+  </table>
+  </div>
+  <p>The only difference: <strong>the green and orange pairs trade places</strong> (pins 1, 2, 3 and 6). Blue (4, 5) and brown (7, 8) never move.<sup class="cite"><a href="#src-pinout">[2]</a></sup><sup class="cite"><a href="#src-tia">[3]</a></sup> Notice the green or orange pair is <em>split</em>: it sits on pins 3 and 6, wrapped around the blue pair.</p>
+  <p class="sidenote">Which one to use? Electrically they work the same. Many organizations use 568B, others use 568A;<sup class="cite"><a href="#src-messer">[1]</a></sup> what matters is that a site picks one and uses it on every jack, panel and cable.</p>
+
+  <h2>3. Straight-through vs. crossover</h2>
+  <div class="table-wrap">
+  <table>
+    <thead><tr><th>Cable</th><th>Ends</th><th>Used for</th></tr></thead>
+    <tbody>
+      <tr><td><strong>Straight-through</strong> (patch cable)</td><td>Same standard on both ends: B–B (or A–A)</td><td>Almost everything: PC to wall jack, switch to router, patch panel to switch</td></tr>
+      <tr><td><strong>Crossover</strong></td><td>One end A, the other end B</td><td>Historically, linking two devices of the same kind directly: PC to PC, switch to switch</td></tr>
+    </tbody>
+  </table>
+  </div>
+  <p>Why crossover worked: in 10 and 100 Mbps Ethernet, one device sends on pins 1–2 and receives on 3–6. Two PCs joined straight-through would both talk on the same pins. Swapping orange and green at one end (A on one side, B on the other) moves pins 1↔3 and 2↔6, so one side's transmit lands on the other's receive.<sup class="cite"><a href="#src-cross">[4]</a></sup></p>
+  <p>Today this rarely matters. Modern network ports support <strong>Auto-MDIX</strong>: the port detects how the other end is wired and swaps its own transmit and receive pairs if needed, so a straight-through cable works between any two devices.<sup class="cite"><a href="#src-cross">[4]</a></sup><sup class="cite"><a href="#src-mdix">[5]</a></sup> Gigabit Ethernet uses all four pairs in both directions, which is another reason a damaged pair hurts it.<sup class="cite"><a href="#src-mdix">[5]</a></sup> Some older or industrial gear lacks Auto-MDIX, which is where a crossover can still show up.<sup class="cite"><a href="#src-cross">[4]</a></sup></p>
+
+  <div class="callout win">
+    <span class="label">Memory hook</span>
+    <p><strong>B starts with orange; A starts with green.</strong> The pattern is the same: <em>white-X, X, white-Y, blue, white-blue, Y, white-brown, brown</em>. <strong>Blue and brown never move.</strong> <strong>Same on both ends = straight-through. A on one, B on the other = crossover.</strong> <strong>Auto-MDIX makes crossovers mostly unnecessary.</strong></p>
+  </div>
+
+  <h2>Try it (3 minutes)</h2>
+  <ol>
+    <li>Pick up any patch cable. Hold one plug with the gold contacts facing you and the clip at the back. Read the colors left to right through the clear plastic. White-orange first? That's <strong>T568B</strong>. White-green first? <strong>T568A</strong>.</li>
+    <li>Check the other end the same way. Same order on both ends means a straight-through cable.</li>
+  </ol>
+  <details class="recall">
+    <summary>A hand-wired wall jack is 568B and the patch cable is 568B, but the keystone on the other side of the wall was punched down 568A. What do you have, and does it matter? <span class="hint">(then click to check)</span></summary>
+    <p>End to end, that link is effectively a <strong>crossover</strong> (B on one end, A on the other). With Auto-MDIX on both devices it will probably still connect, but it breaks the site's standard and will confuse the next person who troubleshoots it. <strong>Re-terminate the odd jack</strong> so the whole run uses one standard.</p>
+  </details>
+
+  <h2>Practice</h2>
+  <p>Answer from memory before scrolling back up.</p>
+
+  <section class="quiz">
+    <p class="q">Looking through a plug with the contacts facing you, the wires read white-orange, orange, white-green, blue, white-blue, green, white-brown, brown. Which standard is this?</p>
+    <ul class="choices">
+      <li><button class="choice">T568A, the green-first order</button></li>
+      <li><button class="choice" data-correct>T568B, the orange-first order</button></li>
+      <li><button class="choice">A crossover, mixed pair order</button></li>
+      <li><button class="choice">Neither; the pairs are split</button></li>
+    </ul>
+    <div class="explain" hidden>White-orange on pin 1 and orange on pin 2 is <strong>T568B</strong>. T568A starts with white-green, green. You can't tell straight-through or crossover from one end alone.</div>
+  </section>
+
+  <section class="quiz">
+    <p class="q">A technician is converting a T568A termination to T568B. Which wires need to move?</p>
+    <ul class="choices">
+      <li><button class="choice">The blue and brown pairs</button></li>
+      <li><button class="choice">Every wire, all eight pins</button></li>
+      <li><button class="choice">Only the brown pair, pins 7–8</button></li>
+      <li><button class="choice" data-correct>The green and orange pairs</button></li>
+    </ul>
+    <div class="explain" hidden>The two standards differ only in the <strong>green and orange pairs</strong>, on pins 1, 2, 3 and 6. Blue (pins 4–5) and brown (pins 7–8) stay put.</div>
+  </section>
+
+  <section class="quiz">
+    <p class="q">A cable has T568A on one end and T568B on the other. What kind of cable is it?</p>
+    <ul class="choices">
+      <li><button class="choice" data-correct>A crossover cable, transmit swapped</button></li>
+      <li><button class="choice">A straight-through cable, normal patch</button></li>
+      <li><button class="choice">A miswired cable that never works</button></li>
+      <li><button class="choice">A rollover cable for consoles</button></li>
+    </ul>
+    <div class="explain" hidden>A on one end and B on the other swaps pins 1↔3 and 2↔6: that's a <strong>crossover</strong>. It was used to link two devices of the same kind directly. Straight-through has the same standard on both ends.</div>
+  </section>
+
+  <section class="quiz">
+    <p class="q">A technician links two modern switches directly with an ordinary straight-through patch cable, and the link comes up fine. Why?</p>
+    <ul class="choices">
+      <li><button class="choice">Switches only use the brown pair</button></li>
+      <li><button class="choice" data-correct>Auto-MDIX swaps the pairs itself</button></li>
+      <li><button class="choice">Patch cables are crossover by default</button></li>
+      <li><button class="choice">T568B carries data in both directions</button></li>
+    </ul>
+    <div class="explain" hidden><strong>Auto-MDIX</strong> detects how the other end is wired and swaps transmit and receive internally, so a straight-through cable works switch to switch. Without it, you'd need a crossover.</div>
+  </section>
+  <p class="quiz-score" data-quiz-score></p>
+
+  <details class="recall">
+    <summary>From memory: write the T568B order for pins 1 to 8, say what changes for T568A, and define straight-through, crossover and Auto-MDIX in one line each. <span class="hint">(then click to check)</span></summary>
+    <p><strong>T568B</strong>: white-orange, orange, white-green, blue, white-blue, green, white-brown, brown. <strong>T568A</strong>: swap the orange and green pairs (white-green, green, white-orange, blue, white-blue, orange, white-brown, brown). <strong>Straight-through</strong>: same standard on both ends. <strong>Crossover</strong>: A on one end, B on the other. <strong>Auto-MDIX</strong>: the port detects the wiring and swaps pairs itself, so straight-through works everywhere.</p>
+  </details>
+
+  <h2>Review: earlier lessons</h2>
+  <p>Spaced retrieval: pull these from memory first, then check.</p>
+
+  <details class="recall">
+    <summary>A designer needs a monitor for print work; a gamer wants smooth motion. Which display attribute matters most for each, and what values would you look for? <span class="hint">(<a href="0035-display-attributes.html">lesson 0035</a>, 3 days ago)</span></summary>
+    <p>Designer: <strong>color gamut</strong>, ideally wide coverage of <strong>Adobe RGB</strong> (print). Gamer: <strong>refresh rate</strong>: 60 Hz is standard, gaming monitors go up to <strong>240 Hz</strong>.</p>
+  </details>
+
+  <details class="recall">
+    <summary>A VM needs its own IP address on the office network, like any other PC. Which VM network mode do you pick? And what's the difference between a type 1 and a type 2 hypervisor? <span class="hint">(<a href="0031-virtualization-services.html">lesson 0031</a>, 7 days ago)</span></summary>
+    <p><strong>Bridged</strong>: the VM gets its own address on the real network (NAT shares the host's; private goes nowhere). <strong>Type 1</strong> runs directly on the hardware ("bare metal"); <strong>type 2</strong> runs as an app on top of an existing operating system.</p>
+  </details>
+
+  <details class="recall">
+    <summary>A user can't set up Windows Hello face sign-in, though the laptop's webcam works fine in video calls. What's the likely reason? And how close does an NFC tap need to be? <span class="hint">(<a href="0024-laptop-nfc-cameras-microphones.html">lesson 0024</a>, 14 days ago)</span></summary>
+    <p>Windows Hello face recognition needs an <strong>infrared</strong> camera; an ordinary webcam isn't enough. NFC works within about <strong>4 cm</strong>: a tap, not a wave across the room.</p>
+  </details>
+
+  <div class="callout source" id="src-messer">
+    <span class="label">Primary source: watch next</span>
+    <p>[1] Professor Messer, <a href="https://www.professormesser.com/free-a-plus-training/220-1201/220-1201-video/568a-and-568b-colors-220-1201/">568A and 568B Colors (220-1201, 3.2)</a>. Why the colors are standardized, both pin orders, and which to use. Free.</p>
+    <p id="src-pinout">[2] Monoprice, <a href="https://www.monoprice.com/p/resources/ethernet-cable-color-code-rj45-wiring-guide-explained">Ethernet cable color code: RJ45 wiring guide</a> (both pin orders and plug orientation).</p>
+    <p id="src-tia">[3] ANSI/TIA-568 (summary on <a href="https://en.wikipedia-on-ipfs.org/wiki/ANSI/TIA-568">Wikipedia</a>): T568A and T568B swap the orange and green pairs.</p>
+    <p id="src-cross">[4] <a href="https://en.wikipedia-on-ipfs.org/wiki/Ethernet_crossover_cable">Ethernet crossover cable</a> (pins 1↔3 and 2↔6, Auto-MDIX, gear that still needs crossovers).</p>
+    <p id="src-mdix">[5] Microchip, <a href="https://www.alldatasheet.com/html-pdf/1538965/MICROCHIP/KSZ9563RNXI/11533/20/KSZ9563RNXI.html">KSZ9563 Ethernet switch datasheet</a> (auto MDI/MDI-X enabled by default; 1000BASE-T uses all four pairs to send and receive).</p>
+  </div>
+
+  <div class="callout ask">
+    <span class="label">Questions?</span>
+    <p>Anything unclear? Ask your teacher. Open Claude in the Teacher repo and ask, for example: <em>"In IT lesson 0038, why is one pair split across pins 3 and 6 instead of sitting side by side?"</em> Follow-up questions are part of the course.</p>
+  </div>
+</main>
+<nav class="page-footer">
+  <a href="0037-network-cables-twisted-pair.html">← Twisted, shielded, buried or in the ceiling: network cables</a>
+  <a href="../../index.html">Hub</a>
+  <span class="disabled">Next lesson: tomorrow →</span>
+</nav>
+</body>
+</html>

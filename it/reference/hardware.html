@@ -168,6 +168,19 @@
   </div>
   <p class="sidenote">Gigabit card showing 100 Mbps? Suspect the patch cable (a broken pair or an old cable) or the port. Check with <code>Get-NetAdapter</code> below.</p>
 
+  <h2>T568A and T568B (objective 3.2)</h2>
+  <div class="table-wrap">
+  <table>
+    <thead><tr><th>Pin</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th><th>6</th><th>7</th><th>8</th></tr></thead>
+    <tbody>
+      <tr><td>T568A</td><td>W-green</td><td>Green</td><td>W-orange</td><td>Blue</td><td>W-blue</td><td>Orange</td><td>W-brown</td><td>Brown</td></tr>
+      <tr><td>T568B</td><td>W-orange</td><td>Orange</td><td>W-green</td><td>Blue</td><td>W-blue</td><td>Green</td><td>W-brown</td><td>Brown</td></tr>
+    </tbody>
+  </table>
+  </div>
+  <p class="sidenote">Pin 1 on the left: contacts facing you, clip at the back. Only orange and green swap. Same on both ends = <strong>straight-through</strong>; A on one end, B on the other = <strong>crossover</strong> (1↔3, 2↔6). <strong>Auto-MDIX</strong> ports swap pairs themselves, so straight-through works almost everywhere.</p>
+
+
   <h2>Commands (Windows)</h2>
   <div class="table-wrap">
   <table>
