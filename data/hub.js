@@ -240,6 +240,11 @@ window.HUB = {
       track: "app", num: "0005", date: "2026-10-26", covers: 0,
       title: "Build review: the zero trap (conditional rendering with ?: and &&)",
       path: "app-building/lessons/0005-build-review-2026-10-26.html"
+    },
+    {
+      track: "app", num: "0006", date: "2026-11-02", covers: 0,
+      title: "Build review: test it like a user (render, getByRole and fireEvent)",
+      path: "app-building/lessons/0006-build-review-2026-11-02.html"
     }
   ]
 };

@@ -1,0 +1,170 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Test It Like a User</title>
+<meta name="description" content="App building lesson 0006, build review for 2026-11-02: how two-player-bg-finder tests its components with Testing Library. render draws a component into a fake browser (jsdom), getByRole and getByLabelText find elements the way a user would, and fireEvent clicks and types.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=JetBrains+Mono&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../assets/course.css">
+<script src="../../assets/quiz.js" defer></script>
+</head>
+<body class="track-app">
+<nav class="page-header">
+  <a class="home" href="../../index.html">Teacher hub</a>
+  <span>App building</span>
+  <a href="../reference/glossary.html">Glossary</a>
+</nav>
+<main>
+  <p class="kicker">App building · Lesson 0006 · Build review, week of 2026-10-26</p>
+  <h1>Test it like a user: render, getByRole and fireEvent</h1>
+  <p class="lede">About 10 minutes. By the end you can read a component test in Board Games for Two line by line: where the component gets drawn, how the test finds a button or input without knowing its CSS or its position, and how it clicks and types.</p>
+
+  <div class="callout">
+    <span class="label">New activity elsewhere</span>
+    <p>New activity in <strong>Video-Maker</strong>, <strong>Video-Researcher</strong> and <strong>Democrat-Support-Video</strong>. Want any of them registered for Monday reviews? Tell your teacher.</p>
+  </div>
+
+  <div class="callout">
+    <span class="label">What got built this week</span>
+    <p>Nothing new in <a href="https://github.com/ACUNA211/two-player-bg-finder">two-player-bg-finder</a>. The last commit is still <a href="https://github.com/ACUNA211/two-player-bg-finder/commit/3a77ac7">3a77ac7</a> (2026-09-26), so we read existing code again. In lesson 0002 you read tests that call a plain function (<code>applyFilters</code>) and compare arrays. The same test file also has a second kind of test, one that draws the actual UI and pokes at it. Your mission says "know how my apps are tested", and these tests are the ones that will go red when the AI breaks a button.</p>
+  </div>
+
+  <h2>1. A browser that isn't there: jsdom and <code>render</code></h2>
+  <p>Here is the whole of <a href="https://github.com/ACUNA211/two-player-bg-finder/blob/3a77ac7/web/src/Footer.test.tsx"><code>web/src/Footer.test.tsx</code></a>:</p>
+<pre><code>import { cleanup, render, screen } from "@testing-library/react";
+import { afterEach, expect, test } from "vitest";
+import { Footer } from "./Footer";
+
+<span class="hl">afterEach(cleanup);</span>
+
+test("logo links to BGG, and the credit names BGG with the data dates", () =&gt; {
+  <span class="hl">render(&lt;Footer dumpDate="2026-09-24" scrapeDate="2026-09-25" /&gt;);</span>
+  const logo = <span class="hl">screen.getByRole("img", { name: "Powered by BGG" })</span>;
+  expect(logo.closest("a")!.getAttribute("href")).toBe("https://boardgamegeek.com");
+  expect(screen.getByRole("link", { name: "BoardGameGeek" })).toBeTruthy();
+  expect(screen.getByText(/Ranks as of 2026-09-24; poll data fetched 2026-09-25/)).toBeTruthy();
+});</code></pre>
+  <p>Tests run in Node, not in Chrome, and Node has no web page, no <code>document</code>, no buttons. Vitest fixes that with one line in <a href="https://github.com/ACUNA211/two-player-bg-finder/blob/3a77ac7/web/vite.config.ts#L6"><code>vite.config.ts</code></a>: <code>test: { environment: "jsdom" }</code>. The default environment is <code>'node'</code>; <code>jsdom</code> is a browser written in JavaScript, with a fake <code>document</code> that has elements, attributes and events, but draws nothing on a screen.<sup class="cite"><a href="#src-vitest">[2]</a></sup></p>
+  <p><code>render(&lt;Footer ... /&gt;)</code> comes from <strong>React Testing Library</strong> (the <code>@testing-library/react</code> package in <code>devDependencies</code>). It runs the <code>Footer</code> function from lesson 0004 with those props and puts the HTML it returns into jsdom's page.<sup class="cite"><a href="#src-rtl">[1]</a></sup> C# comparison: it's like a WinForms test that creates the form in memory without calling <code>Show()</code>, then inspects its controls.</p>
+  <p>Why <code>afterEach(cleanup)</code>? Every test renders into the <em>same</em> fake page. <code>cleanup</code> empties it after each test, the way an xUnit test class gets a fresh instance per <code>[Fact]</code>. Testing Library registers that for you, but only if <code>afterEach</code> is a global function. In Vitest it isn't, unless you turn on the <code>globals</code> option, which defaults to <code>false</code>. So this repo calls it itself.<sup class="cite"><a href="#src-vitest">[2]</a></sup> I deleted that line from <code>GamesBrowser.test.tsx</code> to check: two tests fail with <em>"Found multiple elements with the role "button" and name /Next/"</em>, because the earlier tests' tables were still on the page.</p>
+
+  <h2>2. Find things the way a person does</h2>
+  <p>The test never says "the second <code>&lt;img&gt;</code>" or "the element with class <code>bgg-logo</code>". It says <code>getByRole("img", { name: "Powered by BGG" })</code>: <em>the image a screen reader would announce as "Powered by BGG"</em>. Every element has a <strong>role</strong> (an <code>&lt;img&gt;</code> is <code>"img"</code>, an <code>&lt;a href&gt;</code> is <code>"link"</code>, a <code>&lt;button&gt;</code> is <code>"button"</code>) and an <strong>accessible name</strong>, its label as a user perceives it. For an image that's its <code>alt</code> text. For a link or button it's the text inside, unless an <code>aria-label</code> overrides it.<sup class="cite"><a href="#src-mdn">[3]</a></sup></p>
+  <p>Testing Library's whole idea is that tests should use the page the way a user does. It recommends <code>getByRole</code> first, then <code>getByLabelText</code> for form inputs, and only falls back to test IDs and CSS selectors when nothing else works.<sup class="cite"><a href="#src-rtl">[1]</a></sup> The payoff: the AI can rename every CSS class or reorder the markup, and the tests still pass. They only fail when something a <em>user</em> would notice changes.</p>
+  <p>The <code>getBy...</code> queries are strict. If they find nothing, or more than one match, they <strong>throw</strong>, and the test fails right there. (There is also <code>queryBy...</code>, which returns <code>null</code> instead of throwing. The repo uses <code>queryAllByRole</code> to check that a list is empty.) So <code>expect(screen.getByRole("link", { name: "BoardGameGeek" })).toBeTruthy()</code> reads oddly, but the real check is the <code>getBy</code> itself. The <code>expect</code> just makes the intent obvious.</p>
+  <p>Two bits of TypeScript in that test:</p>
+  <ul>
+    <li><code>logo.closest("a")<strong>!</strong></code>: <code>closest</code> walks up to the nearest <code>&lt;a&gt;</code> and returns <code>HTMLAnchorElement | null</code>. The postfix <code>!</code> is the <em>non-null assertion</em>: "trust me, it isn't null". C# 8 has the same operator (the null-forgiving <code>!</code>).</li>
+    <li><code>screen.getByLabelText(...) <strong>as HTMLInputElement</strong></code> (in the next test) is a <em>type assertion</em>. It looks like a C# cast <code>(HTMLInputElement)x</code>, but it isn't one: C# checks the cast at run time and throws <code>InvalidCastException</code>, while TypeScript's <code>as</code> and <code>!</code> are simply erased. I compiled both to be sure: <code>el as HTMLInputElement</code> becomes plain <code>el</code>, and <code>el!.closest("a")</code> becomes <code>el.closest("a")</code>. They change what the compiler believes, not what the code does (lesson 0001's "types are a promise" again).</li>
+  </ul>
+
+  <h2>3. Act, then assert: <code>fireEvent</code></h2>
+  <p>The min-votes box is supposed to snap back up to 15 if you type something lower and leave the field. Here's the test, <a href="https://github.com/ACUNA211/two-player-bg-finder/blob/3a77ac7/web/src/GamesBrowser.test.tsx#L78-L85"><code>GamesBrowser.test.tsx</code> lines 78–85</a>:</p>
+<pre><code>test("min votes input defaults to 15 and snaps back up on blur", () =&gt; {
+  render(&lt;GamesBrowser games={[game(1)]} /&gt;);
+  const input = screen.<span class="hl">getByLabelText("Votes at 2 min")</span> as HTMLInputElement;
+  expect(input.value).toBe("15");
+  <span class="hl">fireEvent.change</span>(input, { target: { value: "3" } });
+  <span class="hl">fireEvent.blur</span>(input);
+  expect(input.value).toBe("15");
+});</code></pre>
+  <p>It's the classic Arrange, Act, Assert you'd write in xUnit, with the user's actions in the middle:</p>
+  <ul>
+    <li><strong>Find</strong>: <code>"Votes at 2 min"</code> is the input's <code>aria-label</code>, built in <a href="https://github.com/ACUNA211/two-player-bg-finder/blob/3a77ac7/web/src/GamesBrowser.tsx#L163"><code>GamesBrowser.tsx</code> line 163</a> as <code>{`${label} min`}</code> (a template literal from lesson 0004).</li>
+    <li><strong>Type</strong>: <code>fireEvent.change(input, { target: { value: "3" } })</code> sets the box to <code>"3"</code> and fires a change event, so React's <code>onChange</code> handler runs, exactly as if you'd typed.</li>
+    <li><strong>Leave</strong>: <code>fireEvent.blur(input)</code> fires <em>blur</em>, the event for "focus left this field". That triggers the component's <code>onBlur</code>: <code>onChange({ ...value, min: Math.max(floor, value.min ?? floor) })</code>, which raises 3 back to the floor of 15.</li>
+  </ul>
+  <p>Notice that <code>input.value</code> is always a <strong>string</strong> (<code>"15"</code>, not <code>15</code>), even on a <code>type="number"</code> input. That's the web platform: form fields hold text, which is why the component has a <code>toNum</code> helper to convert it.<sup class="cite"><a href="#src-mdn">[3]</a></sup></p>
+  <p>I checked that this test really guards the behaviour: with the <code>onBlur</code> line removed, it's the only one of the 23 tests that fails, with <em>expected '3' to be '15'</em>.</p>
+
+  <div class="callout">
+    <span class="label">The big idea</span>
+    <p>Component tests draw the real component into a fake browser (<code>render</code> + jsdom), find elements by what a user perceives (<code>getByRole</code>, <code>getByLabelText</code>: role plus accessible name), act like a user (<code>fireEvent.click</code>, <code>.change</code>, <code>.blur</code>), and then assert on what the user would see. <code>getBy</code> throws on zero or several matches, so finding an element is already a check.</p>
+  </div>
+
+  <h2>Practice</h2>
+  <section class="quiz">
+    <p class="q">In the footer test, what does <code>screen.getByRole("img", { name: "Powered by BGG" })</code> return?</p>
+    <ul class="choices">
+      <li><button class="choice" data-correct>The image whose alt text matches</button></li>
+      <li><button class="choice">The PNG file sitting in public</button></li>
+      <li><button class="choice">Any element whose CSS class matches</button></li>
+      <li><button class="choice">The first image anywhere on page</button></li>
+    </ul>
+    <div class="explain" hidden>For an <code>&lt;img&gt;</code>, the accessible name is its <code>alt</code> text, and <code>Footer.tsx</code> has <code>alt="Powered by BGG"</code>. The query returns that element in jsdom's page. It never touches the file on disk, and CSS classes play no part in it.</div>
+  </section>
+
+  <section class="quiz">
+    <p class="q">What breaks if we delete <code>fireEvent.blur(input);</code> from the min-votes test?</p>
+    <ul class="choices">
+      <li><button class="choice">Nothing: React snaps the value back on change</button></li>
+      <li><button class="choice" data-correct>The test fails: the box still shows 3</button></li>
+      <li><button class="choice">tsc fails because blur is a required call</button></li>
+      <li><button class="choice">The test hangs waiting for focus to leave</button></li>
+    </ul>
+    <div class="explain" hidden>The snap-back lives in <code>onBlur</code>, not <code>onChange</code>. <code>onChange</code> just stores what you typed. Without the blur event, nothing raises 3 back to 15, so the last <code>expect</code> sees <code>"3"</code> and the test goes red. <code>fireEvent</code> calls are synchronous: nothing waits.</div>
+  </section>
+
+  <section class="quiz">
+    <p class="q">You ask the AI to "make the logo alt text more descriptive" and it changes it to <code>alt="BGG logo"</code>. What happens on <code>npm test</code>?</p>
+    <ul class="choices">
+      <li><button class="choice">npm test passes because the image file loads</button></li>
+      <li><button class="choice">tsc fails since the alt prop changed type</button></li>
+      <li><button class="choice">The test passes but prints a console warning</button></li>
+      <li><button class="choice" data-correct>The test throws: no image has that name</button></li>
+    </ul>
+    <div class="explain" hidden>I tried it. <code>getByRole</code> finds no image named "Powered by BGG" and throws: <em>Unable to find an accessible element with the role "img" and name "Powered by BGG"</em>. That's a good failure: BGG's terms require that logo, and the test is the reminder. <code>alt</code> is a string either way, so tsc has nothing to say.</div>
+  </section>
+
+  <section class="quiz">
+    <p class="q">Why does each test file in this repo start with <code>afterEach(cleanup)</code>?</p>
+    <ul class="choices">
+      <li><button class="choice">Otherwise Vitest refuses to run JSX files</button></li>
+      <li><button class="choice">Otherwise React keeps state between page reloads</button></li>
+      <li><button class="choice" data-correct>Otherwise earlier tests' components stay in document</button></li>
+      <li><button class="choice">Otherwise the PNG logo leaks memory slowly</button></li>
+    </ul>
+    <div class="explain" hidden>All tests share one jsdom page. Testing Library only cleans it up automatically when <code>afterEach</code> is a global, and Vitest's <code>globals</code> option is off by default. Without cleanup, the second <code>render</code> adds a second table, and <code>getByRole("button", { name: /Next/ })</code> throws "Found multiple elements".</div>
+  </section>
+  <p class="quiz-score" data-quiz-score></p>
+
+  <h2>Try it in your copy (5 minutes)</h2>
+  <ol>
+    <li>In your local <code>two-player-bg-finder</code>, <code>cd web</code>, then <code>git pull</code> and <code>npm install</code> if you haven't. Run <code>npm test</code>: you should see <strong>23 passed</strong>.</li>
+    <li>Open <code>src/GamesBrowser.tsx</code> and find the <code>Filters</code> button (around line 53). Wrap the word in a <code>&lt;span className="label"&gt;</code>, so it reads <code>&lt;span className="label"&gt;Filters&lt;/span&gt;{active &gt; 0 &amp;&amp; ...}</code>.</li>
+    <li><strong>Predict first</strong>: the panel test does <code>getByRole("button", { name: "Filters" })</code>. Does it still pass?</li>
+    <li>Run <code>npm test</code>. Then try a change a user <em>would</em> notice: rename the text to <code>Filter</code> and run it again.</li>
+    <li>Undo it: <code>git checkout src/GamesBrowser.tsx</code>.</li>
+  </ol>
+  <details class="recall">
+    <summary>What should you see? <span class="hint">(after trying it)</span></summary>
+    <p>With the <code>&lt;span&gt;</code>, everything still passes. A button's accessible name is all the text inside it, however it's nested, so a user (and the test) still sees a button called "Filters". Renaming it to "Filter" fails the panel test with "Unable to find an accessible element with the role "button" and name "Filters"". Markup changes are free; visible changes get caught. That's the point of querying by role.</p>
+  </details>
+
+  <details class="recall">
+    <summary>Spaced review from lesson 0005: the button code is <code>Filters{active &gt; 0 &amp;&amp; ` (${active})`}</code>. With no filters on, why doesn't the button say "Filters0"? <span class="hint">(answer, then click)</span></summary>
+    <p><code>active &gt; 0</code> is a real boolean. With no filters it's <code>false</code>, <code>&amp;&amp;</code> returns <code>false</code>, and React renders nothing for <code>false</code>. Plain <code>active &amp;&amp; ...</code> would return the number <code>0</code>, and React <em>does</em> draw numbers. Today's lesson adds that a test would catch it: <code>getByRole("button", { name: "Filters" })</code> wouldn't match "Filters0".</p>
+  </details>
+
+  <div class="callout source" id="src-rtl">
+    <span class="label">Primary source: read next</span>
+    <p>[1] Testing Library docs, <a href="https://testing-library.com/docs/queries/about">About Queries</a>. Read the "Types of Queries" table (getBy vs queryBy vs findBy) and the "Priority" list. About 10 minutes. Then skim <a href="https://testing-library.com/docs/react-testing-library/api">React Testing Library API</a> for <code>render</code> and <code>cleanup</code>.</p>
+    <p id="src-vitest">[2] Vitest Guide, <a href="https://vitest.dev/guide/environment">Test Environment</a> (node vs jsdom) and the <a href="https://vitest.dev/config/#globals"><code>globals</code></a> option. Checked against the installed packages: Vitest's config types say <code>environment</code> defaults to <code>'node'</code> and <code>globals</code> to <code>false</code>, and Testing Library's entry file only registers automatic cleanup when <code>afterEach</code> is a global.</p>
+    <p id="src-mdn">[3] MDN Web Docs, <a href="https://developer.mozilla.org/en-US/docs/Glossary/Accessible_name">Accessible name</a>, <a href="https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Reference/Roles">ARIA roles</a> and <a href="https://developer.mozilla.org/en-US/docs/Web/API/Element/blur_event">Element: blur event</a>. Code is quoted from the repo at <code>3a77ac7</code>. Every "what breaks" answer above was checked by making the change and running <code>npm test</code>.</p>
+  </div>
+
+  <div class="callout ask">
+    <span class="label">Questions?</span>
+    <p>Anything unclear? Ask your teacher. Open Claude in the Teacher repo and ask, for example: <em>"In app lesson 0006, what's the difference between <code>fireEvent</code> and <code>userEvent</code>, and should my repo switch?"</em> Follow-up questions are part of the course.</p>
+  </div>
+</main>
+<nav class="page-footer">
+  <a href="0005-build-review-2026-10-26.html">← 0005 The zero trap</a>
+  <a href="../../index.html">Hub</a>
+  <span class="disabled">Next build review: next Monday →</span>
+</nav>
+</body>
+</html>
