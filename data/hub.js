@@ -1,7 +1,7 @@
 /* Hub data. The teacher updates this file after every lesson; index.html renders it.
    Keep it free of personal data: the site is public. */
 window.HUB = {
-  updated: "2026-11-02",
+  updated: "2026-11-03",
   tracks: [
     {
       id: "it", name: "IT and certs", folder: "it", cls: "track-it", status: "active",
@@ -215,6 +215,11 @@ window.HUB = {
       track: "it", num: "0038", date: "2026-11-02", covers: 1,
       title: "Eight wires, two orders: T568A and T568B",
       path: "it/lessons/0038-568a-568b-colors.html"
+    },
+    {
+      track: "it", num: "0039", date: "2026-11-03", covers: 1,
+      title: "Light instead of electricity: optical fiber",
+      path: "it/lessons/0039-optical-fiber.html"
     },
     {
       track: "app", num: "0001", date: "2026-09-28", covers: 0,

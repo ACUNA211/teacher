@@ -1,0 +1,175 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Optical Fiber</title>
+<meta name="description" content="IT lesson 0039: A+ objective 3.2, optical fiber: why light beats copper for distance and interference, single-mode vs. multimode, light sources, jacket colors, and handling fiber safely.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=JetBrains+Mono&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../assets/course.css">
+<script src="../../assets/quiz.js" defer></script>
+</head>
+<body class="track-it">
+<nav class="page-header">
+  <a class="home" href="../../index.html">Teacher hub</a>
+  <span>IT and certs</span>
+  <a href="../reference/glossary.html">Glossary</a>
+  <a href="../reference/hardware.html">Hardware cheat sheet</a>
+</nav>
+<main>
+  <p class="kicker">IT and certs · Lesson 0039 · A+ Core 1, objective 3.2</p>
+  <h1>Light instead of electricity: optical fiber</h1>
+  <p class="lede">About 10 minutes. The last two lessons were copper: twisted pairs and their color order. Today the signal is <strong>light</strong> in a thin strand of glass. The win: say when fiber is the right cable, and tell <strong>single-mode</strong> from <strong>multimode</strong> by what it does, how far it goes and (usually) the color of its jacket.<sup class="cite"><a href="#src-messer">[1]</a></sup></p>
+
+  <div class="callout">
+    <span class="label">Why this matters at work</span>
+    <p>You'll rarely run fiber to a desk, but you'll meet it: the uplink between two network closets, the link between buildings, and the ISP's fiber that ends at an ONT (<a href="0021-poe-modems-ont-nic.html">lesson 0021</a>). When "the whole floor is offline" while one floor up is fine, a bent or unplugged fiber uplink is a real suspect, long before anyone's account or laptop.</p>
+  </div>
+
+  <h2>1. Why use light?</h2>
+  <p>Copper carries electrical signals, which pick up interference and fade over distance (Cat 6A tops out at 100 m, <a href="0037-network-cables-twisted-pair.html">lesson 0037</a>). Fiber carries pulses of light instead.<sup class="cite"><a href="#src-messer">[1]</a></sup></p>
+  <div class="table-wrap">
+  <table>
+    <thead><tr><th>Fiber's strengths</th><th>Fiber's costs</th></tr></thead>
+    <tbody>
+      <tr><td><strong>No electrical signal</strong>, so it's immune to radio and electrical interference (motors, power lines)</td><td>Usually <strong>more expensive</strong> than copper, cable and the optics at each end</td></tr>
+      <tr><td>The signal fades slowly: runs of <strong>kilometers</strong>, not 100 m</td><td>Harder to <strong>install and terminate</strong>; you can't crimp it like RJ45</td></tr>
+      <tr><td><strong>Hard to tap</strong>: nothing radiates from the cable to eavesdrop on</td><td><strong>Fragile</strong>: bend it too tightly and the glass breaks inside the jacket</td></tr>
+    </tbody>
+  </table>
+  </div>
+  <p class="sidenote">"Hard to tap" isn't "impossible": bending a fiber can leak some light out to a listener. It's just far harder than with copper.<sup class="cite"><a href="#src-foa">[3]</a></sup></p>
+
+  <h2>2. Single-mode vs. multimode</h2>
+  <p>The glass has a <strong>core</strong> that carries the light. Its width sets the type.<sup class="cite"><a href="#src-messer">[1]</a></sup></p>
+  <div class="table-wrap">
+  <table>
+    <thead><tr><th></th><th>Multimode (MMF)</th><th>Single-mode (SMF)</th></tr></thead>
+    <tbody>
+      <tr><td>Core</td><td>Wider: light bounces along many paths ("modes")</td><td>Much narrower: one path</td></tr>
+      <tr><td>Distance</td><td><strong>Short range</strong>, up to about <strong>2 km</strong></td><td><strong>Long range</strong>, up to about <strong>100 km</strong> without regenerating the signal</td></tr>
+      <tr><td>Light source</td><td>Inexpensive, often <strong>LEDs</strong></td><td>Expensive <strong>lasers</strong></td></tr>
+      <tr><td>Typical use</td><td>Inside a building or a campus: closet to closet, data center racks</td><td>Between sites, ISP and telecom links</td></tr>
+      <tr><td>Usual jacket color</td><td><strong>Orange</strong> (older) or <strong>aqua</strong></td><td><strong>Yellow</strong></td></tr>
+    </tbody>
+  </table>
+  </div>
+  <p>Distances and light sources follow Professor Messer's A+ fiber video;<sup class="cite"><a href="#src-messer">[1]</a></sup><sup class="cite"><a href="#src-reach">[2]</a></sup> real reach depends on the speed and the optics, so treat 2 km and 100 km as exam numbers, not guarantees. Why multimode is short: light taking many paths arrives at slightly different times and smears over distance. One path stays sharp much longer.</p>
+  <p class="sidenote">Jacket colors are a convention (orange = OM1/OM2, aqua = OM3/OM4, yellow = single-mode), not a rule. Read the printing on the jacket ("SM OS2", "MM OM3") to be sure.<sup class="cite"><a href="#src-color">[4]</a></sup> And you can't mix them: a single-mode optic on a multimode cable won't give a reliable link.</p>
+
+  <h2>3. Handle it safely</h2>
+  <ul>
+    <li><strong>Never look into the end of a fiber or an optic port.</strong> The laser light can be invisible and can damage your eyes.<sup class="cite"><a href="#src-juniper">[5]</a></sup></li>
+    <li><strong>Don't bend it tightly.</strong> Bends smaller than a few inches across can damage the fiber and cause problems that are hard to diagnose.<sup class="cite"><a href="#src-juniper">[5]</a></sup> Don't pinch it in a door or zip-tie it hard.</li>
+    <li><strong>Keep the dust caps on</strong> unplugged ends; a dirty connector end dims the light.<sup class="cite"><a href="#src-juniper">[5]</a></sup></li>
+  </ul>
+
+  <div class="callout win">
+    <span class="label">Memory hook</span>
+    <p><strong>Fiber = light: no interference, long distance, hard to tap, but pricier and fragile.</strong> <strong>Multi = many paths = short (≈2 km), cheap LEDs, orange/aqua.</strong> <strong>Single = one path = long (≈100 km), lasers, yellow.</strong> <strong>Never look into the end.</strong></p>
+  </div>
+
+  <h2>Try it (2 minutes)</h2>
+  <ol>
+    <li>Next time you're near a network rack or a switch with an uplink, look for thin cables that don't end in RJ45. Note the jacket color: yellow, orange or aqua?</li>
+    <li>Read the jacket printing if you can reach it (for example "OM3 50/125" or "OS2 9/125"). The numbers are the core/cladding size in microns: the tiny 9 µm core is single-mode.</li>
+  </ol>
+  <details class="recall">
+    <summary>A factory wants to link an office to a warehouse 400 m away. The cable path runs past large electric motors. Copper or fiber, and which kind? <span class="hint">(then click to check)</span></summary>
+    <p><strong>Fiber.</strong> 400 m is far beyond copper's 100 m limit, and fiber ignores the motors' interference. <strong>Multimode</strong> covers 400 m (it's under about 2 km) with cheaper optics; single-mode would also work but costs more than needed.</p>
+  </details>
+
+  <h2>Practice</h2>
+  <p>Answer from memory before scrolling back up.</p>
+
+  <section class="quiz">
+    <p class="q">Two buildings on a campus sit 300 m apart, and the cable must cross a noisy plant floor. Which cable fits best?</p>
+    <ul class="choices">
+      <li><button class="choice">Cat 6A shielded twisted pair</button></li>
+      <li><button class="choice">Cat 5e unshielded twisted pair</button></li>
+      <li><button class="choice" data-correct>Multimode optical fiber cable</button></li>
+      <li><button class="choice">Coaxial cable with plenum jacket</button></li>
+    </ul>
+    <div class="explain" hidden>Twisted pair, even Cat 6A, stops at <strong>100 m</strong>. <strong>Multimode fiber</strong> covers short ranges (up to about 2 km) and, carrying light, isn't affected by the plant's electrical noise.</div>
+  </section>
+
+  <section class="quiz">
+    <p class="q">An ISP links two cities 60 km apart with fiber. Which type do they use, with which light source?</p>
+    <ul class="choices">
+      <li><button class="choice">Multimode fiber driven by LEDs</button></li>
+      <li><button class="choice" data-correct>Single-mode fiber driven by lasers</button></li>
+      <li><button class="choice">Multimode fiber driven by lasers</button></li>
+      <li><button class="choice">Single-mode fiber driven by LEDs</button></li>
+    </ul>
+    <div class="explain" hidden><strong>Single-mode</strong> has a narrow core with one light path, so the signal stays sharp for long distances (up to about 100 km). It uses <strong>lasers</strong>. Multimode, with cheaper LEDs, is for short runs.</div>
+  </section>
+
+  <section class="quiz">
+    <p class="q">A security team prefers fiber for a sensitive link between two server rooms. What property of fiber are they after?</p>
+    <ul class="choices">
+      <li><button class="choice">It encrypts every frame itself</button></li>
+      <li><button class="choice">It costs less than copper cable</button></li>
+      <li><button class="choice">It needs no network switch ports</button></li>
+      <li><button class="choice" data-correct>It is very hard to tap</button></li>
+    </ul>
+    <div class="explain" hidden>Fiber carries light, not an electrical signal, so nothing radiates from the cable and it's <strong>very hard to tap</strong>. It doesn't encrypt anything by itself, and it usually costs <em>more</em> than copper.</div>
+  </section>
+
+  <section class="quiz">
+    <p class="q">After a closet was tidied, a fiber uplink drops errors and flaps. The cable is plugged in at both ends. What's the likely cause?</p>
+    <ul class="choices">
+      <li><button class="choice" data-correct>A too-tight bend or zip tie</button></li>
+      <li><button class="choice">Electrical interference from nearby power</button></li>
+      <li><button class="choice">The wrong T568 wire color order</button></li>
+      <li><button class="choice">A missing ground on the shield</button></li>
+    </ul>
+    <div class="explain" hidden>Fiber ignores electrical interference and has no T568 colors or shield to ground. But it's <strong>fragile</strong>: a tight bend or a hard zip tie can crack the glass or leak light, causing hard-to-diagnose errors. Ease the bend, then test or replace the cable.</div>
+  </section>
+  <p class="quiz-score" data-quiz-score></p>
+
+  <details class="recall">
+    <summary>From memory: three reasons to choose fiber over copper, two downsides, and the single-mode vs. multimode differences (core, distance, light source, jacket color). <span class="hint">(then click to check)</span></summary>
+    <p><strong>Pros</strong>: immune to interference (no electrical signal), long distances, hard to tap. <strong>Cons</strong>: more expensive, harder to install, fragile. <strong>Multimode</strong>: wider core, short range (≈2 km), LEDs, orange/aqua. <strong>Single-mode</strong>: narrow core, long range (≈100 km), lasers, yellow.</p>
+  </details>
+
+  <h2>Review: earlier lessons</h2>
+  <p>Spaced retrieval: pull these from memory first, then check.</p>
+
+  <details class="recall">
+    <summary>A cable reads white-green, green, white-orange… on one end and white-orange, orange, white-green… on the other. Which standards are these, what kind of cable is it, and why does it usually still work between two switches? <span class="hint">(<a href="0038-568a-568b-colors.html">lesson 0038</a>, 1 day ago)</span></summary>
+    <p>White-green first is <strong>T568A</strong>; white-orange first is <strong>T568B</strong>. A on one end and B on the other is a <strong>crossover</strong> cable. It works switch to switch anyway (as would straight-through) because of <strong>Auto-MDIX</strong>.</p>
+  </details>
+
+  <details class="recall">
+    <summary>Your company uses Microsoft 365 for email. Is that IaaS, PaaS or SaaS? And in that model, name one thing that's still the customer's job. <span class="hint">(<a href="0032-cloud-models.html">lesson 0032</a>, 7 days ago)</span></summary>
+    <p><strong>SaaS</strong>: the provider runs the whole application. The customer still owns its <strong>data, accounts and access management</strong> (who gets in, MFA, permissions) and its endpoints.</p>
+  </details>
+
+  <details class="recall">
+    <summary>Which wireless technology fits each: a badge reader at a door, paying with a phone at a till, and wireless earbuds? <span class="hint">(<a href="0009-bluetooth-nfc-rfid-fixed-wireless.html">lesson 0009</a>, 30 days ago)</span></summary>
+    <p>Badge reader: <strong>RFID</strong> (passive tags powered by the reader). Phone payment: <strong>NFC</strong> (a few centimeters, a tap). Earbuds: <strong>Bluetooth</strong> (2.4 GHz, about 10 m).</p>
+  </details>
+
+  <div class="callout source" id="src-messer">
+    <span class="label">Primary source: watch next</span>
+    <p>[1] Professor Messer, <a href="https://www.professormesser.com/free-a-plus-training/220-1201/220-1201-video/optical-fiber-220-1201/">Optical Fiber (220-1201, 3.2)</a>. Why fiber, and single-mode vs. multimode. Free.</p>
+    <p id="src-reach">[2] Professor Messer, <a href="https://www.professormesser.com/free-a-plus-training/220-1101/220-1101-video/optical-fiber-220-1101/">Optical Fiber (220-1101, 3.1)</a>, the previous version of the same video (multimode up to about 2 km with LEDs, single-mode up to about 100 km with lasers).</p>
+    <p id="src-foa">[3] The Fiber Optic Association, <a href="https://www.thefoa.org/tech/ref/appln/tap-fiber.html">How to tap fiber optic cables</a> (why fiber is hard, but not impossible, to tap).</p>
+    <p id="src-color">[4] The Fiber Optic Association, <a href="https://www.thefoa.org/tech/ColCodes.htm">Fiber optic cable and connector color codes</a> (yellow single-mode, orange/aqua multimode; check the jacket printing).</p>
+    <p id="src-juniper">[5] Juniper Networks, <a href="https://www.juniper.net/documentation/us/en/hardware/ex2300/topics/topic-map/maintaining-fiber-optic-cables.html">Maintaining fiber-optic cables</a> (laser eye safety, bend radius, dust caps).</p>
+  </div>
+
+  <div class="callout ask">
+    <span class="label">Questions?</span>
+    <p>Anything unclear? Ask your teacher. Open Claude in the Teacher repo and ask, for example: <em>"In IT lesson 0039, why does light taking many paths limit how far multimode fiber can go?"</em> Follow-up questions are part of the course.</p>
+  </div>
+</main>
+<nav class="page-footer">
+  <a href="0038-568a-568b-colors.html">← Eight wires, two orders: T568A and T568B</a>
+  <a href="../../index.html">Hub</a>
+  <span class="disabled">Next lesson: tomorrow →</span>
+</nav>
+</body>
+</html>
