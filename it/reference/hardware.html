@@ -194,10 +194,29 @@
   </div>
   <p class="sidenote">Fiber vs. copper: no interference, long runs, hard to tap; but pricier, harder to terminate and fragile (no tight bends). <strong>Never look into a fiber end or optic port.</strong> Check the jacket printing, not just the color.</p>
 
+  <h2>Peripheral cables (objective 3.2)</h2>
+  <div class="table-wrap">
+  <table>
+    <thead><tr><th>Cable</th><th>Connector</th><th>Speed</th><th>Notes</th></tr></thead>
+    <tbody>
+      <tr><td>USB 2.0</td><td>USB-A, USB-B, micro-USB, USB-C</td><td>480 Mbps</td><td>About 5 m max</td></tr>
+      <tr><td>USB 3.2 Gen 1 (= USB 3.0)</td><td>USB-A (often blue / "SS"), USB-C</td><td>5 Gbps</td><td>About 3 m typical</td></tr>
+      <tr><td>USB 3.2 Gen 2 (= USB 3.1)</td><td>USB-A, USB-C</td><td>10 Gbps</td><td>Shorter passive cables</td></tr>
+      <tr><td>USB 3.2 Gen 2x2</td><td>USB-C</td><td>20 Gbps</td><td>Two 10 Gbps lanes</td></tr>
+      <tr><td>Thunderbolt 1 / 2</td><td>Mini DisplayPort</td><td>10 / 20 Gbps</td><td>Data, video, power; daisy-chain</td></tr>
+      <tr><td>Thunderbolt 3 / 4</td><td>USB-C (bolt icon)</td><td>40 Gbps</td><td>About 3 m copper (exam figure); TB4 guarantees two 4K displays</td></tr>
+      <tr><td>Thunderbolt 5</td><td>USB-C</td><td>80 Gbps (120 one way)</td><td></td></tr>
+      <tr><td>Serial (RS-232)</td><td>DB-9 (older DB-25)</td><td>Slow</td><td>Console ports on network/industrial gear; USB-to-serial adapter = COM port</td></tr>
+    </tbody>
+  </table>
+  </div>
+  <p class="sidenote">USB-C is a reversible 24-pin connector, not a speed: check the port icon and the cable rating.</p>
+
   <h2>Commands (Windows)</h2>
   <div class="table-wrap">
   <table>
     <tbody>
+      <tr><td><code>Get-PnpDevice -PresentOnly -Class Ports</code></td><td>PowerShell: serial ports, including a USB-to-serial adapter and its COM number</td></tr>
       <tr><td><code>Get-CimInstance Win32_VideoController | Select-Object Name, CurrentHorizontalResolution, CurrentVerticalResolution, CurrentRefreshRate</code></td><td>PowerShell: current resolution and refresh rate per graphics adapter</td></tr>
       <tr><td><code>powercfg /batteryreport</code></td><td>HTML battery report: design vs. full charge capacity, cycle count, usage history. Add <code>/output path</code> to choose where it's saved</td></tr>
       <tr><td><code>Suspend-BitLocker -MountPoint "C:" -RebootCount 1</code></td><td>PowerShell (admin): suspend BitLocker for one reboot before planned hardware work; <code>manage-bde -protectors -disable C:</code> also works</td></tr>
@@ -208,7 +227,7 @@
     </tbody>
   </table>
   </div>
-  <p class="sidenote">Sources: <a href="https://www.professormesser.com/free-a-plus-training/220-1201/220-1201-video/laptop-hardware-220-1201/">Professor Messer, Laptop Hardware</a> · <a href="https://learn.microsoft.com/en-us/windows/security/operating-system-security/data-protection/bitlocker/recovery-overview">Microsoft, BitLocker recovery overview</a> · <a href="https://learn.microsoft.com/en-us/powershell/module/bitlocker/suspend-bitlocker">Microsoft Learn, Suspend-BitLocker</a> · <a href="https://learn.microsoft.com/en-us/mem/intune/configuration/device-restrictions-configure">Microsoft Learn, Intune device restrictions</a> · <a href="https://learn.microsoft.com/en-us/powershell/module/pnpdevice/get-pnpdevice">Microsoft Learn, Get-PnpDevice</a> · <a href="https://www.professormesser.com/free-a-plus-training/220-1201/220-1201-video/connecting-mobile-devices-220-1201/">Professor Messer, Connecting Mobile Devices</a> · <a href="https://learn.microsoft.com/en-us/intune/device-configuration/templates/ref-device-restrictions-android-enterprise">Microsoft Learn, Android Enterprise restrictions</a> · <a href="https://www.professormesser.com/free-a-plus-training/220-1201/220-1201-video/network-cables-220-1201/">Professor Messer, Network Cables</a> · <a href="https://www.professormesser.com/free-a-plus-training/220-1201/220-1201-video/optical-fiber-220-1201/">Professor Messer, Optical Fiber</a> · <a href="https://www.howtogeek.com/217010/how-to-generate-a-battery-health-report-on-windows-8-or-windows-10/">How-To Geek, battery report</a></p>
+  <p class="sidenote">Sources: <a href="https://www.professormesser.com/free-a-plus-training/220-1201/220-1201-video/laptop-hardware-220-1201/">Professor Messer, Laptop Hardware</a> · <a href="https://learn.microsoft.com/en-us/windows/security/operating-system-security/data-protection/bitlocker/recovery-overview">Microsoft, BitLocker recovery overview</a> · <a href="https://learn.microsoft.com/en-us/powershell/module/bitlocker/suspend-bitlocker">Microsoft Learn, Suspend-BitLocker</a> · <a href="https://learn.microsoft.com/en-us/mem/intune/configuration/device-restrictions-configure">Microsoft Learn, Intune device restrictions</a> · <a href="https://learn.microsoft.com/en-us/powershell/module/pnpdevice/get-pnpdevice">Microsoft Learn, Get-PnpDevice</a> · <a href="https://www.professormesser.com/free-a-plus-training/220-1201/220-1201-video/connecting-mobile-devices-220-1201/">Professor Messer, Connecting Mobile Devices</a> · <a href="https://learn.microsoft.com/en-us/intune/device-configuration/templates/ref-device-restrictions-android-enterprise">Microsoft Learn, Android Enterprise restrictions</a> · <a href="https://www.professormesser.com/free-a-plus-training/220-1201/220-1201-video/network-cables-220-1201/">Professor Messer, Network Cables</a> · <a href="https://www.professormesser.com/free-a-plus-training/220-1201/220-1201-video/optical-fiber-220-1201/">Professor Messer, Optical Fiber</a> · <a href="https://www.professormesser.com/free-a-plus-training/220-1201/220-1201-video/peripheral-cables-220-1201/">Professor Messer, Peripheral Cables</a> · <a href="https://www.howtogeek.com/217010/how-to-generate-a-battery-health-report-on-windows-8-or-windows-10/">How-To Geek, battery report</a></p>
 </main>
 </body>
 </html>

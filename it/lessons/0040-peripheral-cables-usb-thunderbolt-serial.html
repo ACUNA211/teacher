@@ -1,0 +1,178 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Peripheral Cables</title>
+<meta name="description" content="IT lesson 0040: A+ objective 3.2, peripheral cables. USB versions and speeds, why USB-C is a connector and not a speed, Thunderbolt generations, and serial (RS-232, DB-9) console cables.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=JetBrains+Mono&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../assets/course.css">
+<script src="../../assets/quiz.js" defer></script>
+</head>
+<body class="track-it">
+<nav class="page-header">
+  <a class="home" href="../../index.html">Teacher hub</a>
+  <span>IT and certs</span>
+  <a href="../reference/glossary.html">Glossary</a>
+  <a href="../reference/hardware.html">Hardware cheat sheet</a>
+</nav>
+<main>
+  <p class="kicker">IT and certs · Lesson 0040 · A+ Core 1, objective 3.2</p>
+  <h1>Same plug, different cable: USB, Thunderbolt and serial</h1>
+  <p class="lede">About 10 minutes. The last three lessons were network cables. Today is the cables that connect things <em>to</em> a computer: <strong>USB</strong>, <strong>Thunderbolt</strong> and old-school <strong>serial</strong>.<sup class="cite"><a href="#src-messer">[1]</a></sup> The win: when a USB-C cable "doesn't work", know that the plug tells you almost nothing, and know which label does.</p>
+
+  <div class="callout">
+    <span class="label">Why this matters at work</span>
+    <p>A classic ticket: "The new dock charges my laptop but the second monitor stays black." The dock, the laptop and the cable can all have USB-C plugs and still disagree on what they carry. And when you (or the network team) need to reach a switch's <strong>console port</strong> after a bad config change, the answer is a serial cable, usually through a USB adapter.</p>
+  </div>
+
+  <h2>1. USB: versions and speeds</h2>
+  <p>USB (Universal Serial Bus) replaced a drawer of older ports. Each version is faster, and newer ports still accept older devices at the older speed.<sup class="cite"><a href="#src-messer">[1]</a></sup><sup class="cite"><a href="#src-bh">[2]</a></sup></p>
+  <div class="table-wrap">
+  <table>
+    <thead><tr><th>Version (newer name)</th><th>Top speed</th><th>Typical max cable</th></tr></thead>
+    <tbody>
+      <tr><td><strong>USB 2.0</strong> (Hi-Speed)</td><td><strong>480 Mbps</strong></td><td><strong>5 m</strong></td></tr>
+      <tr><td><strong>USB 3.0</strong> = USB 3.2 Gen 1 (SuperSpeed)</td><td><strong>5 Gbps</strong></td><td>about <strong>3 m</strong> (not fixed by the standard)</td></tr>
+      <tr><td><strong>USB 3.1</strong> = USB 3.2 Gen 2</td><td><strong>10 Gbps</strong></td><td>shorter; often 1 m or less for passive cables</td></tr>
+      <tr><td><strong>USB 3.2 Gen 2x2</strong></td><td><strong>20 Gbps</strong> (two 10 Gbps lanes)</td><td>short, USB-C only</td></tr>
+    </tbody>
+  </table>
+  </div>
+  <p class="sidenote">Yes, the names were renamed twice, so "USB 3.0" and "USB 3.2 Gen 1" are the same 5 Gbps. Read the <strong>speed</strong> on the box, not the version number.<sup class="cite"><a href="#src-bh">[2]</a></sup><sup class="cite"><a href="#src-ada">[3]</a></sup> Cable lengths are typical exam-style figures; the faster the link, the shorter a passive cable can be.</p>
+
+  <h2>2. USB-C is a shape, not a speed</h2>
+  <p><strong>USB-C</strong> is the small, <strong>reversible 24-pin</strong> connector you met in <a href="0025-connecting-mobile-devices.html">lesson 0025</a>. It describes the <em>plug</em>. What travels through it depends on the port and the cable: USB 2.0 at 480 Mbps, USB 3.2 at 5–20 Gbps, video, power, or <strong>Thunderbolt</strong>.<sup class="cite"><a href="#src-messer">[1]</a></sup> A cheap USB-C charging cable may carry only USB 2.0 data. Same shape, very different cable.</p>
+
+  <h2>3. Thunderbolt</h2>
+  <p><strong>Thunderbolt</strong> is a high-speed serial link from Intel (with Apple) that carries <strong>data, video and power</strong> on one cable, and can daisy-chain devices.<sup class="cite"><a href="#src-messer">[1]</a></sup></p>
+  <div class="table-wrap">
+  <table>
+    <thead><tr><th>Version</th><th>Connector</th><th>Speed</th></tr></thead>
+    <tbody>
+      <tr><td>Thunderbolt 1</td><td>Mini DisplayPort</td><td>10 Gbps (two 10 Gbps channels)</td></tr>
+      <tr><td>Thunderbolt 2</td><td>Mini DisplayPort</td><td><strong>20 Gbps</strong> (channels combined)</td></tr>
+      <tr><td>Thunderbolt 3 and 4</td><td><strong>USB-C</strong></td><td><strong>40 Gbps</strong></td></tr>
+      <tr><td>Thunderbolt 5</td><td>USB-C</td><td>80 Gbps (up to 120 Gbps one way)</td></tr>
+    </tbody>
+  </table>
+  </div>
+  <p>Professor Messer's exam figure for copper Thunderbolt cable is a maximum of about <strong>3 m</strong>; full 40 Gbps over a <em>passive</em> cable needs a much shorter one, and longer runs use active or optical cables.<sup class="cite"><a href="#src-messer">[1]</a></sup><sup class="cite"><a href="#src-mono">[4]</a></sup> Thunderbolt 4 also sets minimums a USB-C port doesn't have to meet: 40 Gbps, two 4K displays and 15 W for accessories.<sup class="cite"><a href="#src-intel">[5]</a></sup> Look for the <strong>lightning-bolt icon</strong> next to the port.</p>
+  <p class="sidenote">Back to the dock ticket: a Thunderbolt dock plugged into a plain USB-C port (or through a USB 2.0-only cable) often charges but can't drive both monitors. Check the laptop's port icon and the cable's rating before blaming drivers.</p>
+
+  <h2>4. Serial: RS-232 and DB-9</h2>
+  <p>Before USB, devices talked over <strong>serial</strong> cables using the <strong>RS-232</strong> standard, on a <strong>DB-9</strong> (9-pin) or older <strong>DB-25</strong> connector.<sup class="cite"><a href="#src-messer">[1]</a></sup> It's slow, but it isn't dead: switches, routers, firewalls and industrial gear still have a <strong>console port</strong> for setup and recovery, reached with a serial cable even when the network is down. Modern laptops have no DB-9, so you use a <strong>USB-to-serial adapter</strong>, which shows up in Windows as a <strong>COM port</strong>.<sup class="cite"><a href="#src-messer">[1]</a></sup></p>
+
+  <div class="callout win">
+    <span class="label">Memory hook</span>
+    <p><strong>USB 2.0 = 480 Mbps, 5 m. USB 3.x Gen 1 / 2 / 2x2 = 5 / 10 / 20 Gbps.</strong> <strong>USB-C is the plug, not the speed.</strong> <strong>Thunderbolt: 1–2 on Mini DisplayPort (10, 20), 3–4 on USB-C (40), bolt icon.</strong> <strong>Serial = RS-232 on DB-9, for console ports, via USB adapter.</strong></p>
+  </div>
+
+  <h2>Try it (2 minutes)</h2>
+  <ol>
+    <li>Look at the USB-C ports on your laptop. Is there a lightning bolt (Thunderbolt), a "SS" with a number (USB SuperSpeed 5/10/20), or no icon at all?</li>
+    <li>In PowerShell, list what's connected over USB and any serial ports:
+      <pre><code>Get-PnpDevice -PresentOnly -Class USB | Format-Table Status, FriendlyName
+Get-PnpDevice -PresentOnly -Class Ports | Format-Table Status, FriendlyName</code></pre>
+      Host controllers named "USB 3.x eXtensible" are your SuperSpeed ports. If you plug in a USB-to-serial adapter, it appears under <strong>Ports</strong> as "… (COM3)" or similar: that COM number is what a terminal program needs.<sup class="cite"><a href="#src-pnp">[6]</a></sup></li>
+  </ol>
+  <details class="recall">
+    <summary>A user copies a 20 GB video to a new "USB 3.2" external SSD and it crawls at about 40 MB/s. The drive's own cable is USB-C to USB-A, plugged into a black port on an old desktop. What's your first guess? <span class="hint">(then click to check)</span></summary>
+    <p>The port is probably <strong>USB 2.0</strong> (480 Mbps ≈ 40–50 MB/s in practice). USB is backward compatible, so the drive works, but only at the older port's speed. Move it to a USB 3 port (often blue or marked "SS") and the copy should be many times faster.</p>
+  </details>
+
+  <h2>Practice</h2>
+  <p>Answer from memory before scrolling back up.</p>
+
+  <section class="quiz">
+    <p class="q">A laptop and a dock both have USB-C, but the dock's two monitors stay dark while charging works. The dock is labeled Thunderbolt 4. What's the most likely cause?</p>
+    <ul class="choices">
+      <li><button class="choice">The monitors need a crossover cable</button></li>
+      <li><button class="choice" data-correct>The laptop port lacks Thunderbolt support</button></li>
+      <li><button class="choice">The dock needs a plenum-rated jacket</button></li>
+      <li><button class="choice">The display driver blocks the charging</button></li>
+    </ul>
+    <div class="explain" hidden>USB-C is only the connector. A <strong>Thunderbolt</strong> dock on a plain USB-C port (no bolt icon), or through a low-speed cable, often gets power but not the bandwidth for two displays. Check the port icon and the cable rating.</div>
+  </section>
+
+  <section class="quiz">
+    <p class="q">Which pairing of USB version and top speed is correct?</p>
+    <ul class="choices">
+      <li><button class="choice">USB 2.0 runs at 5 Gbps</button></li>
+      <li><button class="choice">USB 3.2 Gen 2 runs at 480 Mbps</button></li>
+      <li><button class="choice">USB 3.0 runs at 10 Gbps</button></li>
+      <li><button class="choice" data-correct>USB 3.2 Gen 1 runs at 5 Gbps</button></li>
+    </ul>
+    <div class="explain" hidden><strong>USB 3.2 Gen 1</strong> is the renamed <strong>USB 3.0</strong>: 5 Gbps. USB 2.0 is 480 Mbps, Gen 2 is 10 Gbps, Gen 2x2 is 20 Gbps.</div>
+  </section>
+
+  <section class="quiz">
+    <p class="q">A switch was misconfigured and dropped off the network. You need to reach its command line directly. What do you connect?</p>
+    <ul class="choices">
+      <li><button class="choice" data-correct>A serial console cable via USB adapter</button></li>
+      <li><button class="choice">A Thunderbolt cable to its uplink</button></li>
+      <li><button class="choice">A USB-C charging cable to its port</button></li>
+      <li><button class="choice">A multimode fiber patch to a NIC</button></li>
+    </ul>
+    <div class="explain" hidden>Network gear has a <strong>console port</strong> that speaks <strong>RS-232 serial</strong>, independent of the network. Laptops lack DB-9 ports, so a <strong>USB-to-serial adapter</strong> (a COM port in Windows) fills the gap.</div>
+  </section>
+
+  <section class="quiz">
+    <p class="q">An older Mac has a Thunderbolt port shaped like Mini DisplayPort. What is its fastest possible version and speed?</p>
+    <ul class="choices">
+      <li><button class="choice">Thunderbolt 3 at 40 Gbps</button></li>
+      <li><button class="choice">Thunderbolt 4 at 40 Gbps</button></li>
+      <li><button class="choice" data-correct>Thunderbolt 2 at 20 Gbps</button></li>
+      <li><button class="choice">Thunderbolt 5 at 80 Gbps</button></li>
+    </ul>
+    <div class="explain" hidden>Thunderbolt <strong>1 and 2</strong> used the <strong>Mini DisplayPort</strong> connector (10 and 20 Gbps). From Thunderbolt 3 on, the connector is <strong>USB-C</strong>.</div>
+  </section>
+  <p class="quiz-score" data-quiz-score></p>
+
+  <details class="recall">
+    <summary>From memory: the four USB speeds, what USB-C does and doesn't tell you, the Thunderbolt connectors and speeds, and what serial is still used for. <span class="hint">(then click to check)</span></summary>
+    <p><strong>USB</strong>: 2.0 = 480 Mbps; 3.2 Gen 1 (3.0) = 5 Gbps; Gen 2 = 10 Gbps; Gen 2x2 = 20 Gbps. <strong>USB-C</strong>: a reversible 24-pin plug; says nothing about speed. <strong>Thunderbolt</strong>: 1/2 on Mini DisplayPort (10/20 Gbps), 3/4 on USB-C (40 Gbps), 5 at 80 Gbps; about 3 m copper. <strong>Serial</strong>: RS-232 on DB-9, for console ports on network and industrial gear, via a USB-to-serial adapter.</p>
+  </details>
+
+  <h2>Review: earlier lessons</h2>
+  <p>Spaced retrieval: pull these from memory first, then check.</p>
+
+  <details class="recall">
+    <summary>A contractor wants to run ordinary PVC-jacketed Ethernet above the drop ceiling, where the building's air returns flow. What's the problem, and what should the jacket say instead? <span class="hint">(<a href="0037-network-cables-twisted-pair.html">lesson 0037</a>, 3 days ago)</span></summary>
+    <p>That space is a <strong>plenum</strong>: in a fire, burning PVC gives off toxic smoke that the air system spreads. Use <strong>plenum-rated</strong> cable, printed <strong>CMP</strong> (CMR is only for risers).</p>
+  </details>
+
+  <details class="recall">
+    <summary>A laptop dock adds monitors, USB ports and Ethernet, plus has its own power supply and extra hardware. A cheaper box only copies the laptop's existing ports. Which is the docking station and which is the port replicator? <span class="hint">(<a href="0026-mobile-device-accessories.html">lesson 0026</a>, 14 days ago)</span></summary>
+    <p>The first is a <strong>docking station</strong> (adds capabilities). The second is a <strong>port replicator</strong> (just extends the ports the laptop already has). Today's twist: either may need Thunderbolt to drive several displays.</p>
+  </details>
+
+  <details class="recall">
+    <summary>The firewall, switches and servers all send their logs to one box over UDP 514. What's that service, and which severity number is the worst? <span class="hint">(<a href="0010-server-roles.html">lesson 0010</a>, 30 days ago)</span></summary>
+    <p>A <strong>syslog</strong> server. Severities run from <strong>0 (emergency)</strong>, the worst, to <strong>7 (debug)</strong>. The logs often feed a SIEM.</p>
+  </details>
+
+  <div class="callout source" id="src-messer">
+    <span class="label">Primary source: watch next</span>
+    <p>[1] Professor Messer, <a href="https://www.professormesser.com/free-a-plus-training/220-1201/220-1201-video/peripheral-cables-220-1201/">Peripheral Cables (220-1201, 3.2)</a>. USB, USB-C, Thunderbolt and serial. Free.</p>
+    <p id="src-bh">[2] B&amp;H Explora, <a href="https://www.bhphotovideo.com/explora/computers/tips-and-solutions/clearing-up-the-confusion-about-usb-again">Clearing up the confusion about USB… again</a> (USB 3.x renaming and speeds).</p>
+    <p id="src-ada">[3] Adafruit, <a href="https://learn.adafruit.com/understanding-usb-type-c-cable-types-pitfalls-and-more/cable-lengths">USB Type-C cable lengths</a> (why faster passive cables are shorter).</p>
+    <p id="src-mono">[4] Monoprice, <a href="https://www.monoprice.com/p/resources/thunderbolt-cable-types-every-generation-explained">Thunderbolt cable types: every generation explained</a> (connectors per version; passive vs. active cables).</p>
+    <p id="src-intel">[5] Intel, <a href="https://www.intel.com/content/dam/www/central-libraries/us/en/documents/2023-09/thunderbolt-messaging-guide.pdf">Thunderbolt messaging guide</a> (Thunderbolt 4 and 5 minimum requirements).</p>
+    <p id="src-pnp">[6] Microsoft Learn, <a href="https://learn.microsoft.com/en-us/powershell/module/pnpdevice/get-pnpdevice">Get-PnpDevice</a>.</p>
+  </div>
+
+  <div class="callout ask">
+    <span class="label">Questions?</span>
+    <p>Anything unclear? Ask your teacher. Open Claude in the Teacher repo and ask, for example: <em>"In IT lesson 0040, how can I tell what a USB-C cable supports if it has no label?"</em> Follow-up questions are part of the course.</p>
+  </div>
+</main>
+<nav class="page-footer">
+  <a href="0039-optical-fiber.html">← Light instead of electricity: optical fiber</a>
+  <a href="../../index.html">Hub</a>
+  <span class="disabled">Next lesson: tomorrow →</span>
+</nav>
+</body>
+</html>
