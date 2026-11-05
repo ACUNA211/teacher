@@ -1,0 +1,175 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Video Cables</title>
+<meta name="description" content="IT lesson 0041: A+ objective 3.2, video cables. VGA (analog), DVI (DVI-A, DVI-D, DVI-I, single and dual link), HDMI and DisplayPort (digital video and audio), and video over USB-C.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=JetBrains+Mono&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../assets/course.css">
+<script src="../../assets/quiz.js" defer></script>
+</head>
+<body class="track-it">
+<nav class="page-header">
+  <a class="home" href="../../index.html">Teacher hub</a>
+  <span>IT and certs</span>
+  <a href="../reference/glossary.html">Glossary</a>
+  <a href="../reference/hardware.html">Hardware cheat sheet</a>
+</nav>
+<main>
+  <p class="kicker">IT and certs · Lesson 0041 · A+ Core 1, objective 3.2</p>
+  <h1>From analog to all-in-one: VGA, DVI, HDMI, DisplayPort and USB-C</h1>
+  <p class="lede">About 10 minutes. Yesterday's cables carried data. Today's carry the <strong>picture</strong>: five ways to get video from a computer to a screen.<sup class="cite"><a href="#src-messer">[1]</a></sup> The win: tell the connectors apart on sight, and know which ones carry <strong>sound</strong> and which adapters will actually work.</p>
+
+  <div class="callout">
+    <span class="label">Why this matters at work</span>
+    <p>Conference-room and hot-desk tickets: "the projector says no signal", "the monitor works but there's no sound", "I need an adapter for the old screen". Most of them come down to which signal the port sends (analog or digital, video only or video plus audio) and whether the adapter in the drawer can convert it.</p>
+  </div>
+
+  <h2>1. The five, oldest to newest</h2>
+  <div class="table-wrap">
+  <table>
+    <thead><tr><th>Cable</th><th>Signal</th><th>Audio?</th><th>How to spot it</th></tr></thead>
+    <tbody>
+      <tr><td><strong>VGA</strong></td><td><strong>Analog</strong></td><td>No</td><td>Blue, D-shaped, <strong>15 pins in 3 rows</strong> (DE-15, often called DB-15), thumbscrews</td></tr>
+      <tr><td><strong>DVI</strong></td><td>Digital, analog, or both (by type)</td><td>No (video only)</td><td>Large white connector, pin grid plus a flat blade, thumbscrews</td></tr>
+      <tr><td><strong>HDMI</strong></td><td><strong>Digital</strong></td><td><strong>Yes</strong></td><td>Flat, slightly trapezoid, <strong>19 pins</strong>, no screws; the TV standard</td></tr>
+      <tr><td><strong>DisplayPort</strong></td><td><strong>Digital</strong></td><td><strong>Yes</strong></td><td>One corner cut off, 20 pins, often a latch; also <strong>Mini DisplayPort</strong></td></tr>
+      <tr><td><strong>USB-C</strong></td><td>Digital (usually DisplayPort inside)</td><td>Yes</td><td>The reversible plug from <a href="0040-peripheral-cables-usb-thunderbolt-serial.html">lesson 0040</a></td></tr>
+    </tbody>
+  </table>
+  </div>
+  <p>Messer's 1201 video covers exactly these five.<sup class="cite"><a href="#src-messer">[1]</a></sup> <strong>VGA</strong> is the legacy one: analog, video only. Because the signal is analog, long or poor cables give a softer, ghosting picture rather than simply cutting out.<sup class="cite"><a href="#src-dell">[2]</a></sup></p>
+
+  <h2>2. DVI: three types, two link widths</h2>
+  <ul>
+    <li><strong>DVI-A</strong>: analog only (basically VGA on a DVI plug).</li>
+    <li><strong>DVI-D</strong>: digital only.</li>
+    <li><strong>DVI-I</strong>: <em>integrated</em>, both digital and analog.<sup class="cite"><a href="#src-messer">[1]</a></sup></li>
+  </ul>
+  <p>DVI-D and DVI-I come in <strong>single link</strong> and <strong>dual link</strong>. Dual link adds a second set of pins (a fuller pin grid) for higher resolutions: single link is commonly rated to about <strong>1920 × 1200</strong>, dual link to about <strong>2560 × 1600</strong>.<sup class="cite"><a href="#src-messer">[1]</a></sup><sup class="cite"><a href="#src-adder">[3]</a></sup> Today DVI is mostly found on older monitors and gear.<sup class="cite"><a href="#src-pvc">[4]</a></sup></p>
+
+  <h2>3. HDMI and DisplayPort: video plus audio</h2>
+  <p>Both are <strong>digital</strong> and carry <strong>video and audio</strong> on one cable.<sup class="cite"><a href="#src-messer">[1]</a></sup> HDMI is the standard on TVs and projectors; DisplayPort is common on business monitors and docks. They're <strong>not</strong> plug-compatible, but adapters bridge them:</p>
+  <ul>
+    <li><strong>DisplayPort → HDMI or DVI</strong>: a cheap <strong>passive</strong> adapter usually works, because the DisplayPort source can switch to sending a compatible signal.<sup class="cite"><a href="#src-messer">[1]</a></sup></li>
+    <li><strong>HDMI ↔ DVI-D</strong>: passive works too (same digital video), but DVI drops the audio.<sup class="cite"><a href="#src-adder">[3]</a></sup></li>
+    <li><strong>Digital → VGA</strong>: needs an <strong>active converter</strong> (a chip that turns digital into analog). A plain wire can't do it.</li>
+  </ul>
+
+  <h2>4. Video over USB-C</h2>
+  <p>A USB-C port can carry video using <strong>DisplayPort Alternate Mode</strong>: some of the cable's high-speed lanes stop carrying USB data and carry DisplayPort instead.<sup class="cite"><a href="#src-ada">[5]</a></sup> That's why a USB-C-to-HDMI adapter works on many laptops (DisplayPort inside, converted to HDMI), and why a USB-C port with <em>no</em> Alt Mode, or a USB 2.0-only cable, gives no picture at all. Thunderbolt ports always support video.</p>
+
+  <div class="callout win">
+    <span class="label">Memory hook</span>
+    <p><strong>VGA = analog, video only, blue, 15 pins in 3 rows.</strong> <strong>DVI = video only; A analog, D digital, I both; dual link = more pixels.</strong> <strong>HDMI and DisplayPort = digital video + audio.</strong> <strong>DP → HDMI/DVI passive; anything digital → VGA needs active.</strong> <strong>USB-C video = DisplayPort Alt Mode.</strong></p>
+  </div>
+
+  <h2>Try it (2 minutes)</h2>
+  <ol>
+    <li>Look at the back of your monitor and the side of your laptop. Name every video port you see.</li>
+    <li>In PowerShell, ask Windows how each screen is connected:
+      <pre><code>Get-CimInstance -Namespace root\wmi -ClassName WmiMonitorConnectionParams |
+  Format-Table InstanceName, VideoOutputTechnology</code></pre>
+      Common values: <strong>0</strong> = VGA, <strong>4</strong> = DVI, <strong>5</strong> = HDMI, <strong>10</strong> = DisplayPort (external), <strong>11</strong> = DisplayPort embedded (a laptop's own panel), <strong>2147483648</strong> = internal.<sup class="cite"><a href="#src-ms">[6]</a></sup> A monitor on a USB-C dock usually shows 10, because the video is DisplayPort inside. Some drivers report odd values, so treat it as a hint.</li>
+  </ol>
+  <details class="recall">
+    <summary>A meeting room's projector has only VGA. A user's new laptop has only HDMI and USB-C. They bring a simple HDMI-to-VGA cable with no box or chip, and get no picture. Why? <span class="hint">(then click to check)</span></summary>
+    <p>HDMI is <strong>digital</strong> and VGA is <strong>analog</strong>. A plain cable can't convert between them; you need an <strong>active converter</strong> (a small box or dongle with a chip, sometimes with its own power). And VGA carries no audio, so sound has to come from the laptop or a separate cable.</p>
+  </details>
+
+  <h2>Practice</h2>
+  <p>Answer from memory before scrolling back up.</p>
+
+  <section class="quiz">
+    <p class="q">A user connects a laptop to a monitor with a DVI-D cable through an HDMI adapter. The picture is perfect, but the monitor speakers are silent. Why?</p>
+    <ul class="choices">
+      <li><button class="choice">The monitor needs a VGA connection</button></li>
+      <li><button class="choice">The adapter must be an active converter</button></li>
+      <li><button class="choice" data-correct>DVI carries video but no audio</button></li>
+      <li><button class="choice">The cable is single link, not dual</button></li>
+    </ul>
+    <div class="explain" hidden>HDMI and DVI-D share the same digital video, so a passive adapter gives a picture. But <strong>DVI carries no audio</strong>. Use HDMI or DisplayPort end to end, or send audio another way.</div>
+  </section>
+
+  <section class="quiz">
+    <p class="q">Which video connector sends an analog signal and uses fifteen pins in three rows?</p>
+    <ul class="choices">
+      <li><button class="choice" data-correct>VGA</button></li>
+      <li><button class="choice">HDMI</button></li>
+      <li><button class="choice">DVI-D</button></li>
+      <li><button class="choice">DisplayPort</button></li>
+    </ul>
+    <div class="explain" hidden><strong>VGA</strong>: analog, video only, the blue DE-15 (often called DB-15) connector with three rows of pins. HDMI, DisplayPort and DVI-D are all digital.</div>
+  </section>
+
+  <section class="quiz">
+    <p class="q">A dock's DisplayPort output must drive a monitor that has only HDMI. What's the simplest fix that usually works?</p>
+    <ul class="choices">
+      <li><button class="choice">An active digital-to-analog VGA converter</button></li>
+      <li><button class="choice">A DVI-A cable with thumbscrews</button></li>
+      <li><button class="choice">A USB 2.0 cable to the monitor</button></li>
+      <li><button class="choice" data-correct>A passive DisplayPort-to-HDMI adapter</button></li>
+    </ul>
+    <div class="explain" hidden>A DisplayPort source can send an HDMI-compatible signal, so a <strong>passive DisplayPort-to-HDMI adapter</strong> usually works. Active converters are for digital-to-analog (VGA).</div>
+  </section>
+
+  <section class="quiz">
+    <p class="q">A laptop's USB-C port charges a phone and reads flash drives, but a USB-C-to-HDMI adapter gives no picture. What's most likely missing?</p>
+    <ul class="choices">
+      <li><button class="choice">Dual-link DVI support in the GPU</button></li>
+      <li><button class="choice" data-correct>DisplayPort Alternate Mode on that port</button></li>
+      <li><button class="choice">An analog signal on the HDMI side</button></li>
+      <li><button class="choice">A crossover wiring order in the cable</button></li>
+    </ul>
+    <div class="explain" hidden>USB-C carries video only if the port supports <strong>DisplayPort Alt Mode</strong> (or Thunderbolt). A data-and-charging-only USB-C port can't output video, whatever the adapter.</div>
+  </section>
+  <p class="quiz-score" data-quiz-score></p>
+
+  <details class="recall">
+    <summary>From memory: for each of VGA, DVI, HDMI and DisplayPort, is it analog or digital, and does it carry audio? What do the DVI letters mean? <span class="hint">(then click to check)</span></summary>
+    <p><strong>VGA</strong>: analog, video only. <strong>DVI</strong>: video only; DVI-A analog, DVI-D digital, DVI-I both; single vs. dual link (dual = higher resolution). <strong>HDMI</strong> and <strong>DisplayPort</strong>: digital, video + audio. <strong>USB-C</strong>: video via DisplayPort Alt Mode. Passive DP → HDMI/DVI works; digital → VGA needs an active converter.</p>
+  </details>
+
+  <h2>Review: earlier lessons</h2>
+  <p>Spaced retrieval: pull these from memory first, then check.</p>
+
+  <details class="recall">
+    <summary>You crimp one end of a patch cable as T568A and the other as T568B. What kind of cable did you make, and why might it still work on modern gear? <span class="hint">(<a href="0038-568a-568b-colors.html">lesson 0038</a>, 3 days ago)</span></summary>
+    <p>A <strong>crossover</strong> cable (orange and green pairs swapped: 1↔3, 2↔6). Modern ports with <strong>Auto-MDIX</strong> detect it and adjust, so it often works anyway. For normal patch cables, use the same standard (usually T568B) on both ends.</p>
+  </details>
+
+  <details class="recall">
+    <summary>A display panel needs no backlight, has perfect blacks, but can suffer burn-in from static images. Which display type is it? <span class="hint">(<a href="0034-display-types.html">lesson 0034</a>, 7 days ago)</span></summary>
+    <p><strong>OLED</strong>: each pixel makes its own light. LCDs (including "LED" and Mini-LED screens) need a backlight.</p>
+  </details>
+
+  <details class="recall">
+    <summary>Users reach one web address, but behind it several servers share the work, and a failed server stops getting traffic. Which appliance does that? <span class="hint">(<a href="0011-appliances-scada-iot.html">lesson 0011</a>, 30 days ago)</span></summary>
+    <p>A <strong>load balancer</strong>. It faces inward, protecting and scaling your servers, unlike a proxy, which sits in front of your users.</p>
+  </details>
+
+  <div class="callout source" id="src-messer">
+    <span class="label">Primary source: watch next</span>
+    <p>[1] Professor Messer, <a href="https://www.professormesser.com/free-a-plus-training/220-1201/220-1201-video/video-cables-220-1201/">Video Cables (220-1201, 3.2)</a>. HDMI, DisplayPort, DVI, VGA and video over USB-C, about 7 minutes. Free.</p>
+    <p id="src-dell">[2] Dell Support, <a href="https://www.dell.com/support/kbdoc/en-us/000143545/video-cables-and-their-capabilities">Understanding video cables: which one do you need</a> (VGA analog, comparison chart).</p>
+    <p id="src-adder">[3] Adder, <a href="https://adder.com/en/adderr-dvi-d-single-link-cable">DVI-D single-link cable</a> (single-link resolution rating); vendor HDMI-to-DVI-D cable listings.</p>
+    <p id="src-pvc">[4] ProVideo Coalition, <a href="https://www.provideocoalition.com/ultimate-guide-to-video-cables-hdmi-displayport-vga-and-dvi/amp/">Ultimate guide to video cables</a> (DVI being phased out).</p>
+    <p id="src-ada">[5] Adafruit, <a href="https://learn.adafruit.com/understanding-usb-type-c-cable-types-pitfalls-and-more/protocols-and-alternate-modes">USB Type-C protocols and alternate modes</a> (DisplayPort Alt Mode).</p>
+    <p id="src-ms">[6] Microsoft Learn, <a href="https://learn.microsoft.com/windows/win32/api/wingdi/ne-wingdi-displayconfig_video_output_technology">DISPLAYCONFIG_VIDEO_OUTPUT_TECHNOLOGY</a> (connection type values).</p>
+  </div>
+
+  <div class="callout ask">
+    <span class="label">Questions?</span>
+    <p>Anything unclear? Ask your teacher. Open Claude in the Teacher repo and ask, for example: <em>"In IT lesson 0041, how do I tell a DVI-D dual-link cable from single link?"</em> Follow-up questions are part of the course.</p>
+  </div>
+</main>
+<nav class="page-footer">
+  <a href="0040-peripheral-cables-usb-thunderbolt-serial.html">← Same plug, different cable: USB, Thunderbolt and serial</a>
+  <a href="../../index.html">Hub</a>
+  <span class="disabled">Next lesson: tomorrow →</span>
+</nav>
+</body>
+</html>

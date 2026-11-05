@@ -1,7 +1,7 @@
 /* Hub data. The teacher updates this file after every lesson; index.html renders it.
    Keep it free of personal data: the site is public. */
 window.HUB = {
-  updated: "2026-11-04",
+  updated: "2026-11-05",
   tracks: [
     {
       id: "it", name: "IT and certs", folder: "it", cls: "track-it", status: "active",
@@ -225,6 +225,11 @@ window.HUB = {
       track: "it", num: "0040", date: "2026-11-04", covers: 1,
       title: "Same plug, different cable: USB, Thunderbolt and serial",
       path: "it/lessons/0040-peripheral-cables-usb-thunderbolt-serial.html"
+    },
+    {
+      track: "it", num: "0041", date: "2026-11-05", covers: 1,
+      title: "From analog to all-in-one: VGA, DVI, HDMI, DisplayPort and USB-C",
+      path: "it/lessons/0041-video-cables-hdmi-displayport-dvi-vga.html"
     },
     {
       track: "app", num: "0001", date: "2026-09-28", covers: 0,

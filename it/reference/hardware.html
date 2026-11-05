@@ -212,10 +212,26 @@
   </div>
   <p class="sidenote">USB-C is a reversible 24-pin connector, not a speed: check the port icon and the cable rating.</p>
 
+  <h2>Video cables (objective 3.2)</h2>
+  <div class="table-wrap">
+  <table>
+    <thead><tr><th>Cable</th><th>Signal</th><th>Audio</th><th>Notes</th></tr></thead>
+    <tbody>
+      <tr><td>VGA</td><td>Analog</td><td>No</td><td>Blue DE-15 (DB-15), 15 pins in 3 rows; legacy; long/poor cables blur or ghost</td></tr>
+      <tr><td>DVI-A / DVI-D / DVI-I</td><td>Analog / digital / both</td><td>No</td><td>Single link ~1920×1200, dual link ~2560×1600</td></tr>
+      <tr><td>HDMI</td><td>Digital</td><td>Yes</td><td>19 pins, TVs and projectors; passive adapter to DVI-D (no audio)</td></tr>
+      <tr><td>DisplayPort / Mini DP</td><td>Digital</td><td>Yes</td><td>Passive adapter to HDMI or DVI usually works</td></tr>
+      <tr><td>USB-C</td><td>Digital (DisplayPort Alt Mode)</td><td>Yes</td><td>Only if the port supports Alt Mode or Thunderbolt</td></tr>
+    </tbody>
+  </table>
+  </div>
+  <p class="sidenote">Digital → VGA always needs an <strong>active</strong> converter (a chip), not just a cable.</p>
+
   <h2>Commands (Windows)</h2>
   <div class="table-wrap">
   <table>
     <tbody>
+      <tr><td><code>Get-CimInstance -Namespace root\wmi -ClassName WmiMonitorConnectionParams | Format-Table InstanceName, VideoOutputTechnology</code></td><td>PowerShell: how each screen is connected: 0 VGA, 4 DVI, 5 HDMI, 10 DisplayPort, 11 embedded DisplayPort (laptop panel)</td></tr>
       <tr><td><code>Get-PnpDevice -PresentOnly -Class Ports</code></td><td>PowerShell: serial ports, including a USB-to-serial adapter and its COM number</td></tr>
       <tr><td><code>Get-CimInstance Win32_VideoController | Select-Object Name, CurrentHorizontalResolution, CurrentVerticalResolution, CurrentRefreshRate</code></td><td>PowerShell: current resolution and refresh rate per graphics adapter</td></tr>
       <tr><td><code>powercfg /batteryreport</code></td><td>HTML battery report: design vs. full charge capacity, cycle count, usage history. Add <code>/output path</code> to choose where it's saved</td></tr>
@@ -227,7 +243,7 @@
     </tbody>
   </table>
   </div>
-  <p class="sidenote">Sources: <a href="https://www.professormesser.com/free-a-plus-training/220-1201/220-1201-video/laptop-hardware-220-1201/">Professor Messer, Laptop Hardware</a> · <a href="https://learn.microsoft.com/en-us/windows/security/operating-system-security/data-protection/bitlocker/recovery-overview">Microsoft, BitLocker recovery overview</a> · <a href="https://learn.microsoft.com/en-us/powershell/module/bitlocker/suspend-bitlocker">Microsoft Learn, Suspend-BitLocker</a> · <a href="https://learn.microsoft.com/en-us/mem/intune/configuration/device-restrictions-configure">Microsoft Learn, Intune device restrictions</a> · <a href="https://learn.microsoft.com/en-us/powershell/module/pnpdevice/get-pnpdevice">Microsoft Learn, Get-PnpDevice</a> · <a href="https://www.professormesser.com/free-a-plus-training/220-1201/220-1201-video/connecting-mobile-devices-220-1201/">Professor Messer, Connecting Mobile Devices</a> · <a href="https://learn.microsoft.com/en-us/intune/device-configuration/templates/ref-device-restrictions-android-enterprise">Microsoft Learn, Android Enterprise restrictions</a> · <a href="https://www.professormesser.com/free-a-plus-training/220-1201/220-1201-video/network-cables-220-1201/">Professor Messer, Network Cables</a> · <a href="https://www.professormesser.com/free-a-plus-training/220-1201/220-1201-video/optical-fiber-220-1201/">Professor Messer, Optical Fiber</a> · <a href="https://www.professormesser.com/free-a-plus-training/220-1201/220-1201-video/peripheral-cables-220-1201/">Professor Messer, Peripheral Cables</a> · <a href="https://www.howtogeek.com/217010/how-to-generate-a-battery-health-report-on-windows-8-or-windows-10/">How-To Geek, battery report</a></p>
+  <p class="sidenote">Sources: <a href="https://www.professormesser.com/free-a-plus-training/220-1201/220-1201-video/laptop-hardware-220-1201/">Professor Messer, Laptop Hardware</a> · <a href="https://learn.microsoft.com/en-us/windows/security/operating-system-security/data-protection/bitlocker/recovery-overview">Microsoft, BitLocker recovery overview</a> · <a href="https://learn.microsoft.com/en-us/powershell/module/bitlocker/suspend-bitlocker">Microsoft Learn, Suspend-BitLocker</a> · <a href="https://learn.microsoft.com/en-us/mem/intune/configuration/device-restrictions-configure">Microsoft Learn, Intune device restrictions</a> · <a href="https://learn.microsoft.com/en-us/powershell/module/pnpdevice/get-pnpdevice">Microsoft Learn, Get-PnpDevice</a> · <a href="https://www.professormesser.com/free-a-plus-training/220-1201/220-1201-video/connecting-mobile-devices-220-1201/">Professor Messer, Connecting Mobile Devices</a> · <a href="https://learn.microsoft.com/en-us/intune/device-configuration/templates/ref-device-restrictions-android-enterprise">Microsoft Learn, Android Enterprise restrictions</a> · <a href="https://www.professormesser.com/free-a-plus-training/220-1201/220-1201-video/network-cables-220-1201/">Professor Messer, Network Cables</a> · <a href="https://www.professormesser.com/free-a-plus-training/220-1201/220-1201-video/optical-fiber-220-1201/">Professor Messer, Optical Fiber</a> · <a href="https://www.professormesser.com/free-a-plus-training/220-1201/220-1201-video/peripheral-cables-220-1201/">Professor Messer, Peripheral Cables</a> · <a href="https://www.professormesser.com/free-a-plus-training/220-1201/220-1201-video/video-cables-220-1201/">Professor Messer, Video Cables</a> · <a href="https://www.howtogeek.com/217010/how-to-generate-a-battery-health-report-on-windows-8-or-windows-10/">How-To Geek, battery report</a></p>
 </main>
 </body>
 </html>
