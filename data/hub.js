@@ -1,7 +1,7 @@
 /* Hub data. The teacher updates this file after every lesson; index.html renders it.
    Keep it free of personal data: the site is public. */
 window.HUB = {
-  updated: "2026-11-05",
+  updated: "2026-11-06",
   tracks: [
     {
       id: "it", name: "IT and certs", folder: "it", cls: "track-it", status: "active",
@@ -230,6 +230,11 @@ window.HUB = {
       track: "it", num: "0041", date: "2026-11-05", covers: 1,
       title: "From analog to all-in-one: VGA, DVI, HDMI, DisplayPort and USB-C",
       path: "it/lessons/0041-video-cables-hdmi-displayport-dvi-vga.html"
+    },
+    {
+      track: "it", num: "0042", date: "2026-11-06", covers: 1,
+      title: "Inside the case and just outside it: SATA and eSATA",
+      path: "it/lessons/0042-storage-cables-sata-esata.html"
     },
     {
       track: "app", num: "0001", date: "2026-09-28", covers: 0,

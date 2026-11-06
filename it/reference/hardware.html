@@ -227,10 +227,24 @@
   </div>
   <p class="sidenote">Digital → VGA always needs an <strong>active</strong> converter (a chip), not just a cable.</p>
 
+  <h2>Storage cables (objective 3.2)</h2>
+  <div class="table-wrap">
+  <table>
+    <thead><tr><th>Cable</th><th>Pins / power</th><th>Max length</th><th>Notes</th></tr></thead>
+    <tbody>
+      <tr><td>SATA data</td><td>7 pins, no power</td><td>~1 m</td><td>Drive to motherboard port; L-keyed; 1.5 / 3 / 6 Gbps (SATA 1.0 / 2.0 / 3.0), backward compatible</td></tr>
+      <tr><td>SATA power</td><td>15 pins: 3.3, 5, 12 V</td><td>n/a</td><td>From the PSU; replaced 4-pin Molex</td></tr>
+      <tr><td>eSATA</td><td>No power (eSATAp adds it)</td><td>~2 m</td><td>Shielded, unkeyed plug; not interchangeable with internal SATA; mostly replaced by USB/Thunderbolt</td></tr>
+    </tbody>
+  </table>
+  </div>
+  <p class="sidenote">SATA 3.0 ≈ 600 MB/s real throughput; faster SSDs use M.2 NVMe (no cable).</p>
+
   <h2>Commands (Windows)</h2>
   <div class="table-wrap">
   <table>
     <tbody>
+      <tr><td><code>Get-PhysicalDisk | Format-Table FriendlyName, BusType, MediaType, Size</code></td><td>PowerShell: each physical drive and how it's attached (SATA, NVMe, USB) and whether it's SSD or HDD</td></tr>
       <tr><td><code>Get-CimInstance -Namespace root\wmi -ClassName WmiMonitorConnectionParams | Format-Table InstanceName, VideoOutputTechnology</code></td><td>PowerShell: how each screen is connected: 0 VGA, 4 DVI, 5 HDMI, 10 DisplayPort, 11 embedded DisplayPort (laptop panel)</td></tr>
       <tr><td><code>Get-PnpDevice -PresentOnly -Class Ports</code></td><td>PowerShell: serial ports, including a USB-to-serial adapter and its COM number</td></tr>
       <tr><td><code>Get-CimInstance Win32_VideoController | Select-Object Name, CurrentHorizontalResolution, CurrentVerticalResolution, CurrentRefreshRate</code></td><td>PowerShell: current resolution and refresh rate per graphics adapter</td></tr>

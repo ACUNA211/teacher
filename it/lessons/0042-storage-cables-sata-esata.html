@@ -1,0 +1,166 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Storage Cables</title>
+<meta name="description" content="IT lesson 0042: A+ objective 3.2, storage cables. Internal SATA (7-pin data, 15-pin power, 1 m), external eSATA (shielded, 2 m, no power), SATA speeds, and why the two plugs don't swap.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=JetBrains+Mono&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../assets/course.css">
+<script src="../../assets/quiz.js" defer></script>
+</head>
+<body class="track-it">
+<nav class="page-header">
+  <a class="home" href="../../index.html">Teacher hub</a>
+  <span>IT and certs</span>
+  <a href="../reference/glossary.html">Glossary</a>
+  <a href="../reference/hardware.html">Hardware cheat sheet</a>
+</nav>
+<main>
+  <p class="kicker">IT and certs · Lesson 0042 · A+ Core 1, objective 3.2</p>
+  <h1>Inside the case and just outside it: SATA and eSATA</h1>
+  <p class="lede">About 10 minutes. This week's cables have carried network data, peripherals and video. Today's carry <strong>storage</strong>: the SATA cables that connect drives inside a desktop, and their external cousin, eSATA.<sup class="cite"><a href="#src-messer">[1]</a></sup> The win: know the two plugs every SATA drive needs, the speed and length limits, and why eSATA isn't "just SATA on the outside".</p>
+
+  <div class="callout">
+    <span class="label">Why this matters at work</span>
+    <p>Desktop refreshes and "the PC doesn't see the second drive" tickets. Before blaming the drive or the operating system, check the two cables: a data cable that's loose at the motherboard, or a power plug that never got connected, looks exactly like a dead disk.</p>
+  </div>
+
+  <h2>1. Internal SATA: two cables per drive</h2>
+  <p>A 2.5- or 3.5-inch SATA drive (hard drive, SATA SSD, optical drive) has <strong>two separate connectors</strong> side by side:</p>
+  <div class="table-wrap">
+  <table>
+    <thead><tr><th>Connector</th><th>Pins</th><th>Goes to</th><th>Carries</th></tr></thead>
+    <tbody>
+      <tr><td><strong>SATA data</strong></td><td><strong>7</strong> (two signal pairs + three grounds)</td><td>A SATA port on the motherboard</td><td>Data, one drive per cable</td></tr>
+      <tr><td><strong>SATA power</strong></td><td><strong>15</strong> (wider plug)</td><td>The power supply</td><td><strong>3.3 V, 5 V and 12 V</strong></td></tr>
+    </tbody>
+  </table>
+  </div>
+  <p>Both plugs are <strong>L-shaped</strong> (keyed) so they only go in one way.<sup class="cite"><a href="#src-tl">[2]</a></sup> The 15-pin power plug replaced the old 4-pin Molex; its extra pins give each voltage several contacts and extra grounds for hot-plugging.<sup class="cite"><a href="#src-tl">[2]</a></sup> An internal SATA data cable is limited to about <strong>1 meter</strong>.<sup class="cite"><a href="#src-quiz">[3]</a></sup></p>
+  <p>Speeds come from the SATA revision, and every revision is backward compatible:</p>
+  <ul>
+    <li><strong>SATA 1.0</strong>: 1.5 Gbps</li>
+    <li><strong>SATA 2.0</strong>: 3 Gbps</li>
+    <li><strong>SATA 3.0</strong>: <strong>6 Gbps</strong> (about 600 MB/s of real data), today's normal<sup class="cite"><a href="#src-tl">[2]</a></sup></li>
+  </ul>
+  <p>That 6 Gbps ceiling is why fast SSDs moved to <strong>M.2 NVMe</strong>, which plugs straight into the board with no cable at all (<a href="0023-laptop-batteries-keyboards-ssd.html">lesson 0023</a>).</p>
+
+  <h2>2. eSATA: SATA for the outside</h2>
+  <p><strong>eSATA</strong> (external SATA) connects an external drive at SATA speed. It isn't just the internal cable through a hole in the case:<sup class="cite"><a href="#src-messer">[1]</a></sup><sup class="cite"><a href="#src-toms">[4]</a></sup></p>
+  <ul>
+    <li><strong>Different plug</strong>: no L-shaped key, made to survive many more plug-ins. A SATA cable doesn't fit an eSATA port, and the reverse: each needs its own cable.<sup class="cite"><a href="#src-messer">[1]</a></sup></li>
+    <li><strong>Shielded</strong> cable with stronger signal levels, so it reaches about <strong>2 meters</strong> instead of 1.<sup class="cite"><a href="#src-toms">[4]</a></sup></li>
+    <li><strong>No power</strong>: the drive needs its own power adapter. (A combined <strong>eSATAp</strong> port adds USB-style power, but it was never common.)<sup class="cite"><a href="#src-tl">[2]</a></sup></li>
+  </ul>
+  <p>Today eSATA is mostly legacy: USB 3.x, USB-C and Thunderbolt (<a href="0040-peripheral-cables-usb-thunderbolt-serial.html">lesson 0040</a>) carry data <em>and</em> power on one cable, so new external drives use those.</p>
+
+  <div class="callout win">
+    <span class="label">Memory hook</span>
+    <p><strong>SATA drive = two plugs: 7-pin data to the board, 15-pin power to the PSU.</strong> <strong>1.5 / 3 / 6 Gbps.</strong> <strong>Internal 1 m, eSATA 2 m.</strong> <strong>eSATA: shielded, different plug, no power.</strong></p>
+  </div>
+
+  <h2>Try it (2 minutes)</h2>
+  <ol>
+    <li>In PowerShell, list the physical drives and how each one is attached:
+      <pre><code>Get-PhysicalDisk | Format-Table FriendlyName, BusType, MediaType, Size</code></pre>
+      <strong>BusType</strong> shows <strong>SATA</strong> for a SATA drive, <strong>NVMe</strong> for an M.2 NVMe SSD and <strong>USB</strong> for an external drive in a USB enclosure; <strong>MediaType</strong> says SSD or HDD. A drive missing here (and in Disk Management) points at a cable, power or BIOS setting, not at Windows.</li>
+  </ol>
+  <details class="recall">
+    <summary>A technician adds a second SATA hard drive to a desktop and connects the data cable to the motherboard. The drive doesn't spin and doesn't appear anywhere. What was most likely missed? <span class="hint">(then click to check)</span></summary>
+    <p>The <strong>15-pin SATA power</strong> connector from the power supply. A SATA drive needs both cables: data to the board, power to the PSU. No power means no spin and no detection.</p>
+  </details>
+
+  <h2>Practice</h2>
+  <p>Answer from memory before scrolling back up.</p>
+
+  <section class="quiz">
+    <p class="q">How many pins does the connector that carries power to an internal SATA drive have?</p>
+    <ul class="choices">
+      <li><button class="choice">Seven</button></li>
+      <li><button class="choice">Four</button></li>
+      <li><button class="choice" data-correct>Fifteen</button></li>
+      <li><button class="choice">Nineteen</button></li>
+    </ul>
+    <div class="explain" hidden>SATA <strong>power</strong> is the wide <strong>15-pin</strong> plug (3.3, 5 and 12 V). The narrow 7-pin plug is SATA <strong>data</strong>; 4-pin is old Molex; 19 pins is HDMI.</div>
+  </section>
+
+  <section class="quiz">
+    <p class="q">A user wants an external drive two meters from the PC at SATA speed. The drive has an eSATA port. What should the technician use?</p>
+    <ul class="choices">
+      <li><button class="choice" data-correct>A shielded eSATA cable, plus drive power</button></li>
+      <li><button class="choice">An internal SATA cable through the case</button></li>
+      <li><button class="choice">A 15-pin SATA power cable alone</button></li>
+      <li><button class="choice">A passive SATA-to-HDMI adapter cable</button></li>
+    </ul>
+    <div class="explain" hidden>eSATA uses its own <strong>shielded cable and plug</strong>, rated to about <strong>2 m</strong>. It carries no power, so the drive needs its own adapter. Internal SATA cables are only rated to about 1 m and don't fit eSATA ports.</div>
+  </section>
+
+  <section class="quiz">
+    <p class="q">A new SATA 3.0 SSD is installed on an older motherboard with SATA 2.0 ports. What happens?</p>
+    <ul class="choices">
+      <li><button class="choice">The drive is never detected at all</button></li>
+      <li><button class="choice">It needs a 4-pin Molex adapter first</button></li>
+      <li><button class="choice">It runs at full six gigabit speed</button></li>
+      <li><button class="choice" data-correct>It works, limited to three gigabit speed</button></li>
+    </ul>
+    <div class="explain" hidden>SATA is <strong>backward compatible</strong>: the link runs at the slower side's speed, here SATA 2.0's <strong>3 Gbps</strong>.</div>
+  </section>
+
+  <section class="quiz">
+    <p class="q">A fast SSD tops out near 550 MB/s in benchmarks. A colleague says the drive is faulty. What's the likely explanation?</p>
+    <ul class="choices">
+      <li><button class="choice">The eSATA cable is longer than allowed</button></li>
+      <li><button class="choice" data-correct>SATA 3.0 is capped near 600 MB/s</button></li>
+      <li><button class="choice">The data cable carries only five volts</button></li>
+      <li><button class="choice">NVMe drives always run that slowly</button></li>
+    </ul>
+    <div class="explain" hidden>SATA 3.0 runs at <strong>6 Gbps</strong>, about <strong>600 MB/s</strong> of real data, so ~550 MB/s is a healthy SATA SSD. Faster speeds need an <strong>M.2 NVMe</strong> SSD.</div>
+  </section>
+  <p class="quiz-score" data-quiz-score></p>
+
+  <details class="recall">
+    <summary>From memory: the two connectors on a SATA drive (pins, where they go), the three SATA speeds, and three ways eSATA differs from internal SATA. <span class="hint">(then click to check)</span></summary>
+    <p><strong>7-pin data</strong> to the motherboard, <strong>15-pin power</strong> (3.3/5/12 V) to the PSU. <strong>1.5, 3, 6 Gbps</strong> (SATA 1.0/2.0/3.0). eSATA: <strong>different, unkeyed plug</strong>; <strong>shielded, up to 2 m</strong> (internal 1 m); <strong>no power</strong> (eSATAp adds it).</p>
+  </details>
+
+  <h2>Review: earlier lessons</h2>
+  <p>Spaced retrieval: pull these from memory first, then check.</p>
+
+  <details class="recall">
+    <summary>A campus link must run 10 km between buildings on one fiber run. Single-mode or multimode, and what color is the jacket usually? <span class="hint">(<a href="0039-optical-fiber.html">lesson 0039</a>, 3 days ago)</span></summary>
+    <p><strong>Single-mode</strong>: narrow core, laser light, many kilometers without regenerating. Usually a <strong>yellow</strong> jacket. Multimode (orange or aqua) is for shorter runs, up to about 2 km.</p>
+  </details>
+
+  <details class="recall">
+    <summary>Employees use their own phones for work email. IT wants to protect company data in work apps without managing the whole phone. Which ownership model is this, and what kind of Intune policy fits? <span class="hint">(<a href="0028-mobile-device-management.html">lesson 0028</a>, 14 days ago)</span></summary>
+    <p><strong>BYOD</strong> (bring your own device). <strong>App protection policies</strong> (MAM) protect data inside the work apps, or a personally owned <strong>work profile</strong> partitions work from personal. COPE is the company-owned model.</p>
+  </details>
+
+  <details class="recall">
+    <summary>Which DNS record type points a name at another name instead of an IP address, and which one tells the world where to deliver a domain's email? <span class="hint">(<a href="0012-dns-records.html">lesson 0012</a>, 30 days ago)</span></summary>
+    <p><strong>CNAME</strong> points a name at another name (an alias). <strong>MX</strong> names the mail servers; the lowest preference number is tried first.</p>
+  </details>
+
+  <div class="callout source" id="src-messer">
+    <span class="label">Primary source: watch next</span>
+    <p>[1] Professor Messer, <a href="https://www.professormesser.com/free-a-plus-training/220-1201/220-1201-video/storage-cables-220-1201/">Storage Cables (220-1201, 3.2)</a>. Connecting drives with SATA and eSATA. Free.</p>
+    <p id="src-tl">[2] Tripp Lite (Eaton), <a href="https://tripplite.com/products/sata-cables-and-speeds-compared">SATA cables and speeds compared</a> (7-pin data, 15-pin power, revisions, eSATAp).</p>
+    <p id="src-quiz">[3] Professor Messer, <a href="https://www.professormesser.com/free-a-plus-training/a-plus-pop-quizzes/i-need-a-turbo-button-on-my-hard-drive/2/">A+ pop quiz on SATA and eSATA</a> (internal 1 m, eSATA about 2 m).</p>
+    <p id="src-toms">[4] Tom's Hardware, <a href="https://www.tomshardware.com/reviews/silicon-image-brings-virtualization-esata,1610-2.html">eSATA overview</a> (higher signal levels double the length to 2 m; passive adapters drop back to 1 m).</p>
+  </div>
+
+  <div class="callout ask">
+    <span class="label">Questions?</span>
+    <p>Anything unclear? Ask your teacher. Open Claude in the Teacher repo and ask, for example: <em>"In IT lesson 0042, can I hot-swap a SATA drive, and what's AHCI?"</em> Follow-up questions are part of the course.</p>
+  </div>
+</main>
+<nav class="page-footer">
+  <a href="0041-video-cables-hdmi-displayport-dvi-vga.html">← From analog to all-in-one: VGA, DVI, HDMI, DisplayPort and USB-C</a>
+  <a href="../../index.html">Hub</a>
+  <span class="disabled">Next lesson: tomorrow →</span>
+</nav>
+</body>
+</html>
