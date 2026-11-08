@@ -240,6 +240,22 @@
   </div>
   <p class="sidenote">SATA 3.0 ≈ 600 MB/s real throughput; faster SSDs use M.2 NVMe (no cable).</p>
 
+  <h2>Adapters and converters (objective 3.2)</h2>
+  <div class="table-wrap">
+  <table>
+    <thead><tr><th>From → to</th><th>Needs</th><th>Notes</th></tr></thead>
+    <tbody>
+      <tr><td>DVI ↔ HDMI</td><td>Passive adapter</td><td>Same digital video signal; DVI carries no audio</td></tr>
+      <tr><td>DVI-I → VGA</td><td>Passive adapter</td><td>DVI-I has analog pins</td></tr>
+      <tr><td>DVI-D / HDMI / DisplayPort → VGA</td><td>Active converter</td><td>Digital to analog; often USB-powered</td></tr>
+      <tr><td>USB → Ethernet</td><td>Adapter (is a NIC)</td><td>Own MAC address; USB 2.0 port caps it at 480 Mbps</td></tr>
+      <tr><td>USB-C → USB-A</td><td>Passive adapter</td><td>Runs at the slower side's USB version</td></tr>
+      <tr><td>USB hub</td><td>Bus- or self-powered</td><td>Bus-powered shares one port's ~500 mA (USB 2.0) / ~900 mA (USB 3.x); self-powered feeds each port fully</td></tr>
+    </tbody>
+  </table>
+  </div>
+  <p class="sidenote">Rule: same signal → passive adapter; different signal → active converter.</p>
+
   <h2>Commands (Windows)</h2>
   <div class="table-wrap">
   <table>
@@ -257,7 +273,7 @@
     </tbody>
   </table>
   </div>
-  <p class="sidenote">Sources: <a href="https://www.professormesser.com/free-a-plus-training/220-1201/220-1201-video/laptop-hardware-220-1201/">Professor Messer, Laptop Hardware</a> · <a href="https://learn.microsoft.com/en-us/windows/security/operating-system-security/data-protection/bitlocker/recovery-overview">Microsoft, BitLocker recovery overview</a> · <a href="https://learn.microsoft.com/en-us/powershell/module/bitlocker/suspend-bitlocker">Microsoft Learn, Suspend-BitLocker</a> · <a href="https://learn.microsoft.com/en-us/mem/intune/configuration/device-restrictions-configure">Microsoft Learn, Intune device restrictions</a> · <a href="https://learn.microsoft.com/en-us/powershell/module/pnpdevice/get-pnpdevice">Microsoft Learn, Get-PnpDevice</a> · <a href="https://www.professormesser.com/free-a-plus-training/220-1201/220-1201-video/connecting-mobile-devices-220-1201/">Professor Messer, Connecting Mobile Devices</a> · <a href="https://learn.microsoft.com/en-us/intune/device-configuration/templates/ref-device-restrictions-android-enterprise">Microsoft Learn, Android Enterprise restrictions</a> · <a href="https://www.professormesser.com/free-a-plus-training/220-1201/220-1201-video/network-cables-220-1201/">Professor Messer, Network Cables</a> · <a href="https://www.professormesser.com/free-a-plus-training/220-1201/220-1201-video/optical-fiber-220-1201/">Professor Messer, Optical Fiber</a> · <a href="https://www.professormesser.com/free-a-plus-training/220-1201/220-1201-video/peripheral-cables-220-1201/">Professor Messer, Peripheral Cables</a> · <a href="https://www.professormesser.com/free-a-plus-training/220-1201/220-1201-video/video-cables-220-1201/">Professor Messer, Video Cables</a> · <a href="https://www.howtogeek.com/217010/how-to-generate-a-battery-health-report-on-windows-8-or-windows-10/">How-To Geek, battery report</a></p>
+  <p class="sidenote">Sources: <a href="https://www.professormesser.com/free-a-plus-training/220-1201/220-1201-video/laptop-hardware-220-1201/">Professor Messer, Laptop Hardware</a> · <a href="https://learn.microsoft.com/en-us/windows/security/operating-system-security/data-protection/bitlocker/recovery-overview">Microsoft, BitLocker recovery overview</a> · <a href="https://learn.microsoft.com/en-us/powershell/module/bitlocker/suspend-bitlocker">Microsoft Learn, Suspend-BitLocker</a> · <a href="https://learn.microsoft.com/en-us/mem/intune/configuration/device-restrictions-configure">Microsoft Learn, Intune device restrictions</a> · <a href="https://learn.microsoft.com/en-us/powershell/module/pnpdevice/get-pnpdevice">Microsoft Learn, Get-PnpDevice</a> · <a href="https://www.professormesser.com/free-a-plus-training/220-1201/220-1201-video/connecting-mobile-devices-220-1201/">Professor Messer, Connecting Mobile Devices</a> · <a href="https://learn.microsoft.com/en-us/intune/device-configuration/templates/ref-device-restrictions-android-enterprise">Microsoft Learn, Android Enterprise restrictions</a> · <a href="https://www.professormesser.com/free-a-plus-training/220-1201/220-1201-video/network-cables-220-1201/">Professor Messer, Network Cables</a> · <a href="https://www.professormesser.com/free-a-plus-training/220-1201/220-1201-video/optical-fiber-220-1201/">Professor Messer, Optical Fiber</a> · <a href="https://www.professormesser.com/free-a-plus-training/220-1201/220-1201-video/peripheral-cables-220-1201/">Professor Messer, Peripheral Cables</a> · <a href="https://www.professormesser.com/free-a-plus-training/220-1201/220-1201-video/video-cables-220-1201/">Professor Messer, Video Cables</a> · <a href="https://www.professormesser.com/free-a-plus-training/220-1201/220-1201-video/adapters-and-converters-220-1201/">Professor Messer, Adapters and Converters</a> · <a href="https://www.howtogeek.com/217010/how-to-generate-a-battery-health-report-on-windows-8-or-windows-10/">How-To Geek, battery report</a></p>
 </main>
 </body>
 </html>

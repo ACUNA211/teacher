@@ -1,0 +1,171 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Adapters and Converters</title>
+<meta name="description" content="IT lesson 0044: A+ objective 3.2, adapters and converters. Passive adapter vs. active converter; DVI to HDMI, DVI to VGA; USB to Ethernet, USB-C to USB-A; bus-powered vs. self-powered USB hubs.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=JetBrains+Mono&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../assets/course.css">
+<script src="../../assets/quiz.js" defer></script>
+</head>
+<body class="track-it">
+<nav class="page-header">
+  <a class="home" href="../../index.html">Teacher hub</a>
+  <span>IT and certs</span>
+  <a href="../reference/glossary.html">Glossary</a>
+  <a href="../reference/hardware.html">Hardware cheat sheet</a>
+</nav>
+<main>
+  <p class="kicker">IT and certs · Lesson 0044 · A+ Core 1, objective 3.2</p>
+  <h1>When the plug doesn't fit: adapters and converters</h1>
+  <p class="lede">About 10 minutes. Last week you met the cables. In real life you rarely have exactly the right one, but you might have an <strong>adapter</strong> or <strong>converter</strong> that bridges the gap.<sup class="cite"><a href="#src-messer">[1]</a></sup> The win: look at two ports and know whether a cheap passive adapter will do, or whether you need something that actively changes the signal.</p>
+
+  <div class="callout">
+    <span class="label">Why this matters at work</span>
+    <p>Thin laptops have no Ethernet port, so users plug in a <strong>USB-to-Ethernet adapter</strong> or a dock. That adapter is its own network card with <strong>its own MAC address</strong>. Anything keyed to a MAC (a DHCP reservation, a MAC allowlist on the network) follows the adapter, not the laptop: swap adapters and the "known device" suddenly looks new.</p>
+  </div>
+
+  <h2>1. Adapter or converter?</h2>
+  <div class="table-wrap">
+  <table>
+    <thead><tr><th></th><th>Adapter (passive)</th><th>Converter (active)</th></tr></thead>
+    <tbody>
+      <tr><td><strong>What it does</strong></td><td>Rewires one connector shape to another. The signal passes through unchanged.</td><td>Has a chip that <strong>changes the signal</strong>, e.g. digital to analog.</td></tr>
+      <tr><td><strong>Works when</strong></td><td>Both sides already speak the same signal.</td><td>The two sides speak different signals.</td></tr>
+      <tr><td><strong>Power</strong></td><td>None needed.<sup class="cite"><a href="#src-st">[2]</a></sup></td><td>Often draws power (USB or its own supply).</td></tr>
+    </tbody>
+  </table>
+  </div>
+  <p>So the question is never "does it fit?" but "<strong>is the same signal on both sides?</strong>"</p>
+
+  <h2>2. Video: DVI to HDMI, DVI to VGA</h2>
+  <p>Recall from <a href="0041-video-cables-hdmi-displayport-dvi-vga.html">lesson 0041</a>: DVI-D is digital only, DVI-A analog only, DVI-I both; HDMI is digital; VGA is analog.</p>
+  <ul>
+    <li><strong>DVI ↔ HDMI: passive adapter works.</strong> Both use the same digital video signaling (TMDS). Catch: DVI carries <strong>no audio</strong>, so sound has to travel another way.<sup class="cite"><a href="#src-vt">[3]</a></sup></li>
+    <li><strong>DVI-I → VGA: passive adapter works.</strong> DVI-I has analog pins, and the adapter just routes them to the VGA plug.<sup class="cite"><a href="#src-st">[2]</a></sup></li>
+    <li><strong>DVI-D → VGA: needs an active converter.</strong> DVI-D has no analog pins at all, so a passive dongle has nothing to pass on.<sup class="cite"><a href="#src-st">[2]</a></sup><sup class="cite"><a href="#src-tl">[4]</a></sup> Same rule for HDMI or DisplayPort to VGA: digital to analog always takes a converter.</li>
+  </ul>
+
+  <h2>3. USB: Ethernet, USB-C to USB-A, and hubs</h2>
+  <ul>
+    <li><strong>USB to Ethernet</strong>: an RJ45 port on a stick. Windows sees a new network adapter with its own MAC. Its speed is capped by the USB port: USB 2.0 tops out at 480 Mbps (<a href="0040-peripheral-cables-usb-thunderbolt-serial.html">lesson 0040</a>), so a gigabit adapter needs a USB 3.x port to reach gigabit.</li>
+    <li><strong>USB-C to USB-A</strong>: lets an older USB-A device (flash drive, receiver) plug into a USB-C-only laptop. The link runs at the slower side's USB version.</li>
+    <li><strong>USB hub</strong>: turns one port into several, all sharing that port's bandwidth and power.<sup class="cite"><a href="#src-messer">[1]</a></sup>
+      <ul>
+        <li><strong>Bus-powered</strong> (no power brick): all ports share what one host port gives, about 500 mA on USB 2.0 or 900 mA on USB 3.x. Fine for a keyboard and mouse.<sup class="cite"><a href="#src-hub">[5]</a></sup></li>
+        <li><strong>Self-powered</strong> (own power supply): can give each port its full allowance. Use it for external drives and other hungry devices.<sup class="cite"><a href="#src-hub">[5]</a></sup></li>
+      </ul>
+    </li>
+  </ul>
+
+  <div class="callout win">
+    <span class="label">Memory hook</span>
+    <p><strong>Same signal → passive adapter. Different signal → active converter.</strong> DVI↔HDMI passive (no audio). DVI-I→VGA passive, DVI-D→VGA converter. <strong>USB-Ethernet = new NIC, new MAC.</strong> <strong>Hungry devices → self-powered hub.</strong></p>
+  </div>
+
+  <h2>Try it (2 minutes)</h2>
+  <ol>
+    <li>In PowerShell, list your network adapters and their MAC addresses:
+      <pre><code>Get-NetAdapter | Format-Table Name, InterfaceDescription, Status, LinkSpeed, MacAddress</code></pre>
+      A USB or dock Ethernet adapter usually has "USB" in its <strong>InterfaceDescription</strong>. If you have one, plug it in and run the command again: a new row appears with a different MAC from the built-in Wi-Fi card.</li>
+  </ol>
+  <details class="recall">
+    <summary>A projector has only a VGA input. The laptop has only HDMI. Will a cheap passive HDMI-to-VGA plug work? <span class="hint">(then click to check)</span></summary>
+    <p><strong>No.</strong> HDMI is digital and VGA is analog, so the signal must be changed. You need an <strong>active converter</strong> (the ones sold as "HDMI to VGA" have a chip inside, often with USB power).</p>
+  </details>
+
+  <h2>Practice</h2>
+  <p>Answer from memory before scrolling back up.</p>
+
+  <section class="quiz">
+    <p class="q">A graphics card has only a DVI-D port. The monitor has only VGA. A passive DVI-to-VGA dongle gives a black screen. Why?</p>
+    <ul class="choices">
+      <li><button class="choice">The dongle needs a USB driver installed</button></li>
+      <li><button class="choice" data-correct>DVI-D carries no analog signal to pass</button></li>
+      <li><button class="choice">VGA monitors cannot show above 1080p</button></li>
+      <li><button class="choice">The VGA cable is longer than allowed</button></li>
+    </ul>
+    <div class="explain" hidden>A passive adapter only reroutes pins. <strong>DVI-D</strong> is digital only, so there are no analog pins to route to VGA. It needs an <strong>active converter</strong>. A DVI-I port would have worked with the passive dongle.</div>
+  </section>
+
+  <section class="quiz">
+    <p class="q">A PC connects to a TV with a passive DVI-to-HDMI adapter. The picture is perfect, but the TV speakers are silent. What's the most likely reason?</p>
+    <ul class="choices">
+      <li><button class="choice">The adapter is converting digital to analog</button></li>
+      <li><button class="choice">HDMI cables never carry sound to TVs</button></li>
+      <li><button class="choice">The TV needs a self-powered USB hub</button></li>
+      <li><button class="choice" data-correct>DVI carries video only, never any audio</button></li>
+    </ul>
+    <div class="explain" hidden>DVI and HDMI share the same digital video signal, so the picture passes through. But <strong>DVI has no audio</strong>, so sound needs another path (a separate audio cable, or a direct HDMI connection).</div>
+  </section>
+
+  <section class="quiz">
+    <p class="q">A user plugs a portable hard drive into a small USB hub that has no power supply. The drive clicks and keeps disconnecting. What's the best fix?</p>
+    <ul class="choices">
+      <li><button class="choice" data-correct>Use a self-powered hub with its own supply</button></li>
+      <li><button class="choice">Replace the hub with a passive HDMI adapter</button></li>
+      <li><button class="choice">Add a USB-C to USB-A adapter in between</button></li>
+      <li><button class="choice">Reformat the drive and plug it back in</button></li>
+    </ul>
+    <div class="explain" hidden>A <strong>bus-powered</strong> hub shares one port's power (about 500 mA on USB 2.0, 900 mA on USB 3.x) across all its devices. A hard drive can need more. A <strong>self-powered</strong> hub has its own supply and can feed each port fully.</div>
+  </section>
+
+  <section class="quiz">
+    <p class="q">A thin laptop uses a gigabit USB-to-Ethernet adapter, but the link only reaches about 300 Mbps in tests. The adapter is in a USB 2.0 port. What's the cause?</p>
+    <ul class="choices">
+      <li><button class="choice">The adapter changes the MAC on every boot</button></li>
+      <li><button class="choice">Ethernet adapters must use passive DVI cables</button></li>
+      <li><button class="choice" data-correct>USB 2.0 caps everything at 480 Mbps</button></li>
+      <li><button class="choice">Gigabit speed needs a self-powered USB hub</button></li>
+    </ul>
+    <div class="explain" hidden>The adapter can't go faster than the port it's in. <strong>USB 2.0</strong> is 480 Mbps on paper and less in practice. Move it to a <strong>USB 3.x</strong> port (5 Gbps or more) to reach gigabit.</div>
+  </section>
+  <p class="quiz-score" data-quiz-score></p>
+
+  <details class="recall">
+    <summary>From memory: the difference between an adapter and a converter, the three DVI cases (to HDMI, DVI-I to VGA, DVI-D to VGA), and the two kinds of USB hub. <span class="hint">(then click to check)</span></summary>
+    <p><strong>Adapter</strong>: passive, same signal, new shape. <strong>Converter</strong>: active chip, changes the signal. DVI→HDMI <strong>passive</strong> (no audio); DVI-I→VGA <strong>passive</strong> (analog pins); DVI-D→VGA <strong>active converter</strong>. Hubs: <strong>bus-powered</strong> (share one port's power) and <strong>self-powered</strong> (own supply, full power per port).</p>
+  </details>
+
+  <h2>Review: earlier lessons</h2>
+  <p>Spaced retrieval: pull these from memory first, then check.</p>
+
+  <details class="recall">
+    <summary>Of VGA, DVI-D, HDMI and DisplayPort, which one is analog only, and which two also carry audio? <span class="hint">(<a href="0041-video-cables-hdmi-displayport-dvi-vga.html">lesson 0041</a>, 3 days ago)</span></summary>
+    <p><strong>VGA</strong> is analog only (and video only). <strong>HDMI</strong> and <strong>DisplayPort</strong> carry digital video <em>and</em> audio. DVI-D is digital video with no audio.</p>
+  </details>
+
+  <details class="recall">
+    <summary>A cable has to run through the air-handling space above a drop ceiling. What kind of jacket is required, and why? <span class="hint">(<a href="0037-network-cables-twisted-pair.html">lesson 0037</a>, 7 days ago)</span></summary>
+    <p><strong>Plenum-rated</strong> cable (CMP). Its fire-retardant jacket (e.g. FEP or low-smoke PVC) gives off less smoke and fumes in a fire than ordinary PVC, which matters where air is circulated through the building. Trade-off: it's stiffer and costs more.</p>
+  </details>
+
+  <details class="recall">
+    <summary>Name two reasons from the A+ objectives to run a virtual machine, and what happens to your files when you close Windows Sandbox. <span class="hint">(<a href="0030-virtualization-concepts.html">lesson 0030</a>, 14 days ago)</span></summary>
+    <p>Any two of: <strong>sandboxing</strong>, <strong>developing/testing software</strong>, <strong>legacy software</strong>, <strong>cross-platform</strong>. Windows Sandbox discards <strong>everything</strong> when it closes: nothing persists.</p>
+  </details>
+
+  <div class="callout source" id="src-messer">
+    <span class="label">Primary source: watch next</span>
+    <p>[1] Professor Messer, <a href="https://www.professormesser.com/free-a-plus-training/220-1201/220-1201-video/adapters-and-converters-220-1201/">Adapters and Converters (220-1201, 3.2)</a>. DVI to HDMI, DVI to VGA, USB to Ethernet, USB-C to USB-A, USB hubs. Free.</p>
+    <p id="src-st">[2] StarTech.com, <a href="https://sites.salsify.com/a66ecb41-0968-46ba-ab75-8fa57c69fcf9/cff3b26b-d5f9-47a0-8967-69e2c4121eac/en-US/product/DVIVGAFM/DVI-to-VGA-Display-Adapter-F-M/">DVI to VGA display adapter</a> (passive, no power or driver; needs an analog DVI-I source, not DVI-D).</p>
+    <p id="src-vt">[3] VisionTek, <a href="https://deploydepot.ca/products/visiontek-dvi-male-to-hdmi-female-adapter-900665">DVI to HDMI adapter</a> (shared digital video signal; audio not supported over DVI).</p>
+    <p id="src-tl">[4] Tripp Lite (Eaton), <a href="https://www.markertek.com/product/trl-p120-06n-act/tripp-lite-p120-06n-act-dvi-d-to-vga-active-adapter-converter-cable-1920x1200-6-inch">DVI-D to VGA active converter</a> (digital-only sources need an active converter).</p>
+    <p id="src-hub">[5] Wikipedia, <a href="https://en.wikipedia.org/wiki/USB_hub">USB hub</a> (bus-powered vs. self-powered hubs and their power budgets).</p>
+  </div>
+
+  <div class="callout ask">
+    <span class="label">Questions?</span>
+    <p>Anything unclear? Ask your teacher. Open Claude in the Teacher repo and ask, for example: <em>"In IT lesson 0044, how is a USB-C dock different from a simple USB hub?"</em> Follow-up questions are part of the course.</p>
+  </div>
+</main>
+<nav class="page-footer">
+  <a href="0043-week-quiz-2026-11-07.html">← Weekly quiz: Nov 1 – Nov 6</a>
+  <a href="../../index.html">Hub</a>
+  <span class="disabled">Next lesson: tomorrow →</span>
+</nav>
+</body>
+</html>
