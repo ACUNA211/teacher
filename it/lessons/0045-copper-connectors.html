@@ -1,0 +1,159 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Copper Connectors</title>
+<meta name="description" content="IT lesson 0045: A+ objective 3.2, copper connectors. RJ11 vs. RJ45, the F connector, punchdown blocks, Molex power, and a quick recap of USB, USB-C, Lightning and DB-9.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=JetBrains+Mono&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../assets/course.css">
+<script src="../../assets/quiz.js" defer></script>
+</head>
+<body class="track-it">
+<nav class="page-header">
+  <a class="home" href="../../index.html">Teacher hub</a>
+  <span>IT and certs</span>
+  <a href="../reference/glossary.html">Glossary</a>
+  <a href="../reference/hardware.html">Hardware cheat sheet</a>
+</nav>
+<main>
+  <p class="kicker">IT and certs · Lesson 0045 · A+ Core 1, objective 3.2</p>
+  <h1>Name that plug: copper connectors</h1>
+  <p class="lede">About 10 minutes. You've met the cables; now the ends. The A+ exam shows you a connector and expects a name and a job.<sup class="cite"><a href="#src-messer">[1]</a></sup> Four are new today (RJ11, F connector, punchdown block, Molex) and four you already know (USB, USB-C, Lightning, DB-9). The win: walk up to a wall plate, a modem or the inside of a PC and name every copper plug you see.</p>
+
+  <div class="callout">
+    <span class="label">Why this matters at work</span>
+    <p>"The network is down" sometimes means the laptop's Ethernet cable is in the <strong>phone jack</strong>. An RJ11 plug can sit in an RJ45 port and an RJ45 plug looks almost right next to a phone jack, so a quick look at the plug saves a long remote session.<sup class="cite"><a href="#src-rj">[2]</a></sup></p>
+  </div>
+
+  <h2>1. The new four</h2>
+  <div class="table-wrap">
+  <table>
+    <thead><tr><th>Connector</th><th>Looks like</th><th>Used for</th></tr></thead>
+    <tbody>
+      <tr><td><strong>RJ11</strong></td><td>Small clip plug, 6 positions, usually 2 or 4 wires (6P2C / 6P4C)</td><td>Telephone lines and <strong>DSL</strong><sup class="cite"><a href="#src-messer">[1]</a></sup><sup class="cite"><a href="#src-rj">[2]</a></sup></td></tr>
+      <tr><td><strong>RJ45</strong></td><td>Wider clip plug, 8 positions, 8 wires (8P8C)</td><td><strong>Ethernet</strong> on twisted pair (<a href="0038-568a-568b-colors.html">lesson 0038</a>)</td></tr>
+      <tr><td><strong>F connector</strong></td><td><strong>Threaded</strong> round coax plug with a center wire</td><td>Cable TV and the <strong>cable modem</strong> (<a href="0021-poe-modems-ont-nic.html">lesson 0021</a>), usually on RG-6 coax<sup class="cite"><a href="#src-messer">[1]</a></sup><sup class="cite"><a href="#src-f">[3]</a></sup></td></tr>
+      <tr><td><strong>Punchdown block</strong></td><td>A row of slots in the wiring closet; each wire is pressed in with a punchdown tool (<a href="0019-network-tools.html">lesson 0019</a>)</td><td>Terminating the permanent cable runs from desks. <strong>110</strong> blocks are the common data type; <strong>66</strong> blocks are older, for phones.</td></tr>
+      <tr><td><strong>Molex</strong></td><td>Chunky 4-pin internal <strong>power</strong> plug, no latch</td><td>Older drives and fans. Yellow = <strong>12 V</strong>, red = <strong>5 V</strong>, two black grounds. No 3.3 V; SATA power has largely replaced it (<a href="0042-storage-cables-sata-esata.html">lesson 0042</a>).<sup class="cite"><a href="#src-molex">[4]</a></sup></td></tr>
+    </tbody>
+  </table>
+  </div>
+  <p>Molex is the company that made the connector; the name stuck to the plug.<sup class="cite"><a href="#src-messer">[1]</a></sup></p>
+
+  <h2>2. The familiar four (quick recap)</h2>
+  <ul>
+    <li><strong>USB (Type-A, Type-B, Micro, Mini)</strong>: the rectangular host plug and its smaller device-side cousins (<a href="0040-peripheral-cables-usb-thunderbolt-serial.html">lesson 0040</a>).</li>
+    <li><strong>USB-C</strong>: 24 pins, <strong>reversible</strong>; also carries Thunderbolt and DisplayPort video (<a href="0025-connecting-mobile-devices.html">lesson 0025</a>, <a href="0041-video-cables-hdmi-displayport-dvi-vga.html">lesson 0041</a>).</li>
+    <li><strong>Lightning</strong>: Apple's 8-pin <strong>reversible</strong> plug on older iPhones; newer iPhones moved to USB-C (<a href="0025-connecting-mobile-devices.html">lesson 0025</a>).</li>
+    <li><strong>DB-9</strong>: the 9-pin D-shaped <strong>serial</strong> (RS-232) plug, still found on switch and router console ports (<a href="0040-peripheral-cables-usb-thunderbolt-serial.html">lesson 0040</a>).</li>
+  </ul>
+
+  <div class="callout win">
+    <span class="label">Memory hook</span>
+    <p><strong>RJ11 = 1 phone line, small. RJ45 = Ethernet, wide.</strong> <strong>F screws on</strong> (coax, cable modem). <strong>Punchdown = closet, no plug at all.</strong> <strong>Molex = yellow 12, red 5.</strong></p>
+  </div>
+
+  <h2>Try it (2 minutes)</h2>
+  <ol>
+    <li>Look behind your desk, your home router or a PC. For each copper plug, say its name and what it carries: RJ45 (Ethernet), RJ11 (phone/DSL), F (coax from the provider), USB-C, and so on.</li>
+    <li>If you have a cable modem, find the F connector: it's the one marked <strong>Cable</strong> or <strong>RF In</strong>. Hand-tight is enough; it screws on so it can't be tugged loose.<sup class="cite"><a href="#src-f">[3]</a></sup></li>
+  </ol>
+  <details class="recall">
+    <summary>Someone shows you a plug with eight gold contacts and a clip, about the width of a finger. What is it, and where else could you see eight contacts? <span class="hint">(then click to check)</span></summary>
+    <p>An <strong>RJ45</strong> (8P8C) Ethernet plug. RJ11 has the same clip shape but is <strong>narrower</strong>, with 6 positions and usually only 2 or 4 contacts wired. (Lightning also has 8 contacts, but it's a small flat reversible tongue, not a clip plug.)</p>
+  </details>
+
+  <h2>Practice</h2>
+  <p>Answer from memory before scrolling back up.</p>
+
+  <section class="quiz">
+    <p class="q">A home user with DSL service says the internet stopped after moving furniture. The modem's power and Ethernet look fine. Which cable should you check next?</p>
+    <ul class="choices">
+      <li><button class="choice">The threaded F connector to the coax</button></li>
+      <li><button class="choice">The Molex power plug inside the PC</button></li>
+      <li><button class="choice" data-correct>The RJ11 cord to the phone jack</button></li>
+      <li><button class="choice">The DB-9 serial cable to the router</button></li>
+    </ul>
+    <div class="explain" hidden><strong>DSL</strong> runs over phone lines, so the modem connects to the wall with an <strong>RJ11</strong> cord. The F connector is for <strong>cable</strong> (coax) service, not DSL.</div>
+  </section>
+
+  <section class="quiz">
+    <p class="q">A technician is connecting a cable modem to the provider's line. Which connector screws onto the modem's input?</p>
+    <ul class="choices">
+      <li><button class="choice" data-correct>An F connector on coaxial cable</button></li>
+      <li><button class="choice">An RJ45 connector on twisted pair</button></li>
+      <li><button class="choice">A Lightning connector on USB cable</button></li>
+      <li><button class="choice">A 110 punchdown block on fiber</button></li>
+    </ul>
+    <div class="explain" hidden>Cable internet arrives on <strong>coax</strong>, and coax ends in a <strong>threaded F connector</strong>. RJ45 is on the other side of the modem, toward your network.</div>
+  </section>
+
+  <section class="quiz">
+    <p class="q">An old optical drive in a desktop has a 4-pin power socket with no latch. Which voltages does that plug deliver?</p>
+    <ul class="choices">
+      <li><button class="choice">3.3 V and 5 V on two red wires</button></li>
+      <li><button class="choice">12 V only, through the yellow wire</button></li>
+      <li><button class="choice">5 V and 3.3 V through four black wires</button></li>
+      <li><button class="choice" data-correct>12 V on yellow, 5 V on red</button></li>
+    </ul>
+    <div class="explain" hidden>That's a <strong>Molex</strong> peripheral connector: <strong>yellow 12 V</strong>, <strong>red 5 V</strong>, two black grounds. It has <strong>no 3.3 V</strong>, one reason SATA power replaced it.</div>
+  </section>
+
+  <section class="quiz">
+    <p class="q">New desk jacks are being installed. In the wiring closet, the other end of each cable run is pressed into a row of slots with a tool. What is that row called?</p>
+    <ul class="choices">
+      <li><button class="choice">An F connector coupler plate</button></li>
+      <li><button class="choice" data-correct>A punchdown block, often 110</button></li>
+      <li><button class="choice">A DB-9 serial console port</button></li>
+      <li><button class="choice">A Molex power distribution strip</button></li>
+    </ul>
+    <div class="explain" hidden>A <strong>punchdown block</strong> terminates permanent runs without a plug: each wire is punched into a slot. <strong>110</strong> blocks are the usual type for data; 66 blocks are older, for phones. Often it's built into the back of a patch panel (<a href="0020-network-devices-switch-router-ap.html">lesson 0020</a>).</div>
+  </section>
+  <p class="quiz-score" data-quiz-score></p>
+
+  <details class="recall">
+    <summary>From memory: name the eight copper connectors from today and one job for each. <span class="hint">(then click to check)</span></summary>
+    <p><strong>RJ11</strong> phone/DSL · <strong>RJ45</strong> Ethernet · <strong>F</strong> coax, cable modem · <strong>punchdown block</strong> closet termination · <strong>Molex</strong> internal 12/5 V power · <strong>USB</strong> peripherals · <strong>USB-C</strong> reversible data, power and video · <strong>Lightning</strong> older iPhones · <strong>DB-9</strong> serial console.</p>
+  </details>
+
+  <h2>Review: earlier lessons</h2>
+  <p>Spaced retrieval: pull these from memory first, then check.</p>
+
+  <details class="recall">
+    <summary>How long can an internal SATA cable be, and how long an eSATA cable? Can you swap them? <span class="hint">(<a href="0042-storage-cables-sata-esata.html">lesson 0042</a>, 3 days ago)</span></summary>
+    <p>Internal SATA: up to <strong>1 m</strong>. eSATA: about <strong>2 m</strong> (stronger signal, shielded). They are <strong>not interchangeable</strong>: the plugs are shaped differently.</p>
+  </details>
+
+  <details class="recall">
+    <summary>What's the only difference between T568A and T568B, and when do you get a crossover cable? <span class="hint">(<a href="0038-568a-568b-colors.html">lesson 0038</a>, 7 days ago)</span></summary>
+    <p>The <strong>orange and green pairs swap</strong> places. Same standard on both ends = <strong>straight-through</strong>; A on one end and B on the other = <strong>crossover</strong>. Auto-MDIX on modern ports makes crossovers rarely needed.</p>
+  </details>
+
+  <details class="recall">
+    <summary>Type 1 vs. type 2 hypervisor: which runs on bare metal, and which kind is VirtualBox on a laptop? <span class="hint">(<a href="0031-virtualization-services.html">lesson 0031</a>, 14 days ago)</span></summary>
+    <p><strong>Type 1</strong> (native / bare metal) runs directly on the hardware, e.g. Hyper-V, ESXi. <strong>Type 2</strong> (hosted) runs as an app on top of an OS, like VirtualBox on a laptop.</p>
+  </details>
+
+  <div class="callout source" id="src-messer">
+    <span class="label">Primary source: watch next</span>
+    <p>[1] Professor Messer, <a href="https://www.professormesser.com/free-a-plus-training/220-1201/220-1201-video/copper-connectors-220-1201/">Copper Connectors (220-1201, 3.2)</a>. RJ11, RJ45, F connector, punchdown block, USB, USB-C, Molex, Lightning, DB-9. Free.</p>
+    <p id="src-rj">[2] L-com, <a href="https://resources.l-p.com/knowledge-center/difference-between-rj11-and-rj45">Difference between RJ11 and RJ45</a> (6P2C/6P4C phone vs. 8P8C Ethernet).</p>
+    <p id="src-f">[3] Wikipedia, <a href="https://en.wikipedia.org/wiki/F_connector">F connector</a> (threaded coax connector for cable TV, satellite and cable modems, usually RG-6).</p>
+    <p id="src-molex">[4] Wikipedia, <a href="https://en.wikipedia.org/wiki/Molex_connector">Molex connector</a> (4-pin peripheral pinout: yellow 12 V, red 5 V, two grounds; no 3.3 V; replaced by SATA power).</p>
+  </div>
+
+  <div class="callout ask">
+    <span class="label">Questions?</span>
+    <p>Anything unclear? Ask your teacher. Open Claude in the Teacher repo and ask, for example: <em>"In IT lesson 0045, why does a phone plug fit an Ethernet port but not work?"</em> Follow-up questions are part of the course.</p>
+  </div>
+</main>
+<nav class="page-footer">
+  <a href="0044-adapters-and-converters.html">← When the plug doesn't fit: adapters and converters</a>
+  <a href="../../index.html">Hub</a>
+  <span class="disabled">Next lesson: tomorrow →</span>
+</nav>
+</body>
+</html>
