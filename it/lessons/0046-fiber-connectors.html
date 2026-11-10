@@ -1,0 +1,161 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Fiber Connectors</title>
+<meta name="description" content="IT lesson 0046: A+ objective 3.2, fiber connectors. ST, SC and LC: how each one looks, locks and where you'll meet it, plus the blue vs. green polish colors.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=JetBrains+Mono&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../assets/course.css">
+<script src="../../assets/quiz.js" defer></script>
+</head>
+<body class="track-it">
+<nav class="page-header">
+  <a class="home" href="../../index.html">Teacher hub</a>
+  <span>IT and certs</span>
+  <a href="../reference/glossary.html">Glossary</a>
+  <a href="../reference/hardware.html">Hardware cheat sheet</a>
+</nav>
+<main>
+  <p class="kicker">IT and certs · Lesson 0046 · A+ Core 1, objective 3.2</p>
+  <h1>Twist, push, click: fiber connectors</h1>
+  <p class="lede">About 10 minutes. Yesterday's connectors were copper; today's end a glass fiber (<a href="0039-optical-fiber.html">lesson 0039</a>). The exam names three: <strong>ST</strong>, <strong>SC</strong> and <strong>LC</strong>.<sup class="cite"><a href="#src-messer">[1]</a></sup> The win: tell them apart by <strong>how they lock</strong> and <strong>how big they are</strong>, and know which one plugs into a switch's fiber port.</p>
+
+  <div class="callout">
+    <span class="label">Why this matters at work</span>
+    <p>When a fiber link between two switches or to the provider's box needs a new patch cable, you have to order the right ends. A cable with <strong>LC on one end and SC on the other</strong> is common and cheap, but only if you checked both ports first. The wrong ends mean the link waits days for a reorder.</p>
+  </div>
+
+  <h2>1. The three connectors</h2>
+  <div class="table-wrap">
+  <table>
+    <thead><tr><th>Connector</th><th>Shape and lock</th><th>Where you'll see it</th></tr></thead>
+    <tbody>
+      <tr><td><strong>ST</strong> (straight tip)</td><td>Round metal barrel; <strong>bayonet</strong> lock: push in and <strong>twist</strong> a quarter turn, untwist to remove. 2.5 mm ferrule.<sup class="cite"><a href="#src-messer1101">[2]</a></sup><sup class="cite"><a href="#src-arrow">[3]</a></sup></td><td>Older multimode networks and patch panels; legacy gear.</td></tr>
+      <tr><td><strong>SC</strong> (subscriber / square connector)</td><td><strong>Square</strong> plastic body; <strong>push-pull</strong>: snaps in straight, pulls straight out. 2.5 mm ferrule.<sup class="cite"><a href="#src-messer1101">[2]</a></sup><sup class="cite"><a href="#src-arrow">[3]</a></sup></td><td>Provider fiber and the home or office <strong>ONT</strong> (<a href="0021-poe-modems-ont-nic.html">lesson 0021</a>), older switch ports.</td></tr>
+      <tr><td><strong>LC</strong> (local / Lucent connector)</td><td><strong>Small</strong>, about half the size of SC; <strong>latch clip</strong> on top like an RJ45. 1.25 mm ferrule. Usually two side by side (<strong>duplex</strong>).<sup class="cite"><a href="#src-messer1101">[2]</a></sup><sup class="cite"><a href="#src-arrow">[3]</a></sup></td><td>Today's switches, servers and <strong>SFP transceivers</strong>; dense patch panels.</td></tr>
+    </tbody>
+  </table>
+  </div>
+  <p>The <strong>ferrule</strong> is the thin ceramic tube in the tip that holds the fiber dead center, so two cores line up face to face. LC's smaller ferrule is why it fits twice as many ports in the same space.<sup class="cite"><a href="#src-arrow">[3]</a></sup></p>
+
+  <h2>2. Two fibers, one conversation</h2>
+  <p>Light goes one way down a strand, so a normal link uses <strong>two fibers: one transmit, one receive</strong>.<sup class="cite"><a href="#src-messer1101">[2]</a></sup> That's why LC usually comes as a clipped-together pair. If a new link stays dark, one classic cause is the pair landing <strong>swapped</strong> (transmit into transmit). Many duplex connectors let you flip the pair without re-terminating.</p>
+
+  <h2>3. Colors on the connector body</h2>
+  <ul>
+    <li><strong>Blue</strong> body: single-mode, <strong>UPC</strong> polish (flat-domed tip).</li>
+    <li><strong>Green</strong> body: single-mode, <strong>APC</strong> polish (tip angled at 8°), common on provider fiber and ONTs.</li>
+    <li><strong>Beige</strong> body: often multimode.</li>
+  </ul>
+  <p>Never mate a green APC plug with a blue UPC port: the angled and flat faces don't meet, the link loses light, and the tips can be damaged. Match the color of the plug to the port.<sup class="cite"><a href="#src-color">[4]</a></sup> (The cable jacket colors from <a href="0039-optical-fiber.html">lesson 0039</a> are a different code: yellow single-mode, orange or aqua multimode.)</p>
+
+  <div class="callout win">
+    <span class="label">Memory hook</span>
+    <p><strong>ST = Stick and Twist</strong> (bayonet). <strong>SC = Stick and Click</strong> (square, push-pull). <strong>LC = Little Connector</strong> (half size, latch, in pairs).</p>
+  </div>
+
+  <h2>Try it (2 minutes)</h2>
+  <ol>
+    <li>If you have fiber internet, look at where the provider's fiber enters the ONT (don't unplug it). Square body? That's <strong>SC</strong>. Green? <strong>APC</strong> polish.</li>
+    <li>At work, look at a switch with fiber uplinks (or a photo of one). The small removable modules are <strong>SFP</strong> transceivers, and the paired plugs in them are <strong>duplex LC</strong>.</li>
+    <li>Safety rule from <a href="0039-optical-fiber.html">lesson 0039</a>: never look into a fiber end or port, and put the dust caps back on.</li>
+  </ol>
+  <details class="recall">
+    <summary>A connector is square, snaps in without twisting, and is about twice the size of the plugs next to it on the switch. Which one is it, and which ones are the small plugs? <span class="hint">(then click to check)</span></summary>
+    <p>The square push-pull one is <strong>SC</strong>. The smaller latch-clip plugs are <strong>LC</strong>, half the size thanks to a 1.25 mm ferrule instead of 2.5 mm.</p>
+  </details>
+
+  <h2>Practice</h2>
+  <p>Answer from memory before scrolling back up.</p>
+
+  <section class="quiz">
+    <p class="q">In an old wiring closet you find a round metal fiber connector that only comes out after a quarter turn. What is it?</p>
+    <ul class="choices">
+      <li><button class="choice">An LC with a latch clip</button></li>
+      <li><button class="choice" data-correct>An ST with a bayonet lock</button></li>
+      <li><button class="choice">An SC with a push-pull body</button></li>
+      <li><button class="choice">An F connector on coax cable</button></li>
+    </ul>
+    <div class="explain" hidden><strong>ST</strong> (straight tip) uses a <strong>bayonet</strong> coupling: push and twist to lock, untwist to release. SC and LC go straight in and out; the F connector screws on but carries copper coax (<a href="0045-copper-connectors.html">lesson 0045</a>).</div>
+  </section>
+
+  <section class="quiz">
+    <p class="q">A switch has a row of small removable fiber modules, each with two tiny plugs clipped together. Which connector is in them?</p>
+    <ul class="choices">
+      <li><button class="choice">Simplex ST, one per module</button></li>
+      <li><button class="choice">Duplex SC, square and large</button></li>
+      <li><button class="choice">Single RJ45, eight copper pins</button></li>
+      <li><button class="choice" data-correct>Duplex LC, small with latches</button></li>
+    </ul>
+    <div class="explain" hidden>The modules are SFP transceivers, and those almost always take <strong>duplex LC</strong>: small (1.25 mm ferrule), latch clip, one fiber to transmit and one to receive.</div>
+  </section>
+
+  <section class="quiz">
+    <p class="q">A new fiber link between two switches stays dark. Both ends have LC plugs seated firmly and the cable tests good. What's a likely cause?</p>
+    <ul class="choices">
+      <li><button class="choice" data-correct>Transmit and receive fibers are swapped</button></li>
+      <li><button class="choice">The LC needs twisting to lock</button></li>
+      <li><button class="choice">The plugs need Molex power leads</button></li>
+      <li><button class="choice">Fiber only works with ST connectors</button></li>
+    </ul>
+    <div class="explain" hidden>A duplex link needs one end's <strong>transmit</strong> to reach the other end's <strong>receive</strong>. If the pair is crossed the wrong way, no light arrives where it's expected. Flipping the pair at one end is the usual fix. LC locks with a latch, not a twist.</div>
+  </section>
+
+  <section class="quiz">
+    <p class="q">A technician has a patch cable with green SC plugs. The ONT's port is green too. What does the green tell them?</p>
+    <ul class="choices">
+      <li><button class="choice">Multimode fiber with a short range</button></li>
+      <li><button class="choice">Copper coax that carries cable TV</button></li>
+      <li><button class="choice" data-correct>Angled APC polish; the match fits</button></li>
+      <li><button class="choice">Flat UPC polish; swap to blue</button></li>
+    </ul>
+    <div class="explain" hidden>Green marks <strong>APC</strong> (angled, 8°) polish, common on provider fiber. Blue is UPC. Green plug into green port is correct; mixing APC and UPC loses light and can damage the tips.</div>
+  </section>
+  <p class="quiz-score" data-quiz-score></p>
+
+  <details class="recall">
+    <summary>From memory: for ST, SC and LC, give the lock type and one place you'd find each. <span class="hint">(then click to check)</span></summary>
+    <p><strong>ST</strong> bayonet twist, older multimode panels · <strong>SC</strong> square push-pull, provider fiber and ONTs · <strong>LC</strong> small latch, in duplex pairs, SFP modules in switches.</p>
+  </details>
+
+  <h2>Review: earlier lessons</h2>
+  <p>Spaced retrieval: pull these from memory first, then check.</p>
+
+  <details class="recall">
+    <summary>A DSL modem and a cable modem sit side by side. Which connector brings the provider's line into each? <span class="hint">(<a href="0045-copper-connectors.html">lesson 0045</a>, yesterday)</span></summary>
+    <p>DSL: an <strong>RJ11</strong> phone cord. Cable: a threaded <strong>F connector</strong> on coax (usually RG-6).</p>
+  </details>
+
+  <details class="recall">
+    <summary>In SaaS like Microsoft 365, what does the provider manage, and what stays your job no matter the model? <span class="hint">(<a href="0032-cloud-models.html">lesson 0032</a>, 14 days ago)</span></summary>
+    <p>The provider runs almost everything: hardware, OS, the app itself. In every model (IaaS, PaaS, SaaS) the customer keeps <strong>its data, its endpoints, its accounts and access management</strong>.</p>
+  </details>
+
+  <details class="recall">
+    <summary>Split tunnel vs. full tunnel: where does a user's ordinary web traffic go in each? <span class="hint">(<a href="0016-vlans-vpns.html">lesson 0016</a>, 30 days ago)</span></summary>
+    <p><strong>Full tunnel</strong>: everything, web included, goes through the VPN to the company first. <strong>Split tunnel</strong>: only company traffic uses the VPN; ordinary web traffic goes straight out the local internet connection.</p>
+  </details>
+
+  <div class="callout source" id="src-messer">
+    <span class="label">Primary source: watch next</span>
+    <p>[1] Professor Messer, <a href="https://www.professormesser.com/free-a-plus-training/220-1201/220-1201-video/fiber-connectors-220-1201/">Fiber Connectors (220-1201, 3.2)</a>. ST, SC, LC. Free.</p>
+    <p id="src-messer1101">[2] Professor Messer, <a href="https://www.professormesser.com/free-a-plus-training/220-1101/220-1101-video/fiber-connectors-220-1101/">Fiber Connectors (220-1101)</a>: the previous exam's version (LC smaller with a clip and used in transmit/receive pairs; ST bayonet twist-lock; SC square).</p>
+    <p id="src-arrow">[3] Arrow, <a href="https://www.arrow.com/research-and-events/articles/fiber-optic-connectors-sc-vs-lc">Fiber-optic connectors: SC vs. LC</a> (2.5 mm vs. 1.25 mm ferrule, push-pull vs. latch, density).</p>
+    <p id="src-color">[4] Televés, <a href="https://www.televes.com/en/233217-sc-apc-female-sc-apc-female-optical-duplex-adapter-single-mode-sm.html">SC/APC duplex adapter (single-mode)</a> and vendor color guides: green = APC, blue = UPC, beige = multimode; don't mix APC and UPC.</p>
+  </div>
+
+  <div class="callout ask">
+    <span class="label">Questions?</span>
+    <p>Anything unclear? Ask your teacher. Open Claude in the Teacher repo and ask, for example: <em>"In IT lesson 0046, why does an angled APC tip reflect less light than a flat one?"</em> Follow-up questions are part of the course.</p>
+  </div>
+</main>
+<nav class="page-footer">
+  <a href="0045-copper-connectors.html">← Name that plug: copper connectors</a>
+  <a href="../../index.html">Hub</a>
+  <span class="disabled">Next lesson: tomorrow →</span>
+</nav>
+</body>
+</html>
