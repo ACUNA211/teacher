@@ -1,0 +1,166 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>An Overview of Memory</title>
+<meta name="description" content="IT lesson 0047: A+ objective 3.3, an overview of memory. What RAM does, DIMM vs. SO-DIMM, SDRAM and DDR, and why DDR3, DDR4 and DDR5 never swap.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=JetBrains+Mono&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../assets/course.css">
+<script src="../../assets/quiz.js" defer></script>
+</head>
+<body class="track-it">
+<nav class="page-header">
+  <a class="home" href="../../index.html">Teacher hub</a>
+  <span>IT and certs</span>
+  <a href="../reference/glossary.html">Glossary</a>
+  <a href="../reference/hardware.html">Hardware cheat sheet</a>
+</nav>
+<main>
+  <p class="kicker">IT and certs · Lesson 0047 · A+ Core 1, objective 3.3</p>
+  <h1>Sticks of memory: DIMM, SO-DIMM and DDR</h1>
+  <p class="lede">About 10 minutes. Cables and connectors are done; now we open the case. Objective 3.3 starts with <strong>RAM</strong>: the module shapes (<strong>DIMM</strong>, <strong>SO-DIMM</strong>) and the generations (<strong>DDR3, DDR4, DDR5</strong>).<sup class="cite"><a href="#src-messer">[1]</a></sup> The win: look at a stick (or a spec sheet) and say whether it fits the machine in front of you.</p>
+
+  <div class="callout">
+    <span class="label">Why this matters at work</span>
+    <p>"My laptop is slow" tickets often end with "add RAM". Before anyone orders, you need two facts about the device: <strong>which shape</strong> (desktop DIMM or laptop SO-DIMM) and <strong>which generation</strong> (DDR4 or DDR5). Get either wrong and the stick won't even go in. Many thin laptops also have RAM <strong>soldered</strong> to the board, so there's nothing to add at all.</p>
+  </div>
+
+  <h2>1. What RAM does</h2>
+  <p><strong>RAM</strong> (random access memory) is the computer's short-term workspace: the running OS, open apps and their data live there while you work. It's fast, but <strong>volatile</strong>: when the power goes off, it's empty. Storage (SSD, HDD) is the long-term shelf. Too little RAM means Windows keeps swapping data out to the much slower drive, and everything feels sluggish.<sup class="cite"><a href="#src-messer">[1]</a></sup></p>
+
+  <h2>2. Two shapes: DIMM and SO-DIMM</h2>
+  <div class="table-wrap">
+  <table>
+    <thead><tr><th>Module</th><th>What it is</th><th>Where</th></tr></thead>
+    <tbody>
+      <tr><td><strong>DIMM</strong> (dual inline memory module)</td><td>Full-size stick, about 13 cm long, stands upright in a slot with clips at each end.</td><td>Desktops, servers</td></tr>
+      <tr><td><strong>SO-DIMM</strong> (small outline DIMM)</td><td>About half the length, lies flat or at an angle; side clips hold it down.</td><td>Laptops, mini PCs, some all-in-ones</td></tr>
+    </tbody>
+  </table>
+  </div>
+  <p>"Dual inline" just means the contacts on the front and back of the stick are separate signals.<sup class="cite"><a href="#src-dimm">[2]</a></sup></p>
+
+  <h2>3. SDRAM and DDR generations</h2>
+  <p>Modern RAM is <strong>SDRAM</strong>: <em>synchronous</em> DRAM, timed to the system clock. <strong>DDR</strong> (double data rate) SDRAM moves data on both the rising and falling edge of each clock tick, twice per cycle.<sup class="cite"><a href="#src-messer">[1]</a></sup> Each generation is faster and uses less power, and each one is <strong>keyed differently</strong>: the <strong>notch</strong> in the gold edge sits in a different place, so the wrong generation physically won't seat.<sup class="cite"><a href="#src-dimm">[2]</a></sup></p>
+  <div class="table-wrap">
+  <table>
+    <thead><tr><th>Generation</th><th>DIMM pins</th><th>SO-DIMM pins</th><th>Voltage</th></tr></thead>
+    <tbody>
+      <tr><td><strong>DDR3</strong></td><td>240</td><td>204</td><td>1.5 V (DDR3L 1.35 V)</td></tr>
+      <tr><td><strong>DDR4</strong></td><td>288</td><td>260</td><td>1.2 V</td></tr>
+      <tr><td><strong>DDR5</strong></td><td>288</td><td>262</td><td>1.1 V</td></tr>
+    </tbody>
+  </table>
+  </div>
+  <p>DDR4 and DDR5 desktop sticks both have 288 pins, so <strong>the notch, not the pin count, is the real check</strong>.<sup class="cite"><a href="#src-dimm">[2]</a></sup> Two DDR5 changes worth one line each: every DDR5 stick is split into <strong>two independent 32-bit subchannels</strong>, and it carries its own power regulator chip (PMIC) on the module.<sup class="cite"><a href="#src-kingston">[3]</a></sup></p>
+
+  <div class="callout win">
+    <span class="label">Rule of thumb</span>
+    <p>Match <strong>shape</strong> (DIMM vs. SO-DIMM) and <strong>generation</strong> (DDR3/4/5) to the motherboard. There is <strong>no backward compatibility</strong> between DDR generations: a DDR4 stick will not work in a DDR5 slot, ever.</p>
+  </div>
+
+  <h2>Try it (2 minutes)</h2>
+  <ol>
+    <li>On a Windows PC, open <strong>Task Manager → Performance → Memory</strong>. Read <strong>Speed</strong>, <strong>Slots used</strong> (e.g. "2 of 2" means no free slot) and <strong>Form factor</strong> (DIMM or SODIMM).</li>
+    <li>For the generation, run in PowerShell:<br><code>Get-CimInstance Win32_PhysicalMemory | Format-Table DeviceLocator, Capacity, Speed, SMBIOSMemoryType</code><br><code>SMBIOSMemoryType</code>: <strong>24</strong> = DDR3, <strong>26</strong> = DDR4, <strong>34</strong> = DDR5.<sup class="cite"><a href="#src-ms">[4]</a></sup><sup class="cite"><a href="#src-mte">[5]</a></sup> (Some newer laptops with soldered memory report LPDDR codes instead.)</li>
+  </ol>
+  <details class="recall">
+    <summary>Task Manager says "Form factor: SODIMM, Slots used: 1 of 2", and PowerShell shows SMBIOSMemoryType 26. What do you order? <span class="hint">(then click to check)</span></summary>
+    <p>A <strong>DDR4 SO-DIMM</strong>: laptop-size, generation 4 (26), and there's one free slot. Ideally match the existing stick's speed and size so the pair runs in dual channel.</p>
+  </details>
+
+  <h2>Practice</h2>
+  <p>Answer from memory before scrolling back up.</p>
+
+  <section class="quiz">
+    <p class="q">A user wants more memory in their laptop. The short module you remove lies flat under a panel. What kind of module is it?</p>
+    <ul class="choices">
+      <li><button class="choice">A full-size DIMM for desktops</button></li>
+      <li><button class="choice" data-correct>A SO-DIMM, the small outline module</button></li>
+      <li><button class="choice">An M.2 SSD for long-term storage</button></li>
+      <li><button class="choice">A SATA drive with a 7-pin cable</button></li>
+    </ul>
+    <div class="explain" hidden>Laptops use the <strong>SO-DIMM</strong> (small outline DIMM), about half the length of a desktop DIMM. An M.2 SSD is also small, but it's storage, not RAM (<a href="0023-laptop-batteries-keyboards-ssd.html">lesson 0023</a>).</div>
+  </section>
+
+  <section class="quiz">
+    <p class="q">A tech tries to install a 288-pin DDR4 DIMM into a new desktop with DDR5 slots. Both have 288 pins. What happens?</p>
+    <ul class="choices">
+      <li><button class="choice">It works at the slower DDR4 speed</button></li>
+      <li><button class="choice">It works after a firmware update first</button></li>
+      <li><button class="choice" data-correct>It won't seat; the notch is different</button></li>
+      <li><button class="choice">It works but only in single channel</button></li>
+    </ul>
+    <div class="explain" hidden>DDR generations are <strong>not compatible</strong>. DDR4 and DDR5 share a pin count, but the <strong>notch</strong> is in a different place, so the stick physically won't go in. Voltages and signaling differ too (1.2 V vs. 1.1 V).</div>
+  </section>
+
+  <section class="quiz">
+    <p class="q">A user's PC freezes for seconds when switching between many browser tabs, and the drive light stays busy. What's the most likely cause?</p>
+    <ul class="choices">
+      <li><button class="choice">The SSD is too large to manage</button></li>
+      <li><button class="choice">The RAM is non-volatile and full</button></li>
+      <li><button class="choice">The DIMM is the wrong pin count</button></li>
+      <li><button class="choice" data-correct>Too little RAM, so Windows swaps</button></li>
+    </ul>
+    <div class="explain" hidden>When RAM fills up, Windows moves data out to the much slower drive (the page file) and back. The busy drive and pauses are the sign. RAM is <strong>volatile</strong>, and a wrong-pin stick wouldn't fit at all.</div>
+  </section>
+
+  <section class="quiz">
+    <p class="q">What does "double data rate" mean in DDR SDRAM?</p>
+    <ul class="choices">
+      <li><button class="choice" data-correct>Data moves twice per clock cycle</button></li>
+      <li><button class="choice">Each stick holds double the capacity</button></li>
+      <li><button class="choice">Two sticks must always be installed</button></li>
+      <li><button class="choice">It runs at double the voltage</button></li>
+    </ul>
+    <div class="explain" hidden>DDR transfers data on both the rising and the falling edge of each clock tick: <strong>twice per cycle</strong>. Pairs of sticks help with multi-channel memory, but that's a separate idea (next lesson).</div>
+  </section>
+  <p class="quiz-score" data-quiz-score></p>
+
+  <details class="recall">
+    <summary>From memory: pins and voltage for a DDR3, DDR4 and DDR5 desktop DIMM. <span class="hint">(then click to check)</span></summary>
+    <p><strong>DDR3</strong> 240 pins, 1.5 V · <strong>DDR4</strong> 288 pins, 1.2 V · <strong>DDR5</strong> 288 pins, 1.1 V. Same pins for 4 and 5, different notch.</p>
+  </details>
+
+  <h2>Review: earlier lessons</h2>
+  <p>Spaced retrieval: pull these from memory first, then check.</p>
+
+  <details class="recall">
+    <summary>Adapter vs. converter: what's the difference, and which one does DVI-D to VGA need? <span class="hint">(<a href="0044-adapters-and-converters.html">lesson 0044</a>, 3 days ago)</span></summary>
+    <p>An <strong>adapter</strong> is passive: it only rewires pins between two connectors that carry the same signal. A <strong>converter</strong> is active and changes the signal. DVI-D is digital only and VGA is analog, so it needs a <strong>converter</strong>.</p>
+  </details>
+
+  <details class="recall">
+    <summary>A USB-C laptop port shows a lightning-bolt icon. What can it do that a plain USB-C port may not? <span class="hint">(<a href="0040-peripheral-cables-usb-thunderbolt-serial.html">lesson 0040</a>, 7 days ago)</span></summary>
+    <p>It's <strong>Thunderbolt</strong>: up to 40 Gbps (Thunderbolt 3/4) over the USB-C connector, with displays and docks on one cable. USB-C is only the plug shape; what the port carries depends on the standard behind it.</p>
+  </details>
+
+  <details class="recall">
+    <summary>Black Friday traffic triples, and the cloud adds servers on its own, then removes them next week. Which cloud characteristic is that? <span class="hint">(<a href="0033-cloud-characteristics.html">lesson 0033</a>, 14 days ago)</span></summary>
+    <p><strong>Rapid elasticity</strong>: capacity grows and shrinks with demand, usually without users noticing. Paired with <strong>metered</strong> billing, you pay only for what you used.</p>
+  </details>
+
+  <div class="callout source" id="src-messer">
+    <span class="label">Primary source: watch next</span>
+    <p>[1] Professor Messer, <a href="https://www.professormesser.com/free-a-plus-training/220-1201/220-1201-video/an-overview-of-memory-220-1201/">An Overview of Memory (220-1201, 3.3)</a>. RAM, DIMMs, SO-DIMMs, SDRAM, DDR3, DDR4 and DDR5. Free.</p>
+    <p id="src-dimm">[2] Wikipedia, <a href="https://en.wikipedia.org/wiki/DIMM">DIMM</a>: pin counts per generation (240/288/288; SO-DIMM 204/260/262) and notch keying.</p>
+    <p id="src-kingston">[3] Kingston, <a href="https://www.kingston.com/en/memory/ddr5-overview">DDR5 overview</a>: 1.1 V, two independent subchannels per module, on-module PMIC.</p>
+    <p id="src-ms">[4] Microsoft Learn, <a href="https://learn.microsoft.com/en-us/windows/win32/cimwin32prov/win32-physicalmemory">Win32_PhysicalMemory class</a>: memory type codes (DDR3 = 24, DDR4 = 26).</p>
+    <p id="src-mte">[5] Make Tech Easier, <a href="https://maketecheasier.com/check-ram-type-windows/">How to check your RAM type in Windows</a>: SMBIOSMemoryType 34 = DDR5 (not yet in Microsoft's table).</p>
+  </div>
+
+  <div class="callout ask">
+    <span class="label">Questions?</span>
+    <p>Anything unclear? Ask your teacher. Open Claude in the Teacher repo and ask, for example: <em>"In IT lesson 0047, how do I tell if a laptop's RAM is soldered before I open it?"</em> Follow-up questions are part of the course.</p>
+  </div>
+</main>
+<nav class="page-footer">
+  <a href="0046-fiber-connectors.html">← Twist, push, click: fiber connectors</a>
+  <a href="../../index.html">Hub</a>
+  <span class="disabled">Next lesson: tomorrow →</span>
+</nav>
+</body>
+</html>
