@@ -1,0 +1,160 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Memory Technologies</title>
+<meta name="description" content="IT lesson 0048: A+ objective 3.3, memory technologies. Parity vs. ECC memory, why servers use ECC, and how dual- and multi-channel memory doubles bandwidth.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=JetBrains+Mono&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../assets/course.css">
+<script src="../../assets/quiz.js" defer></script>
+</head>
+<body class="track-it">
+<nav class="page-header">
+  <a class="home" href="../../index.html">Teacher hub</a>
+  <span>IT and certs</span>
+  <a href="../reference/glossary.html">Glossary</a>
+  <a href="../reference/hardware.html">Hardware cheat sheet</a>
+</nav>
+<main>
+  <p class="kicker">IT and certs · Lesson 0048 · A+ Core 1, objective 3.3</p>
+  <h1>Catch the flipped bit: parity, ECC and memory channels</h1>
+  <p class="lede">About 10 minutes. Yesterday you learned which stick fits. Today: two things you can't see by looking at it. <strong>Error checking</strong> (non-parity, parity, ECC) and <strong>multi-channel</strong> memory (why two sticks beat one).<sup class="cite"><a href="#src-messer">[1]</a></sup> The win: read a RAM spec line and know whether it suits a server, and set up a desktop so its memory runs at full speed.</p>
+
+  <div class="callout">
+    <span class="label">Why this matters at work</span>
+    <p>Two common hardware requests: "upgrade this PC from 8 to 16 GB" and "order RAM for the server". For the PC, <strong>two matching 8 GB sticks</strong> usually beat one 16 GB stick, because they run in dual channel. For the server, the stick must be <strong>ECC</strong>, and a regular desktop stick won't do. Both look almost identical on the order page; the spec line is the difference.</p>
+  </div>
+
+  <h2>1. Bits can flip</h2>
+  <p>RAM stores each bit as a tiny electrical charge. Now and then one flips from 0 to 1 (or back) on its own. On a laptop that's a rare crash. On a server running for months with lots of memory, it can silently corrupt data. Three kinds of memory handle this differently:<sup class="cite"><a href="#src-messer">[1]</a></sup></p>
+  <div class="table-wrap">
+  <table>
+    <thead><tr><th>Type</th><th>What it does</th><th>Where you see it</th></tr></thead>
+    <tbody>
+      <tr><td><strong>Non-parity</strong></td><td>No checking at all. A flipped bit goes unnoticed.</td><td>Almost every desktop and laptop</td></tr>
+      <tr><td><strong>Parity</strong></td><td>Adds one check bit per byte. It can <strong>detect</strong> a single-bit error but <strong>can't fix</strong> it; the system usually halts.</td><td>Older systems; rare today</td></tr>
+      <tr><td><strong>ECC</strong> (error-correcting code)</td><td>Extra check bits that <strong>detect and correct</strong> a single-bit error on the fly, so the system keeps running. It can also detect (not fix) some multi-bit errors.</td><td>Servers, workstations</td></tr>
+    </tbody>
+  </table>
+  </div>
+  <p><strong>How parity works:</strong> the extra bit makes the count of 1s come out even (even parity) or odd (odd parity). If one bit flips, the count is wrong, so the error shows. But it can't say <em>which</em> bit flipped, and two flips cancel out. <strong>ECC</strong> uses more check bits: a standard ECC module is <strong>72 bits wide</strong> instead of 64, with 8 bits for error correction.<sup class="cite"><a href="#src-sth">[2]</a></sup></p>
+
+  <div class="callout win">
+    <span class="label">Rule of thumb</span>
+    <p>Parity <strong>finds</strong>. ECC <strong>finds and fixes</strong>. You can't tell them apart by looking: <strong>check the spec</strong>.<sup class="cite"><a href="#src-messer">[1]</a></sup> And ECC only works if the <strong>motherboard and CPU support it</strong>; that's why it lives in servers.</p>
+  </div>
+  <p class="sidenote">Trap: every DDR5 stick has <strong>on-die ECC</strong> inside each chip. That's not the same as an ECC module: it fixes errors inside the chip only, not on the way to the CPU. A "DDR5" spec line alone does not mean "ECC memory".<sup class="cite"><a href="#src-corsair">[3]</a></sup></p>
+
+  <h2>2. Multi-channel: more lanes to the CPU</h2>
+  <p>The memory controller talks to RAM over <strong>channels</strong>, like lanes on a road. With one stick, only one channel is in use. Put matching sticks in the right slots and the controller uses <strong>two channels at once</strong> (dual channel), roughly doubling bandwidth. Some boards support <strong>triple</strong> or <strong>quad</strong> channel.<sup class="cite"><a href="#src-messer">[1]</a></sup></p>
+  <ul>
+    <li><strong>Match the sticks</strong>: same size and speed, ideally the same model, installed as a set (pair, triple, quad).</li>
+    <li><strong>Use the right slots</strong>: boards often <strong>color-code</strong> the slots that go together; the motherboard manual says which to fill first.<sup class="cite"><a href="#src-messer">[1]</a></sup></li>
+    <li>Integrated graphics use system RAM, so laptops without a separate graphics card feel the single-channel penalty most.</li>
+  </ul>
+
+  <h2>Try it (2 minutes)</h2>
+  <ol>
+    <li>In Windows PowerShell, check whether the board uses error correction:<br><code>Get-CimInstance Win32_PhysicalMemoryArray | Select-Object MemoryErrorCorrection</code><br><strong>3</strong> = none, <strong>4</strong> = parity, <strong>5</strong> = single-bit ECC, <strong>6</strong> = multi-bit ECC.<sup class="cite"><a href="#src-ms">[4]</a></sup><sup class="cite"><a href="#src-psg">[5]</a></sup></li>
+    <li>Check each stick's width and slot:<br><code>Get-CimInstance Win32_PhysicalMemory | Format-Table DeviceLocator, Capacity, DataWidth, TotalWidth</code><br>DataWidth 64 / TotalWidth <strong>72</strong> points to ECC; 64 / 64 is regular memory.<sup class="cite"><a href="#src-sth">[2]</a></sup> Some systems report these fields wrongly, so treat it as a hint and confirm with the spec sheet.</li>
+  </ol>
+  <details class="recall">
+    <summary>A desktop shows two DeviceLocator entries, both 8 GB, in slots the manual pairs together. A third command returns MemoryErrorCorrection 3. What does that tell you? <span class="hint">(then click to check)</span></summary>
+    <p>The pair can run in <strong>dual channel</strong> (matching sizes in paired slots), and the system uses <strong>no error correction</strong> (3 = none): ordinary non-parity desktop memory. Normal for a workstation that isn't a server.</p>
+  </details>
+
+  <h2>Practice</h2>
+  <p>Answer from memory before scrolling back up.</p>
+
+  <section class="quiz">
+    <p class="q">A file server must keep running even if a single memory bit flips. Which memory should you order?</p>
+    <ul class="choices">
+      <li><button class="choice">Parity memory, which halts on errors</button></li>
+      <li><button class="choice">Non-parity memory with a faster speed</button></li>
+      <li><button class="choice" data-correct>ECC memory, which corrects the error</button></li>
+      <li><button class="choice">Any DDR5 stick, since on-die ECC</button></li>
+    </ul>
+    <div class="explain" hidden><strong>ECC</strong> detects and corrects single-bit errors, so the server keeps running. Parity only detects (and usually halts the system). DDR5's on-die ECC protects only inside the chip; it doesn't make a stick an ECC module.</div>
+  </section>
+
+  <section class="quiz">
+    <p class="q">A system halts with a memory error message. Its RAM could detect the error but not fix it. What kind of memory is it?</p>
+    <ul class="choices">
+      <li><button class="choice" data-correct>Parity memory with one check bit</button></li>
+      <li><button class="choice">ECC memory with extra check bits</button></li>
+      <li><button class="choice">Non-parity memory with no check bits</button></li>
+      <li><button class="choice">Dual-channel memory in a matched pair</button></li>
+    </ul>
+    <div class="explain" hidden><strong>Parity</strong> notices that the count of 1s is wrong but can't tell which bit flipped, so it can't fix it. ECC would have corrected a single-bit error; non-parity wouldn't have noticed at all.</div>
+  </section>
+
+  <section class="quiz">
+    <p class="q">A user's desktop has one 16 GB stick. They want it faster for the same capacity. What's the best change?</p>
+    <ul class="choices">
+      <li><button class="choice">One 16 GB ECC stick in place</button></li>
+      <li><button class="choice">One 32 GB stick in any slot</button></li>
+      <li><button class="choice">Add an 8 GB stick beside it</button></li>
+      <li><button class="choice" data-correct>Two matched 8 GB sticks, paired slots</button></li>
+    </ul>
+    <div class="explain" hidden>Two <strong>matching</strong> sticks in the paired (often color-coded) slots run in <strong>dual channel</strong>, roughly doubling memory bandwidth at the same 16 GB. A mismatched 8 GB stick may not run fully dual channel, and ECC needs board support.</div>
+  </section>
+
+  <section class="quiz">
+    <p class="q">Two RAM sticks look identical. How do you tell whether one is ECC?</p>
+    <ul class="choices">
+      <li><button class="choice">Count the pins along it</button></li>
+      <li><button class="choice" data-correct>Read the module's specification sheet</button></li>
+      <li><button class="choice">Look at the notch position</button></li>
+      <li><button class="choice">Compare the colors of labels</button></li>
+    </ul>
+    <div class="explain" hidden>ECC, parity and non-parity modules look very similar; you have to <strong>check the specifications</strong>.<sup class="cite"><a href="#src-messer">[1]</a></sup> Pins and the notch tell you the generation (<a href="0047-memory-overview-dimm-ddr.html">lesson 0047</a>), not error checking.</div>
+  </section>
+  <p class="quiz-score" data-quiz-score></p>
+
+  <details class="recall">
+    <summary>From memory: one line each for non-parity, parity and ECC. <span class="hint">(then click to check)</span></summary>
+    <p><strong>Non-parity</strong>: no checking. <strong>Parity</strong>: detects a single-bit error, can't fix it. <strong>ECC</strong>: detects and corrects a single-bit error, keeps running; needs board support.</p>
+  </details>
+
+  <h2>Review: earlier lessons</h2>
+  <p>Spaced retrieval: pull these from memory first, then check.</p>
+
+  <details class="recall">
+    <summary>A cable modem's coax port uses a threaded connector; an old DSL line uses a small 4-wire plug. Name both. <span class="hint">(<a href="0045-copper-connectors.html">lesson 0045</a>, 3 days ago)</span></summary>
+    <p>The coax one is an <strong>F-connector</strong> (threaded, RG-6). The DSL plug is <strong>RJ11</strong>, smaller than the 8-pin RJ45 used for Ethernet.</p>
+  </details>
+
+  <details class="recall">
+    <summary>A monitor looks slightly blurry on an old cable with blue 15-pin plugs. Why, and what's the fix? <span class="hint">(<a href="0041-video-cables-hdmi-displayport-dvi-vga.html">lesson 0041</a>, 7 days ago)</span></summary>
+    <p>That's <strong>VGA</strong>: analog video only, which softens at high resolutions. Move to a digital link: <strong>HDMI</strong>, <strong>DisplayPort</strong> or DVI-D.</p>
+  </details>
+
+  <details class="recall">
+    <summary>A laptop screen is very dark, but with a flashlight you can faintly see the desktop. Which part probably failed? <span class="hint">(<a href="0034-display-types.html">lesson 0034</a>, 14 days ago)</span></summary>
+    <p>The <strong>backlight</strong> (or, on older LCDs, its <strong>inverter</strong>). The LCD panel still draws the picture; nothing lights it from behind.</p>
+  </details>
+
+  <div class="callout source" id="src-messer">
+    <span class="label">Primary source: watch next</span>
+    <p>[1] Professor Messer, <a href="https://www.professormesser.com/free-a-plus-training/220-1201/220-1201-video/memory-technologies-220-1201/">Memory Technologies (220-1201, 3.3)</a>. Parity, ECC and multi-channel memory. Free.</p>
+    <p id="src-sth">[2] ServeTheHome, <a href="https://www.servethehome.com/how-to-see-if-ecc-is-working-in-windows-quickly/">How to see if ECC is working in Windows quickly</a>: 72-bit total vs. 64-bit data width, and why Windows readings can be unreliable.</p>
+    <p id="src-corsair">[3] Corsair, <a href="https://www.corsair.com/us/en/explorer/diy-builder/memory/is-ddr5-ecc-memory/">Is DDR5 ECC memory?</a>: on-die ECC vs. a true ECC module.</p>
+    <p id="src-ms">[4] Microsoft Learn, <a href="https://learn.microsoft.com/en-us/windows/win32/cimwin32prov/win32-physicalmemoryarray">Win32_PhysicalMemoryArray class</a>: the MemoryErrorCorrection property.</p>
+    <p id="src-psg">[5] PowerShell Gallery, <a href="https://powershellgallery.com/packages/Systeminfo/1.3.5/Content/Scripts/Memory/ECCType.ps1">Systeminfo ECCType.ps1</a>: code table 3 none, 4 parity, 5 single-bit ECC, 6 multi-bit ECC.</p>
+  </div>
+
+  <div class="callout ask">
+    <span class="label">Questions?</span>
+    <p>Anything unclear? Ask your teacher. Open Claude in the Teacher repo and ask, for example: <em>"In IT lesson 0048, does a 3-stick setup on a dual-channel board still run in dual channel?"</em> Follow-up questions are part of the course.</p>
+  </div>
+</main>
+<nav class="page-footer">
+  <a href="0047-memory-overview-dimm-ddr.html">← Sticks of memory: DIMM, SO-DIMM and DDR</a>
+  <a href="../../index.html">Hub</a>
+  <span class="disabled">Next lesson: tomorrow →</span>
+</nav>
+</body>
+</html>
