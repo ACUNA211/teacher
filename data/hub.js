@@ -1,7 +1,7 @@
 /* Hub data. The teacher updates this file after every lesson; index.html renders it.
    Keep it free of personal data: the site is public. */
 window.HUB = {
-  updated: "2026-11-12",
+  updated: "2026-11-13",
   tracks: [
     {
       id: "it", name: "IT and certs", folder: "it", cls: "track-it", status: "active",
@@ -265,6 +265,11 @@ window.HUB = {
       track: "it", num: "0048", date: "2026-11-12", covers: 1,
       title: "Catch the flipped bit: parity, ECC and memory channels",
       path: "it/lessons/0048-memory-technologies-ecc-channels.html"
+    },
+    {
+      track: "it", num: "0049", date: "2026-11-13", covers: 0,
+      title: "Spinning or solid: HDDs, SSDs and how they connect",
+      path: "it/lessons/0049-storage-devices-hdd-ssd-interfaces.html"
     },
     {
       track: "app", num: "0001", date: "2026-09-28", covers: 0,

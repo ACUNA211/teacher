@@ -1,0 +1,168 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Storage Devices: HDD and SSD</title>
+<meta name="description" content="IT lesson 0049: A+ objective 3.4, storage devices (part 1). Hard drives vs. solid-state drives, spindle speeds and form factors, and the three drive interfaces: SATA, SAS and NVMe over PCIe.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=JetBrains+Mono&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../assets/course.css">
+<script src="../../assets/quiz.js" defer></script>
+</head>
+<body class="track-it">
+<nav class="page-header">
+  <a class="home" href="../../index.html">Teacher hub</a>
+  <span>IT and certs</span>
+  <a href="../reference/glossary.html">Glossary</a>
+  <a href="../reference/hardware.html">Hardware cheat sheet</a>
+</nav>
+<main>
+  <p class="kicker">IT and certs · Lesson 0049 · A+ Core 1, objective 3.4</p>
+  <h1>Spinning or solid: HDDs, SSDs and how they connect</h1>
+  <p class="lede">About 10 minutes. Memory is done; now the place data lives when the power is off. Today: the two kinds of drive (<strong>hard disk</strong> and <strong>solid-state</strong>) and the three ways they talk to the computer (<strong>SATA</strong>, <strong>SAS</strong>, <strong>NVMe</strong>).<sup class="cite"><a href="#src-messer">[1]</a></sup> The win: read a drive's spec line and say how fast it can be and where it belongs. (M.2 and mSATA slots, flash cards and optical drives come in the next lesson.)</p>
+
+  <div class="callout">
+    <span class="label">Why this matters at work</span>
+    <p>"Sign-in takes forever" tickets often look like an account problem. On an older laptop the cause is often the <strong>drive</strong>: a slow spinning disk loading the profile and apps. Swapping a hard drive for an SSD can greatly improve the whole system's speed,<sup class="cite"><a href="#src-messer">[1]</a></sup> and a one-line check tells you which kind is inside before you start resetting anything.</p>
+  </div>
+
+  <h2>1. Two kinds of drive</h2>
+  <div class="table-wrap">
+  <table>
+    <thead><tr><th></th><th>Hard disk drive (HDD)</th><th>Solid-state drive (SSD)</th></tr></thead>
+    <tbody>
+      <tr><td>Stores data on</td><td>Magnetic <strong>spinning platters</strong>, read by a moving arm</td><td><strong>Flash memory</strong> chips, <strong>no moving parts</strong></td></tr>
+      <tr><td>Speed</td><td>Limited by how fast the platter spins and the arm moves</td><td>Much faster, especially for many small reads (booting, opening apps)</td></tr>
+      <tr><td>Strength</td><td><strong>Lots of capacity for little money</strong></td><td>Speed, silence, survives bumps and drops</td></tr>
+      <tr><td>Weakness</td><td>Moving parts wear out and hate being dropped</td><td>Costs more per terabyte</td></tr>
+    </tbody>
+  </table>
+  </div>
+  <p>That's why big, cheap storage (backups, file servers) still uses hard drives, and almost every new laptop ships with an SSD.<sup class="cite"><a href="#src-messer">[1]</a></sup></p>
+  <p><strong>Spindle speed</strong> is how fast an HDD's platters spin, in rpm: <strong>5,400</strong> (cheap laptops), <strong>7,200</strong> (desktops), <strong>10,000</strong> and <strong>15,000</strong> (servers). Faster spins mean less waiting for the data to come under the head, but more heat and power.<sup class="cite"><a href="#src-utp">[2]</a></sup><sup class="cite"><a href="#src-lenovo">[3]</a></sup> An SSD has no rpm at all.</p>
+  <p><strong>Form factors</strong>: <strong>3.5-inch</strong> drives go in desktops, <strong>2.5-inch</strong> in laptops (and many servers).<sup class="cite"><a href="#src-messer">[1]</a></sup> A 2.5-inch SATA SSD is the same shape as a 2.5-inch hard drive, which is what makes the laptop upgrade easy (<a href="0023-laptop-batteries-keyboards-ssd.html">lesson 0023</a>).</p>
+  <p class="sidenote">A <strong>hybrid drive</strong> (SSHD) puts a small SSD cache in front of a hard drive: the files you use most load from flash, the rest from the platters.</p>
+
+  <h2>2. Three ways to connect</h2>
+  <div class="table-wrap">
+  <table>
+    <thead><tr><th>Interface</th><th>What it is</th><th>Top speed</th><th>Where</th></tr></thead>
+    <tbody>
+      <tr><td><strong>SATA</strong></td><td>The standard drive cable (<a href="0042-storage-cables-sata-esata.html">lesson 0042</a>), using the <strong>AHCI</strong> protocol, which was designed for hard drives</td><td>6 Gbps, about <strong>600 MB/s</strong></td><td>Desktops, laptops; HDDs and cheaper SSDs</td></tr>
+      <tr><td><strong>SAS</strong> (Serial Attached SCSI)</td><td>Enterprise version of the idea: built for servers, high-rpm drives and hot-swap bays</td><td>12 Gbps and up</td><td>Servers, storage arrays</td></tr>
+      <tr><td><strong>NVMe</strong> over <strong>PCIe</strong></td><td>A protocol made for flash, talking straight over PCI Express lanes (no SATA in the way)</td><td>Several <strong>GB/s</strong></td><td>Fast SSDs in laptops, desktops, servers</td></tr>
+    </tbody>
+  </table>
+  </div>
+  <p>The big idea: a fast SSD on SATA is held back by an interface built for spinning disks. AHCI has one command queue, 32 commands deep; NVMe allows thousands of queues, each up to about 65,000 commands.<sup class="cite"><a href="#src-messer">[1]</a></sup><sup class="cite"><a href="#src-tt">[4]</a></sup> That's why "SSD" alone doesn't tell you the speed: a <strong>SATA SSD</strong> tops out near 600 MB/s, an <strong>NVMe SSD</strong> goes several times faster.</p>
+
+  <div class="callout win">
+    <span class="label">Rule of thumb</span>
+    <p><strong>HDD = cheap capacity, SSD = speed.</strong> <strong>SATA</strong> for everyday drives (≈600 MB/s), <strong>SAS</strong> for servers, <strong>NVMe over PCIe</strong> for the fastest SSDs. Read <em>both</em> parts of a spec line: what kind of drive, and how it connects.</p>
+  </div>
+
+  <h2>Try it (2 minutes)</h2>
+  <ol>
+    <li>In Windows PowerShell, list the drives:<br><code>Get-PhysicalDisk | Format-Table FriendlyName, MediaType, BusType, Size</code></li>
+    <li>Read the two middle columns. <strong>MediaType</strong> says what it is (HDD, SSD, or Unspecified if Windows can't tell). <strong>BusType</strong> says how it's attached (SATA, SAS, NVMe, USB).<sup class="cite"><a href="#src-ms">[5]</a></sup></li>
+    <li>No PowerShell handy? Search the Start menu for <strong>Defragment and Optimize Drives</strong>: the <em>Media type</em> column shows "Hard disk drive" or "Solid state drive".</li>
+  </ol>
+  <details class="recall">
+    <summary>A laptop shows MediaType <strong>HDD</strong>, BusType <strong>SATA</strong>, and its user says sign-in is painfully slow. What would you suggest, and what speed limit would the new drive face on that same connector? <span class="hint">(then click to check)</span></summary>
+    <p>Replace the spinning hard drive with an <strong>SSD</strong>: the biggest single speed-up for an old machine. A 2.5-inch <strong>SATA SSD</strong> fits the same bay, but it's capped near <strong>600 MB/s</strong> by SATA. (If the laptop has an NVMe slot, an NVMe SSD would go faster; slots are next lesson.)</p>
+  </details>
+
+  <h2>Practice</h2>
+  <p>Answer from memory before scrolling back up.</p>
+
+  <section class="quiz">
+    <p class="q">An older laptop with a 5,400 rpm hard drive takes minutes to boot and sign in. RAM is fine. What's the best upgrade?</p>
+    <ul class="choices">
+      <li><button class="choice">Install a faster 7,200 rpm drive</button></li>
+      <li><button class="choice" data-correct>Replace the drive with an SSD</button></li>
+      <li><button class="choice">Add a second matching memory stick</button></li>
+      <li><button class="choice">Defragment the drive every single week</button></li>
+    </ul>
+    <div class="explain" hidden>An <strong>SSD</strong> has no moving parts, so the many small reads at boot and sign-in are far faster than on any spinning disk.<sup class="cite"><a href="#src-messer">[1]</a></sup> A 7,200 rpm drive helps only a little; RAM is already fine; defragmenting doesn't fix a slow drive type.</div>
+  </section>
+
+  <section class="quiz">
+    <p class="q">A server's spec sheet lists 2.5-inch 15,000 rpm hard drives at 12 Gbps in hot-swap bays. Which interface is that?</p>
+    <ul class="choices">
+      <li><button class="choice">SATA, a desktop interface</button></li>
+      <li><button class="choice">NVMe, a flash protocol</button></li>
+      <li><button class="choice" data-correct>SAS, an enterprise interface</button></li>
+      <li><button class="choice">eSATA, an external interface</button></li>
+    </ul>
+    <div class="explain" hidden>High-rpm server drives at 12 Gbps in hot-swap bays point to <strong>SAS</strong> (Serial Attached SCSI). SATA tops out at 6 Gbps, NVMe is for SSDs over PCIe, and eSATA is an external cable.</div>
+  </section>
+
+  <section class="quiz">
+    <p class="q">Two 1 TB SSDs: one reads at about 550 MB/s, the other at several GB/s. What explains the gap?</p>
+    <ul class="choices">
+      <li><button class="choice" data-correct>The faster one uses NVMe over PCIe</button></li>
+      <li><button class="choice">The faster one spins at higher rpm</button></li>
+      <li><button class="choice">The slower one uses parity memory chips</button></li>
+      <li><button class="choice">The slower one has an eSATA cable</button></li>
+    </ul>
+    <div class="explain" hidden>About 550 MB/s is the ceiling of <strong>SATA</strong> (6 Gbps, AHCI). <strong>NVMe over PCIe</strong> skips SATA and was designed for flash, so it reaches several GB/s. SSDs don't spin, and parity is a RAM feature (<a href="0048-memory-technologies-ecc-channels.html">lesson 0048</a>).</div>
+  </section>
+
+  <section class="quiz">
+    <p class="q"><code>Get-PhysicalDisk</code> shows a drive with MediaType <strong>SSD</strong> and BusType <strong>SATA</strong>. What is it?</p>
+    <ul class="choices">
+      <li><button class="choice">A spinning hard drive over SATA</button></li>
+      <li><button class="choice">An NVMe SSD on PCIe lanes</button></li>
+      <li><button class="choice">An external drive over USB cable</button></li>
+      <li><button class="choice" data-correct>A solid-state drive limited by SATA</button></li>
+    </ul>
+    <div class="explain" hidden>MediaType says <strong>what</strong> it is (SSD), BusType says <strong>how</strong> it's attached (SATA). So it's a SATA SSD: no moving parts, but capped near 600 MB/s. An NVMe drive would show BusType NVMe; a USB drive, BusType USB.</div>
+  </section>
+  <p class="quiz-score" data-quiz-score></p>
+
+  <details class="recall">
+    <summary>From memory: one strength of HDDs, one of SSDs, the four common spindle speeds, and the three drive interfaces with where each is used. <span class="hint">(then click to check)</span></summary>
+    <p>HDD: <strong>cheap capacity</strong>. SSD: <strong>speed</strong>, no moving parts. <strong>5,400 / 7,200 / 10,000 / 15,000 rpm</strong>. <strong>SATA</strong> (everyday, ≈600 MB/s), <strong>SAS</strong> (servers), <strong>NVMe over PCIe</strong> (fastest SSDs).</p>
+  </details>
+
+  <h2>Review: earlier lessons</h2>
+  <p>Spaced retrieval: pull these from memory first, then check.</p>
+
+  <details class="recall">
+    <summary>A switch's fiber module takes a small connector, used in transmit/receive pairs, with a latching clip. Which connector? <span class="hint">(<a href="0046-fiber-connectors.html">lesson 0046</a>, 3 days ago)</span></summary>
+    <p><strong>LC</strong>: the small-form connector with a clip, usually as a duplex pair. SC is the larger square push-pull one; ST twists on like a bayonet.</p>
+  </details>
+
+  <details class="recall">
+    <summary>A new SATA drive is screwed in, but the PC doesn't see it. Which two cables should you check, and where does each go? <span class="hint">(<a href="0042-storage-cables-sata-esata.html">lesson 0042</a>, 7 days ago)</span></summary>
+    <p>The <strong>7-pin SATA data</strong> cable to the motherboard, and the <strong>15-pin SATA power</strong> cable from the power supply. A drive needs both.</p>
+  </details>
+
+  <details class="recall">
+    <summary>You need to find which patch-panel port a user's wall jack runs to, without unplugging everything. Which tool? <span class="hint">(<a href="0019-network-tools.html">lesson 0019</a>, 30 days ago)</span></summary>
+    <p>A <strong>tone generator and probe</strong> (toner): put the tone on the cable at the wall jack, then sweep the probe across the patch panel until it beeps.</p>
+  </details>
+
+  <div class="callout source" id="src-messer">
+    <span class="label">Primary source: watch next</span>
+    <p>[1] Professor Messer, <a href="https://www.professormesser.com/free-a-plus-training/220-1201/220-1201-video/storage-devices-220-1201/">Storage Devices (220-1201, 3.4)</a>. Hard drives, SSDs, SATA, SAS, NVMe, M.2, flash and optical. Free.</p>
+    <p id="src-utp">[2] Union Test Prep, <a href="https://uniontestprep.com/comptia-a-core-series-exam/study-guide/220-1201-hardware/pages/3">220-1201 Hardware study guide</a>: spindle speeds, heat and power trade-off, SAS for enterprise storage.</p>
+    <p id="src-lenovo">[3] Lenovo Press, <a href="https://lenovopress.lenovo.com/lp1059-lenovo-thinksystem-hdd-summary">ThinkSystem HDD summary</a>: server drives at 7,200, 10,000 and 15,000 rpm on SATA and SAS.</p>
+    <p id="src-tt">[4] TechTarget, <a href="https://searchstorage.techtarget.com/definition/AHCI-Advanced-Host-Controller-Interface">AHCI (Advanced Host Controller Interface)</a>: one queue of 32 commands, designed for spinning disks; NVMe's many deep queues.</p>
+    <p id="src-ms">[5] Microsoft Learn, <a href="https://learn.microsoft.com/en-us/windows-hardware/drivers/storage/msft-physicaldisk">MSFT_PhysicalDisk class</a>: the MediaType and BusType properties behind <code>Get-PhysicalDisk</code>.</p>
+  </div>
+
+  <div class="callout ask">
+    <span class="label">Questions?</span>
+    <p>Anything unclear? Ask your teacher. Open Claude in the Teacher repo and ask, for example: <em>"In IT lesson 0049, can I put a SATA drive on a SAS controller, or the other way round?"</em> Follow-up questions are part of the course.</p>
+  </div>
+</main>
+<nav class="page-footer">
+  <a href="0048-memory-technologies-ecc-channels.html">← Catch the flipped bit: parity, ECC and memory channels</a>
+  <a href="../../index.html">Hub</a>
+  <span class="disabled">Next lesson: tomorrow →</span>
+</nav>
+</body>
+</html>

@@ -316,6 +316,23 @@
   </div>
   <p class="sidenote">Parity finds; ECC finds and fixes. They look alike: check the spec. Win32_PhysicalMemory DataWidth 64 / TotalWidth 72 hints at ECC, but some systems misreport it.</p>
 
+  <h2>Storage devices: drives and interfaces (objective 3.4)</h2>
+  <div class="table-wrap">
+  <table>
+    <thead><tr><th>Item</th><th>Key facts</th><th>Where</th></tr></thead>
+    <tbody>
+      <tr><td>HDD</td><td>Magnetic spinning platters, moving arm; cheap capacity; 5,400 / 7,200 / 10,000 / 15,000 rpm (faster = more heat and power)</td><td>Backups, file servers, older PCs</td></tr>
+      <tr><td>SSD</td><td>Flash memory, no moving parts; much faster, especially at boot and app start</td><td>Almost every new laptop and desktop</td></tr>
+      <tr><td>Hybrid (SSHD)</td><td>Small SSD cache in front of a hard drive</td><td>Some older laptops and desktops</td></tr>
+      <tr><td>Form factors</td><td>3.5-inch desktop, 2.5-inch laptop (and many servers)</td><td>Drive bays</td></tr>
+      <tr><td>SATA</td><td>AHCI protocol, built for hard drives; 6 Gbps ≈ 600 MB/s; one queue of 32 commands</td><td>Everyday drives</td></tr>
+      <tr><td>SAS</td><td>Serial Attached SCSI; 12 Gbps and up; high-rpm and hot-swap drives</td><td>Servers, storage arrays</td></tr>
+      <tr><td>NVMe over PCIe</td><td>Protocol made for flash, straight over PCIe lanes; several GB/s; many deep queues</td><td>Fast SSDs</td></tr>
+    </tbody>
+  </table>
+  </div>
+  <p class="sidenote">Read both halves of a spec line: what the drive is (HDD/SSD) and how it connects (SATA/SAS/NVMe). <code>Get-PhysicalDisk</code> shows them as MediaType and BusType.</p>
+
   <h2>Commands (Windows)</h2>
   <div class="table-wrap">
   <table>
