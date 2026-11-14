@@ -1,0 +1,255 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Weekly Quiz: Nov 8 – Nov 13</title>
+<meta name="description" content="IT lesson 0050: Saturday in-depth quiz on week seven (adapters and converters, copper and fiber connectors, RAM modules, ECC and dual channel, HDDs, SSDs and drive interfaces) mixed with early networking lessons, plus an A+ Core 1 pace check.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=JetBrains+Mono&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../assets/course.css">
+<script src="../../assets/quiz.js" defer></script>
+</head>
+<body class="track-it">
+<nav class="page-header">
+  <a class="home" href="../../index.html">Teacher hub</a>
+  <span>IT and certs</span>
+  <a href="../reference/glossary.html">Glossary</a>
+  <a href="../reference/network-settings.html">Cheat sheet</a>
+  <a href="../reference/hardware.html">Hardware cheat sheet</a>
+</nav>
+<main>
+  <p class="kicker">IT and certs · Lesson 0050 · Saturday quiz · A+ Core 1, objectives 3.2–3.4 and 2.x review</p>
+  <h1>Weekly quiz: Nov 8 – Nov 13</h1>
+  <p class="lede">About 20 minutes. Fifteen questions: nine on this week's hardware (adapters and converters, copper and fiber connectors, RAM, ECC and dual channel, hard drives and SSDs) and six pulled back from the networking weeks, five to seven weeks ago (TCP and UDP, RFID, AAA, DNS, VPNs, internet connections). They're shuffled on purpose. Most are tickets: work out what's going on before you work out what it's called.</p>
+
+  <div class="callout">
+    <span class="label">How to take it</span>
+    <p>No scrolling back to the lessons until you've answered. A wrong answer followed by the explanation sticks better than a right answer you looked up. Each explanation links to the lesson that taught it, so you know exactly what to reread.</p>
+  </div>
+
+  <p class="quiz-score" data-quiz-score></p>
+
+  <section class="quiz">
+    <p class="q">A manager forwards a quote for a new file server's memory: "32 GB DDR5-4800 DIMM, 64-bit, on-die ECC." The server vendor requires ECC memory. Is this the right part?</p>
+    <ul class="choices">
+      <li><button class="choice">Yes: every DDR5 stick is ECC memory</button></li>
+      <li><button class="choice">Yes: on-die ECC protects the whole path</button></li>
+      <li><button class="choice" data-correct>No: on-die ECC isn't an ECC module</button></li>
+      <li><button class="choice">No: servers need parity memory, not ECC</button></li>
+    </ul>
+    <div class="explain" hidden>Every DDR5 chip has <strong>on-die ECC</strong>, but it only fixes errors <em>inside</em> each chip, not on the way to the CPU. An <strong>ECC module</strong> is 72 bits wide (64 data + 8 check bits), and this quote says 64-bit: ordinary memory. Parity would be worse, not better: it detects an error but can't fix it, and the system usually halts. Order a part whose spec line says ECC as a module feature. See <a href="0048-memory-technologies-ecc-channels.html">lesson 0048</a>.</div>
+  </section>
+
+  <section class="quiz">
+    <p class="q">A small office's VoIP phones sound choppy during busy hours. A coworker suggests reconfiguring the phones to send voice over TCP "so no audio gets lost." What's wrong with that idea?</p>
+    <ul class="choices">
+      <li><button class="choice" data-correct>TCP re-sends lost audio, adding worse delays</button></li>
+      <li><button class="choice">TCP can't carry audio between two phones</button></li>
+      <li><button class="choice">TCP has no ports for voice traffic</button></li>
+      <li><button class="choice">TCP is connectionless, so nothing would improve</button></li>
+    </ul>
+    <div class="explain" hidden>Live voice rides <strong>UDP</strong> on purpose. A lost packet becomes a tiny glitch and the call moves on. <strong>TCP</strong> would stop and re-send, so audio arrives late, which is worse in a conversation than a missing syllable. TCP is the connection-oriented one, and both protocols use ports. The real fix for choppy calls on a busy network is more bandwidth or traffic priority (QoS), not TCP. See <a href="0002-tcp-udp-ports.html">lesson 0002</a>, 48 days ago.</div>
+  </section>
+
+  <section class="quiz">
+    <p class="q">A conference-room PC has a DHCP reservation so the room's booking display can always find it. IT replaces the PC's broken USB-to-Ethernet adapter, and now the PC gets a random address from the pool. Why?</p>
+    <ul class="choices">
+      <li><button class="choice">USB adapters never get any DHCP reservations</button></li>
+      <li><button class="choice">The old lease must expire before renewing</button></li>
+      <li><button class="choice">The new adapter needs an exclusion range</button></li>
+      <li><button class="choice" data-correct>The reservation points at the old MAC</button></li>
+    </ul>
+    <div class="explain" hidden>A USB-to-Ethernet adapter is its <strong>own network card with its own MAC address</strong>. A DHCP <strong>reservation</strong> ties one IP to one MAC, so it followed the old adapter, not the PC. Update the reservation with the new adapter's MAC (<code>Get-NetAdapter</code> shows it). An exclusion does the opposite: DHCP would never hand that address out. See <a href="0044-adapters-and-converters.html">lesson 0044</a> and <a href="0014-dhcp-scopes-leases.html">lesson 0014</a>, 36 days ago.</div>
+  </section>
+
+  <section class="quiz">
+    <p class="q">A video editor wants the fastest possible scratch drive in their desktop. It has a free SATA port and a free PCIe x4 slot that takes an NVMe SSD card. Which do you recommend, and why?</p>
+    <ul class="choices">
+      <li><button class="choice">A SATA SSD, since AHCI queues run deeper</button></li>
+      <li><button class="choice" data-correct>An NVMe SSD, since PCIe passes SATA's limit</button></li>
+      <li><button class="choice">A SAS hard drive, since 15,000 rpm wins</button></li>
+      <li><button class="choice">A hybrid SSHD, since its cache covers everything</button></li>
+    </ul>
+    <div class="explain" hidden>Any SSD on <strong>SATA</strong> tops out near 600 MB/s, held back by AHCI, a protocol built for spinning disks with <em>one</em> queue of 32 commands. <strong>NVMe over PCIe</strong> was designed for flash, with thousands of deep queues, and reaches several GB/s. A 15,000 rpm drive is still a spinning disk, and an SSHD only caches the files you use most. See <a href="0049-storage-devices-hdd-ssd-interfaces.html">lesson 0049</a>.</div>
+  </section>
+
+  <section class="quiz">
+    <p class="q">A warehouse wants pallets logged automatically as forklifts carry them through the dock door, a few meters from the reader. The tags must be cheap and have no battery. Which technology fits?</p>
+    <ul class="choices">
+      <li><button class="choice">NFC tags tapped against a handheld phone</button></li>
+      <li><button class="choice">Bluetooth beacons paired with each dock reader</button></li>
+      <li><button class="choice" data-correct>Passive RFID tags powered by the reader</button></li>
+      <li><button class="choice">Fixed wireless links aimed at each pallet</button></li>
+    </ul>
+    <div class="explain" hidden>A <strong>passive RFID</strong> tag has no battery: the reader's radio signal powers it just long enough to reply with its ID, with no tap and no pairing. <strong>NFC</strong> works at a few centimeters and needs someone to tap; Bluetooth beacons need a battery; fixed wireless links two buildings, not pallets. See <a href="0009-bluetooth-nfc-rfid-fixed-wireless.html">lesson 0009</a>, 41 days ago.</div>
+  </section>
+
+  <section class="quiz">
+    <p class="q">A user moved desks and now sees "Network cable unplugged." The cord from the PC to the wall jack is pushed in at both ends, but its plugs are narrower than the ports and show only four gold contacts. What's going on?</p>
+    <ul class="choices">
+      <li><button class="choice" data-correct>It's an RJ11 phone cord, not Ethernet</button></li>
+      <li><button class="choice">It's a crossover cable with swapped pairs</button></li>
+      <li><button class="choice">It's a riser cable, not plenum rated</button></li>
+      <li><button class="choice">It's an F connector on coax cable</button></li>
+    </ul>
+    <div class="explain" hidden>A narrow clip plug with 6 positions and 2 or 4 contacts is <strong>RJ11</strong>, a phone/DSL cord. It can sit in an RJ45 port, but it doesn't reach the pins Ethernet uses, so there's no link. Ethernet uses the wider 8-contact <strong>RJ45</strong> (8P8C). A crossover cable still has RJ45 plugs, the jacket rating is about fire safety, and an F connector screws onto coax. See <a href="0045-copper-connectors.html">lesson 0045</a>.</div>
+  </section>
+
+  <section class="quiz">
+    <p class="q">The provider replaced a fiber customer's ONT. The technician grabs a spare patch cable with blue SC plugs and connects it to the new ONT's green SC port. The link comes up but shows high signal loss. What's the most likely cause?</p>
+    <ul class="choices">
+      <li><button class="choice">The SC plug must be twisted to lock</button></li>
+      <li><button class="choice">The duplex pair is swapped at one end</button></li>
+      <li><button class="choice">The ONT port needs a beige multimode plug</button></li>
+      <li><button class="choice" data-correct>Blue UPC plug meets a green APC port</button></li>
+    </ul>
+    <div class="explain" hidden>Connector body colors code the polish: <strong>blue = UPC</strong> (flat tip), <strong>green = APC</strong> (angled 8°). A flat face against an angled one leaves a gap: light is lost, and the tips can be damaged. Use a green APC cable. SC is push-pull (ST is the one that twists), a swapped duplex pair gives no link at all rather than a weak one, and beige marks multimode, not a fix. See <a href="0046-fiber-connectors.html">lesson 0046</a>.</div>
+  </section>
+
+  <section class="quiz">
+    <p class="q">A company moved its website to a new host and changed the A record 20 minutes ago. Some users already see the new site; others still get the old one. The record's TTL is 3600. What's going on?</p>
+    <ul class="choices">
+      <li><button class="choice">The new host is missing its AAAA record</button></li>
+      <li><button class="choice" data-correct>Old answers stay cached until the TTL ends</button></li>
+      <li><button class="choice">The MX record overrides the new A record</button></li>
+      <li><button class="choice">A CNAME must replace the bare A record</button></li>
+    </ul>
+    <div class="explain" hidden>The <strong>TTL</strong> (time to live, in seconds) says how long clients and other DNS servers may cache an answer. 3600 s is an hour, so anyone who looked the name up just before the change keeps the old address for up to an hour. Wait it out (or <code>ipconfig /flushdns</code> on one PC); next time, lower the TTL a day before a move. MX is only for mail, and AAAA is IPv6. See <a href="0012-dns-records.html">lesson 0012</a>, 38 days ago.</div>
+  </section>
+
+  <section class="quiz">
+    <p class="q">A user's laptop has 8 GB of RAM and needs 16 GB. Task Manager shows <strong>Form factor: SODIMM</strong> and <strong>Slots used: 2 of 2</strong>, and PowerShell reports <code>SMBIOSMemoryType 34</code> for both 4 GB sticks. What do you order?</p>
+    <ul class="choices">
+      <li><button class="choice">One extra 8 GB DDR5 SO-DIMM added</button></li>
+      <li><button class="choice">Two 8 GB DDR4 SO-DIMMs as replacements</button></li>
+      <li><button class="choice">Two 8 GB DDR5 DIMMs as replacements</button></li>
+      <li><button class="choice" data-correct>Two 8 GB DDR5 SO-DIMMs as replacements</button></li>
+    </ul>
+    <div class="explain" hidden>Three facts decide it. <strong>SODIMM</strong>: laptop-size modules, not desktop DIMMs. Type <strong>34 = DDR5</strong> (26 would be DDR4), and generations never mix. <strong>2 of 2</strong>: no free slot, so both sticks get replaced. A matched pair keeps it in dual channel. See <a href="0047-memory-overview-dimm-ddr.html">lesson 0047</a> and <a href="0048-memory-technologies-ecc-channels.html">lesson 0048</a>.</div>
+  </section>
+
+  <section class="quiz">
+    <p class="q">A branch office's internet slows to a crawl during heavy rainstorms and recovers when the weather clears. Even on sunny days, every remote-desktop click lags about half a second. What connection does the branch most likely have?</p>
+    <ul class="choices">
+      <li><button class="choice" data-correct>Geostationary satellite, with rain fade and latency</button></li>
+      <li><button class="choice">Fixed wireless, with blocked line of sight</button></li>
+      <li><button class="choice">DSL, too distant from the provider's office</button></li>
+      <li><button class="choice">Cable, with bandwidth shared among the neighbors</button></li>
+    </ul>
+    <div class="explain" hidden>Two clues, one answer. <strong>Rain fade</strong> is satellite's weather weakness, and a constant half-second lag is the round trip to a <strong>geostationary</strong> satellite about 36,000 km up. A blocked line of sight (WISP) doesn't come and go with rain, DSL distance doesn't change with the weather, and shared cable slows at busy times of day. See <a href="0018-internet-connection-types.html">lesson 0018</a>, 32 days ago.</div>
+  </section>
+
+  <section class="quiz">
+    <p class="q">A desktop with integrated graphics has a single 8 GB DDR4 stick, and its user says video playback and screen sharing stutter. Which inexpensive upgrade will help the graphics most?</p>
+    <ul class="choices">
+      <li><button class="choice">Replace the stick with one 16 GB</button></li>
+      <li><button class="choice">Replace the stick with an ECC stick</button></li>
+      <li><button class="choice" data-correct>Add a matching stick for dual channel</button></li>
+      <li><button class="choice">Add a 7,200 rpm drive for swap</button></li>
+    </ul>
+    <div class="explain" hidden><strong>Integrated graphics use system RAM</strong>, so memory bandwidth is graphics bandwidth. One stick uses one channel; a <strong>matching</strong> stick in the paired (often color-coded) slot gives <strong>dual channel</strong>, roughly doubling bandwidth. One bigger stick is still single channel, ECC adds no speed (and needs board support), and a hard drive for swap is slower than any RAM. See <a href="0048-memory-technologies-ecc-channels.html">lesson 0048</a>.</div>
+  </section>
+
+  <section class="quiz">
+    <p class="q">A conference room's projector has only a VGA input. A visitor's laptop has only USB-C ports. Which of these will get a picture on the screen?</p>
+    <ul class="choices">
+      <li><button class="choice">A passive USB-C to HDMI adapter</button></li>
+      <li><button class="choice" data-correct>An active USB-C to VGA converter</button></li>
+      <li><button class="choice">A passive DVI-I to VGA adapter</button></li>
+      <li><button class="choice">A passive USB-C to USB-A adapter</button></li>
+    </ul>
+    <div class="explain" hidden>Video over USB-C is <strong>DisplayPort Alt Mode</strong>: digital. VGA is <strong>analog</strong>. Different signals need an <strong>active converter</strong> with a chip that changes the signal. The HDMI adapter's output doesn't fit a VGA input, the laptop has no DVI-I port, and a USB-A adapter carries data, not video. See <a href="0044-adapters-and-converters.html">lesson 0044</a> and <a href="0041-video-cables-hdmi-displayport-dvi-vga.html">lesson 0041</a>.</div>
+  </section>
+
+  <section class="quiz">
+    <p class="q">A user's account shows a sign-in at 3 a.m. from another country. Before you reset the password, you want every sign-in to that account last week, with times and locations. Which part of AAA gives you that?</p>
+    <ul class="choices">
+      <li><button class="choice">Authentication, from the MFA methods page</button></li>
+      <li><button class="choice">Authorization, from the app's group assignments</button></li>
+      <li><button class="choice">Authentication, from the password reset portal</button></li>
+      <li><button class="choice" data-correct>Accounting, from the Entra sign-in logs</button></li>
+    </ul>
+    <div class="explain" hidden><strong>Accounting</strong> is the record of what happened: who signed in, when, from where, to what. In Microsoft Entra ID that's the <strong>sign-in logs</strong>. Authentication is proving who you are (password, MFA); authorization is what you're then allowed to do (group and app assignments). Neither keeps the history. See <a href="0010-server-roles.html">lesson 0010</a>, 40 days ago.</div>
+  </section>
+
+  <section class="quiz">
+    <p class="q">A small office needs about 40 TB of storage for nightly backups. The budget is tight, and how fast a restore runs matters little. Which drives fit best?</p>
+    <ul class="choices">
+      <li><button class="choice" data-correct>Large hard drives: cheapest per terabyte</button></li>
+      <li><button class="choice">NVMe SSDs: the fastest per terabyte</button></li>
+      <li><button class="choice">SATA SSDs: the quietest per terabyte</button></li>
+      <li><button class="choice">Hybrid SSHDs: the best of both</button></li>
+    </ul>
+    <div class="explain" hidden><strong>Hard drives</strong> give the most capacity for the least money, which is exactly what bulk backups need when speed doesn't matter. SSDs win on speed, silence and surviving drops, but cost more per terabyte. An SSHD's small flash cache only speeds up files used often, and backups are written once and rarely read. See <a href="0049-storage-devices-hdd-ssd-interfaces.html">lesson 0049</a>.</div>
+  </section>
+
+  <section class="quiz">
+    <p class="q">During a company-wide video town hall streamed from a cloud service, remote staff on VPN say the stream keeps buffering, and the HQ internet link shows 100% use. The VPN profile sends all traffic through HQ. What change would relieve the link most?</p>
+    <ul class="choices">
+      <li><button class="choice">Move remote staff to a new VLAN</button></li>
+      <li><button class="choice">Add a site-to-site tunnel for each user</button></li>
+      <li><button class="choice" data-correct>Switch the VPN profile to split tunnel</button></li>
+      <li><button class="choice">Shorten the DHCP lease on the VPN</button></li>
+    </ul>
+    <div class="explain" hidden>With a <strong>full tunnel</strong>, every remote viewer's stream comes in through HQ's internet link and goes back out through the VPN: twice over one link. A <strong>split tunnel</strong> sends only company traffic through the VPN, so cloud video goes straight from the provider to each home connection. The trade-off: HQ can no longer inspect that traffic. A VLAN divides a local network, and site-to-site joins offices, not single users. See <a href="0016-vlans-vpns.html">lesson 0016</a>, 34 days ago.</div>
+  </section>
+
+  <p class="quiz-score" data-quiz-score></p>
+
+  <h2>Explain it in your own words</h2>
+  <p>Say or write the answer before you open each one. If you can explain it to a coworker, you know it.</p>
+
+  <details class="recall">
+    <summary>A coworker asks: "ECC, parity, non-parity: what's the difference, and doesn't every DDR5 stick have ECC anyway?" Explain. <span class="hint">(<a href="0048-memory-technologies-ecc-channels.html">lesson 0048</a>)</span></summary>
+    <p><strong>Non-parity</strong>: no checking; a flipped bit goes unnoticed. <strong>Parity</strong>: one check bit per byte; it can detect a single-bit error but not fix it, so the system usually halts. <strong>ECC</strong>: extra check bits (72 bits wide instead of 64) that detect <em>and</em> correct single-bit errors so the system keeps running; it needs board and CPU support. DDR5's <strong>on-die ECC</strong> only protects inside each chip, so a DDR5 stick isn't an ECC module unless its spec says so.</p>
+  </details>
+
+  <details class="recall">
+    <summary>Explain the difference between an adapter and a converter, and give one video example of each. <span class="hint">(<a href="0044-adapters-and-converters.html">lesson 0044</a>)</span></summary>
+    <p>An <strong>adapter</strong> is passive: it only rewires one connector shape to another, so both sides must already carry the same signal (DVI to HDMI, DVI-I to VGA). A <strong>converter</strong> is active: a chip changes the signal, often with its own power (DVI-D, HDMI, DisplayPort or USB-C to VGA, digital to analog). The test is never "does it fit?" but "is the same signal on both sides?"</p>
+  </details>
+
+  <details class="recall">
+    <summary>A user bought "a fast SSD" and asks why their friend's SSD benchmarks five times faster. Explain what else decides an SSD's speed. <span class="hint">(<a href="0049-storage-devices-hdd-ssd-interfaces.html">lesson 0049</a>)</span></summary>
+    <p>How it connects. A <strong>SATA</strong> SSD uses AHCI, a protocol built for spinning disks (one queue of 32 commands), and is capped near 600 MB/s. An <strong>NVMe</strong> SSD talks straight over PCIe lanes with thousands of deep queues and reaches several GB/s. "SSD" says what the drive is; the bus says how fast it can go. <code>Get-PhysicalDisk</code> shows both: MediaType and BusType.</p>
+  </details>
+
+  <details class="recall">
+    <summary>For ST, SC and LC: how does each lock, and where would you expect to find it? <span class="hint">(<a href="0046-fiber-connectors.html">lesson 0046</a>)</span></summary>
+    <p><strong>ST</strong>: round, bayonet (push and twist), older multimode panels. <strong>SC</strong>: square, push-pull, provider fiber and ONTs. <strong>LC</strong>: small, latch clip, usually in duplex pairs, in the SFP modules of today's switches. Memory hook: Stick and Twist, Stick and Click, Little Connector.</p>
+  </details>
+
+  <details class="recall">
+    <summary>Explain a DHCP exclusion vs. a DHCP reservation, and when you'd use each. <span class="hint">(<a href="0014-dhcp-scopes-leases.html">lesson 0014</a>, 36 days ago)</span></summary>
+    <p>An <strong>exclusion</strong> is a set of addresses DHCP never hands out: use it for devices with hand-typed static addresses (router, some servers), so DHCP doesn't give their IP to someone else. A <strong>reservation</strong> always gives one IP to one MAC address: use it for devices that should keep the same address but still get their settings from DHCP, like printers. Because it's tied to the MAC, replacing the network adapter breaks it.</p>
+  </details>
+
+  <h2>Pace check</h2>
+  <div class="callout">
+    <span class="label">A+ Core 1: 34 of 63 videos covered (about 54%)</span>
+    <div class="meter"><span style="width:54%"></span></div>
+    <p>Fully covered so far: the 12 networking videos (objectives 2.1–2.8), the 5 mobile device videos (1.1–1.3), the 4 virtualization and cloud videos (4.1–4.2), and 13 hardware videos, including this week's five: Adapters and Converters, Copper Connectors, Fiber Connectors, An Overview of Memory and Memory Technologies. Storage Devices is half done (lesson 0049) and counts once tomorrow's lesson finishes it.</p>
+    <p><strong>What the calendar needs:</strong> the syllabus puts all new material in weeks 1–17 (Sep 27 – Jan 23), about <strong>3.7 videos a week</strong>. Today ends week 7, so you'd expect about 26. You're at 34: <strong>ahead, by about eight videos</strong>, a little over two weeks of buffer. The lead keeps growing: one behind, on pace, one ahead, two ahead, four or five ahead, seven, now eight.</p>
+    <p><strong>The trend:</strong> five videos this week instead of six, because Storage Devices is a long video and was split in two on purpose (short lessons beat a rushed one). The remaining 29 videos fit in the 10 weeks before review starts at about 2.9 a week, so the February target holds comfortably. By the syllabus, Hardware (3.1–3.8) starts tomorrow, Nov 15; it's already well under way.</p>
+    <p>Nothing in the plan was changed. Tomorrow's lesson finishes Storage Devices (M.2, mSATA, flash memory and optical drives), then objective 3.4 continues. The spare time is yours to spend: keep it as slack for the holidays, start the troubleshooting domain (28% of the exam, the biggest) earlier, or turn it into extra practice exams before February.</p>
+  </div>
+
+  <div class="callout source" id="src-messer">
+    <span class="label">Primary source: watch next</span>
+    <p>Professor Messer, <a href="https://www.professormesser.com/free-a-plus-training/220-1201/220-1201-video/220-1201-training-course/">Free CompTIA A+ 220-1201 course</a>. Rewatch the video behind whichever question you missed: Adapters and Converters, Copper Connectors, Fiber Connectors, An Overview of Memory, Memory Technologies and Storage Devices cover this week. Free.</p>
+  </div>
+
+  <div class="callout ask">
+    <span class="label">Questions?</span>
+    <p>Missed one and the explanation didn't settle it? Ask your teacher. Open Claude in the Teacher repo and ask, for example: <em>"In IT lesson 0050, question 1, how can I check whether a server's memory is really running with ECC?"</em> Follow-up questions are part of the course.</p>
+  </div>
+</main>
+<nav class="page-footer">
+  <a href="0049-storage-devices-hdd-ssd-interfaces.html">← Spinning or solid: HDDs, SSDs and how they connect</a>
+  <a href="../../index.html">Hub</a>
+  <span class="disabled">Next lesson: tomorrow →</span>
+</nav>
+</body>
+</html>

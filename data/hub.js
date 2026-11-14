@@ -1,7 +1,7 @@
 /* Hub data. The teacher updates this file after every lesson; index.html renders it.
    Keep it free of personal data: the site is public. */
 window.HUB = {
-  updated: "2026-11-13",
+  updated: "2026-11-14",
   tracks: [
     {
       id: "it", name: "IT and certs", folder: "it", cls: "track-it", status: "active",
@@ -270,6 +270,11 @@ window.HUB = {
       track: "it", num: "0049", date: "2026-11-13", covers: 0,
       title: "Spinning or solid: HDDs, SSDs and how they connect",
       path: "it/lessons/0049-storage-devices-hdd-ssd-interfaces.html"
+    },
+    {
+      track: "it", num: "0050", date: "2026-11-14", covers: 0,
+      title: "Weekly quiz: Nov 8 – Nov 13",
+      path: "it/lessons/0050-week-quiz-2026-11-14.html"
     },
     {
       track: "app", num: "0001", date: "2026-09-28", covers: 0,
