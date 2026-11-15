@@ -1,0 +1,171 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Storage Devices: M.2, Flash, Optical</title>
+<meta name="description" content="IT lesson 0051: A+ objective 3.4, storage devices (part 2). M.2 keys and lengths, mSATA, flash memory (USB drives and SD cards) and optical discs (CD, DVD, Blu-ray).">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=JetBrains+Mono&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../assets/course.css">
+<script src="../../assets/quiz.js" defer></script>
+</head>
+<body class="track-it">
+<nav class="page-header">
+  <a class="home" href="../../index.html">Teacher hub</a>
+  <span>IT and certs</span>
+  <a href="../reference/glossary.html">Glossary</a>
+  <a href="../reference/hardware.html">Hardware cheat sheet</a>
+</nav>
+<main>
+  <p class="kicker">IT and certs · Lesson 0051 · A+ Core 1, objective 3.4</p>
+  <h1>Small slots, pocket drives and discs: M.2, flash and optical</h1>
+  <p class="lede">About 10 minutes. <a href="0049-storage-devices-hdd-ssd-interfaces.html">Lesson 0049</a> covered the drives (HDD vs. SSD) and the interfaces (SATA, SAS, NVMe). Today finishes the video: the small <strong>M.2</strong> and <strong>mSATA</strong> slots, <strong>flash memory</strong> you carry around, and <strong>optical discs</strong>.<sup class="cite"><a href="#src-messer">[1]</a></sup> The win: look at an SSD listing and a motherboard manual and say whether the drive will work.</p>
+
+  <div class="callout">
+    <span class="label">Why this matters at work</span>
+    <p>A USB flash drive is the easiest way for company data to walk out the door, or get lost in a parking lot. That's why managed Windows devices often get a policy that <strong>blocks removable storage</strong> or allows only reading from it (in Intune, a device restrictions or device control setting).<sup class="cite"><a href="#src-intune">[4]</a></sup> When a user says "my USB stick stopped working on my work laptop," the first question is whether it's broken or <em>blocked on purpose</em>.</p>
+  </div>
+
+  <h2>1. M.2: one slot, two possible languages</h2>
+  <p><strong>M.2</strong> is a small card-shaped drive that plugs straight into the motherboard: no cable. It's the usual SSD in laptops and modern desktops. The catch: an M.2 drive can speak <strong>SATA</strong> or <strong>NVMe</strong>, and they look almost the same.<sup class="cite"><a href="#src-messer">[1]</a></sup></p>
+  <div class="table-wrap">
+  <table>
+    <thead><tr><th>Read this</th><th>What it tells you</th></tr></thead>
+    <tbody>
+      <tr><td><strong>Key</strong> (notch in the edge connector)</td><td><strong>M key</strong> (one notch): up to four PCIe lanes, the usual <strong>NVMe</strong> drive. <strong>B+M key</strong> (two notches): usually an M.2 <strong>SATA</strong> drive.<sup class="cite"><a href="#src-delock">[2]</a></sup></td></tr>
+      <tr><td><strong>Size code</strong>, e.g. <strong>2280</strong></td><td>Width then length in mm: <strong>22 mm wide, 80 mm long</strong>. Others: 2230, 2242, 2260, 22110. It must fit the screw post.<sup class="cite"><a href="#src-crucial">[3]</a></sup></td></tr>
+      <tr><td>The <strong>motherboard manual</strong></td><td>Which protocol the slot supports. Some M.2 slots are <strong>SATA only</strong>: an NVMe drive there won't be detected.<sup class="cite"><a href="#src-delock">[2]</a></sup></td></tr>
+    </tbody>
+  </table>
+  </div>
+  <p><strong>mSATA</strong> is the older, smaller cousin: a little SATA-only card with a different connector. Messer calls it a stopgap between SATA and M.2; you'll find it in older laptops, and it <strong>doesn't fit an M.2 slot</strong>.<sup class="cite"><a href="#src-messer">[1]</a></sup><sup class="cite"><a href="#src-crucial">[3]</a></sup></p>
+
+  <h2>2. Flash memory you carry</h2>
+  <p><strong>Flash</strong> is non-volatile: it keeps data with the power off (the same chips inside an SSD). The removable kinds: <strong>USB flash drives</strong> and memory cards like <strong>SD</strong> and <strong>microSD</strong> (cameras, phones, some laptops).<sup class="cite"><a href="#src-messer">[1]</a></sup></p>
+  <p>Messer's warning: they're small, so they're <strong>easy to lose or damage</strong>, and not a good place for the only copy of anything (archival storage).<sup class="cite"><a href="#src-messer">[1]</a></sup></p>
+
+  <h2>3. Optical discs</h2>
+  <p>A laser reads (and burns) data on a spinning disc. Rare on new PCs; when you need one, an external USB drive does the job.</p>
+  <div class="table-wrap">
+  <table>
+    <thead><tr><th>Disc</th><th>Capacity</th></tr></thead>
+    <tbody>
+      <tr><td><strong>CD</strong></td><td>About <strong>700 MB</strong></td></tr>
+      <tr><td><strong>DVD</strong></td><td><strong>4.7 GB</strong> single layer, <strong>8.5 GB</strong> dual layer</td></tr>
+      <tr><td><strong>Blu-ray</strong></td><td><strong>25 GB</strong> single layer, <strong>50 GB</strong> dual layer (BDXL goes to 100 GB and more)</td></tr>
+    </tbody>
+  </table>
+  </div>
+  <p class="sidenote">Capacities from disc-format references.<sup class="cite"><a href="#src-iasa">[5]</a></sup> Memory hook: each generation is roughly 5–7× the last (0.7 → 4.7 → 25).</p>
+
+  <div class="callout win">
+    <span class="label">Rule of thumb</span>
+    <p><strong>M.2:</strong> check three things: the <strong>key</strong>, the <strong>length</strong> (2280), and whether the <strong>slot speaks SATA or NVMe</strong>. <strong>mSATA</strong> is older and won't fit M.2. <strong>Flash</strong> is handy but easy to lose. <strong>Optical:</strong> CD 700 MB, DVD 4.7/8.5 GB, Blu-ray 25/50 GB.</p>
+  </div>
+
+  <h2>Try it (2 minutes)</h2>
+  <ol>
+    <li>Plug in a USB flash drive (or SD card) if you have one.</li>
+    <li>In Windows PowerShell:<br><code>Get-Volume | Format-Table DriveLetter, FileSystemLabel, DriveType, FileSystem, Size</code></li>
+    <li>Read <strong>DriveType</strong>: your internal SSD shows <strong>Fixed</strong>, a flash drive or card shows <strong>Removable</strong>, an optical drive shows <strong>CD-ROM</strong>.</li>
+    <li>Then <code>Get-PhysicalDisk | Format-Table FriendlyName, BusType</code> (from <a href="0049-storage-devices-hdd-ssd-interfaces.html">lesson 0049</a>): the flash drive shows BusType <strong>USB</strong>, an M.2 NVMe SSD shows <strong>NVMe</strong>, an M.2 SATA SSD shows <strong>SATA</strong>.</li>
+  </ol>
+  <details class="recall">
+    <summary>A laptop's M.2 SSD shows BusType <strong>SATA</strong>. The user wants it faster. What do you check before buying an NVMe drive? <span class="hint">(then click to check)</span></summary>
+    <p>The laptop's manual: does the M.2 slot support <strong>NVMe (PCIe)</strong>, or only SATA? Also the <strong>length</strong> it takes (often 2280). If the slot is SATA-only, an NVMe drive won't be detected at all.</p>
+  </details>
+
+  <h2>Practice</h2>
+  <p>Answer from memory before scrolling back up.</p>
+
+  <section class="quiz">
+    <p class="q">A motherboard manual says its M.2 slot supports <strong>SATA only</strong>. A user installs an M-key NVMe SSD. What happens?</p>
+    <ul class="choices">
+      <li><button class="choice" data-correct>The drive is not detected</button></li>
+      <li><button class="choice">It runs at NVMe speed</button></li>
+      <li><button class="choice">It runs at SATA speed</button></li>
+      <li><button class="choice">Windows converts it to AHCI</button></li>
+    </ul>
+    <div class="explain" hidden>The drive only speaks <strong>NVMe</strong> and the slot only speaks <strong>SATA</strong>, so they can't talk: the drive isn't detected.<sup class="cite"><a href="#src-delock">[2]</a></sup> It doesn't fall back to SATA speed. Always check which protocol the slot supports.</div>
+  </section>
+
+  <section class="quiz">
+    <p class="q">A replacement SSD is listed as <strong>M.2 2280</strong>. What does 2280 tell you?</p>
+    <ul class="choices">
+      <li><button class="choice">It holds about 2,280 GB</button></li>
+      <li><button class="choice">It reads at 2,280 MB/s</button></li>
+      <li><button class="choice" data-correct>Width 22 mm, length 80 mm</button></li>
+      <li><button class="choice">It uses PCIe 2.2 lanes</button></li>
+    </ul>
+    <div class="explain" hidden>The M.2 size code is <strong>width then length in millimetres</strong>: 22 mm wide, 80 mm long.<sup class="cite"><a href="#src-crucial">[3]</a></sup> It says nothing about capacity, speed or PCIe version; it tells you whether the drive reaches the screw post.</div>
+  </section>
+
+  <section class="quiz">
+    <p class="q">You need to hand a client a 20 GB video archive on a single disc. What's the smallest disc type that fits?</p>
+    <ul class="choices">
+      <li><button class="choice">Dual-layer DVD (8.5 GB)</button></li>
+      <li><button class="choice" data-correct>Single-layer Blu-ray (25 GB)</button></li>
+      <li><button class="choice">Single-layer DVD (4.7 GB)</button></li>
+      <li><button class="choice">Standard CD (700 MB)</button></li>
+    </ul>
+    <div class="explain" hidden>20 GB is more than any DVD holds (8.5 GB max), so you need <strong>Blu-ray</strong>: 25 GB on a single layer.<sup class="cite"><a href="#src-iasa">[5]</a></sup></div>
+  </section>
+
+  <section class="quiz">
+    <p class="q">A user keeps the <em>only</em> copy of last year's records on a USB flash drive in a desk drawer. What's the main problem?</p>
+    <ul class="choices">
+      <li><button class="choice">Flash drives lose data without power</button></li>
+      <li><button class="choice">Flash drives need a spinning motor</button></li>
+      <li><button class="choice">Flash drives must be reformatted monthly</button></li>
+      <li><button class="choice" data-correct>Flash drives are easily lost, damaged</button></li>
+    </ul>
+    <div class="explain" hidden>Flash is <strong>non-volatile</strong> (it keeps data without power) and has no moving parts. The problem is that a small removable drive is <strong>easy to lose or damage</strong>, so it's a poor choice for archival storage.<sup class="cite"><a href="#src-messer">[1]</a></sup> Keep the records somewhere backed up, like company cloud storage.</div>
+  </section>
+  <p class="quiz-score" data-quiz-score></p>
+
+  <details class="recall">
+    <summary>From memory: the two M.2 keys and what each usually means, what "2280" means, why mSATA is different, and the capacities of CD, DVD and Blu-ray. <span class="hint">(then click to check)</span></summary>
+    <p><strong>M key</strong> = usually NVMe (up to x4 PCIe); <strong>B+M key</strong> = usually SATA. <strong>2280</strong> = 22 mm × 80 mm. <strong>mSATA</strong>: older, SATA-only, different connector, doesn't fit M.2. CD <strong>700 MB</strong>; DVD <strong>4.7 / 8.5 GB</strong>; Blu-ray <strong>25 / 50 GB</strong>.</p>
+  </details>
+
+  <h2>Review: earlier lessons</h2>
+  <p>Spaced retrieval: pull these from memory first, then check.</p>
+
+  <details class="recall">
+    <summary>A server's memory can find <em>and fix</em> a single flipped bit. Which feature is that, and what does plain parity do instead? <span class="hint">(<a href="0048-memory-technologies-ecc-channels.html">lesson 0048</a>, 3 days ago)</span></summary>
+    <p><strong>ECC</strong> memory detects and corrects single-bit errors. <strong>Parity</strong> only detects the error; it can't fix it and may halt the system.</p>
+  </details>
+
+  <details class="recall">
+    <summary>An old projector has only VGA. The laptop has HDMI. Is a cheap passive adapter enough, or do you need something else? <span class="hint">(<a href="0044-adapters-and-converters.html">lesson 0044</a>, 7 days ago)</span></summary>
+    <p>You need an <strong>active converter</strong>: HDMI is digital, VGA is analog, so something has to change the signal. A passive adapter only rewires pins carrying the same signal.</p>
+  </details>
+
+  <details class="recall">
+    <summary>A new PoE camera needs about 20 W, but it keeps rebooting on an older PoE switch. What's the likely mismatch? <span class="hint">(<a href="0021-poe-modems-ont-nic.html">lesson 0021</a>, 30 days ago)</span></summary>
+    <p>The switch only supplies original <strong>PoE</strong> (802.3af: 15.4 W from the port, about 13 W at the device). The camera needs <strong>PoE+</strong> (802.3at: about 25.5 W at the device), from a PoE+ switch or injector.</p>
+  </details>
+
+  <div class="callout source" id="src-messer">
+    <span class="label">Primary source: watch next</span>
+    <p>[1] Professor Messer, <a href="https://www.professormesser.com/free-a-plus-training/220-1201/220-1201-video/storage-devices-220-1201/">Storage Devices (220-1201, 3.4)</a>. Hard drives, SSDs, SATA, SAS, NVMe, M.2, mSATA, flash and optical. Free. Watch the second half for today's topics.</p>
+    <p id="src-delock">[2] Delock, <a href="https://www.delock.de/infothek/M.2/M.2_e.html">The M.2 interface</a>: B and M keys, PCIe lane counts, SATA vs. PCIe slots.</p>
+    <p id="src-crucial">[3] Crucial, <a href="https://eu.crucial.com/eur/en/msata-m2-overview">An overview of mSATA and M.2 SSDs</a>: 2280 = 22 × 80 mm, common lengths, mSATA vs. M.2.</p>
+    <p id="src-intune">[4] Microsoft Learn, <a href="https://learn.microsoft.com/en-us/intune/device-configuration/settings-catalog/restrict-usb">Restrict USB devices with Intune</a>: blocking or allowing removable storage on managed Windows devices.</p>
+    <p id="src-iasa">[5] IASA, <a href="https://www.iasa-web.org/node/511">Guidelines on optical media</a>: CD, DVD and Blu-ray capacities.</p>
+  </div>
+
+  <div class="callout ask">
+    <span class="label">Questions?</span>
+    <p>Anything unclear? Ask your teacher. Open Claude in the Teacher repo and ask, for example: <em>"In IT lesson 0051, will a B+M key SATA drive work in an M-key slot?"</em> Follow-up questions are part of the course.</p>
+  </div>
+</main>
+<nav class="page-footer">
+  <a href="0050-week-quiz-2026-11-14.html">← Weekly quiz: Nov 8 – Nov 13</a>
+  <a href="../../index.html">Hub</a>
+  <span class="disabled">Next lesson: tomorrow →</span>
+</nav>
+</body>
+</html>

@@ -333,11 +333,26 @@
   </div>
   <p class="sidenote">Read both halves of a spec line: what the drive is (HDD/SSD) and how it connects (SATA/SAS/NVMe). <code>Get-PhysicalDisk</code> shows them as MediaType and BusType.</p>
 
+  <h2>Storage devices: M.2, mSATA, flash, optical (objective 3.4)</h2>
+  <div class="table-wrap">
+  <table>
+    <thead><tr><th>Item</th><th>Key facts</th></tr></thead>
+    <tbody>
+      <tr><td>M.2</td><td>Card plugs straight into the board. <strong>M key</strong> (one notch) usually NVMe, up to PCIe x4; <strong>B+M key</strong> (two notches) usually SATA. Check the manual: some slots are SATA only</td></tr>
+      <tr><td>M.2 size code</td><td>Width + length in mm: 2280 = 22 × 80. Also 2230, 2242, 2260, 22110</td></tr>
+      <tr><td>mSATA</td><td>Older, smaller SATA-only card; different connector, doesn't fit M.2</td></tr>
+      <tr><td>Flash</td><td>Non-volatile; USB flash drives, SD/microSD cards. Easy to lose or damage: not for the only copy</td></tr>
+      <tr><td>Optical</td><td>CD ≈ 700 MB; DVD 4.7 GB (8.5 GB dual layer); Blu-ray 25 GB (50 GB dual layer)</td></tr>
+    </tbody>
+  </table>
+  </div>
+
   <h2>Commands (Windows)</h2>
   <div class="table-wrap">
   <table>
     <tbody>
       <tr><td><code>Get-CimInstance Win32_PhysicalMemory | Format-Table DeviceLocator, Capacity, Speed, SMBIOSMemoryType</code></td><td>PowerShell: each RAM stick, its slot and speed; SMBIOSMemoryType 24 DDR3, 26 DDR4, 34 DDR5. Task Manager → Performance → Memory shows slots used and form factor</td></tr>
+      <tr><td><code>Get-Volume | Format-Table DriveLetter, FileSystemLabel, DriveType, FileSystem, Size</code></td><td>PowerShell: each volume and its DriveType: Fixed (internal), Removable (flash drive, SD card), CD-ROM (optical)</td></tr>
       <tr><td><code>Get-PhysicalDisk | Format-Table FriendlyName, BusType, MediaType, Size</code></td><td>PowerShell: each physical drive and how it's attached (SATA, NVMe, USB) and whether it's SSD or HDD</td></tr>
       <tr><td><code>Get-CimInstance -Namespace root\wmi -ClassName WmiMonitorConnectionParams | Format-Table InstanceName, VideoOutputTechnology</code></td><td>PowerShell: how each screen is connected: 0 VGA, 4 DVI, 5 HDMI, 10 DisplayPort, 11 embedded DisplayPort (laptop panel)</td></tr>
       <tr><td><code>Get-PnpDevice -PresentOnly -Class Ports</code></td><td>PowerShell: serial ports, including a USB-to-serial adapter and its COM number</td></tr>
