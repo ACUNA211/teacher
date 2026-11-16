@@ -320,6 +320,11 @@ window.HUB = {
       track: "app", num: "0007", date: "2026-11-09", covers: 0,
       title: "Build review: lists need keys (.map() and key)",
       path: "app-building/lessons/0007-build-review-2026-11-09.html"
+    },
+    {
+      track: "app", num: "0008", date: "2026-11-16", covers: 0,
+      title: "Build review: reading package.json (scripts, dependencies and the lockfile)",
+      path: "app-building/lessons/0008-build-review-2026-11-16.html"
     }
   ]
 };

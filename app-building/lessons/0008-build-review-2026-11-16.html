@@ -1,0 +1,175 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Reading package.json</title>
+<meta name="description" content="App building lesson 0008, build review for 2026-11-16: reading two-player-bg-finder's package.json like a .csproj. JSON rules, npm scripts and node_modules/.bin, why the build script runs tsc before vite, dependencies vs devDependencies, caret version ranges and the package-lock.json file.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=JetBrains+Mono&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../assets/course.css">
+<script src="../../assets/quiz.js" defer></script>
+</head>
+<body class="track-app">
+<nav class="page-header">
+  <a class="home" href="../../index.html">Teacher hub</a>
+  <span>App building</span>
+  <a href="../reference/glossary.html">Glossary</a>
+</nav>
+<main>
+  <p class="kicker">App building · Lesson 0008 · Build review, week of 2026-11-09</p>
+  <h1>Reading <code>package.json</code>: the app's <code>.csproj</code></h1>
+  <p class="lede">About 10 minutes. By the end you can read every line of Board Games for Two's <code>package.json</code>, say what <code>npm test</code> and <code>npm run build</code> actually run, and explain what <code>^8.3.1</code> and <code>package-lock.json</code> do.</p>
+
+  <div class="callout">
+    <span class="label">New activity elsewhere</span>
+    <p>New activity in <strong>basketball-tcg</strong>. Want it registered for Monday reviews? Tell your teacher.</p>
+  </div>
+
+  <div class="callout">
+    <span class="label">What got built this week</span>
+    <p>Nothing new in <a href="https://github.com/ACUNA211/two-player-bg-finder">two-player-bg-finder</a>. The last commit is still <a href="https://github.com/ACUNA211/two-player-bg-finder/commit/3a77ac7">3a77ac7</a> (2026-09-26), so we read existing code again. Every command you've typed in this course (<code>npm run dev</code>, <code>npm test</code>, <code>npm run build</code>) is defined in one short JSON file we've never opened. Today we open it.</p>
+  </div>
+
+  <h2>1. One JSON file describes the project</h2>
+  <p>Here's the top of <a href="https://github.com/ACUNA211/two-player-bg-finder/blob/3a77ac7/web/package.json"><code>web/package.json</code></a>:</p>
+<pre><code>{
+  "name": "board-games-for-two",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "<span class="hl">tsc -b &amp;&amp; vite build</span>",
+    "preview": "vite preview",
+    "test": "vitest run"
+  },
+  …</code></pre>
+  <p>If you've edited a <code>.csproj</code>, you know the job: the project's name, how to build it, and which packages it needs. <code>package.json</code> does the same for a JavaScript project, in JSON instead of XML.</p>
+  <p>JSON looks like a JavaScript object, but it's stricter. Three rules catch people:<sup class="cite"><a href="#src-mdn">[3]</a></sup></p>
+  <ul>
+    <li><strong>Keys need double quotes</strong>: <code>"name"</code>, never <code>name</code> or <code>'name'</code>. Same for string values.</li>
+    <li><strong>No trailing comma</strong> after the last item. <code>"test": "vitest run",</code> followed by <code>}</code> is a parse error, and npm refuses to run anything.</li>
+    <li><strong>No comments.</strong> There's nowhere to write <code>// why this is here</code>. That's why the repo explains its choices in <code>README.md</code> and ADRs instead.</li>
+  </ul>
+  <p>Two lines are not about building:</p>
+  <ul>
+    <li><strong><code>"private": true</code></strong>: "npm will refuse to publish it". A safety catch so the app never gets uploaded to the public npm registry by accident.<sup class="cite"><a href="#src-npm">[1]</a></sup></li>
+    <li><strong><code>"type": "module"</code></strong>: tells Node.js to treat <code>.js</code> files as modern modules (the <code>import</code>/<code>export</code> you see at the top of every file). npm's own docs say npm itself ignores this field.<sup class="cite"><a href="#src-npm">[1]</a></sup></li>
+  </ul>
+
+  <h2>2. <code>scripts</code>: named commands</h2>
+  <p>Each entry in <code>scripts</code> is a name and a shell command. <code>npm run build</code> looks up <code>"build"</code> and runs <code>tsc -b &amp;&amp; vite build</code>. <code>npm test</code> is a shortcut for <code>npm run test</code>, so it runs <code>vitest run</code>.<sup class="cite"><a href="#src-npm">[1]</a></sup> Think of them as saved terminal commands, like a <code>Makefile</code> target or a <code>dotnet</code> CLI verb.</p>
+  <p>But you never installed a program called <code>vitest</code>. How does the shell find it? <code>npm install</code> puts each package's command-line tools in <code>node_modules/.bin</code>, and npm adds that folder to the <code>PATH</code> while a script runs.<sup class="cite"><a href="#src-npm">[1]</a></sup> So the scripts always use the exact versions this project installed, not whatever is on your machine. (Outside a script, type <code>npx vitest</code> to get the same effect.)</p>
+  <p>Now the highlighted line. <code>&amp;&amp;</code> is shell, not JavaScript: run the right side <em>only if</em> the left side succeeded. So the build is two jobs in order:</p>
+  <ol>
+    <li><code>tsc -b</code>: the TypeScript compiler checks every type. <code>tsconfig.json</code> has <code>"noEmit": true</code>, so it writes no files. It only says yes or no.</li>
+    <li><code>vite build</code>: bundles the app into <code>dist/</code> for the web.</li>
+  </ol>
+  <p>Why both? Because Vite strips the types out without checking them. Vite's docs: "Vite only performs transpilation on <code>.ts</code> files and does <strong>NOT</strong> perform type checking", since checking needs the whole program and would slow Vite down. They suggest running <code>tsc --noEmit</code> alongside the build, which is exactly what this script does.<sup class="cite"><a href="#src-vite">[2]</a></sup> You met the same split in lesson 0001: <code>npm run dev</code> will happily serve code with type errors. Only the build stops you.</p>
+
+  <h2>3. Dependencies, <code>^</code> and the lockfile</h2>
+<pre><code>"dependencies": {
+  "@tanstack/react-table": "^9.2.4",
+  "react": "^19.3.0",
+  "react-dom": "^19.3.0"
+},
+"devDependencies": {
+  "@testing-library/react": "^16.3.3",
+  …
+  "typescript": "^7.0.2",
+  "vite": <span class="hl">"^8.3.1"</span>,
+  "vitest": "^5.0.2"
+}</code></pre>
+  <p><strong>Two lists.</strong> <code>dependencies</code> is what the app needs to <em>run</em>: React draws the page, TanStack Table builds the table. <code>devDependencies</code> is what you need to <em>develop</em> it: the compiler, the bundler, the test runner, and the <code>@types/…</code> packages, which hold only type descriptions (lesson 0001's "types describe, they don't load" again). npm's rule: don't put "test harnesses or transpilers" in <code>dependencies</code>.<sup class="cite"><a href="#src-npm">[1]</a></sup> For an app like this one, the split is mostly a label. Vite bundles only what your <code>src/</code> code imports, so Vitest never reaches a visitor's browser whichever list it's in. The split matters most for libraries that other people install.</p>
+  <p><strong>The caret.</strong> <code>^8.3.1</code> is a version <em>range</em>, not a version. It means "8.3.1 or newer, but below 9.0.0": keep the leftmost non-zero number fixed.<sup class="cite"><a href="#src-semver">[4]</a></sup> The idea (semantic versioning) is that a new major number signals breaking changes, so accept bug fixes and features, never a new major. In pip terms it's <code>vite&gt;=8.3.1,&lt;9</code>. NuGet's plain <code>Version="8.3.1"</code> is looser: a minimum with no ceiling.</p>
+  <p><strong>The lockfile.</strong> A range alone would mean two installs a month apart could get different code. <code>package-lock.json</code> fixes that: it records the <em>exact</em> version of every package actually installed, including the packages your packages need. This repo's lockfile pins 146 packages from just 11 lines of dependencies (React is exactly 19.3.0, Vite exactly 8.3.1). It's committed to git so everyone gets the same tree. <code>npm ci</code> installs strictly from it: it deletes <code>node_modules</code> first, stops with an error if the lockfile and <code>package.json</code> disagree, and never rewrites either file.<sup class="cite"><a href="#src-npm">[1]</a></sup> Plain <code>npm install</code> may update the lockfile instead. C# has the same idea in <code>packages.lock.json</code>; Python's nearest is a <code>pip freeze</code> file.</p>
+
+  <div class="callout">
+    <span class="label">The big idea</span>
+    <p><code>package.json</code> says <em>what</em> the project is: its commands (<code>scripts</code>) and the version <em>ranges</em> it accepts. <code>package-lock.json</code> says <em>exactly</em> what got installed. The <code>build</code> script runs <code>tsc</code> before <code>vite</code> because Vite never checks types. When an AI "fixes" a build, these two files are the first place to look at what it changed.</p>
+  </div>
+
+  <h2>Practice</h2>
+  <section class="quiz">
+    <p class="q">There's no lockfile and you run <code>npm install</code>. Which Vite version can <code>"vite": "^8.3.1"</code> give you?</p>
+    <ul class="choices">
+      <li><button class="choice">Exactly 8.3.1 and nothing else</button></li>
+      <li><button class="choice">Any version 8.3.1 or newer</button></li>
+      <li><button class="choice" data-correct>8.9.0, but never 9.0.0</button></li>
+      <li><button class="choice">Only 8.3.x patches, never 8.4.0</button></li>
+    </ul>
+    <div class="explain" hidden>The caret keeps the leftmost non-zero number fixed: <code>^8.3.1</code> means <code>&gt;=8.3.1 &lt;9.0.0</code>. So 8.9.0 fits and 9.0.0 doesn't. "Exactly 8.3.1" is what the <em>lockfile</em> gives you. "Patches only" is the tilde, <code>~8.3.1</code>.</div>
+  </section>
+
+  <section class="quiz">
+    <p class="q">You type <code>npm test</code> in <code>web/</code>. What actually runs?</p>
+    <ul class="choices">
+      <li><button class="choice">tsc -b first, then vite build</button></li>
+      <li><button class="choice">vite, which serves the app locally</button></li>
+      <li><button class="choice">A globally installed vitest on PATH</button></li>
+      <li><button class="choice" data-correct>vitest run, from the node_modules/.bin folder</button></li>
+    </ul>
+    <div class="explain" hidden><code>npm test</code> is short for <code>npm run test</code>, which runs the <code>"test"</code> script: <code>vitest run</code>. npm puts <code>node_modules/.bin</code> on the <code>PATH</code> first, so it's the project's own Vitest 5.0.2, not anything installed globally. The first choice is the <code>build</code> script; the second is <code>dev</code>.</div>
+  </section>
+
+  <section class="quiz">
+    <p class="q">What breaks if you change the build script from <code>"tsc -b &amp;&amp; vite build"</code> to just <code>"vite build"</code>?</p>
+    <ul class="choices">
+      <li><button class="choice">Vite refuses to compile any .tsx files</button></li>
+      <li><button class="choice" data-correct>Build still succeeds even with type errors</button></li>
+      <li><button class="choice">npm test stops finding the test files</button></li>
+      <li><button class="choice">The browser shows type errors at runtime</button></li>
+    </ul>
+    <div class="explain" hidden>Vite strips types without checking them, so a type error no longer stops the build and broken code can ship. Nothing else changes: <code>npm test</code> is a separate script. Browsers never see types at all, so they can't report type errors.</div>
+  </section>
+
+  <section class="quiz">
+    <p class="q">An AI moves <code>"vitest"</code> from <code>devDependencies</code> to <code>dependencies</code>. What changes for people visiting the site?</p>
+    <ul class="choices">
+      <li><button class="choice" data-correct>Nothing: Vite bundles only what src imports</button></li>
+      <li><button class="choice">Visitors' browsers download Vitest with the page</button></li>
+      <li><button class="choice">Tests run each time a visitor loads</button></li>
+      <li><button class="choice">npm refuses to install test tools there</button></li>
+    </ul>
+    <div class="explain" hidden>The bundle is built by following <code>import</code>s from the app's entry point, and no app code imports Vitest. So the site is identical. It's still the wrong list (npm's docs say keep test tools out of <code>dependencies</code>), and it would matter if this were a library other people install. npm doesn't police which list a package is in.</div>
+  </section>
+  <p class="quiz-score" data-quiz-score></p>
+
+  <h2>Try it in your copy (5 minutes)</h2>
+  <ol>
+    <li>In your local <code>two-player-bg-finder</code>, <code>cd web</code> and <code>git pull</code>. Open <code>package.json</code> and <code>package-lock.json</code> side by side and find <code>"vite"</code> in each. Which shows a range, which an exact version?</li>
+    <li>Run <code>npm ls vite</code>. <strong>Predict first</strong>: which version will it print?</li>
+    <li>Add a script: after <code>"test": "vitest run"</code>, add a comma and a new line <code>"typecheck": "tsc -b"</code>. Run <code>npm run typecheck</code>. Predict: what does it print when there are no type errors?</li>
+    <li>Now break the JSON on purpose: put a comma after your new last line, then run <code>npm test</code>. Read the error, remove the comma, and undo everything with <code>git checkout package.json</code>.</li>
+  </ol>
+  <details class="recall">
+    <summary>What should you see? <span class="hint">(after trying it)</span></summary>
+    <p><code>package.json</code> shows <code>"^8.3.1"</code> (a range); the lockfile's <code>node_modules/vite</code> entry shows <code>"version": "8.3.1"</code> (exact). <code>npm ls vite</code> should print 8.3.1, probably more than once, because <code>vitest</code> and <code>@vitejs/plugin-react</code> use Vite too. <code>npm run typecheck</code> echoes the command and then prints nothing more: silence means no type errors. With the trailing comma, npm should fail before running anything, with a JSON parse error naming <code>package.json</code>. I couldn't run these in this week's automated session, so tell your teacher if you see something different.</p>
+  </details>
+
+  <details class="recall">
+    <summary>Spaced review from lesson 0002: <code>useMemo(() =&gt; applyFilters(games, filters), [games, filters])</code>. What is the array at the end for? <span class="hint">(answer, then click)</span></summary>
+    <p>It's the dependency list. React keeps the cached result and only calls <code>applyFilters</code> again when <code>games</code> or <code>filters</code> is a different value than last render. Leave a dependency out and the list can show stale results; it's the same idea as the <code>[]</code> on <code>useEffect</code> in <code>App.tsx</code> from lesson 0001.</p>
+  </details>
+
+  <div class="callout source" id="src-npm">
+    <span class="label">Primary source: read next</span>
+    <p>[1] npm Docs, <a href="https://docs.npmjs.com/cli/configuring-npm/package-json">package.json</a>. Read <em>scripts</em>, <em>dependencies</em>, <em>devDependencies</em> and <em>private</em>. About 10 minutes. Also used: <a href="https://docs.npmjs.com/cli/using-npm/scripts">scripts</a> (the <code>PATH</code> rule), <a href="https://docs.npmjs.com/cli/commands/npm-test">npm test</a> and <a href="https://docs.npmjs.com/cli/commands/npm-ci">npm ci</a>. Checked against the docs' source in the npm CLI repository.</p>
+    <p id="src-vite">[2] Vite Guide, <a href="https://vite.dev/guide/features.html#transpile-only">Features: TypeScript, transpile only</a>.</p>
+    <p id="src-mdn">[3] MDN Web Docs, <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/JSON">JSON</a> (how JSON differs from JavaScript).</p>
+    <p id="src-semver">[4] npm's semver library, <a href="https://github.com/npm/node-semver#caret-ranges-123-025-004">Caret ranges</a>. Code and version numbers are quoted from the repo at <code>3a77ac7</code>.</p>
+  </div>
+
+  <div class="callout ask">
+    <span class="label">Questions?</span>
+    <p>Anything unclear? Ask your teacher. Open Claude in the Teacher repo and ask, for example: <em>"In app lesson 0008, show me what changes in package-lock.json when I run <code>npm install</code> after editing a version range."</em> Follow-up questions are part of the course.</p>
+  </div>
+</main>
+<nav class="page-footer">
+  <a href="0007-build-review-2026-11-09.html">← 0007 Lists need keys</a>
+  <a href="../../index.html">Hub</a>
+  <span class="disabled">Next build review: next Monday →</span>
+</nav>
+</body>
+</html>

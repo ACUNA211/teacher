@@ -14,6 +14,8 @@
   Official docs for the dev server and build tool. Use for: `npm run dev`/`build`, config, env variables.
 - [Vitest Guide](https://vitest.dev/guide/)
   Official docs for the test runner. Use for: reading and writing the repos' tests.
+- [npm Docs: package.json](https://docs.npmjs.com/cli/configuring-npm/package-json)
+  Official npm reference for `package.json`, scripts, `npm ci` and version ranges. Use for: what a script runs, dependencies vs devDependencies, the lockfile. (Source lives in the npm/cli GitHub repo if the site is unreachable.)
 - [Testing Library: About Queries](https://testing-library.com/docs/queries/about)
   Official docs for the library the repos use to test components (`render`, `screen`, `getByRole`, `fireEvent`). Use for: component tests and which query to pick.
 
