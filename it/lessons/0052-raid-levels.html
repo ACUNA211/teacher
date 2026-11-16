@@ -1,0 +1,166 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>RAID Levels</title>
+<meta name="description" content="IT lesson 0052: A+ objective 3.4, RAID. Striping, mirroring and parity; RAID 0, 1, 5, 6 and 10 with minimum drives, failures survived and usable capacity. RAID is not a backup.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=JetBrains+Mono&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../assets/course.css">
+<script src="../../assets/quiz.js" defer></script>
+</head>
+<body class="track-it">
+<nav class="page-header">
+  <a class="home" href="../../index.html">Teacher hub</a>
+  <span>IT and certs</span>
+  <a href="../reference/glossary.html">Glossary</a>
+  <a href="../reference/hardware.html">Hardware cheat sheet</a>
+</nav>
+<main>
+  <p class="kicker">IT and certs · Lesson 0052 · A+ Core 1, objective 3.4</p>
+  <h1>Many drives, one volume: RAID 0, 1, 5, 6 and 10</h1>
+  <p class="lede">About 10 minutes. <a href="0049-storage-devices-hdd-ssd-interfaces.html">Lessons 0049</a> and <a href="0051-m2-msata-flash-optical.html">0051</a> covered single drives. <strong>RAID</strong> (redundant array of independent disks) combines several drives so the computer sees one, for more <strong>speed</strong>, more <strong>redundancy</strong>, or both.<sup class="cite"><a href="#src-messer">[1]</a></sup> The win: given a pile of drives and a RAID level, say how many can fail and how much space you get.</p>
+
+  <div class="callout">
+    <span class="label">Why this matters at work</span>
+    <p>Messer's key warning: <strong>RAID is not a backup</strong>.<sup class="cite"><a href="#src-messer">[1]</a></sup> RAID protects against a <em>drive</em> dying. If a user deletes a folder, or ransomware encrypts a file share, RAID faithfully writes that change to every drive at once. Recovering it takes a real backup or version history (for example, file versions in a company cloud drive). When a small office's NAS shows <strong>"degraded,"</strong> one drive has failed and the array has no safety margin left until it's replaced and rebuilt.</p>
+  </div>
+
+  <h2>1. Three building blocks</h2>
+  <div class="table-wrap">
+  <table>
+    <thead><tr><th>Technique</th><th>What it does</th><th>Gives you</th></tr></thead>
+    <tbody>
+      <tr><td><strong>Striping</strong></td><td>Splits data into chunks spread across drives, read and written in parallel</td><td>Speed and full capacity, <strong>no</strong> protection</td></tr>
+      <tr><td><strong>Mirroring</strong></td><td>Writes an identical copy to a second drive</td><td>Survives a drive failure; costs half the space</td></tr>
+      <tr><td><strong>Parity</strong></td><td>Stores extra math (like <a href="0048-memory-technologies-ecc-channels.html">memory parity</a>, but able to rebuild) so a missing drive's data can be recalculated</td><td>Protection for the cost of one drive's space</td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <h2>2. The five levels on the exam</h2>
+  <p>Messer covers RAID 0, 1, 5, 6 and 1+0.<sup class="cite"><a href="#src-messer">[1]</a></sup> <em>n</em> = number of drives, all the same size.</p>
+  <div class="table-wrap">
+  <table>
+    <thead><tr><th>Level</th><th>How</th><th>Min drives</th><th>Drives that can fail</th><th>Usable space</th></tr></thead>
+    <tbody>
+      <tr><td><strong>RAID 0</strong></td><td>Striping</td><td>2</td><td><strong>0</strong>: one failure loses everything</td><td><em>n</em> (all of it)</td></tr>
+      <tr><td><strong>RAID 1</strong></td><td>Mirroring</td><td>2</td><td>1</td><td>Half</td></tr>
+      <tr><td><strong>RAID 5</strong></td><td>Striping with parity</td><td>3</td><td>1</td><td><em>n</em> − 1</td></tr>
+      <tr><td><strong>RAID 6</strong></td><td>Striping with double parity</td><td>4</td><td>2</td><td><em>n</em> − 2</td></tr>
+      <tr><td><strong>RAID 10</strong> (1+0)</td><td>A stripe of mirrors</td><td>4</td><td>1 per mirror pair</td><td>Half</td></tr>
+    </tbody>
+  </table>
+  </div>
+  <p class="sidenote">Minimums, failure tolerance and capacity from vendor RAID references.<sup class="cite"><a href="#src-dell">[2]</a></sup><sup class="cite"><a href="#src-intel">[3]</a></sup> Memory hook: RAID <strong>0</strong> = <strong>zero</strong> protection. RAID 10 can survive two failures only if they're in <em>different</em> mirror pairs.</p>
+  <p>When a protected array loses a drive it keeps running <strong>degraded</strong>. Replace the drive and the array <strong>rebuilds</strong> the missing data from the mirror or parity. A <strong>hot spare</strong> is an idle drive the controller uses to start that rebuild automatically.<sup class="cite"><a href="#src-dell">[2]</a></sup></p>
+
+  <div class="callout win">
+    <span class="label">Rule of thumb</span>
+    <p><strong>0</strong> = fast, fragile. <strong>1</strong> = a copy. <strong>5</strong> = lose one drive's space, survive one failure (3+ drives). <strong>6</strong> = lose two, survive two (4+). <strong>10</strong> = mirrors striped together, half the space (4+). And always: <strong>RAID is not a backup.</strong></p>
+  </div>
+
+  <h2>Try it (3 minutes)</h2>
+  <ol>
+    <li>On paper: you have <strong>four 4 TB drives</strong>. Work out the usable space for RAID 0, RAID 5, RAID 6 and RAID 10, and how many drives each can lose.</li>
+    <li>Then check yourself below.</li>
+    <li>Optional, on a Windows PC: <code>Get-VirtualDisk | Format-Table FriendlyName, ResiliencySettingName, HealthStatus</code>. Windows' own software RAID, <strong>Storage Spaces</strong>, calls its layouts <strong>Simple</strong> (striping), <strong>Mirror</strong> and <strong>Parity</strong>.<sup class="cite"><a href="#src-spaces">[4]</a></sup> Most laptops return nothing: no Storage Spaces set up.</li>
+  </ol>
+  <details class="recall">
+    <summary>Four 4 TB drives: usable space and failures survived for RAID 0, 5, 6 and 10? <span class="hint">(then click to check)</span></summary>
+    <p><strong>RAID 0</strong>: 16 TB, survives 0. <strong>RAID 5</strong>: 12 TB (one drive's worth goes to parity), survives 1. <strong>RAID 6</strong>: 8 TB, survives any 2. <strong>RAID 10</strong>: 8 TB, survives 1 (2 if they're in different mirror pairs).</p>
+  </details>
+
+  <h2>Practice</h2>
+  <p>Answer from memory before scrolling back up.</p>
+
+  <section class="quiz">
+    <p class="q">A small office buys a NAS with <strong>three</strong> drives. It must keep running if one drive fails, and use as much space as possible. Which level fits?</p>
+    <ul class="choices">
+      <li><button class="choice">RAID 0</button></li>
+      <li><button class="choice">RAID 1</button></li>
+      <li><button class="choice" data-correct>RAID 5</button></li>
+      <li><button class="choice">RAID 6</button></li>
+    </ul>
+    <div class="explain" hidden><strong>RAID 5</strong> needs at least three drives, survives one failure and gives up only one drive's worth of space to parity.<sup class="cite"><a href="#src-dell">[2]</a></sup> RAID 0 has no protection, RAID 1 mirrors two drives (half the space), and RAID 6 needs at least four.</div>
+  </section>
+
+  <section class="quiz">
+    <p class="q">A video editor's PC stripes two SSDs in <strong>RAID 0</strong> for speed. One SSD dies. What happens to the data?</p>
+    <ul class="choices">
+      <li><button class="choice" data-correct>The whole array is lost</button></li>
+      <li><button class="choice">Half the files stay readable</button></li>
+      <li><button class="choice">It keeps running, just slower</button></li>
+      <li><button class="choice">The mirror copy takes over</button></li>
+    </ul>
+    <div class="explain" hidden>RAID 0 splits <em>every</em> file into chunks across both drives and has <strong>no redundancy</strong>, so losing one drive loses all the data in the array.<sup class="cite"><a href="#src-intel">[3]</a></sup> There's no mirror and no parity to rebuild from.</div>
+  </section>
+
+  <section class="quiz">
+    <p class="q">A user deletes an important folder on a file server that uses <strong>RAID 1</strong>. How do you get it back?</p>
+    <ul class="choices">
+      <li><button class="choice">Copy it from mirror</button></li>
+      <li><button class="choice">Rebuild the RAID array</button></li>
+      <li><button class="choice">Swap in second drive</button></li>
+      <li><button class="choice" data-correct>Restore it from backup</button></li>
+    </ul>
+    <div class="explain" hidden>The mirror received the delete at the same moment, so both drives no longer have the folder. <strong>RAID is not a backup</strong>: it protects against drive failure, not deletion, corruption or ransomware.<sup class="cite"><a href="#src-messer">[1]</a></sup> Restore from a backup or file version history.</div>
+  </section>
+
+  <section class="quiz">
+    <p class="q">A server has <strong>six 2 TB</strong> drives in <strong>RAID 6</strong>. How much usable space does it have?</p>
+    <ul class="choices">
+      <li><button class="choice">10 TB</button></li>
+      <li><button class="choice" data-correct>8 TB</button></li>
+      <li><button class="choice">6 TB</button></li>
+      <li><button class="choice">4 TB</button></li>
+    </ul>
+    <div class="explain" hidden>RAID 6 uses two drives' worth of space for double parity: (6 − 2) × 2 TB = <strong>8 TB</strong>, and it survives any two failures.<sup class="cite"><a href="#src-dell">[2]</a></sup> 10 TB would be RAID 5; 6 TB would be RAID 10.</div>
+  </section>
+  <p class="quiz-score" data-quiz-score></p>
+
+  <details class="recall">
+    <summary>From memory: the three building blocks, and for RAID 0, 1, 5, 6 and 10 the minimum drives and how many can fail. <span class="hint">(then click to check)</span></summary>
+    <p><strong>Striping</strong> (speed), <strong>mirroring</strong> (copy), <strong>parity</strong> (rebuild by math). RAID 0: 2 drives, 0 failures. RAID 1: 2, 1. RAID 5: 3, 1. RAID 6: 4, 2. RAID 10: 4, 1 per mirror pair. RAID is not a backup.</p>
+  </details>
+
+  <h2>Review: earlier lessons</h2>
+  <p>Spaced retrieval: pull these from memory first, then check.</p>
+
+  <details class="recall">
+    <summary>Two SSDs use similar flash chips, but one is SATA and one is NVMe. Why is the NVMe one so much faster? <span class="hint">(<a href="0049-storage-devices-hdd-ssd-interfaces.html">lesson 0049</a>, 3 days ago)</span></summary>
+    <p><strong>NVMe</strong> talks over <strong>PCIe lanes</strong> with many deep command queues. A SATA SSD uses <strong>AHCI</strong> (one queue of 32 commands, built for spinning drives) over a SATA link that tops out around 600 MB/s.</p>
+  </details>
+
+  <details class="recall">
+    <summary>A user's DSL line plugs into the modem with a smaller plug than the Ethernet cable. Name both connectors, and the one on a cable modem's coax. <span class="hint">(<a href="0045-copper-connectors.html">lesson 0045</a>, 7 days ago)</span></summary>
+    <p>DSL/phone: <strong>RJ11</strong> (smaller, 6-position). Ethernet: <strong>RJ45</strong> (8P8C). Cable modem coax: the threaded <strong>F-connector</strong>.</p>
+  </details>
+
+  <details class="recall">
+    <summary>What's the only difference between T568A and T568B, and when do you get a crossover cable? <span class="hint">(<a href="0038-568a-568b-colors.html">lesson 0038</a>, 14 days ago)</span></summary>
+    <p>The <strong>orange and green pairs swap places</strong>. Same standard on both ends = straight-through; <strong>568A on one end and 568B on the other</strong> = crossover. Auto-MDIX on modern ports makes crossovers mostly unnecessary.</p>
+  </details>
+
+  <div class="callout source" id="src-messer">
+    <span class="label">Primary source: watch next</span>
+    <p>[1] Professor Messer, <a href="https://www.professormesser.com/free-a-plus-training/220-1201/220-1201-video/raid-220-1201/">RAID (220-1201, 3.4)</a>. RAID 0, 1, 5, 6 and 1+0, and why RAID is not a backup. Free.</p>
+    <p id="src-dell">[2] Dell, <a href="https://www.dell.com/support/kbdoc/en-us/000128635">PowerEdge: What are the different RAID levels and their specifications</a>: minimum drives, fault tolerance and capacity per level.</p>
+    <p id="src-intel">[3] Intel, <a href="https://www.intel.com/content/www/us/en/support/articles/000005867.html">RAID levels</a>: striping, mirroring, parity; RAID 0 has no redundancy.</p>
+    <p id="src-spaces">[4] Microsoft Support, <a href="https://support.microsoft.com/en-us/help/12438">Storage Spaces in Windows</a>: simple, two-way and three-way mirror, and parity spaces.</p>
+  </div>
+
+  <div class="callout ask">
+    <span class="label">Questions?</span>
+    <p>Anything unclear? Ask your teacher. Open Claude in the Teacher repo and ask, for example: <em>"In IT lesson 0052, why does RAID 10 survive two failures only sometimes?"</em> Follow-up questions are part of the course.</p>
+  </div>
+</main>
+<nav class="page-footer">
+  <a href="0051-m2-msata-flash-optical.html">← Small slots, pocket drives and discs</a>
+  <a href="../../index.html">Hub</a>
+  <span class="disabled">Next lesson: tomorrow →</span>
+</nav>
+</body>
+</html>
