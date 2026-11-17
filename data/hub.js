@@ -1,7 +1,7 @@
 /* Hub data. The teacher updates this file after every lesson; index.html renders it.
    Keep it free of personal data: the site is public. */
 window.HUB = {
-  updated: "2026-11-16",
+  updated: "2026-11-17",
   tracks: [
     {
       id: "it", name: "IT and certs", folder: "it", cls: "track-it", status: "active",
@@ -285,6 +285,11 @@ window.HUB = {
       track: "it", num: "0052", date: "2026-11-16", covers: 1,
       title: "Many drives, one volume: RAID 0, 1, 5, 6 and 10",
       path: "it/lessons/0052-raid-levels.html"
+    },
+    {
+      track: "it", num: "0053", date: "2026-11-17", covers: 1,
+      title: "Big, medium, tiny: motherboard form factors",
+      path: "it/lessons/0053-motherboard-form-factors.html"
     },
     {
       track: "app", num: "0001", date: "2026-09-28", covers: 0,

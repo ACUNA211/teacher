@@ -1,0 +1,158 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Motherboard Form Factors</title>
+<meta name="description" content="IT lesson 0053: A+ objective 3.5, motherboard form factors. ATX, micro-ATX and Mini-ITX: sizes, expansion slots, and why a smaller board fits a bigger case but not the reverse.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=JetBrains+Mono&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../assets/course.css">
+<script src="../../assets/quiz.js" defer></script>
+</head>
+<body class="track-it">
+<nav class="page-header">
+  <a class="home" href="../../index.html">Teacher hub</a>
+  <span>IT and certs</span>
+  <a href="../reference/glossary.html">Glossary</a>
+  <a href="../reference/hardware.html">Hardware cheat sheet</a>
+</nav>
+<main>
+  <p class="kicker">IT and certs · Lesson 0053 · A+ Core 1, objective 3.5</p>
+  <h1>Big, medium, tiny: motherboard form factors</h1>
+  <p class="lede">About 10 minutes. The last few lessons covered what plugs <em>into</em> a computer: memory, drives, RAID. Now the board they all plug into. A motherboard's <strong>form factor</strong> is a standard for its size, the position of its mounting holes, its rear I/O panel and its power connector.<sup class="cite"><a href="#src-toms">[3]</a></sup> Messer's 3.5 video covers three: <strong>ATX</strong>, <strong>micro-ATX</strong> and <strong>ITX</strong>.<sup class="cite"><a href="#src-messer">[1]</a></sup> The win: given a case and a board, say whether it fits, and pick a size for a job.</p>
+
+  <div class="callout">
+    <span class="label">Why this matters at work</span>
+    <p>When you order a replacement board, a new case or a compact PC for a front desk, the form factor decides what physically fits and how many add-in cards you can use later. A tiny PC is quiet and takes no desk space, but it may have <strong>no free slot</strong> for that extra network card or capture card someone asks for next year.</p>
+  </div>
+
+  <h2>1. The three sizes</h2>
+  <div class="table-wrap">
+  <table>
+    <thead><tr><th>Form factor</th><th>Size (about)</th><th>Expansion slots</th><th>Typical use</th></tr></thead>
+    <tbody>
+      <tr><td><strong>ATX</strong></td><td>305 × 244 mm (12 × 9.6 in)</td><td>Most: up to 7</td><td>Full-size towers, workstations, gaming PCs</td></tr>
+      <tr><td><strong>Micro-ATX</strong> (mATX, µATX)</td><td>244 × 244 mm (9.6 × 9.6 in)</td><td>Fewer: up to 4</td><td>Office desktops, smaller towers</td></tr>
+      <tr><td><strong>Mini-ITX</strong></td><td>170 × 170 mm (6.7 × 6.7 in)</td><td>Usually 1</td><td>Small form factor PCs, media and kiosk boxes</td></tr>
+    </tbody>
+  </table>
+  </div>
+  <p class="sidenote">Sizes and typical slot counts from form-factor guides; slot counts vary by board, so check the spec sheet.<sup class="cite"><a href="#src-toms">[3]</a></sup> ATX was standardized by Intel in 1995; micro-ATX is a shorter board with a similar layout.<sup class="cite"><a href="#src-messer">[1]</a></sup> Memory hook: micro-ATX is ATX with the bottom cut off, so it's <strong>square</strong>. You may also see <strong>E-ATX</strong> (extended, larger than ATX, for servers and high-end desktops) and even smaller ITX sizes (Nano-, Pico-ITX) used in embedded systems.</p>
+
+  <h2>2. Why a small board fits a big case</h2>
+  <p>Micro-ATX and Mini-ITX reuse <strong>a subset of the ATX mounting-hole positions</strong> and the same rear I/O panel position.<sup class="cite"><a href="#src-messer901">[2]</a></sup><sup class="cite"><a href="#src-toms">[3]</a></sup> So:</p>
+  <ul>
+    <li>A <strong>smaller board fits a larger case</strong>: Mini-ITX or micro-ATX screws into an ATX tower using the matching standoffs.</li>
+    <li>A <strong>larger board does not fit a smaller case</strong>: an ATX board is simply too big for a Mini-ITX case.</li>
+  </ul>
+  <p>Cases list the board sizes they support (for example, "ATX / mATX / Mini-ITX"). Read that line before ordering.</p>
+
+  <div class="callout win">
+    <span class="label">Rule of thumb</span>
+    <p><strong>ATX</strong> = big, most slots. <strong>Micro-ATX</strong> = square, fewer slots, fits ATX cases. <strong>Mini-ITX</strong> = tiny, one slot, fits almost anything. <strong>Small board → big case: yes. Big board → small case: no.</strong></p>
+  </div>
+
+  <h2>Try it (3 minutes)</h2>
+  <ol>
+    <li>On a Windows desktop, in PowerShell: <code>Get-CimInstance Win32_BaseBoard | Select-Object Manufacturer, Product</code>. <strong>Product</strong> is usually the board's model.<sup class="cite"><a href="#src-msi">[4]</a></sup> (No PowerShell handy? <code>msinfo32</code> shows <em>BaseBoard Manufacturer</em> and <em>BaseBoard Product</em>.)</li>
+    <li>Search the model name and find its form factor on the maker's spec page.</li>
+    <li>On a laptop or many brand-name office PCs you'll get a vendor part number instead: those use <strong>proprietary</strong> boards that only fit that model's chassis.</li>
+  </ol>
+  <details class="recall">
+    <summary>Before checking: which of the three would you guess a typical compact office desktop uses, and why? <span class="hint">(then click to check)</span></summary>
+    <p>Often <strong>micro-ATX</strong> (or a proprietary board of similar size): smaller and cheaper than ATX, with a few slots left over. The tiniest "mini PCs" use Mini-ITX or smaller proprietary boards.</p>
+  </details>
+
+  <h2>Practice</h2>
+  <p>Answer from memory before scrolling back up.</p>
+
+  <section class="quiz">
+    <p class="q">A reception desk needs a very small, quiet PC. It will never need an add-in card. Which form factor fits best?</p>
+    <ul class="choices">
+      <li><button class="choice">ATX</button></li>
+      <li><button class="choice">E-ATX</button></li>
+      <li><button class="choice">Micro-ATX</button></li>
+      <li><button class="choice" data-correct>Mini-ITX</button></li>
+    </ul>
+    <div class="explain" hidden><strong>Mini-ITX</strong> is the smallest of the three (about 17 cm square) and usually has one expansion slot, which is fine when no cards are needed.<sup class="cite"><a href="#src-toms">[3]</a></sup> Small form factors suit single-purpose machines.<sup class="cite"><a href="#src-messer901">[2]</a></sup></div>
+  </section>
+
+  <section class="quiz">
+    <p class="q">A technician has a new <strong>micro-ATX</strong> board and an empty <strong>ATX</strong> mid-tower case. Will the board mount in the case?</p>
+    <ul class="choices">
+      <li><button class="choice" data-correct>Yes, the holes align</button></li>
+      <li><button class="choice">No, the holes differ</button></li>
+      <li><button class="choice">Only with adapter plate</button></li>
+      <li><button class="choice">Only without graphics card</button></li>
+    </ul>
+    <div class="explain" hidden>Micro-ATX uses a subset of the ATX mounting-hole positions and the same I/O panel position, so it screws straight into an ATX case.<sup class="cite"><a href="#src-toms">[3]</a></sup> Smaller board into bigger case works; the reverse doesn't.</div>
+  </section>
+
+  <section class="quiz">
+    <p class="q">A user's compact PC has a <strong>Mini-ITX</strong> case. The cheapest replacement board in stock is <strong>ATX</strong>. What do you tell them?</p>
+    <ul class="choices">
+      <li><button class="choice">It fits with extra standoffs</button></li>
+      <li><button class="choice">It fits after BIOS update</button></li>
+      <li><button class="choice" data-correct>It's too big to fit</button></li>
+      <li><button class="choice">It fits without expansion cards</button></li>
+    </ul>
+    <div class="explain" hidden>An ATX board is about 30 × 24 cm; a Mini-ITX case is built for a board about 17 × 17 cm. <strong>A bigger board never fits a smaller case.</strong> Order a Mini-ITX board (or a bigger case).</div>
+  </section>
+
+  <section class="quiz">
+    <p class="q">An office PC needs a graphics card and two other add-in cards, in the <strong>smallest</strong> standard board that still has room. Which form factor?</p>
+    <ul class="choices">
+      <li><button class="choice">Mini-ITX</button></li>
+      <li><button class="choice" data-correct>Micro-ATX</button></li>
+      <li><button class="choice">ATX</button></li>
+      <li><button class="choice">E-ATX</button></li>
+    </ul>
+    <div class="explain" hidden>Three cards need three slots. <strong>Micro-ATX</strong> offers up to four, in a smaller board than ATX.<sup class="cite"><a href="#src-toms">[3]</a></sup> Mini-ITX usually has only one; ATX and E-ATX work but are bigger than needed.</div>
+  </section>
+  <p class="quiz-score" data-quiz-score></p>
+
+  <details class="recall">
+    <summary>From memory: the three form factors from largest to smallest, roughly how many slots each has, and the fit rule. <span class="hint">(then click to check)</span></summary>
+    <p><strong>ATX</strong> (12 × 9.6 in, up to 7 slots) → <strong>micro-ATX</strong> (9.6 × 9.6 in, up to 4) → <strong>Mini-ITX</strong> (6.7 × 6.7 in, usually 1). Smaller boards fit bigger cases; bigger boards don't fit smaller cases.</p>
+  </details>
+
+  <h2>Review: earlier lessons</h2>
+  <p>Spaced retrieval: pull these from memory first, then check.</p>
+
+  <details class="recall">
+    <summary>You have four 4 TB drives. How much usable space does RAID 5 give, and how many drives can fail? And why can't RAID 1 bring back a deleted folder? <span class="hint">(<a href="0052-raid-levels.html">lesson 0052</a>, 1 day ago)</span></summary>
+    <p>RAID 5: <strong>12 TB</strong> (one drive's worth goes to parity), survives <strong>1</strong> failure. RAID 1 writes the delete to both drives at once: <strong>RAID is not a backup</strong>. Restore from a backup or version history.</p>
+  </details>
+
+  <details class="recall">
+    <summary>A fiber patch cable has small connectors with a latch, in a transmit/receive pair. Which connector is it, and what's the trap with a green connector? <span class="hint">(<a href="0046-fiber-connectors.html">lesson 0046</a>, 7 days ago)</span></summary>
+    <p><strong>LC</strong> (small, latching, used in pairs). Green = <strong>APC</strong> (angled polish): never mate it with a blue <strong>UPC</strong> connector.</p>
+  </details>
+
+  <details class="recall">
+    <summary>Before swapping a laptop's HDD for an SSD on a BitLocker-encrypted PC, what should you check and do? <span class="hint">(<a href="0023-laptop-batteries-keyboards-ssd.html">lesson 0023</a>, 30 days ago)</span></summary>
+    <p>Check the <strong>form factor and interface</strong> the laptop takes (2.5-inch SATA or M.2), make sure the <strong>recovery key</strong> is available, and <strong>suspend BitLocker</strong> before hardware or firmware changes so you aren't stuck at the recovery screen.</p>
+  </details>
+
+  <div class="callout source" id="src-messer">
+    <span class="label">Primary source: watch next</span>
+    <p>[1] Professor Messer, <a href="https://www.professormesser.com/free-a-plus-training/220-1201/220-1201-video/motherboard-form-factors-220-1201/">Motherboard Form Factors (220-1201, 3.5)</a>. ATX, micro-ATX and ITX, about 6 minutes. Free.</p>
+    <p id="src-messer901">[2] Professor Messer, <a href="https://www.professormesser.com/free-a-plus-training/220-901/an-overview-of-motherboard-types-2/">An Overview of Motherboard Types (220-901)</a>: Mini-ITX uses the same screw layout as ATX; small form factors suit single-purpose machines.</p>
+    <p id="src-toms">[3] Tom's Hardware, <a href="https://www.tomshardware.com/features/pc-form-factor-basics">A Basic Guide To Motherboard, Case and Power Supply Form Factors</a>: board sizes, mounting holes and case compatibility.</p>
+    <p id="src-msi">[4] MSI, <a href="https://www.msi.com/blog/how-to-check-what-motherboard-i-have">How to check what motherboard I have</a>: finding the board model in Windows.</p>
+  </div>
+
+  <div class="callout ask">
+    <span class="label">Questions?</span>
+    <p>Anything unclear? Ask your teacher. Open Claude in the Teacher repo and ask, for example: <em>"In IT lesson 0053, why do brand-name office PCs use proprietary motherboards?"</em> Follow-up questions are part of the course.</p>
+  </div>
+</main>
+<nav class="page-footer">
+  <a href="0052-raid-levels.html">← Many drives, one volume</a>
+  <a href="../../index.html">Hub</a>
+  <span class="disabled">Next lesson: tomorrow →</span>
+</nav>
+</body>
+</html>

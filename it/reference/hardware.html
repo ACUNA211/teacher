@@ -362,10 +362,24 @@
   </div>
   <p class="sidenote">Degraded = a drive failed, no margin left; replace and rebuild. Hot spare = idle drive that starts the rebuild automatically. <strong>RAID is not a backup</strong>: deletes and ransomware hit every drive. Windows Storage Spaces: Simple ≈ striping, Mirror, Parity.</p>
 
+  <h2>Motherboard form factors (objective 3.5)</h2>
+  <div class="table-wrap">
+  <table>
+    <thead><tr><th>Form factor</th><th>Size (about)</th><th>Expansion slots</th><th>Notes</th></tr></thead>
+    <tbody>
+      <tr><td>ATX</td><td>305 × 244 mm (12 × 9.6 in)</td><td>Up to 7</td><td>Full towers; Intel standard, 1995</td></tr>
+      <tr><td>Micro-ATX</td><td>244 × 244 mm (9.6 × 9.6 in)</td><td>Up to 4</td><td>Square; fits ATX cases</td></tr>
+      <tr><td>Mini-ITX</td><td>170 × 170 mm (6.7 × 6.7 in)</td><td>Usually 1</td><td>Small form factor PCs; fits mATX and ATX cases</td></tr>
+    </tbody>
+  </table>
+  </div>
+  <p class="sidenote">Smaller boards reuse a subset of the ATX mounting holes and the same I/O panel position: <strong>small board → big case works; big board → small case doesn't</strong>. Laptops and many brand-name PCs use proprietary boards.</p>
+
   <h2>Commands (Windows)</h2>
   <div class="table-wrap">
   <table>
     <tbody>
+      <tr><td><code>Get-CimInstance Win32_BaseBoard | Select-Object Manufacturer, Product</code></td><td>PowerShell: motherboard maker and model (look up its form factor on the maker's site); <code>msinfo32</code> shows BaseBoard Manufacturer/Product</td></tr>
       <tr><td><code>Get-CimInstance Win32_PhysicalMemory | Format-Table DeviceLocator, Capacity, Speed, SMBIOSMemoryType</code></td><td>PowerShell: each RAM stick, its slot and speed; SMBIOSMemoryType 24 DDR3, 26 DDR4, 34 DDR5. Task Manager → Performance → Memory shows slots used and form factor</td></tr>
       <tr><td><code>Get-Volume | Format-Table DriveLetter, FileSystemLabel, DriveType, FileSystem, Size</code></td><td>PowerShell: each volume and its DriveType: Fixed (internal), Removable (flash drive, SD card), CD-ROM (optical)</td></tr>
       <tr><td><code>Get-VirtualDisk | Format-Table FriendlyName, ResiliencySettingName, HealthStatus</code></td><td>PowerShell: Storage Spaces volumes and their layout (Simple, Mirror, Parity) and health; empty if none are set up</td></tr>
