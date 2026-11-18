@@ -1,0 +1,170 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Motherboard Connections</title>
+<meta name="description" content="IT lesson 0054: A+ objective 3.5, motherboard connections. The 24-pin and CPU power connectors, storage ports, and header pins: front panel, USB and TPM.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=JetBrains+Mono&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../assets/course.css">
+<script src="../../assets/quiz.js" defer></script>
+</head>
+<body class="track-it">
+<nav class="page-header">
+  <a class="home" href="../../index.html">Teacher hub</a>
+  <span>IT and certs</span>
+  <a href="../reference/glossary.html">Glossary</a>
+  <a href="../reference/hardware.html">Hardware cheat sheet</a>
+</nav>
+<main>
+  <p class="kicker">IT and certs · Lesson 0054 · A+ Core 1, objective 3.5</p>
+  <h1>Power, ports and pins: motherboard connections</h1>
+  <p class="lede">About 10 minutes. Yesterday was the board's <em>size</em>. Today is what gets <em>plugged into</em> it from inside the case. Messer's 3.5 video groups these into three kinds: <strong>power connections</strong>, <strong>storage drive interfaces</strong> and <strong>header pins</strong>, and his example board has headers for USB and a <strong>TPM</strong>.<sup class="cite"><a href="#src-messer">[1]</a></sup> The win: look at a cable inside a PC and know where it goes, and why a missing one gives a "dead" PC.</p>
+
+  <div class="callout">
+    <span class="label">Why this matters at work</span>
+    <p>The <strong>TPM</strong> is what Windows 11 requires, what BitLocker stores its keys in, and what device-compliance checks (for example in Intune) often rely on. When a PC "has no TPM", the usual cause is not a missing chip: it's a firmware setting that is turned off.<sup class="cite"><a href="#src-tpm">[4]</a></sup></p>
+  </div>
+
+  <h2>1. Power connections</h2>
+  <div class="table-wrap">
+  <table>
+    <thead><tr><th>Connector</th><th>Powers</th><th>Notes</th></tr></thead>
+    <tbody>
+      <tr><td><strong>24-pin ATX</strong> (often 20+4)</td><td>The motherboard itself</td><td>The biggest plug on the board. The 4 extra pins snap off so the cable also fits older 20-pin boards.<sup class="cite"><a href="#src-psu">[2]</a></sup></td></tr>
+      <tr><td><strong>4- or 8-pin CPU</strong> (EPS12V, often 4+4)</td><td>The processor</td><td>Near the CPU socket, usually top-left. Forget it and the PC usually won't start or show anything.</td></tr>
+      <tr><td><strong>6- or 8-pin PCIe</strong> (6+2)</td><td>Graphics card</td><td>Plugs into the card, not the board. Looks like the CPU plug but is wired differently: don't swap them.<sup class="cite"><a href="#src-psu">[2]</a></sup></td></tr>
+    </tbody>
+  </table>
+  </div>
+  <p class="sidenote">SATA power (15-pin) and Molex go to drives and were covered in <a href="0042-storage-cables-sata-esata.html">lesson 0042</a> and <a href="0045-copper-connectors.html">lesson 0045</a>. Each plug is <strong>keyed</strong> (shaped so it fits only one way). If it won't go in, it's the wrong plug or it's the wrong way round. Don't force it.</p>
+
+  <h2>2. Storage drive interfaces</h2>
+  <p>You already know these from objective 3.4: <strong>SATA</strong> ports (small L-shaped 7-pin data ports, often in a row at the board's edge) and <strong>M.2</strong> slots (lying flat on the board, often under a heatsink).<sup class="cite"><a href="#src-messer">[1]</a></sup> Quick recap: <a href="0042-storage-cables-sata-esata.html">SATA cables</a>, <a href="0051-m2-msata-flash-optical.html">M.2 keys and lengths</a>.</p>
+
+  <h2>3. Header pins</h2>
+  <p>A <strong>header</strong> is a small block of pins on the board that a case cable or add-on plugs onto.</p>
+  <div class="table-wrap">
+  <table>
+    <thead><tr><th>Header</th><th>What plugs in</th><th>Look for</th></tr></thead>
+    <tbody>
+      <tr><td><strong>Front panel</strong> (F_PANEL, JFP1)</td><td>Case power button, reset button, power LED, drive activity LED</td><td>Tiny 2-pin plugs. LEDs have polarity (+/−); switches don't.<sup class="cite"><a href="#src-fp">[3]</a></sup></td></tr>
+      <tr><td><strong>USB 2.0</strong> (9-pin)</td><td>Front USB-A ports, card readers</td><td>2×5 block with one pin missing as a key; 480 Mbps<sup class="cite"><a href="#src-usb">[5]</a></sup></td></tr>
+      <tr><td><strong>USB 3.x</strong> (19-pin)</td><td>Two front USB-A 5 Gbps ports</td><td>Larger, usually blue, thick cable<sup class="cite"><a href="#src-usb">[5]</a></sup></td></tr>
+      <tr><td><strong>Front USB-C</strong> (20-pin "Key-A" / Type-E)</td><td>A front USB-C port</td><td>Small and latched; not the same as the 19-pin header<sup class="cite"><a href="#src-usb">[5]</a></sup></td></tr>
+      <tr><td><strong>TPM</strong></td><td>A plug-in <strong>discrete TPM</strong> module</td><td>Often empty, because most modern CPUs have a <strong>firmware TPM</strong> built in: Intel <strong>PTT</strong>, AMD <strong>fTPM</strong><sup class="cite"><a href="#src-tpm">[4]</a></sup></td></tr>
+      <tr><td>Fan / pump (CPU_FAN, SYS_FAN)</td><td>Case and CPU cooler fans</td><td>3-pin (voltage control) or 4-pin (PWM speed control)</td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <div class="callout win">
+    <span class="label">Rule of thumb</span>
+    <p><strong>Two power plugs to the board</strong>: 24-pin main + CPU 4/8-pin. <strong>Headers</strong> bring the case's buttons, LEDs and front ports to the board. Power button does nothing on a new build? Check the <strong>front panel header</strong> and the <strong>CPU power plug</strong> first. Pin layouts differ by board: <strong>the manual has the map</strong>.</p>
+  </div>
+
+  <h2>Try it (2 minutes)</h2>
+  <ol>
+    <li>On a Windows PC, open PowerShell <strong>as administrator</strong> and run <code>Get-Tpm</code>.</li>
+    <li>Look at <strong>TpmPresent</strong> (Windows sees a TPM) and <strong>TpmReady</strong> (it's set up and usable). Both should be <code>True</code>.<sup class="cite"><a href="#src-tpm">[4]</a></sup></li>
+    <li>For the TPM version, run <code>tpm.msc</code> and read <em>Specification Version</em> (Windows 11 needs 2.0).</li>
+  </ol>
+  <details class="recall">
+    <summary>Before checking: TpmPresent is False on a PC with a recent CPU. What's the most likely cause, and where do you fix it? <span class="hint">(then click to check)</span></summary>
+    <p>The <strong>firmware TPM is turned off</strong> in UEFI/BIOS (a setting called something like Intel PTT, AMD fTPM or Security Device Support). Turn it on there. You rarely need to buy a module for the TPM header.<sup class="cite"><a href="#src-tpm">[4]</a></sup></p>
+  </details>
+
+  <h2>Practice</h2>
+  <p>Answer from memory before scrolling back up.</p>
+
+  <section class="quiz">
+    <p class="q">A new build: fans spin when the PSU switch is flipped on, but there's no display and the CPU seems dead. The 24-pin is connected. What's the most likely missing plug?</p>
+    <ul class="choices">
+      <li><button class="choice">The SATA power plug</button></li>
+      <li><button class="choice" data-correct>The 8-pin CPU plug</button></li>
+      <li><button class="choice">The 6-pin PCIe plug</button></li>
+      <li><button class="choice">The USB 3.x plug</button></li>
+    </ul>
+    <div class="explain" hidden>The board gets power from the <strong>24-pin</strong>, but the <strong>processor</strong> gets its own feed from the <strong>4/8-pin CPU (EPS12V)</strong> connector near the socket. Without it, the CPU doesn't run. SATA power only feeds drives; PCIe power feeds a graphics card.</div>
+  </section>
+
+  <section class="quiz">
+    <p class="q">After moving a PC into a new case, the case's power button does nothing, though the PSU is on and all power cables are connected. Where do you look first?</p>
+    <ul class="choices">
+      <li><button class="choice">TPM module header</button></li>
+      <li><button class="choice">CPU fan header</button></li>
+      <li><button class="choice" data-correct>Front panel header</button></li>
+      <li><button class="choice">Spare M.2 slot</button></li>
+    </ul>
+    <div class="explain" hidden>The case button reaches the board through a tiny 2-pin plug on the <strong>front panel header</strong>. A common mistake is putting it on the reset or LED pins. Check the board manual's pin map.<sup class="cite"><a href="#src-fp">[3]</a></sup></div>
+  </section>
+
+  <section class="quiz">
+    <p class="q">A user's new case has a front <strong>USB-C</strong> port that doesn't work. The board has free 9-pin and 19-pin USB headers only. What's the issue?</p>
+    <ul class="choices">
+      <li><button class="choice">USB-C needs a driver</button></li>
+      <li><button class="choice">Port needs PCIe power</button></li>
+      <li><button class="choice">Cable needs reversing first</button></li>
+      <li><button class="choice" data-correct>Board lacks USB-C header</button></li>
+    </ul>
+    <div class="explain" hidden>A front USB-C port uses its own <strong>20-pin Key-A / Type-E</strong> header, which is different from the 19-pin USB 3.x header.<sup class="cite"><a href="#src-usb">[5]</a></sup> Without it, the port can't be connected directly (an adapter may work, at lower capability).</div>
+  </section>
+
+  <section class="quiz">
+    <p class="q">A PC fails the Windows 11 check for TPM 2.0. The board has an <strong>empty TPM header</strong> and a recent Intel CPU. What do you try first?</p>
+    <ul class="choices">
+      <li><button class="choice">Buy a TPM module</button></li>
+      <li><button class="choice" data-correct>Enable PTT in firmware</button></li>
+      <li><button class="choice">Replace the whole motherboard</button></li>
+      <li><button class="choice">Update the graphics driver</button></li>
+    </ul>
+    <div class="explain" hidden>Recent Intel CPUs include a firmware TPM 2.0 called <strong>PTT</strong> (AMD's is <strong>fTPM</strong>), and Windows 11 accepts it just like a discrete chip. It's often off by default in UEFI.<sup class="cite"><a href="#src-tpm">[4]</a></sup> The header is only needed for a discrete module.</div>
+  </section>
+  <p class="quiz-score" data-quiz-score></p>
+
+  <details class="recall">
+    <summary>From memory: the two power plugs every modern board needs, and four kinds of header pins. <span class="hint">(then click to check)</span></summary>
+    <p><strong>24-pin ATX</strong> (board) and <strong>4/8-pin CPU</strong> (processor). Headers: <strong>front panel</strong> (power/reset/LEDs), <strong>USB</strong> (9-pin 2.0, 19-pin 3.x, 20-pin USB-C), <strong>TPM</strong>, <strong>fan</strong>.</p>
+  </details>
+
+  <h2>Review: earlier lessons</h2>
+  <p>Spaced retrieval: pull these from memory first, then check.</p>
+
+  <details class="recall">
+    <summary>A case lists "mATX / Mini-ITX" support. Will an ATX board fit? Will a Mini-ITX board? <span class="hint">(<a href="0053-motherboard-form-factors.html">lesson 0053</a>, 1 day ago)</span></summary>
+    <p>ATX: <strong>no</strong>, too big. Mini-ITX: <strong>yes</strong>. Smaller boards reuse a subset of the bigger boards' mounting holes, so small board → big case works; big board → small case doesn't.</p>
+  </details>
+
+  <details class="recall">
+    <summary>A desktop takes DDR4. Will a DDR5 stick fit in its slot? How can you tell the generations apart? <span class="hint">(<a href="0047-memory-overview-dimm-ddr.html">lesson 0047</a>, 7 days ago)</span></summary>
+    <p><strong>No.</strong> DDR4 and DDR5 DIMMs both have 288 pins, but the <strong>notch</strong> sits in a different place, so a stick only fits its own generation. Check the board's spec (or <code>Win32_PhysicalMemory</code> SMBIOSMemoryType: 26 DDR4, 34 DDR5).</p>
+  </details>
+
+  <details class="recall">
+    <summary>A user wants to block their laptop's camera for privacy, but Windows Hello face sign-in stops working. Why? <span class="hint">(<a href="0024-laptop-nfc-cameras-microphones.html">lesson 0024</a>, 30 days ago)</span></summary>
+    <p>Windows Hello face recognition needs the <strong>IR camera</strong>. Covering or disabling the camera hardware (a shutter, a privacy key, or a policy that blocks the camera) can stop Hello face too. Offer PIN or fingerprint instead.</p>
+  </details>
+
+  <div class="callout source" id="src-messer">
+    <span class="label">Primary source: watch next</span>
+    <p>[1] Professor Messer, <a href="https://www.professormesser.com/free-a-plus-training/220-1201/220-1201-video/motherboard-connections-220-1201/">Motherboard Connections (220-1201, 3.5)</a>: power connections, storage drive interfaces and header pins. Free.</p>
+    <p id="src-psu">[2] Sunbeam, <a href="https://sunbeamtech.com/hardware-guides/psu-cables-explained-24-pin-eps-pcie-sata/">PSU cables explained: 24-pin ATX, EPS 8-pin, PCIe 6+2, SATA, Molex</a>; see also Seasonic, <a href="https://seasonic.com/insights/seasonic-psu-cables/">PSU cables</a>.</p>
+    <p id="src-fp">[3] Intel, <a href="https://www.intel.com/content/www/us/en/support/articles/000007309.html">Front Panel Header</a>: pin roles for power and reset switches and LEDs.</p>
+    <p id="src-tpm">[4] Helge Klein, <a href="https://helgeklein.com/blog/how-to-check-windows-tpm-status-enable-cpu-amd-ftpm-intel-ptt/">How to check the TPM status and enable the CPU's fTPM/PTT</a>; Microsoft, <a href="https://learn.microsoft.com/en-us/powershell/module/trustedplatformmodule/get-tpm">Get-Tpm</a>.</p>
+    <p id="src-usb">[5] Sunbeam, <a href="https://sunbeamtech.com/hardware-guides/usb-headers-on-a-motherboard-explained/">USB headers on a motherboard explained</a>: 9-pin, 19-pin and USB-C headers.</p>
+  </div>
+
+  <div class="callout ask">
+    <span class="label">Questions?</span>
+    <p>Anything unclear? Ask your teacher. Open Claude in the Teacher repo and ask, for example: <em>"In IT lesson 0054, what does a TPM actually store, and why does BitLocker need it?"</em> Follow-up questions are part of the course.</p>
+  </div>
+</main>
+<nav class="page-footer">
+  <a href="0053-motherboard-form-factors.html">← Big, medium, tiny</a>
+  <a href="../../index.html">Hub</a>
+  <span class="disabled">Next lesson: tomorrow →</span>
+</nav>
+</body>
+</html>
