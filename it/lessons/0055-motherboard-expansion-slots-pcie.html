@@ -1,0 +1,163 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Motherboard Expansion Slots</title>
+<meta name="description" content="IT lesson 0055: A+ objective 3.5, motherboard expansion slots. PCI vs. PCI Express, lanes (x1, x4, x8, x16), which cards fit which slots, and why a slot's size isn't its speed.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=JetBrains+Mono&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../assets/course.css">
+<script src="../../assets/quiz.js" defer></script>
+</head>
+<body class="track-it">
+<nav class="page-header">
+  <a class="home" href="../../index.html">Teacher hub</a>
+  <span>IT and certs</span>
+  <a href="../reference/glossary.html">Glossary</a>
+  <a href="../reference/hardware.html">Hardware cheat sheet</a>
+</nav>
+<main>
+  <p class="kicker">IT and certs · Lesson 0055 · A+ Core 1, objective 3.5</p>
+  <h1>Lanes, not length: PCI and PCIe expansion slots</h1>
+  <p class="lede">About 10 minutes. Yesterday was the cables and headers on the board. Today is the long slots where <strong>expansion cards</strong> go: graphics, network, sound, capture. Messer's 3.5 video covers two families: old <strong>PCI</strong> and modern <strong>PCI Express (PCIe)</strong>.<sup class="cite"><a href="#src-messer">[1]</a></sup> The win: read "x16 (x4 mode)" on a spec sheet and know what it means.</p>
+
+  <div class="callout">
+    <span class="label">Why this matters at work</span>
+    <p>A desktop that's "slow on the network" after someone added a 10-gigabit card, or a second monitor that's blank after a graphics card was installed: both often come down to <em>which</em> slot the card went in, or which port the cable went in. Thirty seconds with the board manual beats an hour of driver reinstalls.</p>
+  </div>
+
+  <h2>1. PCI: the old parallel bus</h2>
+  <p><strong>PCI</strong> (Peripheral Component Interconnect) is <strong>parallel</strong>: many bits travel side by side over a shared bus, 32-bit or 64-bit wide.<sup class="cite"><a href="#src-messer">[1]</a></sup> You'll still meet it on old PCs and in exam questions. On new boards it's gone: <strong>PCIe replaced PCI</strong> (and older slots like AGP for graphics).<sup class="cite"><a href="#src-messer">[1]</a></sup></p>
+
+  <h2>2. PCIe: serial lanes</h2>
+  <p><strong>PCI Express</strong> is <strong>serial</strong>: data moves over <strong>lanes</strong>, each a point-to-point link (one pair of wires each way). More lanes = more bandwidth. A slot is named for how many lanes it can hold: <strong>x1, x4, x8, x16</strong> (say "by sixteen").<sup class="cite"><a href="#src-messer">[1]</a></sup><sup class="cite"><a href="#src-crucial">[2]</a></sup></p>
+  <div class="table-wrap">
+  <table>
+    <thead><tr><th>Slot</th><th>Size</th><th>Typical cards</th></tr></thead>
+    <tbody>
+      <tr><td><strong>x1</strong></td><td>Shortest</td><td>Network, sound, Wi-Fi, USB add-on cards</td></tr>
+      <tr><td><strong>x4 / x8</strong></td><td>Medium</td><td>NVMe adapter cards, fast (10 Gb+) network cards, RAID controllers</td></tr>
+      <tr><td><strong>x16</strong></td><td>Longest, often reinforced</td><td><strong>Graphics cards</strong> (the top slot, nearest the CPU)<sup class="cite"><a href="#src-utp">[3]</a></sup></td></tr>
+    </tbody>
+  </table>
+  </div>
+  <p>Each <strong>generation</strong> roughly doubles the speed per lane: PCIe 3.0 ≈ 1 GB/s, 4.0 ≈ 2 GB/s, 5.0 ≈ 4 GB/s per lane, each direction. Multiply by the lanes: a PCIe 4.0 x16 slot ≈ 32 GB/s.<sup class="cite"><a href="#src-crucial">[2]</a></sup> Generations are <strong>backward compatible</strong>: a 3.0 card works in a 5.0 slot, at 3.0 speed.</p>
+  <p class="sidenote">Recall from <a href="0051-m2-msata-flash-optical.html">lesson 0051</a>: an NVMe M.2 drive is a PCIe device too, usually on 4 lanes (x4).</p>
+
+  <h2>3. Which card fits which slot</h2>
+  <ul>
+    <li><strong>Small card → bigger slot: works.</strong> An x1 card runs fine in an x16 slot (it just uses one lane).<sup class="cite"><a href="#src-crucial">[2]</a></sup></li>
+    <li><strong>Big card → smaller slot: doesn't fit</strong> (unless the slot is open-ended at the back).</li>
+    <li><strong>Size ≠ speed.</strong> A full-length x16 slot may be <em>wired</em> with only 4 lanes. The manual writes it as <strong>"x16 (x4 mode)"</strong> or <strong>"x16 @ x4"</strong>: physically x16, electrically x4.<sup class="cite"><a href="#src-wiki">[4]</a></sup> On many boards, filling a second slot or an M.2 socket also drops another slot's lanes, because they share them.</li>
+  </ul>
+
+  <div class="callout win">
+    <span class="label">Rule of thumb</span>
+    <p><strong>PCI = parallel and old; PCIe = serial lanes.</strong> The number after the x is <strong>lanes</strong>. Card fits in its size <em>or bigger</em>. The <strong>physical size</strong> tells you what fits; the <strong>manual's lane table</strong> tells you how fast it runs. Graphics card → top x16 slot.</p>
+  </div>
+
+  <h2>Try it (2 minutes)</h2>
+  <p>On a Windows desktop with a graphics card, open PowerShell and run:<sup class="cite"><a href="#src-pnp">[5]</a></sup></p>
+  <pre><code>Get-PnpDevice -PresentOnly -Class Display |
+  Get-PnpDeviceProperty -KeyName DEVPKEY_PciDevice_CurrentLinkWidth, DEVPKEY_PciDevice_MaxLinkWidth |
+  Format-Table KeyName, Data</code></pre>
+  <p><strong>MaxLinkWidth</strong> is how many lanes the card supports; <strong>CurrentLinkWidth</strong> is how many it's using now (a number like 16 or 8). On a laptop with only built-in graphics, it may show nothing: that's fine. A free tool like GPU-Z shows the same thing as "Bus Interface".</p>
+  <details class="recall">
+    <summary>Before checking: Max says 16, Current says 4. Name two likely causes. <span class="hint">(then click to check)</span></summary>
+    <p>The card is in an <strong>x16 slot wired as x4</strong> (often the lower slot, run by the chipset), or the slot <strong>shares lanes</strong> with something else that's installed (a second card or an M.2 drive). Move it to the top x16 slot and check the manual's lane table. (Some cards also drop speed when idle to save power, but that usually lowers the generation, not the lane count.)</p>
+  </details>
+
+  <h2>Practice</h2>
+  <p>Answer from memory before scrolling back up.</p>
+
+  <section class="quiz">
+    <p class="q">A technician has a PCIe <strong>x1</strong> network card. The only free slot on the board is a PCIe <strong>x16</strong>. What happens?</p>
+    <ul class="choices">
+      <li><button class="choice">It won't physically fit</button></li>
+      <li><button class="choice">It needs an adapter card</button></li>
+      <li><button class="choice" data-correct>It works, using one lane</button></li>
+      <li><button class="choice">It runs at sixteen lanes</button></li>
+    </ul>
+    <div class="explain" hidden>A smaller PCIe card fits and works in a bigger slot. It only uses the lanes it has, so an x1 card uses one lane.<sup class="cite"><a href="#src-crucial">[2]</a></sup> The reverse (x16 card in an x1 slot) doesn't fit.</div>
+  </section>
+
+  <section class="quiz">
+    <p class="q">A board manual lists "PCIEX16_2: x16 (x4 mode)". A user installs a new graphics card there and it benchmarks slower than expected. Why?</p>
+    <ul class="choices">
+      <li><button class="choice">The slot is PCI, not PCIe</button></li>
+      <li><button class="choice" data-correct>The slot has only four lanes</button></li>
+      <li><button class="choice">The card needs a newer driver</button></li>
+      <li><button class="choice">The slot needs a power cable</button></li>
+    </ul>
+    <div class="explain" hidden>"x16 (x4 mode)" means physically x16 but <strong>electrically x4</strong>: the card fits but gets a quarter of the lanes.<sup class="cite"><a href="#src-wiki">[4]</a></sup> Move it to the primary x16 slot (usually the top one, wired to the CPU).</div>
+  </section>
+
+  <section class="quiz">
+    <p class="q">What is the main technical difference between <strong>PCI</strong> and <strong>PCI Express</strong>?</p>
+    <ul class="choices">
+      <li><button class="choice" data-correct>PCI parallel, PCIe serial lanes</button></li>
+      <li><button class="choice">PCI serial, PCIe parallel bus</button></li>
+      <li><button class="choice">PCI wireless, PCIe wired links</button></li>
+      <li><button class="choice">PCI external, PCIe internal only</button></li>
+    </ul>
+    <div class="explain" hidden><strong>PCI</strong> is a shared <strong>parallel</strong> bus (32- or 64-bit). <strong>PCIe</strong> sends data <strong>serially</strong> over point-to-point lanes, and adds bandwidth by adding lanes.<sup class="cite"><a href="#src-messer">[1]</a></sup></div>
+  </section>
+
+  <section class="quiz">
+    <p class="q">A PCIe <strong>4.0</strong> network card is installed in a PCIe <strong>3.0</strong> x4 slot. What's the result?</p>
+    <ul class="choices">
+      <li><button class="choice">The card is not detected</button></li>
+      <li><button class="choice">The card runs at 4.0</button></li>
+      <li><button class="choice">The slot must be updated</button></li>
+      <li><button class="choice" data-correct>The card runs at 3.0</button></li>
+    </ul>
+    <div class="explain" hidden>PCIe generations are <strong>backward compatible</strong>: the link runs at the speed of the <strong>older</strong> side, here 3.0 (about half the per-lane speed of 4.0).<sup class="cite"><a href="#src-crucial">[2]</a></sup></div>
+  </section>
+  <p class="quiz-score" data-quiz-score></p>
+
+  <details class="recall">
+    <summary>From memory: what does the "16" in "PCIe x16" count, and what's usually in that slot? <span class="hint">(then click to check)</span></summary>
+    <p>It counts <strong>lanes</strong> (serial links). The x16 slot usually holds the <strong>graphics card</strong>. x1 slots take small cards like network or sound.</p>
+  </details>
+
+  <h2>Review: earlier lessons</h2>
+  <p>Spaced retrieval: pull these from memory first, then check.</p>
+
+  <details class="recall">
+    <summary>A new graphics card is installed but the PC won't start, and the card has empty 8-pin sockets on its edge. Which plug is missing, and how is it different from the CPU plug? <span class="hint">(<a href="0054-motherboard-power-headers-tpm.html">lesson 0054</a>, 1 day ago)</span></summary>
+    <p>The <strong>6/8-pin PCIe (6+2)</strong> power plug from the PSU. It looks like the <strong>4/8-pin CPU (EPS12V)</strong> plug but is wired differently, so don't swap them. The PCIe plug goes into the card; the CPU plug goes into the board near the socket.</p>
+  </details>
+
+  <details class="recall">
+    <summary>A server has four drives in RAID 5. One fails. Is data lost? What if a second fails before the rebuild? <span class="hint">(<a href="0052-raid-levels.html">lesson 0052</a>, 3 days ago)</span></summary>
+    <p>One failure: <strong>no data lost</strong>; the array is <strong>degraded</strong> and rebuilds from parity onto a replacement. A second failure before the rebuild finishes: <strong>data lost</strong>. RAID 6 survives two. And RAID is still <strong>not a backup</strong>.</p>
+  </details>
+
+  <details class="recall">
+    <summary>Which of VGA, DVI, HDMI and DisplayPort are analog, digital, or either? Which DVI type carries both? <span class="hint">(<a href="0041-video-cables-hdmi-displayport-dvi-vga.html">lesson 0041</a>, 14 days ago)</span></summary>
+    <p><strong>VGA</strong>: analog. <strong>HDMI</strong> and <strong>DisplayPort</strong>: digital (with audio). <strong>DVI</strong>: depends on type: DVI-A analog, DVI-D digital, <strong>DVI-I both</strong>. Bonus tie-in to today: with a graphics card in the x16 slot, plug the monitor into the <em>card's</em> ports, not the board's.</p>
+  </details>
+
+  <div class="callout source" id="src-messer">
+    <span class="label">Primary source: watch next</span>
+    <p>[1] Professor Messer, <a href="https://www.professormesser.com/free-a-plus-training/220-1201/220-1201-video/motherboard-expansion-slots-220-1201/">Motherboard Expansion Slots (220-1201, 3.5)</a>: PCI and PCI Express, lanes and slot sizes. Free.</p>
+    <p id="src-crucial">[2] Crucial, <a href="https://www.crucial.com/support/articles-faq-ssd/pcie-speeds-limitations">PCIe speeds and limitations</a>: per-lane speed by generation, cards in bigger slots, backward compatibility.</p>
+    <p id="src-utp">[3] Union Test Prep, <a href="https://uniontestprep.com/comptia-a-core-series-exam/study-guide/220-1201-hardware/pages/4">220-1201 Hardware study guide</a>: x16 for video cards, x1 for sound and network cards.</p>
+    <p id="src-wiki">[4] Wikipedia, <a href="https://en.wikipedia.org/wiki/PCI_Express">PCI Express</a>: lanes, and the "x16 (x4 mode)" / "x16 @ x4" notation for mechanical vs. electrical size.</p>
+    <p id="src-pnp">[5] Microsoft Learn, <a href="https://learn.microsoft.com/en-us/powershell/module/pnpdevice/get-pnpdeviceproperty">Get-PnpDeviceProperty</a>.</p>
+  </div>
+
+  <div class="callout ask">
+    <span class="label">Questions?</span>
+    <p>Anything unclear? Ask your teacher. Open Claude in the Teacher repo and ask, for example: <em>"In IT lesson 0055, why do the M.2 slot and a PCIe slot share lanes on some boards?"</em> Follow-up questions are part of the course.</p>
+  </div>
+</main>
+<nav class="page-footer">
+  <a href="0054-motherboard-power-headers-tpm.html">← Power, ports and pins</a>
+  <a href="../../index.html">Hub</a>
+  <span class="disabled">Next lesson: tomorrow →</span>
+</nav>
+</body>
+</html>
