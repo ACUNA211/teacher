@@ -406,10 +406,26 @@
   </div>
   <p class="sidenote">Per lane, each direction: PCIe 3.0 ≈ 1 GB/s · 4.0 ≈ 2 GB/s · 5.0 ≈ 4 GB/s. Small card → bigger slot works; generations are backward compatible (runs at the older speed). <strong>"x16 (x4 mode)" / "x16 @ x4"</strong> = physically x16, electrically 4 lanes. Slots and M.2 sockets may share lanes: check the manual's lane table.</p>
 
+  <h2>Motherboard compatibility (objective 3.5)</h2>
+  <div class="table-wrap">
+  <table>
+    <thead><tr><th>Item</th><th>Rule</th></tr></thead>
+    <tbody>
+      <tr><td>Brand</td><td>Intel CPU → Intel socket; AMD CPU → AMD socket. Never crosses over</td></tr>
+      <tr><td>LGA</td><td>Pins in the socket, pads on the CPU (Intel desktop, AMD AM5)</td></tr>
+      <tr><td>PGA</td><td>Pins on the CPU (older AMD, e.g. AM4)</td></tr>
+      <tr><td>BGA</td><td>Soldered, no socket (most laptops): CPU not upgradable</td></tr>
+      <tr><td>Same socket</td><td>Still check the board's CPU support list; may need a BIOS update first</td></tr>
+      <tr><td>Server board</td><td>Often multisocket (2+ CPUs), many ECC memory slots, rack-mounted</td></tr>
+    </tbody>
+  </table>
+  </div>
+
   <h2>Commands (Windows)</h2>
   <div class="table-wrap">
   <table>
     <tbody>
+      <tr><td><code>Get-CimInstance Win32_Processor | Format-Table Name, SocketDesignation, NumberOfCores</code></td><td>PowerShell: CPU model and the socket the firmware reports; <code>(Get-CimInstance Win32_ComputerSystem).NumberOfProcessors</code> counts physical CPUs (2+ = multisocket)</td></tr>
       <tr><td><code>Get-PnpDevice -PresentOnly -Class Display | Get-PnpDeviceProperty -KeyName DEVPKEY_PciDevice_CurrentLinkWidth, DEVPKEY_PciDevice_MaxLinkWidth</code></td><td>PowerShell: PCIe lanes the graphics card supports (Max) vs. is using now (Current); lower Current often means a slot wired with fewer lanes</td></tr>
       <tr><td><code>Get-Tpm</code> (admin) · <code>tpm.msc</code></td><td>PowerShell: TpmPresent (Windows sees a TPM) and TpmReady (usable) should be True; <code>tpm.msc</code> shows Specification Version (Windows 11 needs 2.0)</td></tr>
       <tr><td><code>Get-CimInstance Win32_BaseBoard | Select-Object Manufacturer, Product</code></td><td>PowerShell: motherboard maker and model (look up its form factor on the maker's site); <code>msinfo32</code> shows BaseBoard Manufacturer/Product</td></tr>

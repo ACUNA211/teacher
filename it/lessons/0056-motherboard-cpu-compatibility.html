@@ -1,0 +1,166 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Motherboard Compatibility</title>
+<meta name="description" content="IT lesson 0056: A+ objective 3.5, motherboard compatibility. Intel vs. AMD sockets, LGA, PGA and soldered (BGA) CPUs, desktop vs. server vs. mobile boards, multisocket servers, and the CPU support list.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=JetBrains+Mono&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../assets/course.css">
+<script src="../../assets/quiz.js" defer></script>
+</head>
+<body class="track-it">
+<nav class="page-header">
+  <a class="home" href="../../index.html">Teacher hub</a>
+  <span>IT and certs</span>
+  <a href="../reference/glossary.html">Glossary</a>
+  <a href="../reference/hardware.html">Hardware cheat sheet</a>
+</nav>
+<main>
+  <p class="kicker">IT and certs · Lesson 0056 · A+ Core 1, objective 3.5</p>
+  <h1>Match the socket: motherboard and CPU compatibility</h1>
+  <p class="lede">About 10 minutes. This week you met the board's size, plugs and slots. Today is the last piece before BIOS: which <strong>CPU</strong> a board accepts, and how desktop, server and mobile boards differ.<sup class="cite"><a href="#src-messer">[1]</a></sup> The win: look at a CPU and a board and say "yes, no, or check the support list".</p>
+
+  <div class="callout">
+    <span class="label">Why this matters at work</span>
+    <p>Someone asks for "a faster processor" in their laptop, or wants to drop a spare CPU into an old desktop. The answer starts here: most laptop CPUs can't be swapped at all, and a desktop CPU only fits a board with the same socket <em>and</em> firmware that knows it. Getting this right saves a parts order that can't be used.</p>
+  </div>
+
+  <h2>1. The socket decides: Intel vs. AMD</h2>
+  <p>A motherboard is built for one CPU family. An <strong>Intel</strong> CPU needs a board with an <strong>Intel socket</strong>; an <strong>AMD</strong> CPU needs an <strong>AMD socket</strong>. They never cross over.<sup class="cite"><a href="#src-messer">[1]</a></sup> Within a brand, each socket generation has its own name (for example AMD <strong>AM4</strong> and <strong>AM5</strong>), and they don't cross over either.</p>
+  <p>Sockets come in two physical styles:<sup class="cite"><a href="#src-am5">[2]</a></sup></p>
+  <div class="table-wrap">
+  <table>
+    <thead><tr><th>Style</th><th>Where the pins are</th><th>Examples</th></tr></thead>
+    <tbody>
+      <tr><td><strong>LGA</strong> (land grid array)</td><td>Pins in the <strong>socket</strong>; flat pads on the CPU</td><td>Intel desktop CPUs; AMD AM5 (LGA 1718)</td></tr>
+      <tr><td><strong>PGA</strong> (pin grid array)</td><td>Pins on the <strong>CPU</strong>; holes in the socket</td><td>Older AMD desktop, e.g. AM4</td></tr>
+      <tr><td><strong>BGA</strong> (ball grid array)</td><td>No socket: CPU <strong>soldered</strong> to the board</td><td>Most laptops, tablets, small PCs</td></tr>
+    </tbody>
+  </table>
+  </div>
+  <p>Either socket style uses a <strong>locking lever</strong>: line up the CPU's corner mark with the socket's, drop it in with no force, close the lever.<sup class="cite"><a href="#src-messer">[1]</a></sup> Bent pins are the classic damage: on the CPU for PGA, in the socket for LGA.</p>
+
+  <h2>2. Same socket isn't always enough</h2>
+  <p>A newer CPU may share a socket with an older board but need a <strong>BIOS/UEFI update</strong> before it will start (POST). Check the board maker's <strong>CPU support list</strong>, not just the socket name.<sup class="cite"><a href="#src-utp">[3]</a></sup> The board also fixes the <strong>memory type</strong>: a DDR4 board won't take DDR5 (<a href="0047-memory-overview-dimm-ddr.html">lesson 0047</a>).</p>
+
+  <h2>3. Desktop, server, mobile</h2>
+  <div class="table-wrap">
+  <table>
+    <thead><tr><th>Board</th><th>What's different</th></tr></thead>
+    <tbody>
+      <tr><td><strong>Desktop</strong></td><td>One socket; upgradable CPU, RAM and cards; form factor ATX / micro-ATX / ITX (<a href="0053-motherboard-form-factors.html">lesson 0053</a>)</td></tr>
+      <tr><td><strong>Server</strong></td><td>Often <strong>multisocket</strong>: two or more physical CPUs on one board; many memory slots (usually <strong>ECC</strong>, <a href="0048-memory-technologies-ecc-channels.html">lesson 0048</a>); built to fit a 19-inch rack<sup class="cite"><a href="#src-messer">[1]</a></sup></td></tr>
+      <tr><td><strong>Mobile</strong></td><td>Custom-shaped to the laptop; CPU (and often RAM) <strong>soldered</strong>; little or nothing to upgrade except storage<sup class="cite"><a href="#src-am5">[2]</a></sup></td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <div class="callout win">
+    <span class="label">Rule of thumb</span>
+    <p><strong>Brand → socket → support list.</strong> Intel CPU, Intel socket; AMD CPU, AMD socket; then confirm the exact model is on the board's CPU support list (maybe after a BIOS update). <strong>LGA = pins in the socket, PGA = pins on the CPU, BGA = soldered.</strong> Server = multisocket + lots of ECC RAM. Laptop CPU = not upgradable.</p>
+  </div>
+
+  <h2>Try it (2 minutes)</h2>
+  <p>On any Windows PC, open PowerShell and run:<sup class="cite"><a href="#src-cim">[4]</a></sup></p>
+  <pre><code>Get-CimInstance Win32_Processor | Format-Table Name, SocketDesignation, NumberOfCores
+(Get-CimInstance Win32_ComputerSystem).NumberOfProcessors</code></pre>
+  <p><strong>Name</strong> is the CPU model (search it plus "support list" with your board model from <a href="0053-motherboard-form-factors.html">lesson 0053</a>'s <code>Win32_BaseBoard</code> command). <strong>SocketDesignation</strong> is whatever the firmware reports: on desktops often a socket name like "LGA1700" or "AM5", on laptops often just "CPU 1" or "U3E1" (it's soldered). <strong>NumberOfProcessors</strong> counts physical CPU packages: 1 on desktops and laptops, 2+ on a multisocket server.</p>
+  <details class="recall">
+    <summary>Before checking: a server shows NumberOfProcessors = 2 and two rows from Win32_Processor. What kind of board is it? <span class="hint">(then click to check)</span></summary>
+    <p>A <strong>multisocket</strong> (here dual-socket) server board: two separate physical CPUs on one motherboard. Each row is one CPU package; cores are counted inside each.</p>
+  </details>
+
+  <h2>Practice</h2>
+  <p>Answer from memory before scrolling back up.</p>
+
+  <section class="quiz">
+    <p class="q">A technician has a spare <strong>AMD</strong> desktop CPU and an old desktop with an <strong>Intel</strong> board. Can the CPU be installed?</p>
+    <ul class="choices">
+      <li><button class="choice">Yes, after a BIOS update</button></li>
+      <li><button class="choice" data-correct>No, the sockets never match</button></li>
+      <li><button class="choice">Yes, with a socket adapter</button></li>
+      <li><button class="choice">Only if RAM matches too</button></li>
+    </ul>
+    <div class="explain" hidden>Intel and AMD CPUs use different sockets: an AMD CPU needs a board with an AMD socket.<sup class="cite"><a href="#src-messer">[1]</a></sup> No BIOS update or adapter changes that.</div>
+  </section>
+
+  <section class="quiz">
+    <p class="q">A new CPU has the <strong>same socket</strong> as a user's board, but after installing it the PC won't POST. The old CPU still works. Most likely fix?</p>
+    <ul class="choices">
+      <li><button class="choice">Replace the power supply first</button></li>
+      <li><button class="choice">Reseat every memory module twice</button></li>
+      <li><button class="choice" data-correct>Update the BIOS with old CPU</button></li>
+      <li><button class="choice">Move the graphics card slot</button></li>
+    </ul>
+    <div class="explain" hidden>A same-socket CPU can need newer firmware before the board recognizes it. Put the old CPU back, update the BIOS/UEFI, then swap in the new one, and check the board's <strong>CPU support list</strong> first.<sup class="cite"><a href="#src-utp">[3]</a></sup></div>
+  </section>
+
+  <section class="quiz">
+    <p class="q">A user asks IT to upgrade the processor in their two-year-old <strong>thin laptop</strong>. What's the usual answer?</p>
+    <ul class="choices">
+      <li><button class="choice">Swap it via the socket lever</button></li>
+      <li><button class="choice">Install a second CPU beside it</button></li>
+      <li><button class="choice">Flash firmware to unlock speed</button></li>
+      <li><button class="choice" data-correct>Not possible; CPU is soldered</button></li>
+    </ul>
+    <div class="explain" hidden>Most laptop CPUs are <strong>BGA</strong>: soldered to the board, with no socket.<sup class="cite"><a href="#src-am5">[2]</a></sup> The realistic options are more RAM or a faster SSD (if not soldered either), or a new device.</div>
+  </section>
+
+  <section class="quiz">
+    <p class="q">Which motherboard feature is most typical of a <strong>server</strong> board rather than a desktop board?</p>
+    <ul class="choices">
+      <li><button class="choice" data-correct>Two or more CPU sockets</button></li>
+      <li><button class="choice">A soldered BGA processor</button></li>
+      <li><button class="choice">A single PCIe x1 slot</button></li>
+      <li><button class="choice">An ITX-sized circuit board</button></li>
+    </ul>
+    <div class="explain" hidden>Server boards are often <strong>multisocket</strong>: separate physical CPUs on one board, plus lots of (ECC) memory slots.<sup class="cite"><a href="#src-messer">[1]</a></sup> Soldered CPUs are typical of laptops; ITX is a small desktop form factor.</div>
+  </section>
+  <p class="quiz-score" data-quiz-score></p>
+
+  <details class="recall">
+    <summary>From memory: in LGA, PGA and BGA, where are the pins (or what replaces them)? <span class="hint">(then click to check)</span></summary>
+    <p><strong>LGA</strong>: pins in the socket, flat pads on the CPU. <strong>PGA</strong>: pins on the CPU. <strong>BGA</strong>: no socket; the CPU is soldered to the board with tiny solder balls.</p>
+  </details>
+
+  <h2>Review: earlier lessons</h2>
+  <p>Spaced retrieval: pull these from memory first, then check.</p>
+
+  <details class="recall">
+    <summary>Can a PCIe x16 card go in an x1 slot? Can an x1 card go in an x16 slot? What does "x16 (x4 mode)" mean? <span class="hint">(<a href="0055-motherboard-expansion-slots-pcie.html">lesson 0055</a>, 1 day ago)</span></summary>
+    <p>x16 card in an x1 slot: <strong>no</strong>, it doesn't fit (unless the slot is open-ended). x1 card in an x16 slot: <strong>yes</strong>, it uses one lane. "x16 (x4 mode)": <strong>physically x16, electrically 4 lanes</strong>.</p>
+  </details>
+
+  <details class="recall">
+    <summary>A user's old laptop takes two minutes to boot and the drive light is always on. What single upgrade helps most, and what three interfaces can an internal drive use? <span class="hint">(<a href="0049-storage-devices-hdd-ssd-interfaces.html">lesson 0049</a>, 7 days ago)</span></summary>
+    <p>Replace the <strong>HDD with an SSD</strong>: no moving parts, far faster random access. Interfaces: <strong>SATA</strong> (AHCI, desktop/laptop), <strong>SAS</strong> (enterprise servers), <strong>NVMe over PCIe</strong> (fastest, usually M.2).</p>
+  </details>
+
+  <details class="recall">
+    <summary>What's the difference between a docking station and a port replicator? <span class="hint">(<a href="0026-mobile-device-accessories.html">lesson 0026</a>, 30 days ago)</span></summary>
+    <p>A <strong>port replicator</strong> copies the laptop's existing ports. A <strong>docking station</strong> replicates ports, <strong>adds</strong> more (extra video, network) and usually <strong>charges</strong> the laptop over the same connection.</p>
+  </details>
+
+  <div class="callout source" id="src-messer">
+    <span class="label">Primary source: watch next</span>
+    <p>[1] Professor Messer, <a href="https://www.professormesser.com/free-a-plus-training/220-1201/220-1201-video/motherboard-compatibility-220-1201/">Motherboard Compatibility (220-1201, 3.5)</a>: Intel vs. AMD sockets, installing a CPU, multisocket server boards. Free.</p>
+    <p id="src-am5">[2] Wikipedia, <a href="https://en.wikipedia.org/wiki/Socket_AM5">Socket AM5</a>: LGA 1718, pins moved from CPU (AM4, PGA) to socket; and <a href="https://en.wikipedia.org/wiki/Ball_grid_array">Ball grid array</a>: soldered packages common in mobile devices.</p>
+    <p id="src-utp">[3] Union Test Prep, <a href="https://uniontestprep.com/comptia-a-core-series-exam/study-guide/220-1201-hardware/pages/4">220-1201 Hardware study guide</a>: multisocket boards; same-socket CPUs that need a BIOS update.</p>
+    <p id="src-cim">[4] Microsoft Learn, <a href="https://learn.microsoft.com/en-us/windows/win32/cimwin32prov/win32-processor">Win32_Processor class</a> (SocketDesignation, NumberOfCores).</p>
+  </div>
+
+  <div class="callout ask">
+    <span class="label">Questions?</span>
+    <p>Anything unclear? Ask your teacher. Open Claude in the Teacher repo and ask, for example: <em>"In IT lesson 0056, why did AMD move the pins from the CPU to the socket?"</em> Follow-up questions are part of the course.</p>
+  </div>
+</main>
+<nav class="page-footer">
+  <a href="0055-motherboard-expansion-slots-pcie.html">← Lanes, not length</a>
+  <a href="../../index.html">Hub</a>
+  <span class="disabled">Next lesson: tomorrow →</span>
+</nav>
+</body>
+</html>
