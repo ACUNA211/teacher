@@ -1,0 +1,255 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Weekly Quiz: Nov 15 – Nov 20</title>
+<meta name="description" content="IT lesson 0057: Saturday in-depth quiz on week eight (M.2, RAID, motherboard form factors, power and header connections, PCIe slots, CPU sockets) mixed with the earliest networking lessons, plus an A+ Core 1 pace check.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=JetBrains+Mono&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../assets/course.css">
+<script src="../../assets/quiz.js" defer></script>
+</head>
+<body class="track-it">
+<nav class="page-header">
+  <a class="home" href="../../index.html">Teacher hub</a>
+  <span>IT and certs</span>
+  <a href="../reference/glossary.html">Glossary</a>
+  <a href="../reference/network-settings.html">Cheat sheet</a>
+  <a href="../reference/hardware.html">Hardware cheat sheet</a>
+</nav>
+<main>
+  <p class="kicker">IT and certs · Lesson 0057 · Saturday quiz · A+ Core 1, objectives 3.4–3.5 and 2.x review</p>
+  <h1>Weekly quiz: Nov 15 – Nov 20</h1>
+  <p class="lede">About 20 minutes. Fifteen questions: nine on this week's hardware (M.2 slots, RAID, motherboard sizes, power plugs and header pins, PCIe slots, CPU sockets) and six pulled back from the very first networking weeks, six to eight weeks ago (remote-access ports, email, Wi-Fi bands and standards, SPF, cable tools). They're shuffled on purpose. Most are tickets: work out what's going on before you work out what it's called.</p>
+
+  <div class="callout">
+    <span class="label">How to take it</span>
+    <p>No scrolling back to the lessons until you've answered. A wrong answer followed by the explanation sticks better than a right answer you looked up. Each explanation links to the lesson that taught it, so you know exactly what to reread.</p>
+  </div>
+
+  <p class="quiz-score" data-quiz-score></p>
+
+  <section class="quiz">
+    <p class="q">A laptop's current M.2 SSD shows <strong>BusType SATA</strong> in <code>Get-PhysicalDisk</code>. To speed it up, you install a new M-key NVMe drive in the same slot, and now the firmware lists no drive at all. What's the most likely cause?</p>
+    <ul class="choices">
+      <li><button class="choice">The NVMe drive needs AHCI mode</button></li>
+      <li><button class="choice">The drive is the wrong length</button></li>
+      <li><button class="choice" data-correct>The slot supports only SATA drives</button></li>
+      <li><button class="choice">The drive needs an x16 slot</button></li>
+    </ul>
+    <div class="explain" hidden>An M.2 slot can speak SATA, NVMe or both, and the old drive's <strong>BusType SATA</strong> was the warning sign. An NVMe drive in a <strong>SATA-only slot</strong> isn't detected at all; it doesn't fall back to SATA speed. A wrong length would stop you at the screw post, AHCI is the SATA protocol, and an M.2 NVMe drive uses up to four lanes, not sixteen. Check the manual first. See <a href="0051-m2-msata-flash-optical.html">lesson 0051</a>.</div>
+  </section>
+
+  <section class="quiz">
+    <p class="q">During a review you find the team manages the core switch through a text console on <strong>TCP port 23</strong>. Why flag it, and what should replace it?</p>
+    <ul class="choices">
+      <li><button class="choice" data-correct>Telnet sends passwords in plain text; use SSH on 22</button></li>
+      <li><button class="choice">Telnet is too slow for switches; use RDP on 3389</button></li>
+      <li><button class="choice">Port 23 is FTP control traffic; use SFTP on 21</button></li>
+      <li><button class="choice">Port 23 is unencrypted web traffic; use HTTPS on 443</button></li>
+    </ul>
+    <div class="explain" hidden>Port 23 is <strong>Telnet</strong>: a remote command line with everything, the admin password included, in the clear. <strong>SSH</strong> on port 22 does the same job and encrypts the whole session. RDP (3389) is a full Windows desktop, 21 is FTP's command port, and 443 is HTTPS. See <a href="0003-web-remote-ports.html">lesson 0003</a>, 54 days ago.</div>
+  </section>
+
+  <section class="quiz">
+    <p class="q">A new file server will hold four 4 TB drives. The owner insists the data must survive <strong>any two</strong> drives failing at the same time, even if that costs space. Which RAID level, and how much usable space?</p>
+    <ul class="choices">
+      <li><button class="choice">RAID 5, with 12 TB usable</button></li>
+      <li><button class="choice">RAID 10, with 8 TB usable</button></li>
+      <li><button class="choice">RAID 0, with 16 TB usable</button></li>
+      <li><button class="choice" data-correct>RAID 6, with 8 TB usable</button></li>
+    </ul>
+    <div class="explain" hidden><strong>RAID 6</strong> keeps double parity: (4 − 2) × 4 TB = 8 TB, and <em>any</em> two drives can fail. RAID 10 also gives 8 TB, but it survives two failures only if they're in <em>different</em> mirror pairs; lose both drives of one pair and the array is gone. RAID 5 survives one, RAID 0 none. See <a href="0052-raid-levels.html">lesson 0052</a>.</div>
+  </section>
+
+  <section class="quiz">
+    <p class="q">A technician drops an older AMD desktop processor during an upgrade. Under a flashlight, several tiny pins on the bottom of the <strong>processor itself</strong> are bent. Which socket style does this CPU use?</p>
+    <ul class="choices">
+      <li><button class="choice">LGA, pins in the socket</button></li>
+      <li><button class="choice" data-correct>PGA, pins on the CPU</button></li>
+      <li><button class="choice">BGA, soldered to the board</button></li>
+      <li><button class="choice">LGA, pads on the board</button></li>
+    </ul>
+    <div class="explain" hidden><strong>PGA</strong> (pin grid array) puts the pins on the CPU and holes in the socket, as on older AMD desktop sockets like AM4. With <strong>LGA</strong> (Intel desktops, AMD AM5) the CPU has flat pads and the pins are in the board's socket, so that's where you'd find the damage. A BGA chip is soldered down and never handled loose. See <a href="0056-motherboard-cpu-compatibility.html">lesson 0056</a>.</div>
+  </section>
+
+  <section class="quiz">
+    <p class="q">Staff in the break room say their Wi-Fi drops every time someone runs the microwave. <code>netsh wlan show interfaces</code> shows their laptops on <strong>channel 6</strong>. What's the best fix?</p>
+    <ul class="choices">
+      <li><button class="choice" data-correct>Move the laptops to 5 GHz</button></li>
+      <li><button class="choice">Move the laptops to channel 11</button></li>
+      <li><button class="choice">Lower the DHCP lease to minutes</button></li>
+      <li><button class="choice">Switch the radio to 802.11g only</button></li>
+    </ul>
+    <div class="explain" hidden>Channel 6 means the <strong>2.4 GHz</strong> band, which it shares with microwave ovens, Bluetooth and cordless gear. A microwave leaks across that whole band, so channel 11 is no escape, and 802.11g is still 2.4 GHz. The <strong>5 GHz</strong> band isn't affected (enable it on the access point, or prefer it on the laptops). A lease has nothing to do with radio noise. See <a href="0006-wifi-bands-channels.html">lesson 0006</a>, 51 days ago.</div>
+  </section>
+
+  <section class="quiz">
+    <p class="q">A user's new graphics card benchmarks well below reviews. The PowerShell check shows <strong>MaxLinkWidth 16</strong> but <strong>CurrentLinkWidth 4</strong>. The card sits in the board's lower full-length slot. What's most likely?</p>
+    <ul class="choices">
+      <li><button class="choice">The card needs a newer driver</button></li>
+      <li><button class="choice">The PSU lacks a CPU plug</button></li>
+      <li><button class="choice" data-correct>The slot is wired as x4</button></li>
+      <li><button class="choice">The card is PCIe 3.0 only</button></li>
+    </ul>
+    <div class="explain" hidden><strong>Size isn't speed.</strong> Lower slots are often physically x16 but electrically x4, written "x16 (x4 mode)" in the manual, or they share lanes with an M.2 drive. The card can use 16 lanes but has only 4. Move it to the top x16 slot. A driver doesn't change lane count, a PCIe 3.0 card would lower the generation rather than the lanes, and a missing CPU plug means no start at all. See <a href="0055-motherboard-expansion-slots-pcie.html">lesson 0055</a>.</div>
+  </section>
+
+  <section class="quiz">
+    <p class="q">A company starts using a marketing email service. The admin publishes a <strong>second</strong> TXT record starting <code>v=spf1</code> just for it. Soon, mail from every service, not just marketing, fails SPF. What should they do?</p>
+    <ul class="choices">
+      <li><button class="choice">Add a DKIM record for marketing</button></li>
+      <li><button class="choice">Point the MX record at marketing</button></li>
+      <li><button class="choice">Set the DMARC policy to none</button></li>
+      <li><button class="choice" data-correct>Merge both into one SPF record</button></li>
+    </ul>
+    <div class="explain" hidden>A domain may have only <strong>one SPF record</strong>. Two of them make SPF fail for everyone, not just the new sender. Delete the second one and add the service to the existing record (usually one more <code>include:</code>). DKIM is a separate check, MX only handles incoming mail, and relaxing DMARC hides the symptom without fixing SPF. See <a href="0013-spf-dkim-dmarc.html">lesson 0013</a>, 44 days ago.</div>
+  </section>
+
+  <section class="quiz">
+    <p class="q">A desktop with a recent AMD processor fails the Windows 11 upgrade check. <code>Get-Tpm</code> shows <strong>TpmPresent: False</strong>, and the board's TPM header is empty. What do you try first?</p>
+    <ul class="choices">
+      <li><button class="choice">Order a TPM header module</button></li>
+      <li><button class="choice" data-correct>Turn on fTPM in firmware</button></li>
+      <li><button class="choice">Replace the CPU with Intel</button></li>
+      <li><button class="choice">Clear the TPM in Windows</button></li>
+    </ul>
+    <div class="explain" hidden>Recent CPUs have a <strong>firmware TPM 2.0</strong> built in: AMD calls it <strong>fTPM</strong>, Intel calls it PTT. It's often off by default, so Windows sees no TPM. Turn it on in UEFI setup and Windows 11 accepts it like a chip. The header is only for a discrete module, and you can't clear a TPM Windows can't see. See <a href="0054-motherboard-power-headers-tpm.html">lesson 0054</a>.</div>
+  </section>
+
+  <section class="quiz">
+    <p class="q">A server's four-drive RAID 5 array reports one failed drive. The server is still running and users notice nothing. What's the right next step?</p>
+    <ul class="choices">
+      <li><button class="choice">Nothing; the parity drive covers it</button></li>
+      <li><button class="choice">Restore all data from the backup</button></li>
+      <li><button class="choice" data-correct>Replace the drive soon, then rebuild</button></li>
+      <li><button class="choice">Convert the array to RAID 0</button></li>
+    </ul>
+    <div class="explain" hidden>The array is <strong>degraded</strong>: still working, with no protection left. A second failure before the <strong>rebuild</strong> finishes loses everything, so replace the drive promptly and let parity recreate its data (a hot spare would have started this automatically). Nothing is lost yet, so no restore is needed, and RAID 0 would remove protection entirely. See <a href="0052-raid-levels.html">lesson 0052</a>.</div>
+  </section>
+
+  <section class="quiz">
+    <p class="q">You used a tone generator on a new desk's wall jack, and the probe beeps loudly on one cable at the patch panel. You patch that cable into the switch, but the desk PC still shows no link light. Which tool comes next?</p>
+    <ul class="choices">
+      <li><button class="choice" data-correct>A cable tester on both ends</button></li>
+      <li><button class="choice">A crimper on the patch cable</button></li>
+      <li><button class="choice">A Wi-Fi analyzer at the desk</button></li>
+      <li><button class="choice">A network tap on the link</button></li>
+    </ul>
+    <div class="explain" hidden>A toner <strong>finds</strong> a wire; it doesn't prove it's good. It can beep happily on a run with a broken or miswired pair. A <strong>cable tester</strong> checks every pin end to end. A crimper builds cables, a Wi-Fi analyzer is for radio, and a tap copies traffic on a link that already works. See <a href="0019-network-tools.html">lesson 0019</a>, 38 days ago.</div>
+  </section>
+
+  <section class="quiz">
+    <p class="q">A client wants the smallest standard motherboard for a kiosk PC that needs a <strong>graphics card and a 10 Gb network card</strong>. A colleague suggests Mini-ITX. What's the problem?</p>
+    <ul class="choices">
+      <li><button class="choice">Mini-ITX can't take graphics cards</button></li>
+      <li><button class="choice">Mini-ITX needs a server rack</button></li>
+      <li><button class="choice">Mini-ITX lacks PCIe lanes entirely</button></li>
+      <li><button class="choice" data-correct>Mini-ITX usually has one slot</button></li>
+    </ul>
+    <div class="explain" hidden>Two cards need two expansion slots, and <strong>Mini-ITX</strong> usually has just one (often x16, so a graphics card alone would be fine). <strong>Micro-ATX</strong> offers up to four in a board still smaller than ATX: an x16 for graphics and an x4 or x8 for the fast network card. See <a href="0053-motherboard-form-factors.html">lesson 0053</a> and <a href="0055-motherboard-expansion-slots-pcie.html">lesson 0055</a>.</div>
+  </section>
+
+  <section class="quiz">
+    <p class="q">A warehouse's older <strong>802.11g</strong> label printers can't even see the new wireless network, though every laptop connects fine. What's the most likely cause?</p>
+    <ul class="choices">
+      <li><button class="choice">The printers need Wi-Fi 6 drivers</button></li>
+      <li><button class="choice" data-correct>The network broadcasts 5 GHz only</button></li>
+      <li><button class="choice">The DHCP scope is already full</button></li>
+      <li><button class="choice">The SSID uses channel 11 only</button></li>
+    </ul>
+    <div class="explain" hidden><strong>802.11g</strong> is a 2.4 GHz-only standard, and backward compatibility works only within a band, so a 2.4 GHz radio never hears a 5 GHz-only network. Turn 2.4 GHz back on at the access points and the printers join at g speeds. A full DHCP scope would let them see and join the network but get no address, and channel 11 is a normal 2.4 GHz channel. See <a href="0007-wifi-standards.html">lesson 0007</a>, 50 days ago.</div>
+  </section>
+
+  <section class="quiz">
+    <p class="q">After moving a PC into a new case, it starts and runs normally from the case's power button, but the case's <strong>power LED stays dark</strong>. What's the most likely cause?</p>
+    <ul class="choices">
+      <li><button class="choice">The 24-pin ATX plug is loose</button></li>
+      <li><button class="choice">The CPU fan plug is missing</button></li>
+      <li><button class="choice" data-correct>The LED plug is on backwards</button></li>
+      <li><button class="choice">The TPM module is not installed</button></li>
+    </ul>
+    <div class="explain" hidden>On the <strong>front panel header</strong>, the switch plugs have no polarity, but <strong>LEDs do</strong> (+/−). Reversed, the LED simply stays dark. Flip the plug and match the + to the board manual's pin map. A loose 24-pin would stop the PC itself, and the fan and TPM headers don't touch the case LEDs. See <a href="0054-motherboard-power-headers-tpm.html">lesson 0054</a>.</div>
+  </section>
+
+  <section class="quiz">
+    <p class="q">A user sets up their mailbox on a new phone, but it shows none of the messages they've read on their laptop over the past month. The laptop's mail app is set to <strong>POP3</strong>. What's going on?</p>
+    <ul class="choices">
+      <li><button class="choice" data-correct>POP3 downloaded and removed them from the server</button></li>
+      <li><button class="choice">IMAP downloaded and removed them from the server</button></li>
+      <li><button class="choice">SMTP blocked the phone from receiving old mail</button></li>
+      <li><button class="choice">DNS has not updated the phone's MX record</button></li>
+    </ul>
+    <div class="explain" hidden><strong>POP3</strong> (port 110) is "post office": it takes the mail home to one device and typically removes it from the server, so the phone never sees it. <strong>IMAP</strong> (143) keeps mail and folders on the server and syncs every device: switch the laptop to IMAP. SMTP (25) only sends, and MX records route a domain's incoming mail, not a phone's. See <a href="0004-email-dns-dhcp-ports.html">lesson 0004</a>, 53 days ago.</div>
+  </section>
+
+  <section class="quiz">
+    <p class="q">A board's CPU support list shows a new processor as supported "from BIOS 2.10". The board runs BIOS 1.40. The technician installs the new CPU, and the PC won't POST. What's the fix?</p>
+    <ul class="choices">
+      <li><button class="choice">Reseat all RAM sticks, then retry</button></li>
+      <li><button class="choice">Swap the power supply, then retry</button></li>
+      <li><button class="choice">Clear CMOS, then retry the CPU</button></li>
+      <li><button class="choice" data-correct>Update BIOS using the old CPU</button></li>
+    </ul>
+    <div class="explain" hidden>Same socket isn't always enough: the old firmware doesn't know the new CPU. Put the <strong>old CPU back</strong>, <strong>update the BIOS/UEFI</strong> to 2.10 or later, then install the new one. Clearing CMOS only resets settings on the same old firmware. (Some boards can flash a BIOS from USB with no CPU fitted; the manual says if yours can.) See <a href="0056-motherboard-cpu-compatibility.html">lesson 0056</a>.</div>
+  </section>
+
+  <p class="quiz-score" data-quiz-score></p>
+
+  <h2>Explain it in your own words</h2>
+  <p>Say or write the answer before you open each one. If you can explain it to a coworker, you know it.</p>
+
+  <details class="recall">
+    <summary>Four drives in RAID 6 and four drives in RAID 10 both give half the space. Explain why RAID 6 survives <em>any</em> two failures but RAID 10 only <em>some</em> pairs of failures. <span class="hint">(<a href="0052-raid-levels.html">lesson 0052</a>)</span></summary>
+    <p><strong>RAID 6</strong> spreads two sets of parity across all drives, so any two missing drives can be recalculated from the rest. <strong>RAID 10</strong> is two mirror pairs striped together: each pair can lose one drive and still have a copy, but if both drives of the <em>same</em> pair fail, that half of the stripe is gone, and with it the whole array. And neither one is a backup.</p>
+  </details>
+
+  <details class="recall">
+    <summary>A coworker says "it's an x16 slot, so the card gets x16." Explain why that's not always true, and what rule decides which card fits which slot. <span class="hint">(<a href="0055-motherboard-expansion-slots-pcie.html">lesson 0055</a>)</span></summary>
+    <p>The physical size says what <em>fits</em>; the wiring says how many <strong>lanes</strong> it gets. A slot can be physically x16 but electrically x4 ("x16 (x4 mode)"), and on many boards filling an M.2 socket or another slot takes lanes away. Fit rule: a card works in a slot its own size or bigger (an x1 card in an x16 slot uses one lane); a bigger card doesn't fit a smaller slot.</p>
+  </details>
+
+  <details class="recall">
+    <summary>A user asks for a faster CPU in their thin laptop, and another user wants to drop a spare CPU into their desktop. Explain LGA, PGA and BGA, and what you'd tell each user. <span class="hint">(<a href="0056-motherboard-cpu-compatibility.html">lesson 0056</a>)</span></summary>
+    <p><strong>LGA</strong>: pins in the socket, flat pads on the CPU. <strong>PGA</strong>: pins on the CPU. <strong>BGA</strong>: no socket, the CPU is soldered to the board. The laptop almost certainly uses BGA, so its CPU can't be swapped: offer more RAM or a faster SSD if those aren't soldered too, or a new device. For the desktop: same brand, same socket, and the exact model on the board's CPU support list, which may mean a BIOS update first.</p>
+  </details>
+
+  <details class="recall">
+    <summary>Explain the "old and plain, new and encrypted" pattern in the remote-access and web ports, with the port numbers. <span class="hint">(<a href="0003-web-remote-ports.html">lesson 0003</a>, 54 days ago)</span></summary>
+    <p>Two pairs do the same job, one in the clear and one encrypted: <strong>HTTP 80</strong> vs. <strong>HTTPS 443</strong> for web pages, and <strong>Telnet 23</strong> vs. <strong>SSH 22</strong> for a remote command line. FTP (20/21) is plain too. RDP on 3389, the full Windows desktop, is encrypted. Anything plain sends passwords readable by anyone on the path, so you always choose the encrypted one.</p>
+  </details>
+
+  <details class="recall">
+    <summary>In one sentence each: what do SPF, DKIM and DMARC check, and where in DNS does each live? <span class="hint">(<a href="0013-spf-dkim-dmarc.html">lesson 0013</a>, 44 days ago)</span></summary>
+    <p><strong>SPF</strong>: is the sending server's IP allowed to send for this domain? One TXT record at the domain. <strong>DKIM</strong>: was the message signed by the domain and left unchanged? A public key at <code>selector._domainkey.domain</code>. <strong>DMARC</strong>: what should the receiver do when they fail, and who gets the reports? A TXT record at <code>_dmarc.domain</code>, with p=none, quarantine or reject.</p>
+  </details>
+
+  <h2>Pace check</h2>
+  <div class="callout">
+    <span class="label">A+ Core 1: 40 of 63 videos covered (about 63%)</span>
+    <div class="meter"><span style="width:63%"></span></div>
+    <p>Fully covered so far: the 12 networking videos (objectives 2.1–2.8), the 5 mobile device videos (1.1–1.3), the 4 virtualization and cloud videos (4.1–4.2), and 19 hardware videos, including this week's six: Storage Devices (finished in lesson 0051), RAID, Motherboard Form Factors, Motherboard Connections, Motherboard Expansion Slots and Motherboard Compatibility.</p>
+    <p><strong>What the calendar needs:</strong> the syllabus puts all new material in weeks 1–17 (Sep 27 – Jan 23), about <strong>3.7 videos a week</strong>. Today ends week 8, so you'd expect about 30. You're at 40: <strong>ahead, by about ten videos</strong>, nearly three weeks of buffer. The lead keeps growing: one behind, on pace, one ahead, two, four or five, seven, eight, now ten.</p>
+    <p><strong>The trend:</strong> six videos this week, the best week yet. The remaining 23 videos fit in the 9 weeks before review starts at about 2.6 a week, so the February target holds comfortably, with room for a lighter holiday week. The syllabus has hardware (3.1–3.8) running through Dec 26; at this pace it can finish earlier.</p>
+    <p>Nothing in the plan was changed. Tomorrow's lesson starts <strong>BIOS Settings</strong> (objective 3.5: boot order, passwords, Secure Boot, TPM, virtualization). The spare time is yours to spend: keep it as slack for the holidays, start the troubleshooting domain (28% of the exam, the biggest) earlier, or turn it into extra practice exams before February.</p>
+  </div>
+
+  <div class="callout source" id="src-messer">
+    <span class="label">Primary source: watch next</span>
+    <p>Professor Messer, <a href="https://www.professormesser.com/free-a-plus-training/220-1201/220-1201-video/220-1201-training-course/">Free CompTIA A+ 220-1201 course</a>. Rewatch the video behind whichever question you missed: Storage Devices, RAID, Motherboard Form Factors, Motherboard Connections, Motherboard Expansion Slots and Motherboard Compatibility cover this week; Common Ports, Wireless Network Technologies, DNS Configuration and Network Tools cover the review questions. Free.</p>
+  </div>
+
+  <div class="callout ask">
+    <span class="label">Questions?</span>
+    <p>Missed one and the explanation didn't settle it? Ask your teacher. Open Claude in the Teacher repo and ask, for example: <em>"In IT lesson 0057, question 3, how does a RAID 10 controller decide which drives are mirror pairs, and can I see that in Windows?"</em> Follow-up questions are part of the course.</p>
+  </div>
+</main>
+<nav class="page-footer">
+  <a href="0056-motherboard-cpu-compatibility.html">← Match the socket</a>
+  <a href="../../index.html">Hub</a>
+  <span class="disabled">Next lesson: tomorrow →</span>
+</nav>
+</body>
+</html>
