@@ -1,0 +1,171 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The BIOS and UEFI</title>
+<meta name="description" content="IT lesson 0058: A+ objective 3.5, the BIOS. What the firmware does at power-on (POST, finding a boot device), legacy BIOS vs. UEFI, main and backup BIOS chips, firmware updates, and how to read the BIOS version and mode in Windows.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=JetBrains+Mono&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../assets/course.css">
+<script src="../../assets/quiz.js" defer></script>
+</head>
+<body class="track-it">
+<nav class="page-header">
+  <a class="home" href="../../index.html">Teacher hub</a>
+  <span>IT and certs</span>
+  <a href="../reference/glossary.html">Glossary</a>
+  <a href="../reference/hardware.html">Hardware cheat sheet</a>
+</nav>
+<main>
+  <p class="kicker">IT and certs · Lesson 0058 · A+ Core 1, objective 3.5</p>
+  <h1>The first code that runs: the BIOS and UEFI</h1>
+  <p class="lede">About 10 minutes. Last week you built up the motherboard: size, plugs, slots, socket. Today: the <strong>firmware</strong> on that board, the program that runs before Windows does.<sup class="cite"><a href="#src-messer">[1]</a></sup> The win: say what the BIOS does at power-on, tell legacy BIOS from <strong>UEFI</strong>, and read any PC's firmware version and mode in under a minute.</p>
+
+  <div class="callout">
+    <span class="label">Why this matters at work</span>
+    <p>Device compliance often depends on the firmware. A Windows 11 PC must start in <strong>UEFI</strong> mode with <strong>Secure Boot</strong> available,<sup class="cite"><a href="#src-win11">[4]</a></sup> and an Intune compliance policy can require Secure Boot to be on.<sup class="cite"><a href="#src-intune">[5]</a></sup> When a laptop is marked "not compliant" and the user loses access to company apps, the fix can be in the firmware, not in the account.</p>
+  </div>
+
+  <h2>1. What the BIOS does</h2>
+  <p><strong>BIOS</strong> (Basic Input/Output System) is <strong>firmware</strong>: software stored on a <strong>flash chip</strong> on the motherboard. It's the first thing that runs when you press power.<sup class="cite"><a href="#src-messer">[1]</a></sup> Its job, in order:</p>
+  <ol>
+    <li><strong>POST</strong> (power-on self-test): check the CPU, memory, video and other basics. Errors show as a message, beep codes or lights.<sup class="cite"><a href="#src-wiki">[2]</a></sup></li>
+    <li><strong>Find a boot device</strong> using the boot order (SSD, USB, network…).</li>
+    <li><strong>Hand off</strong> to the operating system's boot loader. From here on, Windows is in charge.</li>
+  </ol>
+  <p>Some boards carry <strong>two BIOS chips</strong>: a <strong>main</strong> and a <strong>backup</strong>. If the main one is damaged (say, by a failed update), the board can recover from the backup.<sup class="cite"><a href="#src-messer">[1]</a></sup> The settings you choose (boot order, passwords) are saved in non-volatile memory; a small coin-cell <strong>CMOS battery</strong> keeps the real-time clock running when the PC is unplugged.</p>
+
+  <h2>2. Legacy BIOS vs. UEFI</h2>
+  <p>Almost every PC sold today uses <strong>UEFI</strong> (Unified Extensible Firmware Interface), the modern replacement. People still say "BIOS" for both, and so does the exam.<sup class="cite"><a href="#src-wiki">[2]</a></sup></p>
+  <div class="table-wrap">
+  <table>
+    <thead><tr><th></th><th>Legacy BIOS</th><th>UEFI</th></tr></thead>
+    <tbody>
+      <tr><td>Setup screen</td><td>Text only, keyboard</td><td>Graphical, mouse works</td></tr>
+      <tr><td>Boot drive</td><td>MBR disks; can't boot past ~2 TB</td><td><strong>GPT</strong> disks; boots from drives over 2 TB<sup class="cite"><a href="#src-gpt">[3]</a></sup></td></tr>
+      <tr><td>Devices before the OS</td><td>Very limited</td><td>Can use USB, network and modern storage</td></tr>
+      <tr><td>Security</td><td>None built in</td><td><strong>Secure Boot</strong>: only signed boot software runs</td></tr>
+      <tr><td>Windows 11</td><td>Not supported</td><td>Required<sup class="cite"><a href="#src-win11">[4]</a></sup></td></tr>
+    </tbody>
+  </table>
+  </div>
+  <p>Many UEFI boards can still pretend to be an old BIOS (a "legacy" or CSM mode). Windows then reports <strong>BIOS Mode: Legacy</strong>, and Secure Boot can't be on.</p>
+
+  <h2>3. Updating the firmware ("flashing")</h2>
+  <p>Board and laptop makers release firmware updates to fix bugs, close security holes and support newer CPUs (remember the <a href="0056-motherboard-cpu-compatibility.html">same-socket CPU that needed a BIOS update</a>). Get the update only from the maker, keep the PC on power during the update, and never switch it off halfway: an interrupted flash can leave a board that won't start (unless it has a backup chip).<sup class="cite"><a href="#src-messer">[1]</a></sup> To open the setup screen, press the maker's key at power-on (often <kbd>Del</kbd>, <kbd>F2</kbd> or <kbd>F10</kbd>), or in Windows go to <em>Settings → System → Recovery → Advanced startup → Troubleshoot → Advanced options → UEFI Firmware Settings</em>.</p>
+
+  <div class="callout win">
+    <span class="label">Rule of thumb</span>
+    <p><strong>Power on → POST → boot device → OS.</strong> The BIOS lives on a flash chip; the backup chip is the safety net. <strong>UEFI = graphical, GPT, drives over 2 TB, Secure Boot, Windows 11.</strong> Legacy BIOS = text, MBR, none of those. Flash firmware only from the maker, and never cut the power mid-update.</p>
+  </div>
+
+  <h2>Try it (2 minutes)</h2>
+  <ol>
+    <li>Press <kbd>Win</kbd>+<kbd>R</kbd>, type <code>msinfo32</code>. In <em>System Summary</em>, find <strong>BIOS Version/Date</strong>, <strong>BIOS Mode</strong> (UEFI or Legacy) and <strong>Secure Boot State</strong> (On, Off or Unsupported).<sup class="cite"><a href="#src-sb">[6]</a></sup></li>
+    <li>Or in PowerShell:<sup class="cite"><a href="#src-cim">[7]</a></sup>
+      <pre><code>Get-CimInstance Win32_BIOS | Select-Object Manufacturer, SMBIOSBIOSVersion, ReleaseDate
+Confirm-SecureBootUEFI    # run as administrator: True = Secure Boot on</code></pre>
+    </li>
+  </ol>
+  <p><code>SMBIOSBIOSVersion</code> is the version string you compare with the maker's download page. <code>Confirm-SecureBootUEFI</code> returns <strong>True</strong> or <strong>False</strong>, or an error saying the cmdlet isn't supported on a legacy-BIOS PC.<sup class="cite"><a href="#src-sb">[6]</a></sup></p>
+  <details class="recall">
+    <summary>Before checking: msinfo32 shows <strong>BIOS Mode: Legacy</strong>. What will <strong>Secure Boot State</strong> say, and could this PC pass the Windows 11 check? <span class="hint">(then click to check)</span></summary>
+    <p>Secure Boot needs UEFI, so it will be <strong>Unsupported</strong> (or Off). The PC <strong>fails</strong> the Windows 11 check as it is set up now. If the board is UEFI-capable, switching the boot disk to GPT and turning off legacy/CSM mode fixes it, but that's a planned job, not a quick toggle.</p>
+  </details>
+
+  <h2>Practice</h2>
+  <p>Answer from memory before scrolling back up.</p>
+
+  <section class="quiz">
+    <p class="q">A PC powers on, the fans spin, but it beeps several times and never shows the logo or starts Windows. Which firmware stage found the problem?</p>
+    <ul class="choices">
+      <li><button class="choice">The operating system boot loader</button></li>
+      <li><button class="choice" data-correct>The power-on self-test (POST)</button></li>
+      <li><button class="choice">The Secure Boot signature check</button></li>
+      <li><button class="choice">The firmware update recovery process</button></li>
+    </ul>
+    <div class="explain" hidden>POST runs before anything else and reports hardware faults with messages, beep codes or lights.<sup class="cite"><a href="#src-wiki">[2]</a></sup> The boot loader and Windows never got a turn.</div>
+  </section>
+
+  <section class="quiz">
+    <p class="q">A technician installs a new <strong>4 TB</strong> drive as the only drive in a PC and wants Windows to boot from all of it. What must the firmware and disk use?</p>
+    <ul class="choices">
+      <li><button class="choice">Legacy BIOS with an MBR disk</button></li>
+      <li><button class="choice">Legacy BIOS with a GPT disk</button></li>
+      <li><button class="choice" data-correct>UEFI firmware with a GPT disk</button></li>
+      <li><button class="choice">UEFI firmware with an MBR disk</button></li>
+    </ul>
+    <div class="explain" hidden>To use more than 2 TB, the disk must be <strong>GPT</strong>, and Windows boots from GPT only on <strong>UEFI</strong> firmware.<sup class="cite"><a href="#src-gpt">[3]</a></sup> A legacy BIOS can use a big GPT disk as a data drive, not as the boot drive.</div>
+  </section>
+
+  <section class="quiz">
+    <p class="q">Halfway through a firmware update, a desktop loses power. Now it won't POST. The board has a second firmware chip. What's the best next step?</p>
+    <ul class="choices">
+      <li><button class="choice" data-correct>Recover from the backup BIOS chip</button></li>
+      <li><button class="choice">Replace the CMOS coin-cell battery</button></li>
+      <li><button class="choice">Reinstall Windows from a USB drive</button></li>
+      <li><button class="choice">Change the boot order to USB</button></li>
+    </ul>
+    <div class="explain" hidden>An interrupted flash can corrupt the main BIOS. Boards with a <strong>main and backup</strong> chip can restore from the backup (follow the maker's steps).<sup class="cite"><a href="#src-messer">[1]</a></sup> Windows and the boot order don't matter until POST works again.</div>
+  </section>
+
+  <section class="quiz">
+    <p class="q">An Intune compliance report flags a laptop: "Secure Boot not enabled". <code>msinfo32</code> shows <strong>BIOS Mode: Legacy</strong>. What's the root cause?</p>
+    <ul class="choices">
+      <li><button class="choice">The user's account is not licensed</button></li>
+      <li><button class="choice">The TPM chip has been cleared</button></li>
+      <li><button class="choice">The firmware version is too new</button></li>
+      <li><button class="choice" data-correct>Firmware runs in legacy, not UEFI</button></li>
+    </ul>
+    <div class="explain" hidden>Secure Boot is a <strong>UEFI</strong> feature. In legacy (CSM) mode it can't be on, so the compliance check fails.<sup class="cite"><a href="#src-intune">[5]</a></sup> The fix is in the firmware setup (and the disk must be GPT), not in the user's account.</div>
+  </section>
+  <p class="quiz-score" data-quiz-score></p>
+
+  <details class="recall">
+    <summary>From memory: the three jobs the BIOS does between pressing power and Windows starting. <span class="hint">(then click to check)</span></summary>
+    <p><strong>1.</strong> POST (test the hardware). <strong>2.</strong> Find a boot device using the boot order. <strong>3.</strong> Hand off to the operating system's boot loader.</p>
+  </details>
+
+  <h2>Review: earlier lessons</h2>
+  <p>Spaced retrieval: pull these from memory first, then check.</p>
+
+  <details class="recall">
+    <summary>A user's new graphics card runs slower than expected and the slot is labeled "x16 (x4 mode)". What does that mean, and does the card still work? <span class="hint">(<a href="0055-motherboard-expansion-slots-pcie.html">lesson 0055</a>, 3 days ago)</span></summary>
+    <p>The slot is <strong>physically x16</strong> but wired with only <strong>4 lanes</strong>. The card works, with less bandwidth. Move it to a full x16 slot (usually the top one).</p>
+  </details>
+
+  <details class="recall">
+    <summary>An M.2 SSD fits the slot but the PC doesn't see it. Name the three things to check. <span class="hint">(<a href="0051-m2-msata-flash-optical.html">lesson 0051</a>, 7 days ago)</span></summary>
+    <p>The <strong>key</strong> (B, M or B+M), the <strong>length</strong> (for example 2280), and whether the <strong>slot speaks SATA or NVMe</strong>. A matching key doesn't guarantee the slot supports the drive's interface.</p>
+  </details>
+
+  <details class="recall">
+    <summary>An employee leaves and their personal (BYOD) phone had company email. Retire or wipe, and why? <span class="hint">(<a href="0028-mobile-device-management.html">lesson 0028</a>, 30 days ago)</span></summary>
+    <p><strong>Retire</strong>: it removes only the company's data and apps. A <strong>wipe</strong> erases everything, including the person's own photos and data, which is wrong for a device the company doesn't own.</p>
+  </details>
+
+  <div class="callout source" id="src-messer">
+    <span class="label">Primary source: watch next</span>
+    <p>[1] Professor Messer, <a href="https://www.professormesser.com/free-a-plus-training/220-1201/220-1201-video/the-bios-220-1201/">The BIOS (220-1201, 3.5)</a>: the firmware chip, main and backup BIOS, and how UEFI manages and protects modern systems. Free. Then <a href="https://www.professormesser.com/free-a-plus-training/220-1201/220-1201-video/bios-settings-220-1201/">BIOS Settings</a> is next.</p>
+    <p id="src-wiki">[2] Wikiversity, <a href="https://en.wikiversity.org/wiki/Computer_Support/Hardware/BIOS_and_UEFI">Computer Support: BIOS and UEFI</a>: POST, UEFI replacing BIOS, legacy support.</p>
+    <p id="src-gpt">[3] Microsoft Support, <a href="https://support.microsoft.com/kb/2581408">Windows support for hard disks larger than 2 TB</a>: GPT disk plus UEFI firmware to boot from more than 2 TB.</p>
+    <p id="src-win11">[4] Microsoft, <a href="https://www.microsoft.com/en-us/windows/windows-11-specifications">Windows 11 specifications</a>: system firmware UEFI, Secure Boot capable; TPM 2.0.</p>
+    <p id="src-intune">[5] Microsoft Learn, <a href="https://learn.microsoft.com/en-us/intune/intune-service/protect/compliance-policy-create-windows">Windows compliance settings in Intune</a>: "Require Secure Boot to be enabled on the device".</p>
+    <p id="src-sb">[6] Microsoft Learn, <a href="https://learn.microsoft.com/en-us/powershell/module/secureboot/confirm-securebootuefi">Confirm-SecureBootUEFI</a>; How-To Geek, <a href="https://www.howtogeek.com/283803/how-to-check-if-secure-boot-is-enabled-on-your-pc/">How to check if Secure Boot is enabled</a> (msinfo32 Secure Boot State).</p>
+    <p id="src-cim">[7] Microsoft Learn, <a href="https://learn.microsoft.com/en-us/windows/win32/cimwin32prov/win32-bios">Win32_BIOS class</a> (SMBIOSBIOSVersion, ReleaseDate).</p>
+  </div>
+
+  <div class="callout ask">
+    <span class="label">Questions?</span>
+    <p>Anything unclear? Ask your teacher. Open Claude in the Teacher repo and ask, for example: <em>"In IT lesson 0058, how do I convert a legacy-BIOS PC to UEFI without reinstalling Windows?"</em> Follow-up questions are part of the course.</p>
+  </div>
+</main>
+<nav class="page-footer">
+  <a href="0057-week-quiz-2026-11-21.html">← Weekly quiz: Nov 15 – Nov 20</a>
+  <a href="../../index.html">Hub</a>
+  <span class="disabled">Next lesson: tomorrow →</span>
+</nav>
+</body>
+</html>
