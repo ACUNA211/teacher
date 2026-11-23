@@ -360,6 +360,11 @@ window.HUB = {
       track: "app", num: "0008", date: "2026-11-16", covers: 0,
       title: "Build review: reading package.json (scripts, dependencies and the lockfile)",
       path: "app-building/lessons/0008-build-review-2026-11-16.html"
+    },
+    {
+      track: "app", num: "0009", date: "2026-11-23", covers: 0,
+      title: "Build review: import and export (how the files find each other)",
+      path: "app-building/lessons/0009-build-review-2026-11-23.html"
     }
   ]
 };

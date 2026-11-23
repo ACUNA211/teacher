@@ -1,0 +1,173 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Import and Export</title>
+<meta name="description" content="App building lesson 0009, build review for 2026-11-23: how two-player-bg-finder's files find each other. index.html as the entry point, main.tsx, ES modules, named vs default exports, import type, bare vs relative imports and importing CSS.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=JetBrains+Mono&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../assets/course.css">
+<script src="../../assets/quiz.js" defer></script>
+</head>
+<body class="track-app">
+<nav class="page-header">
+  <a class="home" href="../../index.html">Teacher hub</a>
+  <span>App building</span>
+  <a href="../reference/glossary.html">Glossary</a>
+</nav>
+<main>
+  <p class="kicker">App building · Lesson 0009 · Build review, week of 2026-11-16</p>
+  <h1>Import and export: how the files find each other</h1>
+  <p class="lede">About 10 minutes. By the end you can start at <code>index.html</code>, follow the <code>import</code> lines through Board Games for Two, and say what each kind of import line does, including the ones with <code>type</code>, no <code>./</code>, or no names at all.</p>
+
+  <div class="callout">
+    <span class="label">New activity elsewhere</span>
+    <p>New activity in <strong>basketball-tcg</strong>, <strong>Pace-Coach</strong> and one more repo (named in your notification). Want any of them registered for Monday reviews? Tell your teacher.</p>
+  </div>
+
+  <div class="callout">
+    <span class="label">What got built this week</span>
+    <p>Nothing new in <a href="https://github.com/ACUNA211/two-player-bg-finder">two-player-bg-finder</a>. The last commit is still <a href="https://github.com/ACUNA211/two-player-bg-finder/commit/3a77ac7">3a77ac7</a> (2026-09-26), so we read existing code again. Every file you've opened in this course starts with a few <code>import</code> lines that we've skipped past. Today they're the lesson.</p>
+  </div>
+
+  <h2>1. It starts in <code>index.html</code></h2>
+  <p>In a C# console app, the runtime looks for <code>Main</code>. A web app has no <code>Main</code>: the browser loads an HTML page, and the page says which code to run. Here's the whole body of <a href="https://github.com/ACUNA211/two-player-bg-finder/blob/3a77ac7/web/index.html"><code>web/index.html</code></a>:</p>
+<pre><code>&lt;body&gt;
+  &lt;div id="root"&gt;&lt;/div&gt;
+  &lt;script <span class="hl">type="module"</span> src="/src/main.tsx"&gt;&lt;/script&gt;
+&lt;/body&gt;</code></pre>
+  <p>An empty <code>div</code> and one script. Vite's docs call <code>index.html</code> "the entry point to your application": Vite reads it as source code and follows that <code>&lt;script type="module" src&gt;</code> into your TypeScript.<sup class="cite"><a href="#src-vite">[2]</a></sup> The <code>type="module"</code> part matters. It tells the browser this file is an <em>ES module</em>, so it may use <code>import</code> and <code>export</code>, and it runs in its own scope.<sup class="cite"><a href="#src-mdn">[1]</a></sup></p>
+  <p>That script is <a href="https://github.com/ACUNA211/two-player-bg-finder/blob/3a77ac7/web/src/main.tsx"><code>src/main.tsx</code></a>, the real <code>Main</code>:</p>
+<pre><code>import { StrictMode } from "react";
+import { createRoot } from "react-dom/client";
+import { App } from "./App";
+import "./index.css";
+
+createRoot(document.getElementById("root")<span class="hl">!</span>).render(
+  &lt;StrictMode&gt;
+    &lt;App /&gt;
+  &lt;/StrictMode&gt;,
+);</code></pre>
+  <p>It finds the empty <code>div</code> and tells React to draw <code>&lt;App /&gt;</code> inside it. The <code>!</code> is TypeScript's <em>non-null assertion</em>: <code>getElementById</code> returns "an element or <code>null</code>", and <code>!</code> says "trust me, it isn't null". Like lesson 0006's <code>as HTMLInputElement</code>, it's a promise, not a check: no code is added, and if the <code>div</code> were missing it would crash at run time.<sup class="cite"><a href="#src-ts">[3]</a></sup></p>
+  <p>From here, each file pulls in the next. Following the <code>import</code> lines gives this <em>module graph</em>:</p>
+<pre><code>index.html
+└─ main.tsx ──── react, react-dom/client, index.css
+   └─ App.tsx ── react
+      ├─ Footer.tsx
+      ├─ GamesBrowser.tsx ── filters.ts
+      │  └─ GamesTable.tsx ── @tanstack/react-table
+      └─ types.ts   (types only: gone before the browser runs)</code></pre>
+  <p>This graph is also how <code>vite build</code> decides what goes into the bundle: anything no import reaches, like the test files, stays out (that's why moving Vitest in lesson 0008 changed nothing for visitors).</p>
+
+  <h2>2. <code>export</code> is <code>public</code>; everything else is private</h2>
+  <p>In C#, a class is visible across the project unless you say otherwise. A JavaScript module is the opposite: everything declared in a file is private to that file <em>unless</em> it's exported.<sup class="cite"><a href="#src-mdn">[1]</a></sup> So a file is roughly a C# <code>static class</code> where <code>export</code> means <code>public</code>. From <a href="https://github.com/ACUNA211/two-player-bg-finder/blob/3a77ac7/web/src/filters.ts"><code>filters.ts</code></a>:</p>
+<pre><code><span class="hl">export</span> const VOTE_FLOOR = 15;
+<span class="hl">export</span> function applyFilters(games: Game[], f: Filters): Game[] { … }</code></pre>
+  <p>and in <code>GamesBrowser.tsx</code>, the other side:</p>
+<pre><code>import { activeCount, applyFilters, emptyFilters, VOTE_FLOOR, <span class="hl">type Filters</span>, … } from "./filters";
+const MORE_TAGS = TAG_FIELDS.filter(…);   // no export: only this file can see it</code></pre>
+  <p>Three things to read in an import line:</p>
+  <ul>
+    <li><strong>Curly braces = named imports.</strong> The names must match the <code>export</code> names exactly. Like <code>using static</code> in C#, but you list each member you want. Imported names are read-only: you can't reassign <code>VOTE_FLOOR</code> from another file.<sup class="cite"><a href="#src-mdn">[1]</a></sup></li>
+    <li><strong>No braces = the default import.</strong> A module may also have <em>one</em> <code>export default</code>, imported without braces under any name you like.<sup class="cite"><a href="#src-mdn">[1]</a></sup> This repo uses named exports for its own code; the one default is in <code>vite.config.ts</code> (<code>export default defineConfig(…)</code>), because Vite reads the config file's default export.</li>
+    <li><strong><code>type</code> = gone at run time.</strong> <code>import type { Game } from "./types"</code> (and the inline <code>type Filters</code> above) can only bring in types. Use one as a value and <code>tsc</code> stops with an error.<sup class="cite"><a href="#src-tsmod">[4]</a></sup> Vite's docs recommend this syntax so type-only imports never get bundled by mistake.<sup class="cite"><a href="#src-vitef">[5]</a></sup> It's lesson 0001 again: <code>types.ts</code> <em>describes</em> data, so nothing from it needs to exist in the browser.</li>
+  </ul>
+
+  <h2>3. The string after <code>from</code>: <code>"./App"</code> vs <code>"react"</code></h2>
+  <ul>
+    <li><strong>Starts with <code>./</code> or <code>../</code></strong>: a file path, relative to this file. <code>"./App"</code> is <code>src/App.tsx</code> (the bundler lets you leave off <code>.tsx</code>).</li>
+    <li><strong>A bare name</strong> like <code>"react"</code> or <code>"@tanstack/react-table"</code>: a package from <code>node_modules</code>, the ones listed in <code>package.json</code> (lesson 0008). Browsers can't resolve bare names on their own: Vite's docs say such an import "will throw an error in the browser", so Vite rewrites it to a real URL under <code>/node_modules/.vite/deps/</code>.<sup class="cite"><a href="#src-vitef">[5]</a></sup> In C# terms, <code>"./App"</code> is a project reference and <code>"react"</code> is a NuGet package.</li>
+    <li><strong>No names at all</strong>: <code>import "./index.css"</code> imports a file just for its side effect. For CSS, Vite injects the file's contents into the page in a <code>&lt;style&gt;</code> tag.<sup class="cite"><a href="#src-vitef">[5]</a></sup> Without Vite, a browser can't import CSS with this plain line; it's a Vite feature.</li>
+  </ul>
+
+  <div class="callout">
+    <span class="label">The big idea</span>
+    <p>The browser runs one file, <code>main.tsx</code>, named in <code>index.html</code>. Everything else arrives because some file imported it. A file shares only what it <code>export</code>s; <code>{ braces }</code> pick named exports, no braces picks the default, <code>type</code> imports vanish before run time, and a path without <code>./</code> means a package. When an AI's change breaks with "is not exported" or "has no default export", the fix is in these first lines, not the logic below them.</p>
+  </div>
+
+  <h2>Practice</h2>
+  <section class="quiz">
+    <p class="q">An AI deletes the word <code>export</code> from <code>export function Footer(…)</code> in <code>Footer.tsx</code>. What happens?</p>
+    <ul class="choices">
+      <li><button class="choice">Footer still works everywhere, just more privately</button></li>
+      <li><button class="choice">Only Footer.test.tsx breaks; the app still runs</button></li>
+      <li><button class="choice" data-correct>App.tsx and the test can't import it</button></li>
+      <li><button class="choice">React finds Footer anyway by its name</button></li>
+    </ul>
+    <div class="explain" hidden>Without <code>export</code>, <code>Footer</code> is private to its file. Both <code>App.tsx</code> and <code>Footer.test.tsx</code> import it by name, so <code>tsc</code> (and <code>npm run build</code>) fails with an error that <code>Footer</code> is declared locally but not exported, and the test file can't load either. React never looks things up by name; it only uses what you import.</div>
+  </section>
+
+  <section class="quiz">
+    <p class="q">An AI "tidies" <code>main.tsx</code> to <code>import App from "./App";</code> (no braces). <code>App.tsx</code> is unchanged. What happens?</p>
+    <ul class="choices">
+      <li><button class="choice">It works: braces are only optional style</button></li>
+      <li><button class="choice" data-correct>It fails: App.tsx has no default export</button></li>
+      <li><button class="choice">It works, but imports every App export</button></li>
+      <li><button class="choice">It fails: App is an invalid name</button></li>
+    </ul>
+    <div class="explain" hidden>No braces means "the default export", and <code>App.tsx</code> only has a <em>named</em> export (<code>export function App</code>). <code>tsc</code> reports that the module has no default export. Fix it either way round: put the braces back, or change <code>App.tsx</code> to <code>export default function App</code>. Braces aren't style; they choose which export you get.</div>
+  </section>
+
+  <section class="quiz">
+    <p class="q">What does the line <code>import type { Game } from "./types";</code> leave in the JavaScript the browser runs?</p>
+    <ul class="choices">
+      <li><button class="choice">A request that downloads types.ts at startup</button></li>
+      <li><button class="choice">An empty Game object filled in later</button></li>
+      <li><button class="choice">A run-time check that every game matches</button></li>
+      <li><button class="choice" data-correct>Nothing at all: the line is removed</button></li>
+    </ul>
+    <div class="explain" hidden>Type-only imports are erased with the rest of the types, so the browser never sees the line. That's also why nothing checks <code>games.json</code> against <code>Game</code> at run time (lesson 0001): the type only exists while <code>tsc</code> is checking your code.</div>
+  </section>
+
+  <section class="quiz">
+    <p class="q">Why does <code>from "react"</code> have no <code>./</code> while <code>from "./App"</code> does?</p>
+    <ul class="choices">
+      <li><button class="choice" data-correct>"react" is an installed package from node_modules</button></li>
+      <li><button class="choice">"react" is built into every web browser</button></li>
+      <li><button class="choice">The ./ is optional; both mean the same</button></li>
+      <li><button class="choice">"react" lives in the same src folder</button></li>
+    </ul>
+    <div class="explain" hidden>A bare name means "a package": it comes from <code>node_modules</code>, installed from <code>package.json</code>. A name starting with <code>./</code> is a path to one of your own files. They aren't interchangeable: <code>from "App"</code> would look for a package called App and fail. Browsers don't ship React, and can't resolve bare names at all, which is why Vite rewrites them.</div>
+  </section>
+  <p class="quiz-score" data-quiz-score></p>
+
+  <h2>Try it in your copy (5 minutes)</h2>
+  <ol>
+    <li>In your local <code>two-player-bg-finder</code>, <code>cd web</code> and <code>git pull</code>. Open <code>GamesTable.tsx</code> and read only its <code>import</code> lines. Which come from packages and which from your own files? Then search the file for <code>export</code>: which things does it share?</li>
+    <li>In <code>main.tsx</code>, change <code>import { App } from "./App";</code> to <code>import App from "./App";</code>. <strong>Predict</strong> the error, then run <code>npx tsc -b</code> to see it.</li>
+    <li>Undo that, then comment out <code>import "./index.css";</code> and run <code>npm run dev</code>. Predict what the page looks like before you open it.</li>
+    <li>Undo everything with <code>git checkout src</code>.</li>
+  </ol>
+  <details class="recall">
+    <summary>What should you see? <span class="hint">(after trying it)</span></summary>
+    <p><code>GamesTable.tsx</code> imports from two packages (<code>@tanstack/react-table</code> and <code>react</code>) and one file (<code>./types</code>, type only). It exports <code>PAGE_SIZE</code>, <code>Info</code>, <code>SCORE_HELP</code> and <code>GamesTable</code>: four, and <code>SCORE_HELP</code> sits in the middle of the file, easy to miss. The default-import change should give a "has no default export" error pointing at <code>main.tsx</code>. Without <code>index.css</code> the app still loads and works, but unstyled, because the CSS only arrived through that import. I couldn't run these in this week's automated session, so tell your teacher if you see something different.</p>
+  </details>
+
+  <details class="recall">
+    <summary>Spaced review from lesson 0005: <code>App.tsx</code> has <code>{data &amp;&amp; &lt;Footer … /&gt;}</code>. Why is <code>&amp;&amp;</code> safe here, when it wasn't safe with a count? <span class="hint">(answer, then click)</span></summary>
+    <p><code>data</code> is either an object or <code>null</code>. If it's <code>null</code>, <code>&amp;&amp;</code> gives <code>null</code> and React draws nothing. The trap is a <em>number</em> on the left: <code>0 &amp;&amp; …</code> gives <code>0</code>, and React draws a literal "0" on the page. An object or <code>null</code> can never be 0.</p>
+  </details>
+
+  <div class="callout source" id="src-mdn">
+    <span class="label">Primary source: read next</span>
+    <p>[1] MDN Web Docs, <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Modules">JavaScript modules</a>. Read the sections on exporting, importing, default vs named exports and "Other differences between modules and classic scripts". About 15 minutes.</p>
+    <p id="src-vite">[2] Vite Guide, <a href="https://vite.dev/guide/#index-html-and-project-root"><code>index.html</code> and Project Root</a>.</p>
+    <p id="src-ts">[3] TypeScript Handbook, <a href="https://www.typescriptlang.org/docs/handbook/2/everyday-types.html#non-null-assertion-operator-postfix-">Everyday Types: Non-null Assertion Operator</a>.</p>
+    <p id="src-tsmod">[4] TypeScript Handbook, <a href="https://www.typescriptlang.org/docs/handbook/2/modules.html">Modules</a> (<code>import type</code> and inline <code>type</code> imports).</p>
+    <p id="src-vitef">[5] Vite Guide, <a href="https://vite.dev/guide/features.html">Features</a>: npm dependency resolving, TypeScript and CSS. Code is quoted from the repo at <code>3a77ac7</code>.</p>
+  </div>
+
+  <div class="callout ask">
+    <span class="label">Questions?</span>
+    <p>Anything unclear? Ask your teacher. Open Claude in the Teacher repo and ask, for example: <em>"In app lesson 0009, when should I use a default export instead of a named one?"</em> Follow-up questions are part of the course.</p>
+  </div>
+</main>
+<nav class="page-footer">
+  <a href="0008-build-review-2026-11-16.html">← 0008 Reading package.json</a>
+  <a href="../../index.html">Hub</a>
+  <span class="disabled">Next build review: next Monday →</span>
+</nav>
+</body>
+</html>
