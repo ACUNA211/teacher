@@ -1,0 +1,159 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>BIOS Settings</title>
+<meta name="description" content="IT lesson 0059: A+ objective 3.5, BIOS settings. Boot options and boot order, USB permissions, fan settings, Secure Boot, and user vs. supervisor passwords, plus how to save the current settings before you change anything.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=JetBrains+Mono&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../assets/course.css">
+<script src="../../assets/quiz.js" defer></script>
+</head>
+<body class="track-it">
+<nav class="page-header">
+  <a class="home" href="../../index.html">Teacher hub</a>
+  <span>IT and certs</span>
+  <a href="../reference/glossary.html">Glossary</a>
+  <a href="../reference/hardware.html">Hardware cheat sheet</a>
+</nav>
+<main>
+  <p class="kicker">IT and certs · Lesson 0059 · A+ Core 1, objective 3.5</p>
+  <h1>Five switches in the firmware: BIOS settings</h1>
+  <p class="lede">About 10 minutes. Yesterday: <a href="0058-the-bios-uefi.html">what the BIOS/UEFI is</a> and what it does at power-on. Today: the <strong>settings</strong> inside its setup screen that a technician actually changes.<sup class="cite"><a href="#src-messer">[1]</a></sup> The win: given a request ("stop USB boot", "lock the setup screen", "boot this old tool"), name the one setting to change.</p>
+
+  <div class="callout">
+    <span class="label">Why this matters at work</span>
+    <p>Firmware settings are part of device security. Intune can even manage some of them remotely on supported PCs through <strong>DFCI</strong> (Device Firmware Configuration Interface): for example, block booting from USB and stop the user from changing UEFI settings.<sup class="cite"><a href="#src-dfci">[3]</a></sup> And when a laptop fails a "Secure Boot" compliance check and the user loses access to company apps, today's Secure Boot switch is where the fix lives.</p>
+  </div>
+
+  <h2>0. Before you touch anything: save what's there</h2>
+  <p>A wrong firmware setting can stop a PC from booting. So <strong>record the current settings first</strong>; a phone photo of each screen is enough. If something breaks, go back in and set things back the way they were.<sup class="cite"><a href="#src-messer1101">[2]</a></sup></p>
+
+  <h2>1. The five settings</h2>
+  <div class="table-wrap">
+  <table>
+    <thead><tr><th>Setting</th><th>What it does</th><th>Typical reason to change it</th></tr></thead>
+    <tbody>
+      <tr><td><strong>Boot options</strong></td><td>Which devices may boot (SSD, USB, network/PXE, optical) and in what <strong>order</strong>; each can be enabled or disabled<sup class="cite"><a href="#src-messer">[1]</a></sup></td><td>Boot an installer from USB; stop anyone booting their own USB stick</td></tr>
+      <tr><td><strong>USB permissions</strong></td><td>Turn USB ports (or USB boot) on or off in the firmware<sup class="cite"><a href="#src-messer">[1]</a></sup></td><td>Locked-down kiosk or lab PC</td></tr>
+      <tr><td><strong>Fan settings</strong></td><td>Fan profiles: quieter and warmer, or louder and cooler; the hardware monitor shows temperatures and fan speeds<sup class="cite"><a href="#src-pcgamer">[5]</a></sup></td><td>Noisy PC in an office; a PC that overheats under load</td></tr>
+      <tr><td><strong>Secure Boot</strong></td><td>UEFI checks <strong>digital signatures</strong> so only trusted boot software runs<sup class="cite"><a href="#src-messer">[1]</a></sup></td><td>Keep it <strong>on</strong>; turn off only for an OS or tool that doesn't support it, then back on</td></tr>
+      <tr><td><strong>Passwords</strong></td><td><strong>User/system</strong> password: needed to start the PC at all. <strong>Supervisor/admin</strong> password: needed to change firmware settings<sup class="cite"><a href="#src-dell">[4]</a></sup></td><td>Stop users changing boot order or turning Secure Boot off</td></tr>
+    </tbody>
+  </table>
+  </div>
+  <p>Two details worth knowing. Most PCs also have a <strong>one-time boot menu</strong> (often <kbd>F12</kbd>, depends on the maker): boot from USB once without changing the saved boot order. And other common switches live in the same screens, such as <strong>virtualization support</strong> (Intel VT-x / AMD-V), which you met in <a href="0030-virtualization-concepts.html">lesson 0030</a>.</p>
+
+  <div class="callout win">
+    <span class="label">Rule of thumb</span>
+    <p><strong>Photo first, then change.</strong> Boot <em>order</em> picks the device; boot <em>options</em> allow or block it. <strong>User password = can't start. Supervisor password = can't change settings.</strong> Secure Boot stays on unless something unsigned truly needs it off, and then goes back on.</p>
+  </div>
+
+  <h2>Try it (2 minutes)</h2>
+  <p>You can peek at two firmware settings from inside Windows without rebooting:</p>
+  <ol>
+    <li><strong>Virtualization:</strong> Task Manager → <em>Performance</em> → <em>CPU</em>. Bottom right says <strong>Virtualization: Enabled</strong> or <strong>Disabled</strong> (a firmware switch).</li>
+    <li><strong>Firmware boot entries:</strong> open PowerShell or Command Prompt <em>as administrator</em> and run:<sup class="cite"><a href="#src-bcd">[6]</a></sup>
+      <pre><code>bcdedit /enum firmware</code></pre>
+      Look at the <strong>Firmware Boot Manager</strong> entry's <code>displayorder</code>: that's the firmware boot list (Windows Boot Manager, USB, network…), in order.</li>
+  </ol>
+  <details class="recall">
+    <summary>Before checking: the list shows <code>Windows Boot Manager</code> first and a USB entry second. A user plugs in a bootable USB stick and restarts. What boots? <span class="hint">(then click to check)</span></summary>
+    <p><strong>Windows</strong>, because the firmware tries the boot order top-down and the SSD's Windows Boot Manager works. To boot the stick, use the one-time boot menu or move USB up (if USB boot isn't disabled).</p>
+  </details>
+
+  <h2>Practice</h2>
+  <p>Answer from memory before scrolling back up.</p>
+
+  <section class="quiz">
+    <p class="q">A training-room PC must never boot from USB sticks people bring in, but its USB keyboard and mouse must keep working. Which firmware change fits best?</p>
+    <ul class="choices">
+      <li><button class="choice">Disable every USB port completely</button></li>
+      <li><button class="choice" data-correct>Remove USB from boot options</button></li>
+      <li><button class="choice">Turn Secure Boot fully off</button></li>
+      <li><button class="choice">Raise the fan speed profile</button></li>
+    </ul>
+    <div class="explain" hidden>Disabling USB as a <strong>boot option</strong> stops USB booting while the ports still work in Windows.<sup class="cite"><a href="#src-messer">[1]</a></sup> Turning off every port would kill the keyboard too. Add a supervisor password so nobody turns it back on.</div>
+  </section>
+
+  <section class="quiz">
+    <p class="q">A lobby kiosk PC: anyone should be able to power it on and use it, but nobody should be able to change the boot order. Which password do you set?</p>
+    <ul class="choices">
+      <li><button class="choice">A user (system) password only</button></li>
+      <li><button class="choice">A BitLocker recovery key only</button></li>
+      <li><button class="choice">A Windows local admin password</button></li>
+      <li><button class="choice" data-correct>A supervisor (admin) password only</button></li>
+    </ul>
+    <div class="explain" hidden>The <strong>supervisor/admin</strong> password guards the setup screen; the PC still starts freely. A <strong>user/system</strong> password would stop everyone at power-on.<sup class="cite"><a href="#src-dell">[4]</a></sup> Windows and BitLocker passwords don't protect firmware settings.</div>
+  </section>
+
+  <section class="quiz">
+    <p class="q">A technician tries to boot an old, unsigned diagnostic tool from USB. The firmware blocks it with a security message. The boot order is correct. What do they change, for now?</p>
+    <ul class="choices">
+      <li><button class="choice" data-correct>Turn off Secure Boot temporarily</button></li>
+      <li><button class="choice">Clear the supervisor password now</button></li>
+      <li><button class="choice">Lower the CPU fan speed</button></li>
+      <li><button class="choice">Switch the disk to MBR</button></li>
+    </ul>
+    <div class="explain" hidden><strong>Secure Boot</strong> blocks boot software without a trusted signature.<sup class="cite"><a href="#src-messer">[1]</a></sup> Turn it off only for the job, then <strong>back on</strong>; otherwise the PC can fail a "Require Secure Boot" compliance check.</div>
+  </section>
+
+  <section class="quiz">
+    <p class="q">You're asked to change several firmware settings on a desktop you've never seen before. What do you do first?</p>
+    <ul class="choices">
+      <li><button class="choice">Update Windows to latest build</button></li>
+      <li><button class="choice">Remove the CMOS battery first</button></li>
+      <li><button class="choice" data-correct>Record the current settings first</button></li>
+      <li><button class="choice">Set every fan to maximum</button></li>
+    </ul>
+    <div class="explain" hidden>A bad setting can stop the PC booting. With a record (photos are fine) you can put everything back.<sup class="cite"><a href="#src-messer1101">[2]</a></sup> Pulling the CMOS battery may reset everything to defaults, which is the opposite of careful.</div>
+  </section>
+  <p class="quiz-score" data-quiz-score></p>
+
+  <details class="recall">
+    <summary>From memory: the five setting groups in today's table, and the difference between the two firmware passwords. <span class="hint">(then click to check)</span></summary>
+    <p>Boot options, USB permissions, fan settings, Secure Boot, passwords. <strong>User/system</strong> = needed to start the PC; <strong>supervisor/admin</strong> = needed to change firmware settings.</p>
+  </details>
+
+  <h2>Review: earlier lessons</h2>
+  <p>Spaced retrieval: pull these from memory first, then check.</p>
+
+  <details class="recall">
+    <summary>Some motherboards carry two BIOS chips. What is the second one for, and when does it save you? <span class="hint">(<a href="0058-the-bios-uefi.html">lesson 0058</a>, 1 day ago)</span></summary>
+    <p>It's a <strong>backup</strong> copy of the firmware. If the main chip is corrupted, for example by a power cut during a firmware update, the board can recover from the backup instead of failing to POST.</p>
+  </details>
+
+  <details class="recall">
+    <summary>RAID 5: minimum number of drives, how many can fail, and why it's still not a backup. <span class="hint">(<a href="0052-raid-levels.html">lesson 0052</a>, 7 days ago)</span></summary>
+    <p>At least <strong>3</strong> drives; it survives <strong>1</strong> drive failure (parity rebuilds it). It's not a backup: deleted files, ransomware or a corrupted file are "faithfully" kept on every drive.</p>
+  </details>
+
+  <details class="recall">
+    <summary>A home office has a DSL line and a cable-TV line. Which connector does each modem use? <span class="hint">(<a href="0045-copper-connectors.html">lesson 0045</a>, 14 days ago)</span></summary>
+    <p>DSL: <strong>RJ11</strong> (smaller phone-line jack). Cable: <strong>F-connector</strong> (threaded, on coax).</p>
+  </details>
+
+  <div class="callout source" id="src-messer">
+    <span class="label">Primary source: watch next</span>
+    <p>[1] Professor Messer, <a href="https://www.professormesser.com/free-a-plus-training/220-1201/220-1201-video/bios-settings-220-1201/">BIOS Settings (220-1201, 3.5)</a>: boot options, USB permissions, fans, Secure Boot and passwords on real setup screens. Free. Next in the <a href="https://www.professormesser.com/free-a-plus-training/220-1201/220-1201-video/220-1201-training-course/">course</a>: HSM and TPM.</p>
+    <p id="src-messer1101">[2] Professor Messer, <a href="https://www.professormesser.com/free-a-plus-training/220-1101/220-1101-video/bios-settings-220-1101/">BIOS Settings (220-1101)</a>: save your current settings (a phone photo works) before making changes.</p>
+    <p id="src-dfci">[3] Microsoft Learn, <a href="https://learn.microsoft.com/en-us/intune/intune-service/configuration/device-firmware-configuration-interface-windows-settings">DFCI settings in Intune</a>: boot from external media, "Allow local user to change UEFI settings"; warns DFCI settings survive re-imaging.</p>
+    <p id="src-dell">[4] Dell, <a href="https://www.dell.com/support/kbdoc/en-us/000219905/how-to-set-an-admin-password-in-the-bios">How to set an admin password in the BIOS</a>: system password blocks boot; admin password blocks changes to settings.</p>
+    <p id="src-pcgamer">[5] PC Gamer, <a href="https://pcgamer.com/how-to-a-guide-to-bios-settings">A guide to BIOS settings</a>: hardware monitor, system health and fan-speed options.</p>
+    <p id="src-bcd">[6] Microsoft Learn, <a href="https://learn.microsoft.com/en-us/windows-hardware/manufacture/desktop/bcdedit-command-line-options">BCDEdit command-line options</a> (<code>/enum firmware</code>).</p>
+  </div>
+
+  <div class="callout ask">
+    <span class="label">Questions?</span>
+    <p>Anything unclear? Ask your teacher. Open Claude in the Teacher repo and ask, for example: <em>"In IT lesson 0059, what happens if someone forgets the supervisor password?"</em> Follow-up questions are part of the course.</p>
+  </div>
+</main>
+<nav class="page-footer">
+  <a href="0058-the-bios-uefi.html">← The first code that runs: the BIOS and UEFI</a>
+  <a href="../../index.html">Hub</a>
+  <span class="disabled">Next lesson: tomorrow →</span>
+</nav>
+</body>
+</html>
