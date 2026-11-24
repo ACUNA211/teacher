@@ -1,0 +1,158 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>HSM and TPM</title>
+<meta name="description" content="IT lesson 0060: A+ objective 3.5, HSM and TPM. A TPM protects keys on one device; an HSM protects keys for many systems in a data center. What each does, and how BitLocker uses the TPM.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=JetBrains+Mono&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../assets/course.css">
+<script src="../../assets/quiz.js" defer></script>
+</head>
+<body class="track-it">
+<nav class="page-header">
+  <a class="home" href="../../index.html">Teacher hub</a>
+  <span>IT and certs</span>
+  <a href="../reference/glossary.html">Glossary</a>
+  <a href="../reference/hardware.html">Hardware cheat sheet</a>
+</nav>
+<main>
+  <p class="kicker">IT and certs · Lesson 0060 · A+ Core 1, objective 3.5</p>
+  <h1>One device or many: TPM and HSM</h1>
+  <p class="lede">About 10 minutes. In <a href="0054-motherboard-power-headers-tpm.html">lesson 0054</a> you found the TPM header and checked <code>Get-Tpm</code>. Today: what a TPM actually <em>does</em>, and its big sibling in the data center, the <strong>HSM</strong>.<sup class="cite"><a href="#src-messer">[1]</a></sup> The win: given a scenario, say whether it's a TPM job or an HSM job, and explain why a BitLocker-encrypted drive can't just be moved to another PC.</p>
+
+  <div class="callout">
+    <span class="label">Why this matters at work</span>
+    <p>Three things you deal with lean on the TPM: <strong>BitLocker</strong> keeps its key sealed in it, <strong>Windows Hello</strong> keys can be bound to it so they can't be copied off the device, and Intune compliance policies can <strong>require a TPM</strong>.<sup class="cite"><a href="#src-mstpm">[2]</a></sup><sup class="cite"><a href="#src-intune">[4]</a></sup> When a user hits a BitLocker recovery screen after a firmware change, the TPM is why.</p>
+  </div>
+
+  <h2>1. Two kinds of hardware for keys</h2>
+  <p>Both are <strong>dedicated cryptographic hardware</strong>: they create keys, keep them, and use them, so the secret key doesn't have to sit in ordinary memory or on disk. The difference is <strong>scope</strong>.<sup class="cite"><a href="#src-messer">[1]</a></sup><sup class="cite"><a href="#src-entrust">[3]</a></sup></p>
+  <div class="table-wrap">
+  <table>
+    <thead><tr><th></th><th>TPM (Trusted Platform Module)</th><th>HSM (Hardware Security Module)</th></tr></thead>
+    <tbody>
+      <tr><td><strong>Where</strong></td><td>Inside one computer: on the motherboard, a plug-in module, or firmware in the CPU (Intel PTT, AMD fTPM)</td><td>A separate device in a data center: a hardened server or a plug-in card</td></tr>
+      <tr><td><strong>Serves</strong></td><td><strong>One</strong> system: protects data on that device</td><td><strong>Many</strong> systems: central, large-scale key management</td></tr>
+      <tr><td><strong>Does</strong></td><td>Random numbers, key generation, keys burned in at manufacture, sealing keys to a known-good boot</td><td>Stores keys for many servers, often with redundancy across devices; can <strong>offload</strong> encryption from busy servers</td></tr>
+      <tr><td><strong>Example</strong></td><td>BitLocker on a laptop; Windows 11 needs TPM 2.0</td><td>A web farm's TLS keys; a certificate authority's signing key</td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <h2>2. How the TPM guards BitLocker</h2>
+  <p>During startup, each piece of boot code is <strong>measured</strong> (hashed) and recorded in the TPM. BitLocker's key is <strong>sealed</strong> to those measurements: the TPM releases it only if the boot looks the same as when it was sealed.<sup class="cite"><a href="#src-mstpm">[2]</a></sup> That gives you two everyday effects:</p>
+  <ul>
+    <li><strong>Drive moved to another PC:</strong> a different TPM, so no key. The data stays unreadable without the recovery key.</li>
+    <li><strong>Firmware or boot changes</strong> (a BIOS update, Secure Boot toggled, a boot-order change): the measurements differ, so BitLocker asks for the <strong>recovery key</strong>. That's why you suspend BitLocker before planned firmware work (<a href="0023-laptop-batteries-keyboards-ssd.html">lesson 0023</a>).</li>
+  </ul>
+  <p>The TPM also has <strong>anti-hammering</strong>: after too many wrong guesses at a TPM PIN it locks out for a while, so the key can't be brute-forced.<sup class="cite"><a href="#src-mstpm">[2]</a></sup></p>
+
+  <div class="callout win">
+    <span class="label">Rule of thumb</span>
+    <p><strong>TPM = one device's vault. HSM = the data center's vault.</strong> Laptop, BitLocker, Windows 11, Windows Hello → TPM. Many servers, a certificate authority, offloading TLS → HSM.</p>
+  </div>
+
+  <h2>Try it (2 minutes)</h2>
+  <p>See the TPM doing its job for BitLocker. Open Command Prompt or PowerShell <em>as administrator</em> and run:<sup class="cite"><a href="#src-bde">[5]</a></sup></p>
+  <pre><code>manage-bde -protectors -get C:</code></pre>
+  <p>On a BitLocker-protected PC you'll usually see two <strong>key protectors</strong>: <strong>TPM</strong> (unlocks automatically at a normal boot) and <strong>Numerical Password</strong> (the 48-digit recovery key, with its ID). If the drive isn't encrypted, it says no key protectors were found.</p>
+  <details class="recall">
+    <summary>Before checking: why does a normal boot never ask the user for anything, yet the drive is still safe if the laptop is stolen? <span class="hint">(then click to check)</span></summary>
+    <p>The <strong>TPM protector</strong> releases the key automatically, but only on <em>this</em> PC with an unchanged boot. A thief who pulls the drive gets nothing; booting something else changes the measurements. (A TPM + PIN protector adds a typed PIN for extra protection.)</p>
+  </details>
+
+  <h2>Practice</h2>
+  <p>Answer from memory before scrolling back up.</p>
+
+  <section class="quiz">
+    <p class="q">A company runs dozens of web servers and wants their TLS private keys kept in one hardened place, with the encryption work taken off the servers' CPUs. What fits?</p>
+    <ul class="choices">
+      <li><button class="choice">A TPM in each server</button></li>
+      <li><button class="choice" data-correct>A central hardware security module</button></li>
+      <li><button class="choice">Secure Boot on every server</button></li>
+      <li><button class="choice">BitLocker on each system drive</button></li>
+    </ul>
+    <div class="explain" hidden>An <strong>HSM</strong> is centralized key management for <strong>many</strong> systems and can offload cryptography in hardware.<sup class="cite"><a href="#src-messer">[1]</a></sup> A TPM protects only the one machine it's in.</div>
+  </section>
+
+  <section class="quiz">
+    <p class="q">A laptop's SSD is removed and put into an identical laptop. Windows won't start and BitLocker asks for a recovery key. Why?</p>
+    <ul class="choices">
+      <li><button class="choice">The SSD firmware was wiped</button></li>
+      <li><button class="choice">Secure Boot blocks foreign drives</button></li>
+      <li><button class="choice" data-correct>The key is sealed elsewhere</button></li>
+      <li><button class="choice">The new board lacks M.2</button></li>
+    </ul>
+    <div class="explain" hidden>BitLocker's key is sealed in the <strong>original laptop's TPM</strong>. The second laptop's TPM doesn't have it, so only the recovery key unlocks the drive.<sup class="cite"><a href="#src-mstpm">[2]</a></sup> Identical models still have different TPMs.</div>
+  </section>
+
+  <section class="quiz">
+    <p class="q">After a BIOS update, a user's laptop shows the BitLocker recovery screen at startup. Nothing else changed. What's the best explanation?</p>
+    <ul class="choices">
+      <li><button class="choice" data-correct>Boot measurements no longer match</button></li>
+      <li><button class="choice">The TPM chip physically failed</button></li>
+      <li><button class="choice">The user's password has expired</button></li>
+      <li><button class="choice">The drive was decrypted overnight</button></li>
+    </ul>
+    <div class="explain" hidden>New firmware means different <strong>measurements</strong> in the TPM, so it won't release the sealed key; BitLocker falls back to the recovery key.<sup class="cite"><a href="#src-mstpm">[2]</a></sup> Prevent it next time by suspending BitLocker before the update.</div>
+  </section>
+
+  <section class="quiz">
+    <p class="q">Which of these is a job for a TPM rather than an HSM?</p>
+    <ul class="choices">
+      <li><button class="choice">Signing certificates for an entire company</button></li>
+      <li><button class="choice">Holding keys for many cloud servers</button></li>
+      <li><button class="choice">Offloading encryption for a web farm</button></li>
+      <li><button class="choice" data-correct>Protecting one laptop's disk encryption key</button></li>
+    </ul>
+    <div class="explain" hidden>A TPM secures data on <strong>its own device</strong>, like a laptop's BitLocker key.<sup class="cite"><a href="#src-messer">[1]</a></sup> The other three are many-system, centralized jobs: HSM territory.</div>
+  </section>
+  <p class="quiz-score" data-quiz-score></p>
+
+  <details class="recall">
+    <summary>From memory: one sentence each on what a TPM is and what an HSM is, and the one word that separates them. <span class="hint">(then click to check)</span></summary>
+    <p><strong>TPM</strong>: crypto hardware inside one computer that generates and protects that device's keys. <strong>HSM</strong>: a dedicated, centralized device that stores and uses keys for many systems. The word: <strong>scope</strong> (one device vs. many).</p>
+  </details>
+
+  <h2>Review: earlier lessons</h2>
+  <p>Spaced retrieval: pull these from memory first, then check.</p>
+
+  <details class="recall">
+    <summary>Which firmware password lets anyone power on a PC but stops them changing the boot order? <span class="hint">(<a href="0059-bios-settings.html">lesson 0059</a>, 1 day ago)</span></summary>
+    <p>The <strong>supervisor/admin</strong> password. A <strong>user/system</strong> password would stop the PC from starting at all.</p>
+  </details>
+
+  <details class="recall">
+    <summary>A customer wants the smallest standard board for a tiny kiosk PC with one expansion card. Which form factor, and roughly how big? <span class="hint">(<a href="0053-motherboard-form-factors.html">lesson 0053</a>, 7 days ago)</span></summary>
+    <p><strong>Mini-ITX</strong>: about 17 × 17 cm, one expansion slot, and it uses a subset of ATX mounting holes, so it fits many ATX cases.</p>
+  </details>
+
+  <details class="recall">
+    <summary>Windows Sandbox: what happens to files inside it when you close it, and which firmware setting must be on for it to run? <span class="hint">(<a href="0030-virtualization-concepts.html">lesson 0030</a>, 30 days ago)</span></summary>
+    <p>Everything is <strong>discarded</strong>: nothing persists. It needs <strong>virtualization</strong> (Intel VT-x / AMD-V) enabled in the BIOS/UEFI, plus a Pro, Enterprise or Education edition.</p>
+  </details>
+
+  <div class="callout source" id="src-messer">
+    <span class="label">Primary source: watch next</span>
+    <p>[1] Professor Messer, <a href="https://www.professormesser.com/free-a-plus-training/220-1201/220-1201-video/hsm-and-tpm-220-1201/">HSM and TPM (220-1201, 3.5)</a>: TPM on one device (key generation, random numbers, keys burned in) vs. HSM as centralized key management for many systems, with hardware offload. Free. Back to the <a href="https://www.professormesser.com/free-a-plus-training/220-1201/220-1201-video/220-1201-training-course/">course index</a>.</p>
+    <p id="src-mstpm">[2] Microsoft Learn, <a href="https://learn.microsoft.com/en-us/windows/security/hardware-security/tpm/trusted-platform-module-overview">Trusted Platform Module technology overview</a> and <a href="https://learn.microsoft.com/en-us/windows/security/hardware-security/tpm/tpm-fundamentals">TPM fundamentals</a>: measured boot, keys that can't leave the TPM, anti-hammering lockout, Windows 11 needs TPM 2.0.</p>
+    <p id="src-entrust">[3] Entrust, <a href="https://www.entrust.com/blog/2025/09/hsm-vs-tpm">TPMs vs. HSMs</a>: device-level protection vs. protection at scale.</p>
+    <p id="src-intune">[4] Microsoft Learn, <a href="https://learn.microsoft.com/en-us/intune/intune-service/protect/compliance-policy-create-windows">Windows compliance settings in Intune</a>: Device Security can require a TPM; device health uses attestation.</p>
+    <p id="src-bde">[5] Microsoft Learn, <a href="https://learn.microsoft.com/en-us/windows-server/administration/windows-commands/manage-bde-protectors">manage-bde protectors</a> (<code>-get</code> lists a volume's key protectors).</p>
+  </div>
+
+  <div class="callout ask">
+    <span class="label">Questions?</span>
+    <p>Anything unclear? Ask your teacher. Open Claude in the Teacher repo and ask, for example: <em>"In IT lesson 0060, where does the BitLocker recovery key get backed up in an Entra-joined setup?"</em> Follow-up questions are part of the course.</p>
+  </div>
+</main>
+<nav class="page-footer">
+  <a href="0059-bios-settings.html">← Five switches in the firmware: BIOS settings</a>
+  <a href="../../index.html">Hub</a>
+  <span class="disabled">Next lesson: tomorrow →</span>
+</nav>
+</body>
+</html>

@@ -1,7 +1,7 @@
 /* Hub data. The teacher updates this file after every lesson; index.html renders it.
    Keep it free of personal data: the site is public. */
 window.HUB = {
-  updated: "2026-11-23",
+  updated: "2026-11-24",
   tracks: [
     {
       id: "it", name: "IT and certs", folder: "it", cls: "track-it", status: "active",
@@ -320,6 +320,11 @@ window.HUB = {
       track: "it", num: "0059", date: "2026-11-23", covers: 1,
       title: "Five switches in the firmware: BIOS settings",
       path: "it/lessons/0059-bios-settings.html"
+    },
+    {
+      track: "it", num: "0060", date: "2026-11-24", covers: 1,
+      title: "One device or many: TPM and HSM",
+      path: "it/lessons/0060-hsm-and-tpm.html"
     },
     {
       track: "app", num: "0001", date: "2026-09-28", covers: 0,
