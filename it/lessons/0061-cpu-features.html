@@ -1,0 +1,163 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>CPU Features</title>
+<meta name="description" content="IT lesson 0061: A+ objective 3.5, CPU features. 32-bit (x86) vs. 64-bit (x64), ARM, cores and multithreading, and hardware virtualization support (VT-x, AMD-V).">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=JetBrains+Mono&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../assets/course.css">
+<script src="../../assets/quiz.js" defer></script>
+</head>
+<body class="track-it">
+<nav class="page-header">
+  <a class="home" href="../../index.html">Teacher hub</a>
+  <span>IT and certs</span>
+  <a href="../reference/glossary.html">Glossary</a>
+  <a href="../reference/hardware.html">Hardware cheat sheet</a>
+</nav>
+<main>
+  <p class="kicker">IT and certs · Lesson 0061 · A+ Core 1, objective 3.5</p>
+  <h1>What the processor can do: CPU features</h1>
+  <p class="lede">About 10 minutes. In <a href="0056-motherboard-cpu-compatibility.html">lesson 0056</a> you matched a CPU to its socket. Today: what's printed on the spec sheet once it's in. Four features the exam lists: <strong>32-bit vs. 64-bit</strong>, <strong>ARM</strong>, <strong>cores and multithreading</strong>, and <strong>virtualization support</strong>.<sup class="cite"><a href="#src-messer">[1]</a></sup><sup class="cite"><a href="#src-obj">[2]</a></sup> The win: read a PC's CPU line in Task Manager and explain every number on it.</p>
+
+  <div class="callout">
+    <span class="label">Why this matters at work</span>
+    <p>Windows 11 runs only on <strong>64-bit</strong> processors (x64 or ARM64), and when you package an app in Intune you can set which <strong>architectures</strong> it installs on, so an ARM laptop doesn't get an x64-only installer.<sup class="cite"><a href="#src-arm">[4]</a></sup><sup class="cite"><a href="#src-intune">[6]</a></sup> And "Windows Sandbox won't start" is usually a virtualization switch, not a broken PC.</p>
+  </div>
+
+  <h2>1. 32-bit vs. 64-bit: how much memory it can point at</h2>
+  <p>The "bits" are the size of a memory address. A <strong>32-bit</strong> CPU can name 2<sup>32</sup> addresses: <strong>4 GB</strong>, and that's the ceiling for RAM <em>and</em> device memory together. A <strong>64-bit</strong> CPU can name 2<sup>64</sup>: about 16 exabytes, far beyond any PC (the OS sets its own, lower limit).<sup class="cite"><a href="#src-messer">[1]</a></sup></p>
+  <div class="table-wrap">
+  <table>
+    <thead><tr><th>Name</th><th>Means</th><th>Remember</th></tr></thead>
+    <tbody>
+      <tr><td><strong>x86</strong></td><td>32-bit Intel-compatible (named after the 8086 family)</td><td>4 GB ceiling; a 32-bit OS can't run 64-bit apps</td></tr>
+      <tr><td><strong>x64</strong> (also AMD64, x86-64)</td><td>64-bit Intel/AMD</td><td>Runs 64-bit <em>and</em> 32-bit apps; 32-bit ones install to <code>Program Files (x86)</code></td></tr>
+      <tr><td><strong>ARM</strong> (ARM64)</td><td>A different instruction set, licensed by Arm Ltd.</td><td>Low power, less heat: phones, tablets, many thin laptops</td></tr>
+    </tbody>
+  </table>
+  </div>
+  <p><strong>ARM</strong> isn't a faster or slower x86; it's a different language of instructions. Software built for x64 doesn't run natively on ARM. Windows 11 on ARM can <strong>emulate</strong> most x64 apps, but drivers must be built for ARM64.<sup class="cite"><a href="#src-arm">[4]</a></sup></p>
+
+  <h2>2. Cores and threads</h2>
+  <ul>
+    <li><strong>Single-core</strong>: one processing unit, one thing at a time. Old CPUs.<sup class="cite"><a href="#src-messer1101">[3]</a></sup></li>
+    <li><strong>Multicore</strong>: several complete cores on one chip (2, 8, 24…). Real parallel work.</li>
+    <li><strong>Multithreading</strong> (Intel calls it <strong>Hyper-Threading</strong>; generically SMT): one core runs <strong>two threads</strong>, so Windows sees two <strong>logical processors</strong> per core. The gain is modest (roughly 15–30%), not double, and the OS must support it.<sup class="cite"><a href="#src-messer1101">[3]</a></sup></li>
+  </ul>
+
+  <h2>3. Virtualization support</h2>
+  <p>Modern CPUs have extra instructions that let a hypervisor run virtual machines efficiently: <strong>Intel VT-x</strong> and <strong>AMD-V</strong>. They're often <strong>off in the BIOS/UEFI</strong> by default (<a href="0059-bios-settings.html">lesson 0059</a>). Hyper-V, Windows Sandbox and WSL 2 need them, and Hyper-V also needs a 64-bit CPU with <strong>SLAT</strong> (second-level address translation).<sup class="cite"><a href="#src-hyperv">[5]</a></sup></p>
+
+  <div class="callout win">
+    <span class="label">Rule of thumb</span>
+    <p><strong>x86 = 32-bit = 4 GB. x64 = 64-bit = Windows 11. ARM = battery life, needs ARM64 drivers.</strong> Logical processors = cores × 2 when multithreading is on. VM won't start? <strong>Turn on VT-x / AMD-V in the firmware.</strong></p>
+  </div>
+
+  <h2>Try it (2 minutes)</h2>
+  <p>Open <strong>Task Manager → Performance → CPU</strong>. Under the graph, find <strong>Cores</strong>, <strong>Logical processors</strong> and <strong>Virtualization</strong> (Enabled/Disabled). For the architecture too, run this in PowerShell:<sup class="cite"><a href="#src-wmi">[7]</a></sup></p>
+  <pre><code>Get-CimInstance Win32_Processor | Format-List Name, AddressWidth, NumberOfCores, NumberOfLogicalProcessors, VirtualizationFirmwareEnabled
+$env:PROCESSOR_ARCHITECTURE</code></pre>
+  <p><code>AddressWidth</code> is 64 on a 64-bit OS. <code>PROCESSOR_ARCHITECTURE</code> says <code>AMD64</code> (x64, Intel or AMD alike) or <code>ARM64</code>. If Hyper-V is already running, <code>VirtualizationFirmwareEnabled</code> can show False even though it's on; Task Manager is the better check then.</p>
+  <details class="recall">
+    <summary>Before checking: if Logical processors is exactly twice Cores, what does that tell you? <span class="hint">(then click to check)</span></summary>
+    <p><strong>Multithreading</strong> (Hyper-Threading/SMT) is on: each core runs two threads. If the two numbers are equal, the CPU doesn't support it or it's turned off. (Some newer Intel chips mix core types, so the ratio isn't always exactly 2.)</p>
+  </details>
+
+  <h2>Practice</h2>
+  <p>Answer from memory before scrolling back up.</p>
+
+  <section class="quiz">
+    <p class="q">An older desktop has 8 GB of RAM installed, but Windows reports only about 3.5 GB usable. The memory tests fine. What's the most likely cause?</p>
+    <ul class="choices">
+      <li><button class="choice">One faulty RAM stick</button></li>
+      <li><button class="choice">Dual-channel mode turned off</button></li>
+      <li><button class="choice" data-correct>A 32-bit Windows install</button></li>
+      <li><button class="choice">Virtualization disabled in firmware</button></li>
+    </ul>
+    <div class="explain" hidden>A <strong>32-bit</strong> OS can address only 4 GB in total, and part of that space goes to devices, so you see around 3.x GB.<sup class="cite"><a href="#src-messer">[1]</a></sup> Installing 64-bit Windows (on a 64-bit CPU) unlocks all 8 GB.</div>
+  </section>
+
+  <section class="quiz">
+    <p class="q">Task Manager on a user's PC shows <strong>Cores: 8</strong> and <strong>Logical processors: 16</strong>. It has one CPU socket. What explains the 16?</p>
+    <ul class="choices">
+      <li><button class="choice" data-correct>Each core runs two threads</button></li>
+      <li><button class="choice">The PC has two CPUs</button></li>
+      <li><button class="choice">Virtualization doubles the core count</button></li>
+      <li><button class="choice">Windows counts cache as cores</button></li>
+    </ul>
+    <div class="explain" hidden><strong>Multithreading</strong> (Hyper-Threading/SMT) lets each physical core run two threads, so Windows sees 16 logical processors.<sup class="cite"><a href="#src-messer1101">[3]</a></sup> It's 8 real cores, and the speedup is well short of double.</div>
+  </section>
+
+  <section class="quiz">
+    <p class="q">On a 64-bit Windows 11 Pro laptop with a modern Intel CPU, Windows Sandbox won't start and says virtualization isn't available. What should you do first?</p>
+    <ul class="choices">
+      <li><button class="choice">Reinstall Windows as 64-bit</button></li>
+      <li><button class="choice">Add two more RAM sticks</button></li>
+      <li><button class="choice">Turn off multithreading entirely</button></li>
+      <li><button class="choice" data-correct>Enable VT-x in firmware</button></li>
+    </ul>
+    <div class="explain" hidden>The CPU supports it, but <strong>VT-x</strong> (AMD: <strong>AMD-V</strong>) is often off in the BIOS/UEFI. Turn it on and Task Manager's CPU page shows Virtualization: Enabled.<sup class="cite"><a href="#src-hyperv">[5]</a></sup> It's already 64-bit, and RAM or threads aren't the issue.</div>
+  </section>
+
+  <section class="quiz">
+    <p class="q">A team wants thin, fanless laptops with all-day battery life. Their apps are web-based. Which processor type fits best?</p>
+    <ul class="choices">
+      <li><button class="choice">A 32-bit x86 chip</button></li>
+      <li><button class="choice" data-correct>An ARM64 mobile processor</button></li>
+      <li><button class="choice">A multisocket server board</button></li>
+      <li><button class="choice">A single-core desktop CPU</button></li>
+    </ul>
+    <div class="explain" hidden><strong>ARM</strong> designs use less power and make less heat, which is why they dominate phones and tablets and suit thin laptops.<sup class="cite"><a href="#src-messer">[1]</a></sup><sup class="cite"><a href="#src-arm">[4]</a></sup> Check drivers and any desktop apps for ARM64 support first.</div>
+  </section>
+  <p class="quiz-score" data-quiz-score></p>
+
+  <details class="recall">
+    <summary>From memory: name the four CPU features from objective 3.5 and one fact about each. <span class="hint">(then click to check)</span></summary>
+    <p><strong>32/64-bit</strong>: x86 tops out at 4 GB; x64 runs Windows 11. <strong>ARM</strong>: low power, needs ARM64 software or emulation. <strong>Cores/multithreading</strong>: more cores = real parallel work; multithreading = two threads per core. <strong>Virtualization support</strong>: VT-x / AMD-V, switched on in the firmware.</p>
+  </details>
+
+  <h2>Review: earlier lessons</h2>
+  <p>Spaced retrieval: pull these from memory first, then check.</p>
+
+  <details class="recall">
+    <summary>A server farm needs its TLS keys in one hardened place, with encryption offloaded from the servers. TPM or HSM, and why? <span class="hint">(<a href="0060-hsm-and-tpm.html">lesson 0060</a>, 1 day ago)</span></summary>
+    <p><strong>HSM</strong>: centralized key storage and crypto offload for <strong>many</strong> systems. A TPM protects only the one device it's in.</p>
+  </details>
+
+  <details class="recall">
+    <summary>A PC must boot Windows from a 4 TB drive. Which firmware type and which partition style do you need? <span class="hint">(<a href="0058-the-bios-uefi.html">lesson 0058</a>, 3 days ago)</span></summary>
+    <p><strong>UEFI</strong> with a <strong>GPT</strong> disk. Legacy BIOS with MBR can't boot past about 2 TB.</p>
+  </details>
+
+  <details class="recall">
+    <summary>A new build powers up its fans but never shows anything on screen. Which motherboard power plug do you check first, and where is it? <span class="hint">(<a href="0054-motherboard-power-headers-tpm.html">lesson 0054</a>, 7 days ago)</span></summary>
+    <p>The <strong>4- or 8-pin CPU power</strong> plug (EPS12V), near the CPU socket, usually top-left. The 24-pin main plug alone isn't enough.</p>
+  </details>
+
+  <div class="callout source" id="src-messer">
+    <span class="label">Primary source: watch next</span>
+    <p>[1] Professor Messer, <a href="https://www.professormesser.com/free-a-plus-training/220-1201/220-1201-video/cpu-features-220-1201/">CPU Features (220-1201, 3.5)</a>: what the processor can handle and how much address space it can reference, x86/x64, ARM. Free. Back to the <a href="https://www.professormesser.com/free-a-plus-training/220-1201/220-1201-video/220-1201-training-course/">course index</a>.</p>
+    <p id="src-obj">[2] CompTIA, A+ Core 1 (220-1201) exam objectives, 3.5: CPU architecture (x64/x86, ARM, single-core, multicore, multithreading, virtualization support). Linked in the track's resources.</p>
+    <p id="src-messer1101">[3] Professor Messer, <a href="https://www.professormesser.com/free-a-plus-training/220-1101/220-1101-video/cpu-features-220-1101/">CPU Features (220-1101, 3.4)</a>: cores, multithreading, virtualization support (Intel VT, AMD-V).</p>
+    <p id="src-arm">[4] Microsoft Learn, <a href="https://learn.microsoft.com/en-us/windows/arm/overview">Windows on Arm</a>: ARM64 devices, emulation of x64 apps, ARM64 drivers.</p>
+    <p id="src-hyperv">[5] Microsoft Learn, <a href="https://learn.microsoft.com/en-us/virtualization/hyper-v-on-windows/reference/hyper-v-requirements">Windows Hyper-V system requirements</a>: 64-bit CPU with SLAT, VM Monitor Mode Extensions (VT-x on Intel), enabled in firmware; <code>systeminfo</code> lists Hyper-V requirements.</p>
+    <p id="src-intune">[6] Microsoft Learn, <a href="https://learn.microsoft.com/en-us/intune/intune-service/apps/apps-win32-add">Add and assign Win32 apps in Intune</a>: requirements include the operating system architecture.</p>
+    <p id="src-wmi">[7] Microsoft Learn, <a href="https://learn.microsoft.com/en-us/windows/win32/cimwin32prov/win32-processor">Win32_Processor class</a>: AddressWidth, NumberOfCores, NumberOfLogicalProcessors, VirtualizationFirmwareEnabled.</p>
+  </div>
+
+  <div class="callout ask">
+    <span class="label">Questions?</span>
+    <p>Anything unclear? Ask your teacher. Open Claude in the Teacher repo and ask, for example: <em>"In IT lesson 0061, what's the difference between Intel's performance and efficiency cores?"</em> Follow-up questions are part of the course.</p>
+  </div>
+</main>
+<nav class="page-footer">
+  <a href="0060-hsm-and-tpm.html">← One device or many: TPM and HSM</a>
+  <a href="../../index.html">Hub</a>
+  <span class="disabled">Next lesson: tomorrow →</span>
+</nav>
+</body>
+</html>
