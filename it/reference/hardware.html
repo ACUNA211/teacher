@@ -480,10 +480,25 @@
   </div>
   <p class="sidenote">Task Manager → Performance → CPU shows Cores, Logical processors and Virtualization. <code>Get-CimInstance Win32_Processor | Format-List Name, AddressWidth, NumberOfCores, NumberOfLogicalProcessors, VirtualizationFirmwareEnabled</code> and <code>$env:PROCESSOR_ARCHITECTURE</code> (AMD64 or ARM64). <code>systeminfo</code> lists Hyper-V requirements.</p>
 
+  <h2>Expansion cards (objective 3.5)</h2>
+  <div class="table-wrap">
+  <table>
+    <thead><tr><th>Card</th><th>Key facts</th></tr></thead>
+    <tbody>
+      <tr><td>Sound card</td><td>Better audio in/out than onboard: more channels, cleaner recording; onboard audio can be disabled in BIOS/UEFI</td></tr>
+      <tr><td>Video adapter (graphics card)</td><td>Discrete GPU with its own memory (integrated graphics borrow system RAM); top x16 slot; may need PSU PCIe power; plug the monitor into the card</td></tr>
+      <tr><td>Capture card</td><td>Brings video <em>in</em> (camera, console); high throughput, usually PCIe; USB versions exist</td></tr>
+      <tr><td>Network interface card (NIC)</td><td>Faster (2.5/10 Gb/s) or extra wired port (RJ45), or Wi‑Fi with antennas</td></tr>
+      <tr><td>Drivers</td><td>Read the docs (driver before or after the card?); latest driver from the maker's site; check Device Manager</td></tr>
+    </tbody>
+  </table>
+  </div>
+
   <h2>Commands (Windows)</h2>
   <div class="table-wrap">
   <table>
     <tbody>
+      <tr><td><code>Get-PnpDevice -PresentOnly -Class Display, Net, Media | Format-Table Class, Status, FriendlyName</code></td><td>PowerShell: graphics, network and audio devices; Status should be OK (Error/Unknown = driver problem). <code>pnputil /enum-devices /class Display</code> or <code>devmgmt.msc</code> show the same</td></tr>
       <tr><td><code>Get-CimInstance Win32_BIOS | Select-Object Manufacturer, SMBIOSBIOSVersion, ReleaseDate</code> · <code>Confirm-SecureBootUEFI</code> (admin)</td><td>PowerShell: firmware maker, version and date; Secure Boot True/False (error on legacy BIOS). <code>msinfo32</code> shows BIOS Version/Date, BIOS Mode (UEFI/Legacy) and Secure Boot State</td></tr>
       <tr><td><code>Get-CimInstance Win32_Processor | Format-Table Name, SocketDesignation, NumberOfCores</code></td><td>PowerShell: CPU model and the socket the firmware reports; <code>(Get-CimInstance Win32_ComputerSystem).NumberOfProcessors</code> counts physical CPUs (2+ = multisocket)</td></tr>
       <tr><td><code>Get-PnpDevice -PresentOnly -Class Display | Get-PnpDeviceProperty -KeyName DEVPKEY_PciDevice_CurrentLinkWidth, DEVPKEY_PciDevice_MaxLinkWidth</code></td><td>PowerShell: PCIe lanes the graphics card supports (Max) vs. is using now (Current); lower Current often means a slot wired with fewer lanes</td></tr>

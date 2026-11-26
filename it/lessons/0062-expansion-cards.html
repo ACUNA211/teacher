@@ -1,0 +1,163 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Expansion Cards</title>
+<meta name="description" content="IT lesson 0062: A+ objective 3.5, expansion cards. Sound cards, video adapters (integrated vs. discrete), capture cards, network interface cards, and the driver best practices for installing them.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=JetBrains+Mono&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../assets/course.css">
+<script src="../../assets/quiz.js" defer></script>
+</head>
+<body class="track-it">
+<nav class="page-header">
+  <a class="home" href="../../index.html">Teacher hub</a>
+  <span>IT and certs</span>
+  <a href="../reference/glossary.html">Glossary</a>
+  <a href="../reference/hardware.html">Hardware cheat sheet</a>
+</nav>
+<main>
+  <p class="kicker">IT and certs · Lesson 0062 · A+ Core 1, objective 3.5</p>
+  <h1>Adding a capability: expansion cards</h1>
+  <p class="lede">About 10 minutes. In <a href="0055-motherboard-expansion-slots-pcie.html">lesson 0055</a> you learned the PCIe slots. Today: what goes <em>in</em> them. The exam names four cards: <strong>sound</strong>, <strong>video</strong>, <strong>capture</strong> and <strong>network</strong>, plus one habit: <strong>get the driver right</strong>.<sup class="cite"><a href="#src-messer">[1]</a></sup> The win: given a user's request, name the card that solves it and install it in the right order.</p>
+
+  <div class="callout">
+    <span class="label">Why this matters at work</span>
+    <p>Most "my new card doesn't work" tickets are driver tickets. In a managed fleet, Intune's <strong>Windows driver update policies</strong> let an admin review, approve or pause driver updates from Windows Update, so only approved drivers install.<sup class="cite"><a href="#src-intune">[5]</a></sup> Knowing which device class a driver belongs to (display, network, audio) is how you read that list.</p>
+  </div>
+
+  <h2>The idea: the board does the basics, a card does more</h2>
+  <p>Almost every motherboard already has <strong>integrated</strong> (onboard) audio, graphics and a network port. You add a card when you need <strong>more</strong>: more quality, more speed, more ports, or something the board can't do at all.<sup class="cite"><a href="#src-messer">[1]</a></sup></p>
+
+  <div class="table-wrap">
+  <table>
+    <thead><tr><th>Card</th><th>What it adds</th><th>Remember</th></tr></thead>
+    <tbody>
+      <tr><td><strong>Sound card</strong></td><td>Better audio in and out: more channels, cleaner recording, pro inputs</td><td>Onboard audio is fine for most users; recording studios add a card (or a USB audio interface)</td></tr>
+      <tr><td><strong>Video adapter</strong> (graphics card)</td><td>A <strong>discrete GPU</strong> with its own memory, for gaming, video editing, 3D, many monitors</td><td>Goes in the top <strong>x16</strong> slot; big ones need PSU power plugs (<a href="0054-motherboard-power-headers-tpm.html">lesson 0054</a>)</td></tr>
+      <tr><td><strong>Capture card</strong></td><td>Brings video <strong>in</strong> from a camera, console or another PC</td><td>Very high throughput, so usually PCIe; external USB versions exist</td></tr>
+      <tr><td><strong>Network interface card</strong> (NIC)</td><td>A faster wired port (2.5 or 10 Gb/s), a second port, or Wi‑Fi</td><td>Wired = RJ45; wireless cards have antennas</td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <h3>Integrated vs. discrete graphics</h3>
+  <p><strong>Integrated</strong> graphics live inside the CPU (or chipset) and <strong>borrow system RAM</strong>. Fine for office work. A <strong>discrete</strong> graphics card has its own GPU and its own video memory. For high-end graphics, video editing or gaming, you want discrete.<sup class="cite"><a href="#src-messer">[1]</a></sup> The classic mistake: after installing the card, the monitor cable is still in the <strong>motherboard's</strong> video port, so the new card does nothing. Plug the monitor into the <strong>card</strong>.</p>
+  <p>Ports are a direction clue: a graphics card's HDMI ports are <strong>outputs</strong>. To record a console's HDMI signal you need a capture card's HDMI <strong>input</strong>.</p>
+
+  <h2>Drivers: read first, then install</h2>
+  <ol>
+    <li><strong>Read the card's documentation.</strong> Some hardware wants its driver installed <strong>before</strong> the card goes in; other cards want the card first, then the driver.<sup class="cite"><a href="#src-messer">[1]</a></sup></li>
+    <li><strong>Get the latest driver from the manufacturer's website</strong>, not the disc in the box (it's usually old) and never a random download site.<sup class="cite"><a href="#src-messer">[1]</a></sup></li>
+    <li><strong>Check Device Manager.</strong> A yellow warning icon or an "Unknown device" means Windows sees the card but has no working driver.</li>
+  </ol>
+  <p>Replacing onboard audio or networking with a card? You can <strong>disable the onboard device in the BIOS/UEFI</strong> (<a href="0059-bios-settings.html">lesson 0059</a>) so Windows doesn't use the wrong one.</p>
+
+  <div class="callout win">
+    <span class="label">Rule of thumb</span>
+    <p><strong>Sound = audio quality. Video = graphics out. Capture = video in. NIC = network.</strong> Onboard covers the basics; a card adds more. <strong>Docs first, driver from the maker's site, monitor into the card.</strong></p>
+  </div>
+
+  <h2>Try it (2 minutes)</h2>
+  <p>List the display, network and audio devices Windows knows about. In PowerShell:<sup class="cite"><a href="#src-pnp">[3]</a></sup></p>
+  <pre><code>Get-PnpDevice -PresentOnly -Class Display, Net, Media | Sort-Object Class | Format-Table Class, Status, FriendlyName</code></pre>
+  <p>Every line should show <code>Status</code> <strong>OK</strong>. <code>Error</code> or <code>Unknown</code> points to a driver problem. On a laptop you may see two display adapters: integrated <em>and</em> discrete. Same check without PowerShell: <code>pnputil /enum-devices /class Display</code>, or Device Manager (<code>devmgmt.msc</code>).<sup class="cite"><a href="#src-pnputil">[4]</a></sup></p>
+  <details class="recall">
+    <summary>Before checking: under the Net class you'll likely see more entries than you have network ports. Why? <span class="hint">(then click to check)</span></summary>
+    <p>The <strong>Net</strong> class holds every network adapter Windows uses, not just physical cards: Wi‑Fi, Bluetooth networking, VPN adapters and Hyper-V virtual switches all show up there. The physical NIC is usually the one named after a chip maker.</p>
+  </details>
+
+  <h2>Practice</h2>
+  <p>Answer from memory before scrolling back up.</p>
+
+  <section class="quiz">
+    <p class="q">A user edits 4K video on a desktop that uses the graphics built into its CPU. Playback in the editor stutters. Which upgrade helps most?</p>
+    <ul class="choices">
+      <li><button class="choice">Add a dedicated sound card</button></li>
+      <li><button class="choice">Add a second network card</button></li>
+      <li><button class="choice" data-correct>Add a discrete graphics card</button></li>
+      <li><button class="choice">Add a video capture card</button></li>
+    </ul>
+    <div class="explain" hidden>Integrated graphics share system RAM and are built for basics. For video editing, gaming and high-end graphics, a <strong>discrete</strong> graphics card with its own GPU and memory is the fix.<sup class="cite"><a href="#src-messer">[1]</a></sup> A capture card brings video <em>in</em>; it doesn't render anything.</div>
+  </section>
+
+  <section class="quiz">
+    <p class="q">A marketing team wants to record live footage from a camera's HDMI output on a desktop PC. Which card do they need?</p>
+    <ul class="choices">
+      <li><button class="choice" data-correct>A video capture card</button></li>
+      <li><button class="choice">A discrete graphics card</button></li>
+      <li><button class="choice">A wireless network card</button></li>
+      <li><button class="choice">A dedicated sound card</button></li>
+    </ul>
+    <div class="explain" hidden>A <strong>capture card</strong> takes video <em>in</em> from an external source. It needs high throughput, so it usually sits in a PCIe slot.<sup class="cite"><a href="#src-messer">[1]</a></sup> A graphics card's HDMI ports are outputs only.</div>
+  </section>
+
+  <section class="quiz">
+    <p class="q">A tech unboxes a new network card for a workstation. Before opening the case, what should they do first?</p>
+    <ul class="choices">
+      <li><button class="choice">Install the latest Windows update</button></li>
+      <li><button class="choice">Flash the newest beta firmware</button></li>
+      <li><button class="choice">Disable every onboard device first</button></li>
+      <li><button class="choice" data-correct>Check the card's installation documentation</button></li>
+    </ul>
+    <div class="explain" hidden>Some cards need the driver installed <strong>before</strong> the hardware, others after. The documentation says which; then get the latest driver from the manufacturer's site.<sup class="cite"><a href="#src-messer">[1]</a></sup></div>
+  </section>
+
+  <section class="quiz">
+    <p class="q">A user says the new graphics card you installed made no difference in their design app. Their monitor cable goes to the HDMI port near the USB ports on the back. What's the fix?</p>
+    <ul class="choices">
+      <li><button class="choice">Replace the HDMI cable with VGA</button></li>
+      <li><button class="choice" data-correct>Move the cable onto the card</button></li>
+      <li><button class="choice">Add a second sound card too</button></li>
+      <li><button class="choice">Turn on multithreading in firmware settings</button></li>
+    </ul>
+    <div class="explain" hidden>The ports grouped with the USB ports belong to the <strong>motherboard</strong> (integrated graphics). The discrete card's ports are lower down, on the slot cover. Plug the monitor into the <strong>card</strong> so it does the work.</div>
+  </section>
+  <p class="quiz-score" data-quiz-score></p>
+
+  <details class="recall">
+    <summary>From memory: name the four expansion cards from objective 3.5, what each adds, and the three driver steps. <span class="hint">(then click to check)</span></summary>
+    <p><strong>Sound</strong>: better audio. <strong>Video</strong>: discrete graphics out. <strong>Capture</strong>: video in. <strong>NIC</strong>: faster, extra or wireless network. Drivers: <strong>read the docs</strong> (before or after?), <strong>download the latest from the maker</strong>, <strong>check Device Manager</strong>.</p>
+  </details>
+
+  <h2>Review: earlier lessons</h2>
+  <p>Spaced retrieval: pull these from memory first, then check.</p>
+
+  <details class="recall">
+    <summary>A PC's spec sheet says "x86". What's the memory ceiling, and can it run Windows 11? <span class="hint">(<a href="0061-cpu-features.html">lesson 0061</a>, 1 day ago)</span></summary>
+    <p>x86 is <strong>32-bit</strong>: 2<sup>32</sup> addresses = <strong>4 GB</strong> total (about 3.x GB usable RAM). <strong>No</strong>: Windows 11 needs a 64-bit CPU (x64 or ARM64).</p>
+  </details>
+
+  <details class="recall">
+    <summary>Users at a kiosk keep booting from USB sticks. Which two firmware settings stop that, and which password stops them changing it back? <span class="hint">(<a href="0059-bios-settings.html">lesson 0059</a>, 3 days ago)</span></summary>
+    <p>Put the internal drive first in the <strong>boot order</strong> and turn off USB in the <strong>boot options</strong>. Then set a <strong>supervisor</strong> (admin) password so nobody can change the settings. A user password would stop the PC starting at all.</p>
+  </details>
+
+  <details class="recall">
+    <summary>Today's graphics card is an x16 card. Which slot does it go in, and what does "x16 (x4 mode)" in a manual mean? <span class="hint">(<a href="0055-motherboard-expansion-slots-pcie.html">lesson 0055</a>, 7 days ago)</span></summary>
+    <p>The <strong>top x16 slot</strong> (wired with all 16 lanes). "x16 (x4 mode)" means the slot is physically x16 but only wired with <strong>4 lanes</strong>: the card fits but runs slower.</p>
+  </details>
+
+  <div class="callout source" id="src-messer">
+    <span class="label">Primary source: watch next</span>
+    <p>[1] Professor Messer, <a href="https://www.professormesser.com/free-a-plus-training/220-1201/220-1201-video/expansion-cards-220-1201/">Expansion Cards (220-1201, 3.5)</a>: sound cards, video adapters, capture cards, network interface cards, and best practices for installing drivers. Free. Back to the <a href="https://www.professormesser.com/free-a-plus-training/220-1201/220-1201-video/220-1201-training-course/">course index</a>.</p>
+    <p id="src-obj">[2] CompTIA, A+ Core 1 (220-1201) exam objectives, 3.5: expansion cards. Linked in the track's resources.</p>
+    <p id="src-pnp">[3] Microsoft Learn, <a href="https://learn.microsoft.com/en-us/powershell/module/pnpdevice/get-pnpdevice">Get-PnpDevice</a>: lists Plug and Play devices; <code>-Class</code> takes several classes, <code>-PresentOnly</code> shows connected ones.</p>
+    <p id="src-pnputil">[4] Microsoft Learn, <a href="https://learn.microsoft.com/en-us/windows-hardware/drivers/devtest/pnputil-command-syntax">PnPUtil command syntax</a>: <code>/enum-devices /class</code> (Windows 10 1903 and later).</p>
+    <p id="src-intune">[5] Microsoft Learn, <a href="https://learn.microsoft.com/en-us/intune/device-updates/windows/driver-updates">Windows driver updates in Intune</a>: review, approve and pause driver updates; only approved drivers install.</p>
+  </div>
+
+  <div class="callout ask">
+    <span class="label">Questions?</span>
+    <p>Anything unclear? Ask your teacher. Open Claude in the Teacher repo and ask, for example: <em>"In IT lesson 0062, why do laptops with two graphics chips switch between them?"</em> Follow-up questions are part of the course.</p>
+  </div>
+</main>
+<nav class="page-footer">
+  <a href="0061-cpu-features.html">← What the processor can do: CPU features</a>
+  <a href="../../index.html">Hub</a>
+  <span class="disabled">Next lesson: tomorrow →</span>
+</nav>
+</body>
+</html>
