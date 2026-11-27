@@ -1,0 +1,163 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Cooling</title>
+<meta name="description" content="IT lesson 0063: A+ objective 3.5, cooling. The heat path from chip to room: thermal paste and pads, heat sinks (passive), fans (active), and liquid cooling, plus what overheating looks like in a ticket.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=JetBrains+Mono&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../assets/course.css">
+<script src="../../assets/quiz.js" defer></script>
+</head>
+<body class="track-it">
+<nav class="page-header">
+  <a class="home" href="../../index.html">Teacher hub</a>
+  <span>IT and certs</span>
+  <a href="../reference/glossary.html">Glossary</a>
+  <a href="../reference/hardware.html">Hardware cheat sheet</a>
+</nav>
+<main>
+  <p class="kicker">IT and certs · Lesson 0063 · A+ Core 1, objective 3.5</p>
+  <h1>Moving heat out: fans, heat sinks and liquid cooling</h1>
+  <p class="lede">About 10 minutes. Every part you've met this week (CPU, graphics card, chipset, M.2 drive) turns power into heat. Messer's Cooling video names the tools that move it out: <strong>fans</strong>, <strong>passive cooling</strong>, <strong>heat sinks</strong>, <strong>thermal paste</strong>, <strong>thermal pads</strong> and <strong>liquid cooling</strong>.<sup class="cite"><a href="#src-messer">[1]</a></sup> The win: follow the heat from the chip to the room, and pick the right fix for a hot, loud or slow machine.</p>
+
+  <div class="callout">
+    <span class="label">Why this matters at work</span>
+    <p>"My laptop gets slow in the afternoon" and "the fan is really loud" are often heat tickets, not software tickets. A CPU that runs too hot slows itself down (<strong>thermal throttling</strong>) to protect itself, so the user sees a slow PC, not an error. Before reimaging, ask where the laptop sits and look at the vents.</p>
+  </div>
+
+  <h2>The idea: one path for the heat</h2>
+  <p>Heat has to travel from the chip to the room. Each cooling part handles one step:</p>
+  <p class="sidenote">chip → <strong>thermal paste / pad</strong> → <strong>heat sink</strong> (fins) → air → <strong>fans</strong> → out of the case</p>
+
+  <div class="table-wrap">
+  <table>
+    <thead><tr><th>Part</th><th>What it does</th><th>Remember</th></tr></thead>
+    <tbody>
+      <tr><td><strong>Thermal paste</strong></td><td>Fills the microscopic gaps between the chip and the heat sink, so heat crosses instead of hitting trapped air<sup class="cite"><a href="#src-wiki">[4]</a></sup></td><td>A thin layer, not a blob. Clean off the old paste and apply fresh when you remove a cooler</td></tr>
+      <tr><td><strong>Thermal pad</strong></td><td>A ready-cut pad that does the same job as paste</td><td>Easy and <strong>won't leak</strong> onto other parts; a bit less effective than paste; <strong>single use</strong>: replace it whenever the heat sink comes off<sup class="cite"><a href="#src-messer">[1]</a></sup></td></tr>
+      <tr><td><strong>Heat sink</strong></td><td>Metal with many <strong>fins</strong>: a large surface that hands heat to the air</td><td>On its own it's <strong>passive cooling</strong>: <strong>no moving parts</strong>, silent; good for quiet devices like set-top boxes<sup class="cite"><a href="#src-messer">[1]</a></sup><sup class="cite"><a href="#src-quiz">[2]</a></sup></td></tr>
+      <tr><td><strong>Fans</strong></td><td>Push air through the heat sink and through the case (<strong>active cooling</strong>)</td><td>Case fans come in standard sizes such as <strong>80, 120 and 200 mm</strong>; graphics cards carry their own fans<sup class="cite"><a href="#src-messer">[1]</a></sup></td></tr>
+      <tr><td><strong>Liquid cooling</strong></td><td>A pump moves coolant from a block on the CPU (or GPU) to a <strong>radiator</strong>, where fans cool it, and back again<sup class="cite"><a href="#src-wiki">[4]</a></sup></td><td>For when fans get too loud or can't keep up; usually a sealed <strong>closed loop</strong> ("all-in-one")<sup class="cite"><a href="#src-messer">[1]</a></sup></td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <h3>Who controls the fans?</h3>
+  <p>The motherboard. It has <strong>temperature sensors</strong> and a <strong>built-in fan controller</strong>, and you set its behavior in the BIOS/UEFI: maximum cooling, minimum noise, or full speed all the time.<sup class="cite"><a href="#src-bios">[3]</a></sup> That's why the fan headers you met in <a href="0054-motherboard-power-headers-tpm.html">lesson 0054</a> come in a <strong>4-pin (PWM)</strong> version: the fourth pin lets the board set the speed.</p>
+  <p>Case fans work as a team: the usual layout pulls cool air <strong>in at the front</strong> and pushes hot air <strong>out at the back</strong> (and top, since heat rises).<sup class="cite"><a href="#src-wiki">[4]</a></sup></p>
+
+  <h3>When cooling fails</h3>
+  <p>Messer's hardware troubleshooting video gives the checks: make sure fans are <strong>clean and not blocked</strong>, and that heat sinks have <strong>proper thermal paste</strong>. A <strong>rattle</strong> inside the case is often a loose heat sink.<sup class="cite"><a href="#src-trouble">[5]</a></sup> Dust is the everyday villain: it clogs the fins, so the fans spin harder and louder while moving less heat.</p>
+
+  <div class="callout win">
+    <span class="label">Rule of thumb</span>
+    <p><strong>Paste or pad fills the gap. Heat sink spreads it. Fans carry it away. Liquid when air isn't enough.</strong> Passive = no moving parts. A pad comes off, a new pad goes on.</p>
+  </div>
+
+  <h2>Try it (2 minutes)</h2>
+  <ol>
+    <li>On a Windows PC with a <strong>dedicated graphics card</strong>, open Task Manager (<kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>Esc</kbd>) → <strong>Performance</strong> → <strong>GPU</strong>. Look for <strong>GPU Temperature</strong> (in °C). It only appears for dedicated GPUs, and an old graphics driver can hide it.<sup class="cite"><a href="#src-taskmgr">[6]</a></sup></li>
+    <li>Play a video or a demanding app for a minute and watch the number climb, then fall when you stop. That curve is the cooling system at work.</li>
+    <li>On a desktop, hold a hand behind the case: warm air coming <strong>out</strong> the back means the exhaust fan is doing its job.</li>
+  </ol>
+  <details class="recall">
+    <summary>Before checking: a laptop with only integrated graphics shows no GPU Temperature line. Is its cooling broken? <span class="hint">(then click to check)</span></summary>
+    <p><strong>No.</strong> Task Manager only shows that reading for a <strong>dedicated</strong> GPU.<sup class="cite"><a href="#src-taskmgr">[6]</a></sup> Integrated graphics live inside the CPU (<a href="0062-expansion-cards.html">lesson 0062</a>), so they share the CPU's heat sink and fan. A missing line is a reporting limit, not a fault.</p>
+  </details>
+
+  <h2>Practice</h2>
+  <p>Answer from memory before scrolling back up.</p>
+
+  <section class="quiz">
+    <p class="q">A small PC will play videos in a quiet boardroom, and any fan noise is a problem. Which cooling fits best?</p>
+    <ul class="choices">
+      <li><button class="choice" data-correct>A passive heat sink, no fans</button></li>
+      <li><button class="choice">Larger case fans at full speed</button></li>
+      <li><button class="choice">Liquid cooling with radiator fans</button></li>
+      <li><button class="choice">Extra thermal paste applied thickly</button></li>
+    </ul>
+    <div class="explain" hidden>A heat sink on its own is <strong>passive cooling</strong>: no moving parts, so no noise. That's why quiet devices like set-top boxes use it.<sup class="cite"><a href="#src-messer">[1]</a></sup> Liquid cooling still has a pump and radiator fans, and thick paste insulates instead of helping.</div>
+  </section>
+
+  <section class="quiz">
+    <p class="q">A user's laptop gets slow after twenty minutes of video calls. The fan roars, the bottom is hot, and the laptop sits on a blanket. What's the likely cause?</p>
+    <ul class="choices">
+      <li><button class="choice">A failing memory module throwing errors</button></li>
+      <li><button class="choice" data-correct>Blocked vents causing the CPU to throttle</button></li>
+      <li><button class="choice">An outdated display driver after updates</button></li>
+      <li><button class="choice">A weak Wi‑Fi signal dropping packets</button></li>
+    </ul>
+    <div class="explain" hidden>A blanket blocks the intake vents. Heat builds, the fan speeds up, and the CPU slows itself down to stay safe: <strong>thermal throttling</strong>. Keep fans and vents <strong>clean and unobstructed</strong>.<sup class="cite"><a href="#src-trouble">[5]</a></sup> A hard surface or a stand is the first fix.</div>
+  </section>
+
+  <section class="quiz">
+    <p class="q">A tech removes a CPU heat sink to reseat it. The heat sink used a thermal pad. What should they do before refitting it?</p>
+    <ul class="choices">
+      <li><button class="choice">Reuse the same pad, it still works</button></li>
+      <li><button class="choice">Leave the gap empty, metal touches metal</button></li>
+      <li><button class="choice" data-correct>Fit a new pad or fresh paste</button></li>
+      <li><button class="choice">Add a second fan on the heat sink</button></li>
+    </ul>
+    <div class="explain" hidden>Thermal pads are <strong>single use</strong>: once the heat sink comes off, the pad must be replaced.<sup class="cite"><a href="#src-messer">[1]</a></sup> Bare metal on metal leaves microscopic air gaps, and air is a poor conductor of heat.</div>
+  </section>
+
+  <section class="quiz">
+    <p class="q">A video-editing workstation runs its air cooler's fans at full speed all day. It's loud and still runs hot under load. Which upgrade addresses both problems?</p>
+    <ul class="choices">
+      <li><button class="choice">Remove the side panel for airflow</button></li>
+      <li><button class="choice">Disable fan control in the firmware</button></li>
+      <li><button class="choice">Swap the thermal paste for pads</button></li>
+      <li><button class="choice" data-correct>Install a closed-loop liquid cooler</button></li>
+    </ul>
+    <div class="explain" hidden>When fans get loud or can't keep up, <strong>liquid cooling</strong> is the next step: the coolant carries heat to a large radiator, so its fans can spin slower.<sup class="cite"><a href="#src-messer">[1]</a></sup> Pads perform a little <em>worse</em> than paste, and an open side panel breaks the planned front-to-back airflow.</div>
+  </section>
+  <p class="quiz-score" data-quiz-score></p>
+
+  <details class="recall">
+    <summary>From memory: trace the heat path from chip to room, naming the part at each step, and say which part is "passive". <span class="hint">(then click to check)</span></summary>
+    <p>Chip → <strong>thermal paste or pad</strong> (fills the gaps) → <strong>heat sink</strong> fins → air → <strong>fans</strong> push it out of the case. Or with <strong>liquid cooling</strong>: block → pump → radiator → fans. A heat sink with no fan is <strong>passive</strong> (no moving parts).</p>
+  </details>
+
+  <h2>Review: earlier lessons</h2>
+  <p>Spaced retrieval: pull these from memory first, then check.</p>
+
+  <details class="recall">
+    <summary>A user installs a capture card and a new graphics card. Which one brings video <em>in</em>, and where does the monitor cable go? <span class="hint">(<a href="0062-expansion-cards.html">lesson 0062</a>, 1 day ago)</span></summary>
+    <p>The <strong>capture card</strong> brings video in (camera, console). The monitor goes into the <strong>graphics card's</strong> ports, not the motherboard's, or the new card does nothing.</p>
+  </details>
+
+  <details class="recall">
+    <summary>A company needs one secure place for a certificate authority's signing key, used by many servers. TPM or HSM, and why? <span class="hint">(<a href="0060-hsm-and-tpm.html">lesson 0060</a>, 3 days ago)</span></summary>
+    <p><strong>HSM</strong>: a dedicated, hardened device that stores and uses keys centrally for many systems. A TPM protects keys for <strong>one</strong> device (BitLocker, Windows Hello).</p>
+  </details>
+
+  <details class="recall">
+    <summary>A spare AMD AM4 processor is lying around. Can it go in a new AM5 board? And which socket style has the pins in the socket? <span class="hint">(<a href="0056-motherboard-cpu-compatibility.html">lesson 0056</a>, 7 days ago)</span></summary>
+    <p><strong>No</strong>: each socket generation only takes its own CPUs, so AM4 won't fit AM5. <strong>LGA</strong> (land grid array) has the pins in the socket and flat pads on the CPU. (CPU coolers mount to the socket too, so check the cooler supports it.)</p>
+  </details>
+
+  <div class="callout source" id="src-messer">
+    <span class="label">Primary source: watch next</span>
+    <p>[1] Professor Messer, <a href="https://www.professormesser.com/free-a-plus-training/220-1201/220-1201-video/cooling-220-1201/">Cooling (220-1201, 3.5)</a>: fans, passive cooling, heat sinks, thermal paste, thermal pads and liquid cooling. Free. Back to the <a href="https://www.professormesser.com/free-a-plus-training/220-1201/220-1201-video/220-1201-training-course/">course index</a>.</p>
+    <p id="src-quiz">[2] Professor Messer, <a href="https://www.professormesser.com/free-a-plus-training/220-1201/220-1201-pop-quizzes/and-it-stays-fresh/">220-1201 pop quiz: "And it stays fresh"</a>: a heat sink is passive cooling with no moving parts.</p>
+    <p id="src-bios">[3] Professor Messer, <a href="https://www.professormesser.com/free-a-plus-training/220-1201/220-1201-video/bios-settings-220-1201/">BIOS Settings (220-1201, 3.5)</a>: temperature sensors, integrated fan controllers, and fan modes set in the BIOS.</p>
+    <p id="src-wiki">[4] Wikipedia, <a href="https://en.wikipedia.org/wiki/Computer_cooling">Computer cooling</a>: thermal compound, heat sinks, active vs. passive cooling, case airflow, and liquid cooling loops (block, pump, radiator).</p>
+    <p id="src-trouble">[5] Professor Messer, <a href="https://www.professormesser.com/free-a-plus-training/220-1201/220-1201-video/troubleshooting-hardware-220-1201/">Troubleshooting Hardware (220-1201, 5.1)</a>: clean, unobstructed fans; proper thermal paste; a rattle is often a loose heat sink.</p>
+    <p id="src-taskmgr">[6] Windows Insider Blog, <a href="https://blogs.windows.com/windows-insider/2019/08/16/announcing-windows-10-insider-preview-build-18963/">Announcing Windows 10 Insider Preview Build 18963</a>: GPU temperature in Task Manager, dedicated GPUs only, may need an updated driver, Celsius.</p>
+  </div>
+
+  <div class="callout ask">
+    <span class="label">Questions?</span>
+    <p>Anything unclear? Ask your teacher. Open Claude in the Teacher repo and ask, for example: <em>"In IT lesson 0063, how do I safely clean the dust out of a laptop fan?"</em> Follow-up questions are part of the course.</p>
+  </div>
+</main>
+<nav class="page-footer">
+  <a href="0062-expansion-cards.html">← Adding a capability: expansion cards</a>
+  <a href="../../index.html">Hub</a>
+  <span class="disabled">Next lesson: tomorrow →</span>
+</nav>
+</body>
+</html>
