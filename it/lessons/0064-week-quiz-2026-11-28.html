@@ -1,0 +1,255 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Weekly Quiz: Nov 22 – Nov 27</title>
+<meta name="description" content="IT lesson 0064: Saturday in-depth quiz on week nine (the BIOS and UEFI, BIOS settings, TPM and HSM, CPU features, expansion cards, cooling) mixed with the very first networking lessons, plus an A+ Core 1 pace check.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=JetBrains+Mono&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../assets/course.css">
+<script src="../../assets/quiz.js" defer></script>
+</head>
+<body class="track-it">
+<nav class="page-header">
+  <a class="home" href="../../index.html">Teacher hub</a>
+  <span>IT and certs</span>
+  <a href="../reference/glossary.html">Glossary</a>
+  <a href="../reference/network-settings.html">Cheat sheet</a>
+  <a href="../reference/hardware.html">Hardware cheat sheet</a>
+</nav>
+<main>
+  <p class="kicker">IT and certs · Lesson 0064 · Saturday quiz · A+ Core 1, objective 3.5 and 2.x review</p>
+  <h1>Weekly quiz: Nov 22 – Nov 27</h1>
+  <p class="lede">About 20 minutes. Fifteen questions: nine on this week's firmware and hardware (the BIOS and UEFI, BIOS settings, TPM and HSM, CPU features, expansion cards, cooling) and six pulled back from the very first networking lessons, seven to nine weeks ago (the four IP settings, TCP and UDP, SMB and LDAP ports, Bluetooth, DNS records, DHCP leases). They're shuffled on purpose. Most are tickets: work out what's going on before you work out what it's called.</p>
+
+  <div class="callout">
+    <span class="label">How to take it</span>
+    <p>No scrolling back to the lessons until you've answered. A wrong answer followed by the explanation sticks better than a right answer you looked up. Each explanation links to the lesson that taught it, so you know exactly what to reread.</p>
+  </div>
+
+  <p class="quiz-score" data-quiz-score></p>
+
+  <section class="quiz">
+    <p class="q">A technician changes a BitLocker laptop's boot order to run a USB diagnostic tool, then sets the order back. On the next normal start, the laptop shows the <strong>BitLocker recovery screen</strong>. What should the technician have done first?</p>
+    <ul class="choices">
+      <li><button class="choice">Clear the TPM before rebooting</button></li>
+      <li><button class="choice">Turn Secure Boot off first</button></li>
+      <li><button class="choice" data-correct>Suspend BitLocker before the change</button></li>
+      <li><button class="choice">Set a firmware user password</button></li>
+    </ul>
+    <div class="explain" hidden>BitLocker's key is <strong>sealed</strong> to the TPM's boot measurements. Boot-order and other firmware changes alter those measurements, so the TPM holds the key back and BitLocker asks for the recovery key. <strong>Suspending</strong> BitLocker first lets the change through; it resumes after the restart. Clearing the TPM would destroy the key, and touching Secure Boot is one more change that triggers recovery. See <a href="0060-hsm-and-tpm.html">lesson 0060</a> and <a href="0059-bios-settings.html">lesson 0059</a>.</div>
+  </section>
+
+  <section class="quiz">
+    <p class="q">A user says "the internet is down." Their PC can print to the printer on the same subnet, but can't reach a known public server even by IP address. <code>ipconfig /all</code> shows <strong>DHCP Enabled: No</strong>, address 192.168.1.57, mask 255.255.255.0, and a <strong>blank default gateway</strong>. What's the most likely cause?</p>
+    <ul class="choices">
+      <li><button class="choice">DHCP server failed, so APIPA assigned</button></li>
+      <li><button class="choice" data-correct>Static settings are missing the gateway</button></li>
+      <li><button class="choice">The DNS server is not responding</button></li>
+      <li><button class="choice">The subnet mask blocks the printer</button></li>
+    </ul>
+    <div class="explain" hidden>Someone typed the settings in by hand (<strong>DHCP Enabled: No</strong>) and left out the <strong>default gateway</strong>, the "where do I send everything that isn't local?" setting. Local things work, the internet doesn't. It isn't APIPA (that would be 169.254.x.x), DNS can't be the problem when even a raw IP fails, and the printer works. Fix: switch the adapter back to DHCP, or add the gateway. See <a href="0001-four-ip-settings.html">lesson 0001</a>, 63 days ago.</div>
+  </section>
+
+  <section class="quiz">
+    <p class="q">A team's new thin laptops run Windows 11 well, but the label-printer driver that works on the old Intel laptops refuses to install: "not compatible with this platform." <code>$env:PROCESSOR_ARCHITECTURE</code> returns <strong>ARM64</strong>. What's the most likely cause?</p>
+    <ul class="choices">
+      <li><button class="choice">The laptop needs 32-bit Windows installed</button></li>
+      <li><button class="choice">Virtualization is disabled in the firmware</button></li>
+      <li><button class="choice">Multithreading is off in the firmware</button></li>
+      <li><button class="choice" data-correct>The driver supports only x64 PCs</button></li>
+    </ul>
+    <div class="explain" hidden><strong>ARM</strong> is a different instruction set, not a slower x86. Windows 11 on ARM can <em>emulate</em> most x64 apps, but <strong>drivers must be built for ARM64</strong>. Ask the maker for an ARM64 driver (or keep that job on an x64 PC). 32-bit Windows doesn't exist for ARM laptops, and virtualization and multithreading have nothing to do with driver installs. See <a href="0061-cpu-features.html">lesson 0061</a>.</div>
+  </section>
+
+  <section class="quiz">
+    <p class="q">To check a DNS server, a technician runs <code>Test-NetConnection</code> against it on <strong>port 53</strong> and gets <strong>TcpTestSucceeded: True</strong>. Clients' name lookups still time out. Why doesn't that test settle the question?</p>
+    <ul class="choices">
+      <li><button class="choice" data-correct>Everyday lookups use UDP, not TCP</button></li>
+      <li><button class="choice">DNS actually listens on TCP 443</button></li>
+      <li><button class="choice">Ping must succeed before ports work</button></li>
+      <li><button class="choice">Ephemeral ports cannot reach port 53</button></li>
+    </ul>
+    <div class="explain" hidden>DNS uses port 53 on <strong>both</strong> TCP and UDP, and ordinary lookups are quick <strong>UDP</strong> questions. <code>Test-NetConnection</code> only tests <strong>TCP</strong> (there's no UDP "connection" to test), so a TCP success doesn't prove UDP 53 gets through a firewall. Clients always use ephemeral ports to reach a server's well-known port, and a port test doesn't need ping. See <a href="0002-tcp-udp-ports.html">lesson 0002</a>, 62 days ago.</div>
+  </section>
+
+  <section class="quiz">
+    <p class="q">Last weekend a user cleaned the dust off their desktop's CPU heat sink, wiped the base clean and refitted it. Since then the PC <strong>shuts itself off</strong> after about ten minutes of gaming. The fans spin normally. What's the most likely cause?</p>
+    <ul class="choices">
+      <li><button class="choice">Case fans are spinning backwards</button></li>
+      <li><button class="choice">Secure Boot blocks game drivers</button></li>
+      <li><button class="choice" data-correct>No fresh thermal paste applied</button></li>
+      <li><button class="choice">Graphics card in x4 slot</button></li>
+    </ul>
+    <div class="explain" hidden>Wiping the base removed the <strong>thermal paste</strong>. Without it, microscopic air gaps sit between chip and heat sink, air carries heat badly, and the CPU overheats until it protects itself by shutting down. Clean both surfaces and apply a thin fresh layer (or a new pad). Backwards fans would leave the PC hot even at idle, Secure Boot only acts at startup, and an x4 slot means slower graphics, not shutdowns. See <a href="0063-cooling.html">lesson 0063</a>.</div>
+  </section>
+
+  <section class="quiz">
+    <p class="q">A security review finds that an internal HR app checks usernames against the directory with traffic anyone on the network could read. The vendor supports an encrypted connection from the first byte. Which port should the firewall allow?</p>
+    <ul class="choices">
+      <li><button class="choice" data-correct>TCP 636 for LDAPS</button></li>
+      <li><button class="choice">TCP 389 for LDAP</button></li>
+      <li><button class="choice">TCP 445 for SMB</button></li>
+      <li><button class="choice">TCP 139 for NetBIOS</button></li>
+    </ul>
+    <div class="explain" hidden>Directory lookups are <strong>LDAP</strong>, which on 389 is unencrypted by default. <strong>LDAPS</strong> wraps the same protocol in TLS on <strong>636</strong>, encrypted from the first byte: the same pattern as HTTP 80 vs. HTTPS 443. 445 is SMB file sharing and 139 is the legacy NetBIOS session path. See <a href="0005-file-sharing-directory-ports.html">lesson 0005</a>, 59 days ago.</div>
+  </section>
+
+  <section class="quiz">
+    <p class="q">A school wants its exam-room PCs so locked down that <strong>nobody can even start them</strong> until a staff member types a password at power-on, before Windows loads. Which password do you set?</p>
+    <ul class="choices">
+      <li><button class="choice">A supervisor (admin) firmware password</button></li>
+      <li><button class="choice">A BitLocker recovery key password</button></li>
+      <li><button class="choice">A Windows local administrator password</button></li>
+      <li><button class="choice" data-correct>A user (system) firmware password</button></li>
+    </ul>
+    <div class="explain" hidden>The <strong>user/system</strong> password is asked for at power-on: no password, no boot. The <strong>supervisor/admin</strong> password only guards the setup screen and lets the PC start freely (right for a kiosk, wrong here). A BitLocker recovery key isn't a password you set, and a Windows password comes after the firmware has already booted. Many schools set both. See <a href="0059-bios-settings.html">lesson 0059</a>.</div>
+  </section>
+
+  <section class="quiz">
+    <p class="q">An older office PC fails the Windows 11 upgrade check on Secure Boot. <code>msinfo32</code> shows <strong>BIOS Mode: Legacy</strong>, and the board's manual says it supports UEFI. The system disk is <strong>MBR</strong>. What change does the planned fix need?</p>
+    <ul class="choices">
+      <li><button class="choice" data-correct>Convert disk to GPT, disable CSM</button></li>
+      <li><button class="choice">Flash BIOS, keep disk as MBR</button></li>
+      <li><button class="choice">Enable fTPM, keep legacy boot mode</button></li>
+      <li><button class="choice">Clear CMOS, reset to legacy defaults</button></li>
+    </ul>
+    <div class="explain" hidden><strong>Secure Boot is a UEFI feature</strong>, and it can't be on while the board pretends to be an old BIOS (legacy/CSM mode). UEFI boots Windows from <strong>GPT</strong> disks, so the disk must be converted and CSM turned off; then Secure Boot can be enabled. A BIOS update alone leaves it in legacy mode, fTPM solves a different requirement, and a CMOS clear just resets settings. Plan it as a job, not a quick toggle. See <a href="0058-the-bios-uefi.html">lesson 0058</a>.</div>
+  </section>
+
+  <section class="quiz">
+    <p class="q">A user's Bluetooth headset works with their phone, but it won't show up on their new laptop, sitting right next to it. <code>Get-PnpDevice -Class Bluetooth</code> shows the laptop's radio as <strong>OK</strong>. What's the best next step?</p>
+    <ul class="choices">
+      <li><button class="choice">Turn on the laptop's NFC radio</button></li>
+      <li><button class="choice" data-correct>Put the headset into pairing mode</button></li>
+      <li><button class="choice">Hold the headset four centimeters away</button></li>
+      <li><button class="choice">Update the laptop's Bluetooth driver now</button></li>
+    </ul>
+    <div class="explain" hidden>Bluetooth devices must be <strong>paired</strong> once, and a headset already connected to a phone usually won't advertise itself until it's put in <strong>pairing mode</strong> (disconnect it from the phone if needed). The radio shows OK, so the driver is fine, and NFC is a tap-range technology, not a headset link. Bluetooth uses 2.4 GHz and reaches about 10 m; four centimeters is NFC's range. See <a href="0009-bluetooth-nfc-rfid-fixed-wireless.html">lesson 0009</a>, 55 days ago.</div>
+  </section>
+
+  <section class="quiz">
+    <p class="q">A streamer plugs their game console's HDMI output into one of the HDMI ports on their PC's <strong>new graphics card</strong>, hoping to record gameplay. Nothing appears anywhere. What's the problem?</p>
+    <ul class="choices">
+      <li><button class="choice">The console needs a DisplayPort cable</button></li>
+      <li><button class="choice">The graphics slot is wired x4</button></li>
+      <li><button class="choice" data-correct>Graphics card HDMI ports are outputs</button></li>
+      <li><button class="choice">Integrated graphics must be disabled first</button></li>
+    </ul>
+    <div class="explain" hidden>Ports are a direction clue. A graphics card's HDMI ports send video <strong>out</strong> to monitors; they can't take a signal in. Bringing video <strong>in</strong> from a console or camera is a <strong>capture card's</strong> job (usually PCIe, for the high throughput). Cable type, lanes and integrated graphics don't change which way a port faces. See <a href="0062-expansion-cards.html">lesson 0062</a>.</div>
+  </section>
+
+  <section class="quiz">
+    <p class="q">A laptop protected by BitLocker with a <strong>TPM + PIN</strong> is stolen. The thief starts it and keeps guessing PINs at the startup prompt. What stops them from simply trying every PIN?</p>
+    <ul class="choices">
+      <li><button class="choice" data-correct>The TPM locks out further guesses</button></li>
+      <li><button class="choice">The HSM erases the laptop's keys</button></li>
+      <li><button class="choice">Secure Boot wipes the drive contents</button></li>
+      <li><button class="choice">The firmware resets the user password</button></li>
+    </ul>
+    <div class="explain" hidden>The TPM has <strong>anti-hammering</strong> protection: after too many wrong guesses it locks out for a while, so brute-forcing the PIN would take impossibly long. And the key never leaves the TPM. An HSM is a central device for many servers, not something inside a laptop, and Secure Boot only checks boot software signatures. See <a href="0060-hsm-and-tpm.html">lesson 0060</a>.</div>
+  </section>
+
+  <section class="quiz">
+    <p class="q">An hour ago an admin pointed <code>www.example.com</code>'s A record at a new web server. Some users now reach the new server, others still reach the old one. The record's TTL was <strong>86400</strong>. What's the most likely explanation?</p>
+    <ul class="choices">
+      <li><button class="choice">The MX record still points there</button></li>
+      <li><button class="choice">The AAAA record overrides the A</button></li>
+      <li><button class="choice">DHCP handed users the old address</button></li>
+      <li><button class="choice" data-correct>Old answers are still cached elsewhere</button></li>
+    </ul>
+    <div class="explain" hidden>The <strong>TTL</strong> (86400 seconds = one day) says how long clients and other DNS servers may <strong>cache</strong> the answer. Anyone who looked the name up before the change can keep using the old address for up to a day. Next time, lower the TTL a day ahead of a planned move. MX is for mail, an AAAA record holds IPv6 rather than overriding IPv4, and DHCP hands out client settings, not web-server addresses. See <a href="0012-dns-records.html">lesson 0012</a>, 52 days ago.</div>
+  </section>
+
+  <section class="quiz">
+    <p class="q">An office desktop's fans roar at full speed all day, even when it's idle. The fans and vents are clean, and the hardware monitor shows <strong>low temperatures</strong>. What's the most likely cause?</p>
+    <ul class="choices">
+      <li><button class="choice">Thermal paste dried and cracked</button></li>
+      <li><button class="choice" data-correct>Firmware fan profile set high</button></li>
+      <li><button class="choice">Heat sink is mounted loosely</button></li>
+      <li><button class="choice">Multithreading forces fans to maximum</button></li>
+    </ul>
+    <div class="explain" hidden>The board's <strong>fan controller</strong> follows the mode set in the BIOS/UEFI: maximum cooling, minimum noise, or full speed all the time. Cool temperatures plus loud fans point at the setting, not a cooling fault. Switch to a quieter profile. Dried paste or a loose heat sink would show <em>high</em> temperatures, and CPU threads don't control fans. See <a href="0063-cooling.html">lesson 0063</a> and <a href="0059-bios-settings.html">lesson 0059</a>.</div>
+  </section>
+
+  <section class="quiz">
+    <p class="q">A busy lobby's guest Wi-Fi has a pool of 100 addresses and an <strong>8-day lease</strong>. By mid-afternoon, new visitors' phones get <strong>169.254.x.x</strong> addresses, though most of the morning's visitors left hours ago. What's the best fix?</p>
+    <ul class="choices">
+      <li><button class="choice">Add reservations for every guest phone</button></li>
+      <li><button class="choice">Add exclusions for the busy range</button></li>
+      <li><button class="choice" data-correct>Shorten the lease to an hour</button></li>
+      <li><button class="choice">Change the gateway option on scope</button></li>
+    </ul>
+    <div class="explain" hidden>The pool is <strong>exhausted</strong>: phones that left still hold their addresses until their 8-day leases run out, so new phones get no answer and fall back to APIPA. A <strong>short lease</strong> (an hour or two) recycles addresses quickly, which is exactly what guest Wi-Fi needs. Reservations and exclusions both take addresses <em>out</em> of the pool, and the gateway option doesn't affect who gets an address. See <a href="0014-dhcp-scopes-leases.html">lesson 0014</a>, 50 days ago.</div>
+  </section>
+
+  <section class="quiz">
+    <p class="q">A user added a second RAM stick to their desktop. Now it powers on, the fans spin, and it <strong>beeps a pattern</strong> but never shows the logo. What's the best next step?</p>
+    <ul class="choices">
+      <li><button class="choice">Reinstall Windows from USB media</button></li>
+      <li><button class="choice">Turn Secure Boot off temporarily</button></li>
+      <li><button class="choice">Change the boot order first</button></li>
+      <li><button class="choice" data-correct>Reseat the newly added RAM</button></li>
+    </ul>
+    <div class="explain" hidden>Beeps with no logo mean <strong>POST</strong> found a hardware problem before anything else got a turn, and the only change was the RAM. Reseat it (or remove it and check it matches the board's type). Windows, Secure Boot and the boot order all come <em>after</em> POST, so none of them can be the cause. The board manual decodes the beep pattern. See <a href="0058-the-bios-uefi.html">lesson 0058</a>.</div>
+  </section>
+
+  <p class="quiz-score" data-quiz-score></p>
+
+  <h2>Explain it in your own words</h2>
+  <p>Say or write the answer before you open each one. If you can explain it to a coworker, you know it.</p>
+
+  <details class="recall">
+    <summary>A coworker asks why updating the BIOS on a laptop made it ask for a BitLocker recovery key, when "nothing about the drive changed." Explain it, and how to avoid it next time. <span class="hint">(<a href="0060-hsm-and-tpm.html">lesson 0060</a>)</span></summary>
+    <p>At each start, the boot code is <strong>measured</strong> into the TPM, and BitLocker's key is <strong>sealed</strong> to those measurements. New firmware means new measurements, so the TPM won't release the key and BitLocker falls back to the recovery key. That's the protection working: a changed boot could be an attacker. Next time, <strong>suspend BitLocker</strong> before the update; it resumes after the restart.</p>
+  </details>
+
+  <details class="recall">
+    <summary>Legacy BIOS vs. UEFI: give four differences, and explain why a PC in legacy mode can't pass the Windows 11 check. <span class="hint">(<a href="0058-the-bios-uefi.html">lesson 0058</a>)</span></summary>
+    <p><strong>UEFI</strong>: graphical setup with a mouse, boots from <strong>GPT</strong> disks over 2 TB, can use USB and network before the OS, has <strong>Secure Boot</strong>, required by Windows 11. <strong>Legacy BIOS</strong>: text setup, <strong>MBR</strong> disks, no boot past ~2 TB, no Secure Boot. In legacy (CSM) mode Secure Boot can't be on, so the check fails.</p>
+  </details>
+
+  <details class="recall">
+    <summary>Trace the heat from a CPU to the room, naming each part, and explain why you never refit a heat sink with nothing between it and the chip. <span class="hint">(<a href="0063-cooling.html">lesson 0063</a>)</span></summary>
+    <p>Chip → <strong>thermal paste or pad</strong> → <strong>heat sink</strong> fins → air → <strong>fans</strong> push it out of the case (front in, back and top out). Liquid cooling swaps the middle for block → pump → radiator → fans. Metal surfaces that look flat still leave microscopic air gaps, and air carries heat badly; paste or a pad fills them. A pad is single use.</p>
+  </details>
+
+  <details class="recall">
+    <summary>A laptop shows a 169.254.x.x address. Explain what that is, why the user can reach almost nothing, and where you'd look first. <span class="hint">(<a href="0001-four-ip-settings.html">lesson 0001</a>, 63 days ago)</span></summary>
+    <p>It's <strong>APIPA</strong>: the PC asked for an address, no DHCP server answered, so Windows gave itself a link-local one. It comes with no gateway and no DNS server, so nothing beyond the local link works. Look at the connection to DHCP: the cable or Wi-Fi, the switch port, then the DHCP server itself (or a full pool). It's not the user's account.</p>
+  </details>
+
+  <details class="recall">
+    <summary>DHCP exclusion vs. reservation: what each does, and which you'd use for a network printer and which for a router set by hand. <span class="hint">(<a href="0014-dhcp-scopes-leases.html">lesson 0014</a>, 50 days ago)</span></summary>
+    <p>An <strong>exclusion</strong> says "never hand out these addresses": for devices configured by hand, like the router or servers. A <strong>reservation</strong> says "always give this address to that MAC": the device still uses DHCP but keeps the same IP, which suits a printer. The router gets an exclusion; the printer a reservation.</p>
+  </details>
+
+  <h2>Pace check</h2>
+  <div class="callout">
+    <span class="label">A+ Core 1: 46 of 63 videos covered (about 73%)</span>
+    <div class="meter"><span style="width:73%"></span></div>
+    <p>Fully covered so far: the 12 networking videos (objectives 2.1–2.8), the 5 mobile device videos (1.1–1.3), the 4 virtualization and cloud videos (4.1–4.2), and 25 hardware videos, including this week's six: The BIOS, BIOS Settings, HSM and TPM, CPU Features, Expansion Cards and Cooling. That finishes objective 3.5.</p>
+    <p><strong>What the calendar needs:</strong> the syllabus puts all new material in weeks 1–17 (Sep 27 – Jan 23), about <strong>3.7 videos a week</strong>. Today ends week 9, so you'd expect about 33. You're at 46: <strong>ahead, by about thirteen videos</strong>, roughly three and a half weeks of buffer. The lead keeps growing: one behind, on pace, one ahead, two, four or five, seven, eight, ten, now thirteen.</p>
+    <p><strong>The trend:</strong> six videos again this week. The remaining 17 fit in the 8 weeks before review starts at only about 2.1 a week, so the February target holds comfortably, with room for a lighter holiday week. Hardware (3.1–3.8) is planned through Dec 26; at this pace it can finish in mid-December.</p>
+    <p>Nothing in the plan was changed. Tomorrow's lesson likely starts <strong>Power Supplies</strong> (objective 3.6). The spare time is yours to spend: keep it as holiday slack, start the troubleshooting domain (28% of the exam, the biggest) earlier, or turn it into extra practice exams before February.</p>
+  </div>
+
+  <div class="callout source" id="src-messer">
+    <span class="label">Primary source: watch next</span>
+    <p>Professor Messer, <a href="https://www.professormesser.com/free-a-plus-training/220-1201/220-1201-video/220-1201-training-course/">Free CompTIA A+ 220-1201 course</a>. Rewatch the video behind whichever question you missed: The BIOS, BIOS Settings, HSM and TPM, CPU Features, Expansion Cards and Cooling cover this week; Assigning IP Addresses, Introduction to IP, Common Ports, Wireless Network Technologies, DNS Configuration and DHCP Configuration cover the review questions. Free.</p>
+  </div>
+
+  <div class="callout ask">
+    <span class="label">Questions?</span>
+    <p>Missed one and the explanation didn't settle it? Ask your teacher. Open Claude in the Teacher repo and ask, for example: <em>"In IT lesson 0064, question 8, how do you convert an MBR system disk to GPT without reinstalling Windows?"</em> Follow-up questions are part of the course.</p>
+  </div>
+</main>
+<nav class="page-footer">
+  <a href="0063-cooling.html">← Moving heat out</a>
+  <a href="../../index.html">Hub</a>
+  <span class="disabled">Next lesson: tomorrow →</span>
+</nav>
+</body>
+</html>
